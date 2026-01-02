@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Environments
+.env
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Django-specific
+*.log
+*.sqlite3
+media/
+static/
+/allbikes/settings/local.py
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Misc
+*.backup
