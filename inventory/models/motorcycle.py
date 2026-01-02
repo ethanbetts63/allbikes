@@ -1,4 +1,6 @@
 from django.db import models
+from .motorcycle_image import MotorcycleImage
+
 
 class Motorcycle(models.Model):
     STATUS_CHOICES = [
@@ -22,7 +24,10 @@ class Motorcycle(models.Model):
 
     make = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
-    year = models.IntegerField(null=True, blank=True)
+    year = models.IntegerField(
+        null=True,
+        blank=True,
+    )
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -31,7 +36,11 @@ class Motorcycle(models.Model):
         help_text="Sale price (if applicable)",
     )
 
-    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES, blank=True)
+    condition = models.CharField(
+        max_length=20,
+        choices=CONDITION_CHOICES,
+        blank=True,
+    )
 
     conditions = models.ManyToManyField(
         "inventory.MotorcycleCondition",
@@ -46,22 +55,35 @@ class Motorcycle(models.Model):
         help_text="The sales status of the motorcycle.",
     )
     odometer = models.IntegerField(default=0)
-    engine_size = models.IntegerField(null=True, blank=True, help_text="Engine size in cubic centimeters (cc)")
-    range = models.IntegerField(null=True, blank=True, help_text="Range in kilometers (if applicable)")
+    engine_size = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="Engine size in cubic centimeters (cc)",
+    )
+    range = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="Range in kilometers (if applicable)",
+    )
 
     seats = models.IntegerField(
-        help_text="Number of seats on the motorcycle", null=True, blank=True
+        null=True,
+        blank=True,
+        help_text="Number of seats on the motorcycle",
     )
 
     transmission = models.CharField(
         max_length=20,
         choices=TRANSMISSION_CHOICES,
+        null=True,
+        blank=True,
         help_text="Motorcycle transmission type",
+    )
+
+    description = models.TextField(
         null=True,
         blank=True,
     )
-
-    description = models.TextField(null=True, blank=True)
 
     youtube_link = models.URLField(
         max_length=255,
@@ -72,17 +94,29 @@ class Motorcycle(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
 
     rego = models.CharField(
-        max_length=20, help_text="Registration number", null=True, blank=True
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text="Registration number",
     )
     rego_exp = models.DateField(
-        help_text="Registration expiration date", null=True, blank=True
+        null=True,
+        blank=True,
+        help_text="Registration expiration date",
     )
-    stock_number = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    stock_number = models.CharField(
+        max_length=50,
+        unique=True,
+        null=True,
+        blank=True,
+    )
 
     warranty_months = models.IntegerField(
-        null=True, blank=True, help_text="Number of months the warranty is valid for"
+        null=True,
+        blank=True,
+        help_text="Number of months the warranty is valid for",
     )
 
 
     def __str__(self):
-        return f"{self.year} {self.brand} {self.model}"
+        return f"{self.year} {self.make} {self.model}"
