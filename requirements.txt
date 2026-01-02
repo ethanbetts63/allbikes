@@ -6,3 +6,5 @@ pandas
 pytz
 pytest-mock
 requests
+djangorestframework
+djangorestframework-simplejwt
