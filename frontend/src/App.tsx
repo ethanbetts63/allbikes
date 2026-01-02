@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import NavBar from './components/ui/NavBar';
-import Footer from './components/ui/Footer';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import { Toaster } from "@/components/ui/sonner"
 import { Spinner } from './components/ui/spinner';
