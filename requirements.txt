@@ -8,3 +8,4 @@ pandas
 pytz
 twilio
 pytest-mock
+requests
