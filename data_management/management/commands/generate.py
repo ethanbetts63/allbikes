@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from data_management.utils.generation_utils.faq_generator import FaqUpdateOrchestrator
-from data_management.utils.generation_utils.tier_generator import TierUpdateOrchestrator
 from data_management.utils.generation_utils.terms_generator import TermsUpdateOrchestrator
 from data_management.utils.archive_db.database_archiver import DatabaseArchiver
 
@@ -12,11 +11,6 @@ class Command(BaseCommand):
             '--faqs',
             action='store_true',
             help='Generate FAQs from the JSONL data file.',
-        )
-        parser.add_argument(
-            '--tiers',
-            action='store_true',
-            help='Generate Tiers and Prices from the tiers.jsonl data file.',
         )
         parser.add_argument(
             '--terms',
