@@ -42,7 +42,7 @@ export async function loginUser(email: string, password: string): Promise<AuthRe
 // --- User Profile Endpoint ---
 
 export async function getUserProfile(): Promise<UserProfile> {
-    const response = await authedFetch('/api/users/me/', {
+    const response = await authedFetch('/api/data-management/me/', {
         method: 'GET',
     });
     return handleResponse(response);
