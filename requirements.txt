@@ -1,11 +1,8 @@
+Django
 mysqlclient
 python-dotenv
-djangorestframework
-djangorestframework-simplejwt
-stripe
 Pillow
 pandas
 pytz
-twilio
 pytest-mock
 requests
