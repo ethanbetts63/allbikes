@@ -31,12 +31,6 @@ class Command(BaseCommand):
             orchestrator = FaqUpdateOrchestrator(command=self)
             orchestrator.run()
 
-        if options['tiers']:
-            something_generated = True
-            self.stdout.write(self.style.SUCCESS('Starting Tier and Price generation...'))
-            orchestrator = TierUpdateOrchestrator(command=self)
-            orchestrator.run()
-
         if options['terms']:
             something_generated = True
             self.stdout.write(self.style.SUCCESS('Starting Terms and Conditions generation...'))

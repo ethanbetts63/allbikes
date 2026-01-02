@@ -1,0 +1,546 @@
+[
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 69,
+  "fields": {
+    "motorcycle": 12,
+    "image": "motorcycles/additional/b5axm1pizbgkl4xj3b1u_I1x6JsQ.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 70,
+  "fields": {
+    "motorcycle": 12,
+    "image": "motorcycles/additional/edkrvnwobxuxdhtqc7xt_Pegdvaa.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 71,
+  "fields": {
+    "motorcycle": 12,
+    "image": "motorcycles/additional/liwlh9haedmwygjpamqc_Oa1BI1E.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 72,
+  "fields": {
+    "motorcycle": 12,
+    "image": "motorcycles/additional/pnjohw3bqbuec7x567hp_qPRmpuT.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 73,
+  "fields": {
+    "motorcycle": 12,
+    "image": "motorcycles/additional/y6w1kjwqvweu60pvv8yb_IbBzxOF.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 74,
+  "fields": {
+    "motorcycle": 12,
+    "image": "motorcycles/additional/z5q2mw8kpura7lss3siu_YAsqAwl.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 75,
+  "fields": {
+    "motorcycle": 11,
+    "image": "motorcycles/additional/nmrcrxa8bu5akb6goaov.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 76,
+  "fields": {
+    "motorcycle": 11,
+    "image": "motorcycles/additional/rvycjwip9riz5tsym1lk.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 77,
+  "fields": {
+    "motorcycle": 11,
+    "image": "motorcycles/additional/seacneoiqkorfnlomax8.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 78,
+  "fields": {
+    "motorcycle": 10,
+    "image": "motorcycles/additional/nlj3qgk0rmvlywxn6muw.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 79,
+  "fields": {
+    "motorcycle": 10,
+    "image": "motorcycles/additional/quaep7i5t0yowkqp9cej.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 80,
+  "fields": {
+    "motorcycle": 10,
+    "image": "motorcycles/additional/qxh5rcvhtovxbldzcjiv.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 81,
+  "fields": {
+    "motorcycle": 10,
+    "image": "motorcycles/additional/t2hkwak3q0heb9xf2m9z.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 82,
+  "fields": {
+    "motorcycle": 9,
+    "image": "motorcycles/additional/C125-Sport-web.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 83,
+  "fields": {
+    "motorcycle": 9,
+    "image": "motorcycles/additional/C125-Sport-web2.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 84,
+  "fields": {
+    "motorcycle": 9,
+    "image": "motorcycles/additional/C125-Sport-web3.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 85,
+  "fields": {
+    "motorcycle": 9,
+    "image": "motorcycles/additional/Classic-125-1.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 86,
+  "fields": {
+    "motorcycle": 9,
+    "image": "motorcycles/additional/Classic-125-2.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 87,
+  "fields": {
+    "motorcycle": 9,
+    "image": "motorcycles/additional/Classic-125-3.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 88,
+  "fields": {
+    "motorcycle": 9,
+    "image": "motorcycles/additional/Classic-125-4.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 89,
+  "fields": {
+    "motorcycle": 8,
+    "image": "motorcycles/additional/krl70bj9bckz6taacl3e.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 90,
+  "fields": {
+    "motorcycle": 8,
+    "image": "motorcycles/additional/n9cchzsjuzczjsenlmi8.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 91,
+  "fields": {
+    "motorcycle": 8,
+    "image": "motorcycles/additional/nc99a3bowajsaftemhtq.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 92,
+  "fields": {
+    "motorcycle": 8,
+    "image": "motorcycles/additional/wjzstipffc7r87btttkf.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 93,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DRG160-Studio-Blue.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 94,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DRG160-Studio-Green.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 95,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DRG160TB16W3-EU_HEADLIGHT-1-scaled.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 96,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DRG160TB16W3-EU_INSTRUMENT-1-scaled.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 97,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DRG160TB16W3-EU_TAILLIGHT-1.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 98,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DSCF7998-scaled.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 99,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DSCF8003.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 100,
+  "fields": {
+    "motorcycle": 7,
+    "image": "motorcycles/additional/DSCF8081_square.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 101,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/Crox-Lifestyle_homepage_slider-min.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 102,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/Dash_01.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 103,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/Exhaust_01.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 104,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/Front-Disc_01.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 105,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/Headlight_01.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 106,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/Rear-Suspension_01.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 107,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/Red-Crox-50_01.png"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 108,
+  "fields": {
+    "motorcycle": 6,
+    "image": "motorcycles/additional/White-Crox-50_01-570x500.png"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 109,
+  "fields": {
+    "motorcycle": 5,
+    "image": "motorcycles/additional/1912_2.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 110,
+  "fields": {
+    "motorcycle": 5,
+    "image": "motorcycles/additional/1912_3.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 111,
+  "fields": {
+    "motorcycle": 5,
+    "image": "motorcycles/additional/1912_4.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 112,
+  "fields": {
+    "motorcycle": 4,
+    "image": "motorcycles/additional/1913_1.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 113,
+  "fields": {
+    "motorcycle": 4,
+    "image": "motorcycles/additional/1913_2.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 114,
+  "fields": {
+    "motorcycle": 4,
+    "image": "motorcycles/additional/1913_3.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 115,
+  "fields": {
+    "motorcycle": 4,
+    "image": "motorcycles/additional/1913.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 116,
+  "fields": {
+    "motorcycle": 4,
+    "image": "motorcycles/additional/1913_1915.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 117,
+  "fields": {
+    "motorcycle": 3,
+    "image": "motorcycles/additional/1908_1.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 118,
+  "fields": {
+    "motorcycle": 3,
+    "image": "motorcycles/additional/1908_2.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 119,
+  "fields": {
+    "motorcycle": 3,
+    "image": "motorcycles/additional/1908_3.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 120,
+  "fields": {
+    "motorcycle": 3,
+    "image": "motorcycles/additional/1908.webp"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 122,
+  "fields": {
+    "motorcycle": 14,
+    "image": "motorcycles/additional/IMG_20250725_131654.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 123,
+  "fields": {
+    "motorcycle": 14,
+    "image": "motorcycles/additional/IMG_20250730_102056.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 124,
+  "fields": {
+    "motorcycle": 14,
+    "image": "motorcycles/additional/IMG_20250730_102025.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 125,
+  "fields": {
+    "motorcycle": 15,
+    "image": "motorcycles/additional/IMG_20250731_095912.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 126,
+  "fields": {
+    "motorcycle": 15,
+    "image": "motorcycles/additional/IMG_20250731_095932.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 127,
+  "fields": {
+    "motorcycle": 15,
+    "image": "motorcycles/additional/IMG_20250731_095944.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 128,
+  "fields": {
+    "motorcycle": 15,
+    "image": "motorcycles/additional/IMG_20250731_100000.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 129,
+  "fields": {
+    "motorcycle": 15,
+    "image": "motorcycles/additional/IMG_20250731_100008.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 130,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142101.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 131,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142125.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 132,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142133.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 133,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142141.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 134,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142150.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 135,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142218.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 136,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142232.jpg"
+  }
+},
+{
+  "model": "inventory.motorcycleimage",
+  "pk": 137,
+  "fields": {
+    "motorcycle": 16,
+    "image": "motorcycles/additional/IMG_20250731_142240.jpg"
+  }
+}
+]
