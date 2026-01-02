@@ -1,6 +1,4 @@
 from django.db import models
-from .motorcycle_image import MotorcycleImage
-
 
 class Motorcycle(models.Model):
     STATUS_CHOICES = [
@@ -116,7 +114,6 @@ class Motorcycle(models.Model):
         blank=True,
         help_text="Number of months the warranty is valid for",
     )
-
 
     def __str__(self):
         return f"{self.year} {self.make} {self.model}"
