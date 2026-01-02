@@ -11,6 +11,7 @@ import { Spinner } from './components/ui/spinner';
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
 const AdminHomePage = lazy(() => import('./pages/admin/AdminHomePage'));
+const WorkshopPage = lazy(() => import('./pages/WorkshopPage')); // New lazy-loaded page
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -30,6 +31,7 @@ function App() {
               {/* Public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/workshop" element={<WorkshopPage />} /> {/* New workshop route */}
 
               {/* Admin Section */}
               <Route path="/admin/dashboard" element={<AdminLayout />}>
