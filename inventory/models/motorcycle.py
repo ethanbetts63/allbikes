@@ -40,12 +40,6 @@ class Motorcycle(models.Model):
         blank=True,
     )
 
-    conditions = models.ManyToManyField(
-        "inventory.MotorcycleCondition",
-        related_name="motorcycles",
-        blank=True,
-        help_text="Select all applicable conditions (e.g., Used, New, Demo.)",
-    )
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
