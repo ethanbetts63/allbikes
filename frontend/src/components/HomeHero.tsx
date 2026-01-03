@@ -125,7 +125,7 @@ const HomeHero: React.FC = () => {
       </div>
 
       {/* Right Column */}
-      <div className="md:w-1/2 flex flex-col items-center justify-center p-12 text-center bg-background">
+      <div className="md:w-1/2 flex flex-col items-center justify-center p-12 text-center bg-foreground">
         <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-8">
           Perth Motorcycle/Scooter Mechanic & Dealership
         </h1>

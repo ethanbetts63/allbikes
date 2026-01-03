@@ -3,6 +3,7 @@ import {
     CardFooter,
     CardHeader,
 } from "@/components/ui/card"
+import { Star } from "lucide-react"; // Import Star icon
 
 const reviewData = [
   {
@@ -43,6 +44,15 @@ const reviewData = [
   }
 ].sort((a, b) => a.display_order - b.display_order);
 
+// Helper function to generate a consistent color based on a string
+const generateColorForInitial = (name: string) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = hash % 360;
+  return `hsl(${hue}, 70%, 60%)`; // Use HSL for a vibrant color
+};
 
 const ReviewCarousel = () => {
   return (
@@ -55,14 +65,30 @@ const ReviewCarousel = () => {
             const truncatedText = review.text.length > charLimit 
               ? review.text.substring(0, charLimit) + "..." 
               : review.text;
+            
+            const initial = review.author_name.charAt(0).toUpperCase();
+            const backgroundColor = generateColorForInitial(review.author_name);
 
             return (
                 <Card key={review.pk} className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg transform transition-transform hover:-translate-y-1">
                     <CardHeader>
                         <p className="text-gray-700 leading-relaxed">"{truncatedText}"</p>
                     </CardHeader>
-                    <CardFooter>
-                        <p className="font-semibold text-gray-900">- {review.author_name}</p>
+                    <CardFooter className="flex flex-col items-start pt-0 px-6 pb-6"> {/* Adjusted padding */}
+                        <div className="flex items-center mb-2">
+                            <div 
+                                className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-white font-bold text-lg"
+                                style={{ backgroundColor: backgroundColor }}
+                            >
+                                {initial}
+                            </div>
+                            <p className="font-semibold text-gray-900">{review.author_name}</p>
+                        </div>
+                        <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                                <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                            ))}
+                        </div>
                     </CardFooter>
                 </Card>
             );
