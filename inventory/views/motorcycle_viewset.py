@@ -1,16 +1,23 @@
 from rest_framework import viewsets, permissions
+from rest_framework.pagination import PageNumberPagination
 from ..models import Motorcycle
 from ..serializers.motorcycle_serializer import MotorcycleSerializer
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 12
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 class MotorcycleViewSet(viewsets.ModelViewSet):
     """
     A ViewSet for viewing, creating, editing, and deleting motorcycles.
-    
+
     Read-only access is public.
     Write access is restricted to admin users.
     """
     queryset = Motorcycle.objects.all().order_by('-date_posted')
     serializer_class = MotorcycleSerializer
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         """
