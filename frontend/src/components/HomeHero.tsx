@@ -67,9 +67,9 @@ const HomeHero: React.FC = () => {
     }, [usedFeaturedBikes]);
 
     const getImageUrl = (bikes: Bike[], index: number) => {
-        if (!bikes.length || !bikes[index]) return '';
+        if (!bikes.length || !bikes[index]) return '/src/assets/motorcycle_images/placeholder.png';
         // Assumes images are pre-sorted and the first one is order 0
-        return bikes[index].images[0]?.image || '';
+        return bikes[index].images[0]?.image || '/src/assets/motorcycle_images/placeholder.png';
     };
 
     const newBikeImageUrl = getImageUrl(newFeaturedBikes, currentNewImageIndex);
@@ -77,9 +77,10 @@ const HomeHero: React.FC = () => {
 
     const HeroQuadrant = ({ to, imageUrl, title }: { to: string, imageUrl: string, title: string }) => (
         <Link to={to} className="relative group overflow-hidden rounded-lg h-64 md:h-full flex-grow">
-            <div
-                style={{ backgroundImage: `url(${imageUrl})` }}
-                className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out transform group-hover:scale-110"
+            <img
+                src={imageUrl}
+                alt={title}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center p-4">
                 <h2 className="text-3xl font-bold text-white mb-2">{title}</h2>
@@ -94,8 +95,8 @@ const HomeHero: React.FC = () => {
                 
                 {/* Left Column: Image Quadrants */}
                 <div className="md:order-1 grid grid-rows-2 gap-0">
-                    <HeroQuadrant to="/inventory?condition=new" imageUrl={newBikeImageUrl} title="New Bikes" />
-                    <HeroQuadrant to="/inventory?condition=used" imageUrl={usedBikeImageUrl} title="Used Bikes" />
+                    <HeroQuadrant to="/bikes/new" imageUrl={newBikeImageUrl} title="New Bikes" />
+                    <HeroQuadrant to="/bikes/used" imageUrl={usedBikeImageUrl} title="Used Bikes" />
                 </div>
 
                 {/* Right Column: Text Content */}
