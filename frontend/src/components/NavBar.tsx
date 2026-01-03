@@ -1,55 +1,77 @@
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import logo from '../assets/logo.webp';
+import { cn } from '@/lib/utils'; // Assuming this path is correct for your cn utility
 
 const NavBar = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="bg-gray-800 text-white p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold">Allbikes</h1>
-        <nav>
+    <header className={cn(
+      "sticky top-0 z-50 w-full transition-all duration-300",
+      scrolled ? "border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-transparent"
+    )}>
+      <div className="container flex h-20 items-center justify-between px-4">
+        {/* Left Section: Logo */}
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center">
+            <img 
+              src={logo} 
+              alt="Allbikes Logo" 
+              className="h-20 w-auto object-contain" 
+            />
+          </Link>
+        </div>
+
+        {/* Center Section: Navigation Links */}
+        <nav className="flex-1 flex justify-center gap-4">
           <ul className="flex space-x-4">
             <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-300" : "hover:text-gray-300"
-                }
-                end
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
+              <Link
                 to="/bikes/new"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-300" : "hover:text-gray-300"
-                }
+                className="hover:text-gray-300"
               >
                 New Bikes
-              </NavLink>
+              </Link>
             </li>
             <li>
-              <NavLink
+              <Link
                 to="/bikes/used"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-300" : "hover:text-gray-300"
-                }
+                className="hover:text-gray-300"
               >
                 Used Bikes
-              </NavLink>
+              </Link>
             </li>
             <li>
-              <NavLink
+              <Link
                 to="/workshop"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-300" : "hover:text-gray-300"
-                }
+                className="hover:text-gray-300"
               >
                 Workshop
-              </NavLink>
+              </Link>
             </li>
           </ul>
         </nav>
+
+        {/* Right Section: Empty for now, can add auth buttons later */}
+        <div className="flex items-center justify-end gap-2">
+        </div>
       </div>
     </header>
   );
