@@ -60,10 +60,17 @@ export async function getUserProfile(): Promise<UserProfile> {
 
 // --- Inventory Endpoints ---
 
-export async function getBikes(condition?: 'new' | 'used', page: number = 1): Promise<PaginatedResponse<Bike>> {
+export async function getBikes(
+    condition?: 'new' | 'used' | 'demo', 
+    page: number = 1,
+    is_featured?: boolean
+): Promise<PaginatedResponse<Bike>> {
     let url = `/api/inventory/bikes/?page=${page}`;
     if (condition) {
         url += `&condition=${condition}`;
+    }
+    if (is_featured) {
+        url += `&is_featured=true`;
     }
     const response = await fetch(url, {
         method: 'GET',

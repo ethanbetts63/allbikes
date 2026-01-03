@@ -24,13 +24,19 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Optionally restricts the returned motorcycles to a given condition,
-        by filtering against a `condition` query parameter in the URL.
+        Optionally restricts the returned motorcycles by condition or featured status
+        by filtering against query parameters in the URL.
         """
-        queryset = Motorcycle.objects.all().order_by('-date_posted')
+        queryset = super().get_queryset()
+        
         condition = self.request.query_params.get('condition')
-        if condition in ['new', 'used']:
+        if condition in ['new', 'used', 'demo']:
             queryset = queryset.filter(condition=condition)
+            
+        is_featured = self.request.query_params.get('is_featured')
+        if is_featured and is_featured.lower() == 'true':
+            queryset = queryset.filter(is_featured=True)
+            
         return queryset
 
     def get_permissions(self):

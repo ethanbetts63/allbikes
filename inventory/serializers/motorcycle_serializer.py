@@ -15,6 +15,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'price',
             'condition',
             'status',
+            'is_featured',
             'odometer',
             'engine_size',
             'description',
