@@ -23,7 +23,7 @@ import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
 import { deleteMotorcycle, getBikes } from "@/api"
 import { toast } from "sonner"
-import { Bike } from "@/types"
+import type { Bike } from "@/types"
 
 
 // Main InventoryTable Component

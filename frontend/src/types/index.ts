@@ -36,8 +36,8 @@ export type Bike = {
   rego_exp: string;
   stock_number: string;
   warranty_months: number;
-    images: BikeImage[];
-  };
+  images: BikeImage[];
+};
   
   // --- Site Settings Types ---
   export interface SiteSettings {
