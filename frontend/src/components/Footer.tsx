@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from './ui/button'; // Assuming button component is in the same folder or similar path
-import { getFooterSettings, type FooterSettings } from '@/api/siteSettings'; // Import the new API function and interface
+import { getFooterSettings, type FooterSettings } from '@/api'; // Import the new API function and interface
 
 const Footer = () => {
   const { user, logout } = useAuth(); // Destructure logout from useAuth

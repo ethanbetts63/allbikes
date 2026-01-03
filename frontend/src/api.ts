@@ -7,6 +7,8 @@ import type { MotorcycleFormData, ManagedImage } from "@/components/admin/invent
  * A centralized module for all API interactions.
  */
 
+const API_BASE_URL = '/api/data'; // Define API base URL for data-related endpoints
+
 // --- Type for Paginated API responses ---
 export interface PaginatedResponse<T> {
     count: number;
@@ -15,6 +17,24 @@ export interface PaginatedResponse<T> {
     results: T[];
 }
 
+export interface FooterSettings {
+    phone_number: string;
+    email_address: string;
+    street_address: string;
+    address_locality: string;
+    address_region: string;
+    postal_code: string;
+    abn_number: string;
+    md_number: string;
+    mrb_number: string;
+    opening_hours_monday: string;
+    opening_hours_tuesday: string;
+    opening_hours_wednesday: string;
+    opening_hours_thursday: string;
+    opening_hours_friday: string;
+    opening_hours_saturday: string;
+    opening_hours_sunday: string;
+}
 
 // --- Helper Functions ---
 
@@ -30,7 +50,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
   const data = await response.json();
   if (!response.ok) {
-    const error = new Error(data.detail || 'An unknown API error occurred.');
+    const error = new Error(data.detail || data.message || 'An unknown API error occurred.'); // Added data.message for generic errors
     (error as any).data = data; // Attach the full error data for more specific handling
     throw error;
   }
@@ -52,10 +72,19 @@ export async function loginUser(email: string, password: string): Promise<AuthRe
 // --- User Profile Endpoint ---
 
 export async function getUserProfile(): Promise<UserProfile> {
-    const response = await authedFetch('/api/data/me/', {
+    const response = await authedFetch(`${API_BASE_URL}/me/`, {
         method: 'GET',
     });
     return handleResponse(response);
+}
+
+// --- Site Settings Endpoints ---
+export async function getFooterSettings(): Promise<FooterSettings> {
+    const response = await fetch(`${API_BASE_URL}/footer-settings/`);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
 }
 
 // --- Inventory Endpoints ---
