@@ -36,5 +36,35 @@ export type Bike = {
   rego_exp: string;
   stock_number: string;
   warranty_months: number;
-  images: BikeImage[];
-};
+    images: BikeImage[];
+  };
+  
+  // --- Site Settings Types ---
+  export interface SiteSettings {
+    id: number;
+    enable_motorcycle_mover: boolean;
+    enable_banner: boolean;
+    banner_text: string;
+    phone_number: string;
+    email_address: string;
+    street_address: string;
+    address_locality: string;
+    address_region: string;
+    postal_code: string;
+    google_places_place_id: string;
+    mrb_number: string;
+    abn_number: string;
+    md_number: string;
+    youtube_link: string;
+    instagram_link: string;
+    facebook_link: string;
+    opening_hours_monday: string;
+    opening_hours_tuesday: string;
+    opening_hours_wednesday: string;
+    opening_hours_thursday: string;
+    opening_hours_friday: string;
+    opening_hours_saturday: string;
+    opening_hours_sunday: string;
+    last_updated: string;
+  }
+  

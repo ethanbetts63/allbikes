@@ -101,5 +101,21 @@ class SiteSettings(models.Model):
 
     last_updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "Site Settings"
+        verbose_name_plural = "Site Settings"
+
     def __str__(self):
         return "Site Settings"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and SiteSettings.objects.exists():
+            # If you are creating a new instance and one already exists
+            raise ValueError("There can be only one SiteSettings instance")
+        return super(SiteSettings, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        # Gets the singleton instance, creating it if it doesn't exist
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
