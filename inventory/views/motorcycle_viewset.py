@@ -1,0 +1,24 @@
+from rest_framework import viewsets, permissions
+from ..models import Motorcycle
+from ..serializers.motorcycle_serializer import MotorcycleSerializer
+
+class MotorcycleViewSet(viewsets.ModelViewSet):
+    """
+    A ViewSet for viewing, creating, editing, and deleting motorcycles.
+    
+    Read-only access is public.
+    Write access is restricted to admin users.
+    """
+    queryset = Motorcycle.objects.all().order_by('-date_posted')
+    serializer_class = MotorcycleSerializer
+    
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        Allows public read-only access, but requires admin privileges for write operations.
+        """
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [permissions.AllowAny]
+        else:
+            permission_classes = [permissions.IsAdminUser]
+        return [permission() for permission in permission_classes]

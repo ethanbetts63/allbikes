@@ -27,6 +27,7 @@ export type Bike = {
   price: number;
   condition: 'new' | 'used' | 'demo';
   status: string;
+  is_featured: boolean;
   odometer: number;
   engine_size: number;
   description: string;

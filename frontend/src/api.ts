@@ -1,6 +1,7 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
 import type { AuthResponse, UserProfile, Bike } from "@/types";
+import type { MotorcycleFormData } from "@/components/admin/inventory/MotorcycleForm";
 
 /**
  * A centralized module for all API interactions.
@@ -77,17 +78,40 @@ export async function getBikeById(id: string): Promise<Bike> {
     return handleResponse(response);
 }
 
-// --- Data Management Endpoints ---
-
-export type Condition = {
-    id: number;
-    name: string;
-    display_name: string;
+export async function createMotorcycle(data: Omit<MotorcycleFormData, 'images'>): Promise<Bike> {
+    const response = await authedFetch('/api/inventory/bikes/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
 }
 
-export async function getConditions(): Promise<Condition[]> {
-    const response = await authedFetch('/api/data-management/conditions/', {
-        method: 'GET',
+export async function updateMotorcycle(id: number, data: Omit<MotorcycleFormData, 'images'>): Promise<Bike> {
+    const response = await authedFetch(`/api/inventory/bikes/${id}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function deleteMotorcycle(id: number): Promise<void> {
+    const response = await authedFetch(`/api/inventory/bikes/${id}/`, {
+        method: 'DELETE',
+    });
+    return handleResponse(response);
+}
+
+export async function uploadMotorcycleImage(motorcycleId: number, imageFile: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    // Note: When using FormData, we should not set the 'Content-Type' header.
+    // The browser will automatically set it to 'multipart/form-data' with the correct boundary.
+    const response = await authedFetch(`/api/inventory/bikes/${motorcycleId}/images/`, {
+        method: 'POST',
+        body: formData,
     });
     return handleResponse(response);
 }

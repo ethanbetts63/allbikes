@@ -10,7 +10,7 @@ interface BikeListPageProps {
 }
 
 const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
-  const [bikes, setBikes] = useState<Bike[]>([]);
+  const [bikes, setBikes] = useState<Bike[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +19,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
       try {
         setIsLoading(true);
         setError(null);
-        console.log(`Fetching ${bikeCondition} bikes from API...`);
+        setBikes(undefined); // Reset on re-fetch
         const response = await getBikes(bikeCondition);
         setBikes(response.results);
       } catch (err) {
@@ -51,7 +51,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
 
         {!isLoading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {bikes.length > 0 ? (
+            {bikes && bikes.length > 0 ? (
               bikes.map(bike => (
                 <BikeCard key={bike.id} bike={bike} />
               ))

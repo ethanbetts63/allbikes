@@ -76,9 +76,7 @@ const BikeDetailPage: React.FC = () => {
             <div className="container mx-auto p-4 lg:p-8">
                 <h1 className="text-3xl md:text-4xl font-bold text-center my-4">{cardTitle}</h1>
                 <div className="text-center mb-8 flex justify-center gap-2">
-                    {bike.conditions.map((c) => (
-                        <Badge key={c} className="text-lg capitalize">{c}</Badge>
-                    ))}
+                    <Badge className="text-lg capitalize">{bike.condition}</Badge>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
