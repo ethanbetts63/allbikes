@@ -57,9 +57,9 @@ const InventoryTable = () => {
     const fetchBikes = async () => {
       try {
         // Tanstack table is 0-indexed, API is 1-indexed
-        const response = await getBikes(conditionFilter || undefined, pageIndex + 1, pageSize);
+        const response = await getBikes(conditionFilter || undefined, pageIndex + 1);
         setData(response.results);
-        setPageCount(Math.ceil(response.count / response.page_size));
+        setPageCount(Math.ceil(response.count / pageSize));
       } catch (error) {
         console.error("Failed to fetch bikes:", error);
         toast.error("Failed to fetch bikes");
@@ -73,9 +73,9 @@ const InventoryTable = () => {
       try {
         await deleteMotorcycle(id);
         // Refetch the current page to show the updated data
-        const response = await getBikes(conditionFilter || undefined, pageIndex + 1, pageSize);
+        const response = await getBikes(conditionFilter || undefined, pageIndex + 1);
         setData(response.results);
-        setPageCount(Math.ceil(response.count / response.page_size));
+        setPageCount(Math.ceil(response.count / pageSize));
         toast.success("Motorcycle deleted successfully");
       } catch (error) {
         console.error("Failed to delete motorcycle:", error);

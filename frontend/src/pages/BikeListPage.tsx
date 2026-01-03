@@ -30,7 +30,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
         setError(null);
         const response = await getBikes(bikeCondition, currentPage);
         setBikes(response.results);
-        setTotalPages(Math.ceil(response.count / response.page_size));
+        setTotalPages(Math.ceil(response.count / 12)); // Page size is 12 from backend
       } catch (err) {
         setError(err instanceof Error ? err.message : "An unknown error occurred.");
         console.error(err);

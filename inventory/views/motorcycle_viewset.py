@@ -1,23 +1,12 @@
-from collections import OrderedDict
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
 from ..models import Motorcycle
 from ..serializers.motorcycle_serializer import MotorcycleSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
-    # page_size is inherited from REST_FRAMEWORK settings
+    page_size = 12
     page_size_query_param = 'page_size'
     max_page_size = 100
-
-    def get_paginated_response(self, data):
-        return Response(OrderedDict([
-            ('count', self.page.paginator.count),
-            ('next', self.get_next_link()),
-            ('previous', self.get_previous_link()),
-            ('page_size', self.get_page_size(self.request)),
-            ('results', data)
-        ]))
 
 class MotorcycleViewSet(viewsets.ModelViewSet):
     """
