@@ -16,7 +16,9 @@ export interface UserProfile {
 
 // --- Inventory Types ---
 export type BikeImage = {
+  id: number;
   image: string;
+  order: number;
 };
 
 export type Bike = {

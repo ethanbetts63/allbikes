@@ -4,4 +4,8 @@ from ..models import MotorcycleImage
 class MotorcycleImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MotorcycleImage
-        fields = ['image']
+        fields = ['id', 'image', 'order', 'motorcycle']
+        read_only_fields = ['id', 'motorcycle']
+        extra_kwargs = {
+            'order': {'required': False}
+        }

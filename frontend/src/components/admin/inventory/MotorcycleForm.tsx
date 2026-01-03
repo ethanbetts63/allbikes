@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from "@/components/ui/switch"
-import type { Bike } from '@/types';
+import type { Bike } from '@/types/index';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 
@@ -35,7 +35,7 @@ interface MotorcycleFormProps {
 
 const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, isLoading }) => {
     
-    const { register, handleSubmit, control, watch, formState: { errors } } = useForm<MotorcycleFormData>({
+    const { register, handleSubmit, control, formState: { errors } } = useForm<MotorcycleFormData>({
         defaultValues: {
             ...initialData,
             managedImages: initialData?.images
