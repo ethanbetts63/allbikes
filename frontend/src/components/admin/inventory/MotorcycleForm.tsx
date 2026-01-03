@@ -166,6 +166,7 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
                                             <TableCell>
                                                 <Input
                                                     type="number"
+                                                    min={0}
                                                     {...register(`managedImages.${index}.order`, { valueAsNumber: true })}
                                                     className="w-20"
                                                 />

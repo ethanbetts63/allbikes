@@ -15,8 +15,9 @@ interface BikeCardProps {
 }
 
 const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
-  // Derive imageUrl from the first image in the array, or use a placeholder
-  const imageUrl = bike.images[0]?.image || '/src/assets/motorcycle_images/placeholder.png'; // Assuming you have a placeholder image
+  // Sort images by order and get the one with the lowest order number
+  const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
+  const imageUrl = sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png';
 
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 

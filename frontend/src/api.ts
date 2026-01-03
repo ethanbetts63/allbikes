@@ -124,7 +124,7 @@ export async function manageMotorcycleImages(motorcycleId: number, images: Pick<
     const response = await authedFetch(`/api/inventory/bikes/${motorcycleId}/manage_images/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ images: payload }),
+        body: JSON.stringify(payload),
     });
     return handleResponse(response);
 }
