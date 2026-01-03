@@ -20,12 +20,11 @@ const NavBar = () => {
         </div>
 
         {/* Center Section: Navigation Links */}
-        <nav className="flex-1 flex justify-center gap-4 px-4">
-          <ul className="flex space-x-4">
+        <nav className="flex-1 flex justify-center gap-4 px-4 text-[var(--text-primary)] text-bold text-lg">
+          <ul className="flex space-x-24">
             <li>
               <Link
                 to="/bikes/new"
-                className="text-[var(--text-primary)]"
               >
                 New Bikes
               </Link>
@@ -33,7 +32,6 @@ const NavBar = () => {
             <li>
               <Link
                 to="/bikes/used"
-                className="text-[var(--text-primary)]"
               >
                 Used Bikes
               </Link>
@@ -41,7 +39,6 @@ const NavBar = () => {
             <li>
               <Link
                 to="/workshop"
-                className="text-[var(--text-primary)]"
               >
                 Workshop
               </Link>            </li>

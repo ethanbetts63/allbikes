@@ -72,7 +72,7 @@ const HomeHero: React.FC = () => {
   const renderBikeLink = (condition: 'new' | 'used') => {
     const linkPath = condition === 'new' ? '/bikes/new' : '/bikes/used';
     const text = condition === 'new' ? 'New Bikes' : 'Used Bikes';
-    const bgColorClass = condition === 'new' ? 'bg-white' : 'bg-white'; // Fallback color
+    const bgColorClass = 'bg-foreground';
 
     const currentImageUrl = condition === 'new'
       ? newBikeImageUrls[currentNewBikeImageIndex]
