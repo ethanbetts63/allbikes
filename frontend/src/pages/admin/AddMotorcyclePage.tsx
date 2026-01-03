@@ -1,8 +1,15 @@
+import MotorcycleForm from "@/components/admin/inventory/MotorcycleForm";
+
 const AddMotorcyclePage = () => {
+
+    const handleFormSubmit = (data: any) => {
+        console.log("Form submitted with data:", data);
+        // Here we will eventually call the API to create/update the motorcycle
+    };
+
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Add New Motorcycle</h1>
-            <p>This page will contain a form to add a new motorcycle to the inventory.</p>
+            <MotorcycleForm onSubmit={handleFormSubmit} />
         </div>
     );
 };
