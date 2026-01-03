@@ -1,1 +1,2 @@
 from .motorcycle_list_view import MotorcycleListView
+from .motorcycle_detail_view import MotorcycleDetailView

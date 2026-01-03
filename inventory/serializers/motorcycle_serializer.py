@@ -4,6 +4,7 @@ from .motorcycle_image_serializer import MotorcycleImageSerializer
 
 class MotorcycleSerializer(serializers.ModelSerializer):
     images = MotorcycleImageSerializer(many=True, read_only=True)
+    conditions = serializers.StringRelatedField(many=True, read_only=True)
     
     class Meta:
         model = Motorcycle
@@ -14,6 +15,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'year',
             'price',
             'condition',
+            'conditions', # Now included
             'status',
             'odometer',
             'engine_size',

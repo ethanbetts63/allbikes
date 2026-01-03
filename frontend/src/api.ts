@@ -65,3 +65,10 @@ export async function getBikes(condition: 'new' | 'used', page: number = 1): Pro
     });
     return handleResponse(response);
 }
+
+export async function getBikeById(id: string): Promise<Bike> {
+    const response = await fetch(`/api/inventory/bikes/${id}/`, {
+        method: 'GET',
+    });
+    return handleResponse(response);
+}

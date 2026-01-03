@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import Seo from '@/components/Seo';
-import { LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, Wrench, PlusSquare, Settings } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -37,6 +37,24 @@ const AdminLayout: React.FC = () => {
               <NavLink to="/admin/dashboard" end className={getNavLinkClass}>
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
+              </NavLink>
+            </Button>
+            <Button asChild variant="ghost">
+              <NavLink to="/admin/inventory" className={getNavLinkClass}>
+                <Wrench className="h-4 w-4" />
+                Inventory Management
+              </NavLink>
+            </Button>
+            <Button asChild variant="ghost">
+              <NavLink to="/admin/add-motorcycle" className={getNavLinkClass}>
+                <PlusSquare className="h-4 w-4" />
+                Add Motorcycle
+              </NavLink>
+            </Button>
+            <Button asChild variant="ghost">
+              <NavLink to="/admin/settings" className={getNavLinkClass}>
+                <Settings className="h-4 w-4" />
+                Site Settings
               </NavLink>
             </Button>
           </nav>

@@ -8,8 +8,8 @@ class MotorcycleImageInline(admin.TabularInline):
 @admin.register(Motorcycle)
 class MotorcycleAdmin(admin.ModelAdmin):
     inlines = [MotorcycleImageInline]
-    list_display = ('make', 'model', 'year', 'display_conditions', 'status', 'price', 'stock_number')
-    list_filter = ('status', 'make', 'conditions')
+    list_display = ('make', 'model', 'year', 'display_conditions', 'status', 'is_featured', 'price', 'stock_number')
+    list_filter = ('status', 'is_featured', 'make', 'conditions')
     search_fields = ('make', 'model', 'stock_number')
 
     def display_conditions(self, obj):
