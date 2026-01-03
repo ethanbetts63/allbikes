@@ -30,10 +30,10 @@ This session focused on setting up basic administrator authentication and naviga
     -   Moved user profile API logic from a conceptual `users` app to `data_management` for simplification.
     -   Updated `allbikes/allbikes/urls.py` to include `data_management.urls`, `service.urls`, and `inventory.urls` (with placeholder `urls.py` files created for `service` and `inventory`).
     -   Created `allbikes/data_management/serializers/user_profile_serializer.py` for a basic `User` model serialization.
-    -   Created `allbikes/data_management/views/__init__.py` and `allbikes/data_management/views/user_profile_view.py` containing the `UserProfileView` (for `/api/data-management/me/`).
+    -   Created `allbikes/data_management/views/__init__.py` and `allbikes/data_management/views/user_profile_view.py` containing the `UserProfileView` (for `/api/data/me/`).
     -   Created `allbikes/data_management/urls.py` to expose the `UserProfileView` at `me/`.
 -   **Fixing `403 Forbidden` Error:**
-    -   Addressed a `403 Forbidden` error on `/api/data-management/me/` (`"Authentication credentials were not provided."`).
+    -   Addressed a `403 Forbidden` error on `/api/data/me/` (`"Authentication credentials were not provided."`).
     -   Configured `allbikes/allbikes/settings.py` by adding `rest_framework` and `rest_framework_simplejwt` to `INSTALLED_APPS`.
     -   Defined `REST_FRAMEWORK` settings with `DEFAULT_AUTHENTICATION_CLASSES` (including `JWTAuthentication`) and `DEFAULT_PERMISSION_CLASSES` to enable JWT processing.
 

@@ -6,7 +6,7 @@ from ..serializers.user_profile_serializer import UserProfileSerializer
 class UserProfileView(APIView):
     """
     API view for retrieving the authenticated user's profile.
-    Accessed via `/api/data-management/me/`.
+    Accessed via `/api/data/me/`.
     """
     permission_classes = [IsAuthenticated]
 

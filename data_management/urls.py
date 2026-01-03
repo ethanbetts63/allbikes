@@ -1,16 +1,18 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .views.user_profile_view import UserProfileView
 from .views.site_settings_view import SiteSettingsViewSet
 
 app_name = 'data_management'
 
-# Create a router and register our viewsets with it.
-router = DefaultRouter()
-router.register(r'settings', SiteSettingsViewSet, basename='settings')
+# Manually define the view for the singleton SiteSettings endpoint.
+# .as_view() maps HTTP methods to the ViewSet's actions.
+settings_view = SiteSettingsViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update'
+})
 
-# The API URLs are now determined automatically by the router.
 urlpatterns = [
     path('me/', UserProfileView.as_view(), name='user-profile'),
-    path('', include(router.urls)),
+    path('settings/', settings_view, name='site-settings'),
 ]
