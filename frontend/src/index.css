@@ -47,7 +47,7 @@
 :root {
   --radius: 0.625rem;
   --background: hsl(217.5, 44.44%, 10.59%);
-  --foreground: hsl(217.5, 44.44%, 18.59%);
+  --foreground: hsl(217.5, 44.44%, 16.59%);
   --text-primary: hsl(0 0% 95%);
   --text-secondary: hsl(0 0% 90%);
   --card: oklch(1 0 0);

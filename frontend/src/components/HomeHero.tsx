@@ -95,8 +95,8 @@ const HomeHero: React.FC = () => {
     return (
       <Link
         to={linkPath}
-        className={`relative flex-1 flex items-center justify-center p-4 text-white text-3xl font-bold transition-all duration-1000 ease-in-out group ${bgColorClass}`}
-        style={{
+        className={`relative flex-1 flex items-center justify-center p-4 text-white text-3xl font-bold transition-all duration-1000 ease-in-out group ${bgColorClass} min-h-[200px]`}
+        style={{ // Added a minimum height for smaller screens
           backgroundImage: `url(${currentImageUrl})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -121,7 +121,7 @@ const HomeHero: React.FC = () => {
       </div>
 
       {/* Right Column */}
-      <div className="md:w-1/2 flex flex-col items-center justify-center p-12 text-center bg-foreground">
+      <div className="md:w-1/2 flex flex-col items-center justify-center p-12 text-center bg-background">
         <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-8">
           Perth Motorcycle/Scooter Mechanic & Dealership
         </h1>

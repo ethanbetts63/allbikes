@@ -55,7 +55,7 @@ const generateColorForInitial = (name: string) => {
 
 const ReviewCarousel = () => {
   return (
-    <div className="w-full py-12 bg-background">
+    <div className="w-full py-12 bg-foreground">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold tracking-tight text-center mb-8 text-[var(--text-primary)]">What Our Customers Say</h2>
         <div className="flex overflow-x-auto space-x-6 pb-4">
@@ -69,7 +69,7 @@ const ReviewCarousel = () => {
             const backgroundColor = generateColorForInitial(review.author_name);
 
             return (
-                <Card key={review.pk} className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg transform transition-transform hover:-translate-y-1 pt-6 px-6 pb-6"> {/* Adjusted padding */}
+                <Card key={review.pk} className="flex-shrink-0 w-80 bg-white rounded-xl transform transition-transform hover:-translate-y-1 pt-6 px-6 pb-6"> {/* Adjusted padding */}
                     <CardFooter className="flex flex-col items-start p-0">
                         <div className="flex items-center mb-2">
                             <div 
