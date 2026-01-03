@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
-import BikeCard, { Bike } from '@/components/BikeCard';
+import BikeCard from '@/components/BikeCard';
+import type { Bike } from '@/components/BikeCard'; // Explicit type import
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';
 }
 
-// --- Mock Data ---
+// --- Mock Data (Updated Structure) ---
 // In the future, this will come from an API call
 const allBikes: Bike[] = [
-  { id: 1, name: 'Vespa Primavera 150', price: 7340, condition: 'new', imageUrl: '/src/assets/motorcycle_images/primavera-150-racing-sixties-2_2_1_1_2.jpg' },
-  { id: 2, name: 'Vespa Sprint 150', price: 7640, condition: 'new', imageUrl: '/src/assets/motorcycle_images/sprint-150-2021.jpg' },
-  { id: 3, name: '2020 Royal Enfield Interceptor 650', price: 8500, condition: 'used', imageUrl: '/src/assets/motorcycle_images/interceptor-650-glitter-and-dust.jpg' },
-  { id: 4, name: '2021 Suzuki DR-Z400SM', price: 9800, condition: 'used', imageUrl: '/src/assets/motorcycle_images/dr-z400sm-2021.jpg' },
-  { id: 5, name: 'Piaggio MP3 500 Sport', price: 15490, condition: 'new', imageUrl: '/src/assets/motorcycle_images/piaggio-mp3-500-sport-advanced.jpg' },
-  { id: 6, name: '2019 Harley-Davidson Street 500', price: 10500, condition: 'used', imageUrl: '/src/assets/motorcycle_images/harley-davidson-street-500.jpg' },
+  { id: 1, make: 'Vespa', model: 'Primavera 150', year: 2024, price: 7340, condition: 'new', imageUrl: '/src/assets/motorcycle_images/primavera-150-racing-sixties-2_2_1_1_2.jpg', odometer: 0, engine_size: 150 },
+  { id: 2, make: 'Vespa', model: 'Sprint 150', year: 2024, price: 7640, condition: 'new', imageUrl: '/src/assets/motorcycle_images/sprint-150-2021.jpg', odometer: 0, engine_size: 150 },
+  { id: 3, make: 'Royal Enfield', model: 'Interceptor 650', year: 2020, price: 8500, condition: 'used', imageUrl: '/src/assets/motorcycle_images/interceptor-650-glitter-and-dust.jpg', odometer: 5400, engine_size: 650 },
+  { id: 4, make: 'Suzuki', model: 'DR-Z400SM', year: 2021, price: 9800, condition: 'used', imageUrl: '/src/assets/motorcycle_images/dr-z400sm-2021.jpg', odometer: 2100, engine_size: 400 },
+  { id: 5, make: 'Piaggio', model: 'MP3 500 Sport', year: 2023, price: 15490, condition: 'demo', imageUrl: '/src/assets/motorcycle_images/piaggio-mp3-500-sport-advanced.jpg', odometer: 150, engine_size: 500 },
+  { id: 6, make: 'Harley-Davidson', model: 'Street 500', year: 2019, price: 10500, condition: 'used', imageUrl: '/src/assets/motorcycle_images/harley-davidson-street-500.jpg', odometer: 8900, engine_size: 500 },
 ];
 // --- End Mock Data ---
 
@@ -25,10 +26,16 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
 
   useEffect(() => {
     // This simulates fetching data from an API.
-    // We replace this with a real `fetch` call later.
     console.log(`Fetching ${bikeCondition} bikes...`);
     setIsLoading(true);
-    const filteredBikes = allBikes.filter(bike => bike.condition === bikeCondition);
+    
+    let filteredBikes: Bike[];
+    if (bikeCondition === 'used') {
+      // "Used" page should show both 'used' and 'demo' bikes
+      filteredBikes = allBikes.filter(bike => bike.condition === 'used' || bike.condition === 'demo');
+    } else {
+      filteredBikes = allBikes.filter(bike => bike.condition === bikeCondition);
+    }
     
     // Simulate network delay
     setTimeout(() => {
