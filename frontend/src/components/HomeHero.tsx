@@ -4,59 +4,91 @@ import { getBikes } from '@/api';
 import type { Bike } from '@/types';
 
 const HomeHero: React.FC = () => {
-  const [newBikeImageUrl, setNewBikeImageUrl] = useState<string | null>(null);
-  const [usedBikeImageUrl, setUsedBikeImageUrl] = useState<string | null>(null);
+  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([]);
+  const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([]);
+  const [currentNewBikeImageIndex, setCurrentNewBikeImageIndex] = useState(0);
+  const [currentUsedBikeImageIndex, setCurrentUsedBikeImageIndex] = useState(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const defaultPlaceholderImage = '/src/assets/motorcycle_images/placeholder.png';
 
   useEffect(() => {
     const fetchFeaturedBikeImages = async () => {
       try {
         // Fetch featured new bikes
-        const newBikesResponse = await getBikes('new', 1, true);
-        if (newBikesResponse.results.length > 0) {
-          const firstNewBike = newBikesResponse.results[0];
-          const sortedImages = [...firstNewBike.images].sort((a, b) => a.order - b.order);
-          setNewBikeImageUrl(sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png');
-        }
+        const newBikesResponse = await getBikes('new', 1, true); // Assuming first page is enough for cycling
+        const newUrls: string[] = newBikesResponse.results
+          .filter(bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable')
+          .map(bike => {
+            const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
+            return sortedImages[0]?.image || defaultPlaceholderImage;
+          });
+        setNewBikeImageUrls(newUrls.length > 0 ? newUrls : [defaultPlaceholderImage]);
 
         // Fetch featured used bikes
-        const usedBikesResponse = await getBikes('used', 1, true);
-        if (usedBikesResponse.results.length > 0) {
-          const firstUsedBike = usedBikesResponse.results[0];
-          const sortedImages = [...firstUsedBike.images].sort((a, b) => a.order - b.order);
-          setUsedBikeImageUrl(sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png');
-        }
+        const usedBikesResponse = await getBikes('used', 1, true); // Assuming first page is enough for cycling
+        const usedUrls: string[] = usedBikesResponse.results
+          .filter(bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable')
+          .map(bike => {
+            const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
+            return sortedImages[0]?.image || defaultPlaceholderImage;
+          });
+        setUsedBikeImageUrls(usedUrls.length > 0 ? usedUrls : [defaultPlaceholderImage]);
+
       } catch (err) {
-        console.error("Failed to fetch featured bike images:", err);
-        setError("Failed to load featured bike images.");
+        console.error("Failed to fetch featured bike images for cycling:", err);
+        setError("Failed to load featured bike images for cycling.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchFeaturedBikeImages();
-  }, []);
+  }, []); // Empty dependency array means this runs once on mount
 
-  const renderBikeLink = (condition: 'new' | 'used', imageUrl: string | null) => {
-    const linkPath = condition === 'new' ? '/new-bikes' : '/used-bikes';
+  // Image cycling effect for New Bikes
+  useEffect(() => {
+    if (newBikeImageUrls.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentNewBikeImageIndex(prevIndex => (prevIndex + 1) % newBikeImageUrls.length);
+      }, 5000); // Change image every 5 seconds
+      return () => clearInterval(interval); // Clear interval on component unmount
+    }
+  }, [newBikeImageUrls]);
+
+  // Image cycling effect for Used Bikes
+  useEffect(() => {
+    if (usedBikeImageUrls.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentUsedBikeImageIndex(prevIndex => (prevIndex + 1) % usedBikeImageUrls.length);
+      }, 5000); // Change image every 5 seconds
+      return () => clearInterval(interval); // Clear interval on component unmount
+    }
+  }, [usedBikeImageUrls]);
+
+
+  const renderBikeLink = (condition: 'new' | 'used') => {
+    const linkPath = condition === 'new' ? '/bikes/new' : '/bikes/used';
     const text = condition === 'new' ? 'New Bikes' : 'Used Bikes';
     const bgColorClass = condition === 'new' ? 'bg-green-600' : 'bg-blue-600'; // Fallback color
+
+    const currentImageUrl = condition === 'new'
+      ? newBikeImageUrls[currentNewBikeImageIndex]
+      : usedBikeImageUrls[currentUsedBikeImageIndex];
 
     return (
       <Link
         to={linkPath}
-        className={`relative flex-1 flex items-center justify-center p-4 text-white text-3xl font-bold transition-colors duration-300 group ${bgColorClass}`}
+        className={`relative flex-1 flex items-center justify-center p-4 text-white text-3xl font-bold transition-all duration-1000 ease-in-out group ${bgColorClass}`}
         style={{
-          backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+          backgroundImage: `url(${currentImageUrl})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        {imageUrl && (
-          <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-20 transition-opacity duration-300"></div>
-        )}
-        <span className="relative z-10">{text}</span>
+        <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-20 transition-opacity duration-300"></div>
+        <span className="relative z-10 text-shadow-lg">{text}</span>
       </Link>
     );
   };
@@ -87,8 +119,8 @@ const HomeHero: React.FC = () => {
         )}
         {!loading && !error && (
             <>
-                {renderBikeLink('used', usedBikeImageUrl)}
-                {renderBikeLink('new', newBikeImageUrl)}
+                {renderBikeLink('new')}
+                {renderBikeLink('used')}
             </>
         )}
       </div>
