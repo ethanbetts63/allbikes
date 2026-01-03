@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { authedFetch } from '../../apiClient';
-import { SiteSettings } from '../../types';
+import { authedFetch } from '@/apiClient';
+import type { SiteSettings } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,7 +17,8 @@ const SiteSettingsPage = () => {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const data = await authedFetch('/api/data/settings/');
+                const response = await authedFetch('/api/data/settings/');
+                const data = await response.json();
                 setSettings(data);
             } catch (err) {
                 setError('Failed to fetch site settings.');
@@ -60,7 +61,8 @@ const SiteSettingsPage = () => {
                 method: 'PUT',
                 body: JSON.stringify(settings),
             });
-            setSettings(response);
+            const data = await response.json();
+            setSettings(data);
             setSuccessMessage('Settings saved successfully!');
             setTimeout(() => setSuccessMessage(null), 3000);
         } catch (err) {
