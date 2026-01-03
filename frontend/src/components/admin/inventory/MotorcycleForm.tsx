@@ -9,32 +9,25 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from "@/components/ui/checkbox"
 import { Switch } from "@/components/ui/switch"
 import type { Bike } from '@/types';
-import type { Condition } from '@/api';
 
 // This will be the shape of our form data
 export type MotorcycleFormData = Omit<Bike, 'id' | 'images'> & {
-    conditions: number[]; // We will submit an array of condition IDs
     images: FileList | null;
 };
 
 interface MotorcycleFormProps {
     initialData?: Bike;
-    conditions: Condition[];
     onSubmit: (data: MotorcycleFormData) => void;
     isLoading?: boolean;
 }
 
-const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, conditions, onSubmit, isLoading }) => {
+const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, isLoading }) => {
     const [imagePreviews, setImagePreviews] = React.useState<string[]>(initialData?.images.map(img => img.image) || []);
 
-    const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<MotorcycleFormData>({
-        defaultValues: {
-            ...initialData,
-            conditions: initialData?.conditions.map(c => conditions.find(cond => cond.name === c)?.id).filter(Boolean) as number[] || [],
-        } as any,
+    const { register, handleSubmit, control, watch, formState: { errors } } = useForm<MotorcycleFormData>({
+        defaultValues: initialData || {},
     });
 
     const watchImages = watch("images");
@@ -67,8 +60,8 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, conditions
                         <div className="space-y-2"><Label htmlFor="stock_number">Stock Number</Label><Input id="stock_number" {...register('stock_number')} /></div>
                     </div>
 
-                    {/* Status and Featured Switch */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    {/* Status, Condition, and Featured Switch */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                         <div className="space-y-2">
                             <Label>Status</Label>
                             <Controller name="status" control={control} render={({ field }) => (
@@ -83,42 +76,24 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, conditions
                                 </Select>
                             )} />
                         </div>
+                        <div className="space-y-2">
+                            <Label>Condition</Label>
+                            <Controller name="condition" control={control} render={({ field }) => (
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="new">New</SelectItem>
+                                        <SelectItem value="used">Used</SelectItem>
+                                        <SelectItem value="demo">Demo</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            )} />
+                        </div>
                         <div className="flex items-center space-x-2 pt-6">
                              <Controller name="is_featured" control={control} render={({ field }) => (
                                 <Switch id="is_featured" checked={field.value} onCheckedChange={field.onChange} />
                              )} />
                             <Label htmlFor="is_featured">Featured Motorcycle?</Label>
-                        </div>
-                    </div>
-
-                    {/* Conditions */}
-                    <div className="space-y-2">
-                        <Label>Conditions</Label>
-                        <div className="flex flex-wrap gap-4">
-                            {conditions.map(condition => (
-                                <Controller
-                                    key={condition.id}
-                                    name="conditions"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <div className="flex items-center space-x-2">
-                                            <Checkbox
-                                                id={`condition-${condition.id}`}
-                                                checked={field.value?.includes(condition.id)}
-                                                onCheckedChange={(checked) => {
-                                                    const currentValues = field.value || [];
-                                                    if (checked) {
-                                                        field.onChange([...currentValues, condition.id]);
-                                                    } else {
-                                                        field.onChange(currentValues.filter(id => id !== condition.id));
-                                                    }
-                                                }}
-                                            />
-                                            <Label htmlFor={`condition-${condition.id}`}>{condition.display_name}</Label>
-                                        </div>
-                                    )}
-                                />
-                            ))}
                         </div>
                     </div>
 

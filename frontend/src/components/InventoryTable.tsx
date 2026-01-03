@@ -26,7 +26,7 @@ import { getBikes } from "@/api" // Assuming getBikes is in src/api
 // Column Definitions
 export const columns: ColumnDef<Bike>[] = [
   {
-    accessorKey: "conditions",
+    accessorKey: "condition",
     header: ({ column }) => {
       return (
         <Button
@@ -37,10 +37,6 @@ export const columns: ColumnDef<Bike>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    },
-    cell: ({ row }) => {
-        const conditions = row.original.conditions;
-        return <div>{conditions.join(", ")}</div>;
     },
   },
   {
@@ -114,7 +110,7 @@ const InventoryTable = () => {
     if (!conditionFilter) {
         return data;
     }
-    return data.filter(bike => bike.conditions.includes(conditionFilter));
+    return data.filter(bike => bike.condition === conditionFilter);
   }, [data, conditionFilter]);
 
   const table = useReactTable({
