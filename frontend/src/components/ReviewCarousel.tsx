@@ -46,9 +46,9 @@ const reviewData = [
 
 const ReviewCarousel = () => {
   return (
-    <div className="w-full py-12 bg-gray-100 dark:bg-gray-800">
+    <div className="w-full py-12 bg-foreground">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold tracking-tight text-center mb-8">What Our Customers Say</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-center mb-8 text-[var(--text-primary)]">What Our Customers Say</h2>
         <div className="flex overflow-x-auto space-x-6 pb-4">
           {reviewData.map((review) => {
             const charLimit = 200;

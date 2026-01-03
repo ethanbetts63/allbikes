@@ -42,29 +42,28 @@ const NavBar = () => {
         <nav className="flex-1 flex justify-center gap-4 px-4">
           <ul className="flex space-x-4">
             <li>
-              <Link
-                to="/bikes/new"
-                className="hover:text-gray-300"
-              >
-                New Bikes
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/bikes/used"
-                className="hover:text-gray-300"
-              >
-                Used Bikes
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/workshop"
-                className="hover:text-gray-300"
-              >
-                Workshop
-              </Link>
-            </li>
+                              <Link
+                                to="/bikes/new"
+                                className="text-[var(--text-primary)]"
+                              >
+                                New Bikes
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to="/bikes/used"
+                                className="text-[var(--text-primary)]"
+                              >
+                                Used Bikes
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                to="/workshop"
+                                className="text-[var(--text-primary)]"
+                              >
+                                Workshop
+                              </Link>            </li>
           </ul>
         </nav>
 
