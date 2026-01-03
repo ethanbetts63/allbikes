@@ -2,7 +2,7 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAdminUser
 from inventory.models import MotorcycleCondition
-from ..serializers import MotorcycleConditionSerializer
+from ..serializers.condition_serializer import MotorcycleConditionSerializer
 
 class MotorcycleConditionListView(ListAPIView):
     """

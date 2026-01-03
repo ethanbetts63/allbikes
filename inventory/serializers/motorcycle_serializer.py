@@ -15,7 +15,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'year',
             'price',
             'condition',
-            'conditions', # Now included
+            'conditions', 
             'status',
             'odometer',
             'engine_size',
@@ -25,5 +25,5 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'rego_exp',
             'stock_number',
             'warranty_months',
-            'images', # Nested images
+            'images', 
         ]

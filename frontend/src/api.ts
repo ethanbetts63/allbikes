@@ -76,3 +76,18 @@ export async function getBikeById(id: string): Promise<Bike> {
     });
     return handleResponse(response);
 }
+
+// --- Data Management Endpoints ---
+
+export type Condition = {
+    id: number;
+    name: string;
+    display_name: string;
+}
+
+export async function getConditions(): Promise<Condition[]> {
+    const response = await authedFetch('/api/data-management/conditions/', {
+        method: 'GET',
+    });
+    return handleResponse(response);
+}
