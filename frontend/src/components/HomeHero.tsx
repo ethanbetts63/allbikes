@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getBikes } from '@/api';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 const HomeHero: React.FC = () => {
   const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([]);
@@ -51,7 +53,7 @@ const HomeHero: React.FC = () => {
     if (newBikeImageUrls.length > 1) {
       const interval = setInterval(() => {
         setCurrentNewBikeImageIndex(prevIndex => (prevIndex + 1) % newBikeImageUrls.length);
-      }, 5000); // Change image every 5 seconds
+      }, 8000); // Change image every 8 seconds
       return () => clearInterval(interval); // Clear interval on component unmount
     }
   }, [newBikeImageUrls]);
@@ -87,7 +89,7 @@ const HomeHero: React.FC = () => {
         }}
       >
         <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-20 transition-opacity duration-300"></div>
-        <span className="relative z-10 text-shadow-lg">{text}</span>
+        <span className="relative z-10 text-shadow-lg text-4xl text-bold">{text}</span>
       </Link>
     );
   };
@@ -129,12 +131,18 @@ const HomeHero: React.FC = () => {
         <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-8">
           Perth Motorcycle/Scooter Mechanic & Dealership
         </h1>
-        <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose">
+        <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-12">
           Operating in Perth for over 30 years, we are a motorcycle and scooter mechanic and dealership offering new and used sales across petrol and electric models. We provide motorcycle and scooter servicing, including tyre changes, maintenance, and general repairs. 
         </p>
+        <Link to="/workshop">
+          <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
+            Book a Service <ArrowRight className="h-5" />
+          </Button>
+        </Link>
       </div>
     </div>
   );
 };
+
 
 export default HomeHero;
