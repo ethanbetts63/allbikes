@@ -21,8 +21,14 @@ const BikeDetailPage: React.FC = () => {
                 setIsLoading(true);
                 setError(null);
                 const data = await getBikeById(id);
+                
+                // Sort images by order before setting state
+                const sortedImages = [...data.images].sort((a, b) => a.order - b.order);
+                data.images = sortedImages; //
+                
                 setBike(data);
-                // Set the initial selected image
+
+                // Set the initial selected image from the sorted list
                 if (data.images && data.images.length > 0) {
                     setSelectedImage(data.images[0].image);
                 } else {
@@ -38,6 +44,13 @@ const BikeDetailPage: React.FC = () => {
 
         fetchBike();
     }, [id]);
+
+    // Memoize the sorted image list for rendering
+    const sortedImages = React.useMemo(() => {
+        if (!bike?.images) return [];
+        // The list is already sorted in useEffect, but this ensures it
+        return [...bike.images].sort((a, b) => a.order - b.order);
+    }, [bike]);
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
 
@@ -86,8 +99,8 @@ const BikeDetailPage: React.FC = () => {
                             <img src={selectedImage} alt={cardTitle} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex space-x-2">
-                            {bike.images.length > 1 ? (
-                                bike.images.map((img, index) => (
+                            {sortedImages.length > 1 ? (
+                                sortedImages.map((img, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(img.image)}
