@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getBikes } from '@/api';
-import type { Bike } from '@/types';
 
 const HomeHero: React.FC = () => {
   const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([]);
