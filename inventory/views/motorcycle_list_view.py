@@ -1,5 +1,6 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny # Import AllowAny
 from ..models import Motorcycle
 from ..serializers import MotorcycleSerializer
 
@@ -16,6 +17,7 @@ class MotorcycleListView(ListAPIView):
     """
     serializer_class = MotorcycleSerializer
     pagination_class = StandardResultsSetPagination
+    permission_classes = [AllowAny] # Make this endpoint public
 
     def get_queryset(self):
         """
