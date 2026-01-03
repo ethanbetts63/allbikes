@@ -24,10 +24,9 @@ const NavBar = () => {
 
   return (
     <header className={cn(
-      "sticky top-0 z-50 w-full transition-all duration-300",
-      scrolled ? "border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-transparent"
+      "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300"
     )}>
-      <div className="container flex h-20 items-center justify-between px-4">
+      <div className="container flex h-20 items-center justify-between">
         {/* Left Section: Logo */}
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
@@ -40,7 +39,7 @@ const NavBar = () => {
         </div>
 
         {/* Center Section: Navigation Links */}
-        <nav className="flex-1 flex justify-center gap-4">
+        <nav className="flex-1 flex justify-center gap-4 px-4">
           <ul className="flex space-x-4">
             <li>
               <Link
@@ -70,7 +69,7 @@ const NavBar = () => {
         </nav>
 
         {/* Right Section: Empty for now, can add auth buttons later */}
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-2 px-4">
         </div>
       </div>
     </header>
