@@ -60,7 +60,11 @@ export async function authedFetch(url: string, options: RequestInit = {}): Promi
     let accessToken = localStorage.getItem('accessToken');
 
     options.headers = options.headers || {};
-    (options.headers as Record<string, string>)['Content-Type'] = 'application/json';
+    // Only set Content-Type if it's not a FormData request
+    if (!(options.body instanceof FormData)) {
+      (options.headers as Record<string, string>)['Content-Type'] = 'application/json';
+    }
+    
     if (accessToken) {
         (options.headers as Record<string, string>)['Authorization'] = `Bearer ${accessToken}`;
     }
