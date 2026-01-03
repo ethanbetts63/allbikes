@@ -11,7 +11,18 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
     """
     queryset = Motorcycle.objects.all().order_by('-date_posted')
     serializer_class = MotorcycleSerializer
-    
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned motorcycles to a given condition,
+        by filtering against a `condition` query parameter in the URL.
+        """
+        queryset = Motorcycle.objects.all().order_by('-date_posted')
+        condition = self.request.query_params.get('condition')
+        if condition in ['new', 'used']:
+            queryset = queryset.filter(condition=condition)
+        return queryset
+
     def get_permissions(self):
         """
         Instantiates and returns the list of permissions that this view requires.

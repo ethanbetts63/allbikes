@@ -24,10 +24,10 @@ export type Bike = {
   make: string;
   model: string;
   year: number;
-  price: number;
+  price: string;
   condition: 'new' | 'used' | 'demo';
   status: string;
-  is_featured: boolean;
+  is_featured?: boolean;
   odometer: number;
   engine_size: number;
   description: string;

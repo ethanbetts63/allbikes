@@ -31,7 +31,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
       <CardContent className="p-4 flex-grow">
         <CardTitle className="text-lg font-bold mb-2">{cardTitle}</CardTitle>
         <p className="text-xl font-semibold text-gray-800 mb-4">
-          ${bike.price.toLocaleString()}
+          ${parseFloat(bike.price).toLocaleString()}
         </p>
         <div className="text-sm text-gray-600">
           <h3 className="font-semibold mb-1">Specifications:</h3>
