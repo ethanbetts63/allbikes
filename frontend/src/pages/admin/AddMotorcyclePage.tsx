@@ -3,7 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from "sonner"
 import MotorcycleForm from "@/components/admin/inventory/MotorcycleForm";
 import type { MotorcycleFormData } from "@/components/admin/inventory/MotorcycleForm";
-import { createMotorcycle, uploadMotorcycleImage, getBikeById, updateMotorcycle } from "@/api";
+import { 
+    createMotorcycle, 
+    uploadMotorcycleImage, 
+    getBikeById, 
+    updateMotorcycle,
+    manageMotorcycleImages
+} from "@/api";
 import type { Bike } from '@/types';
 
 const AddMotorcyclePage = () => {
@@ -36,7 +42,7 @@ const AddMotorcyclePage = () => {
         setError(null);
 
         try {
-            const { images, ...motorcycleData } = data;
+            const { managedImages, ...motorcycleData } = data;
             let savedMotorcycle;
 
             if (id) {
@@ -53,18 +59,29 @@ const AddMotorcyclePage = () => {
                 });
             }
 
-            // Image upload logic (for both create and update)
-            if (images && images.length > 0) {
-                toast.info("Uploading Images...", {
-                    description: `Uploading ${images.length} images. Please wait.`,
+            // --- New Image Management Logic ---
+            const hasImageChanges = managedImages && managedImages.length > 0;
+
+            if (hasImageChanges) {
+                toast.info("Processing Images...", {
+                    description: `Updating image order and uploading new images. Please wait.`,
                 });
-                const uploadPromises = Array.from(images).map(imageFile =>
-                    uploadMotorcycleImage(savedMotorcycle.id, imageFile)
-                );
-                await Promise.allSettled(uploadPromises);
-                toast.success("Image Upload Complete", {
-                    description: "All images have been processed.",
+                
+                const uploadPromises = managedImages
+                    .filter(img => img.file !== null) // Filter for new uploads
+                    .map(img => uploadMotorcycleImage(savedMotorcycle.id, img.file!, img.order));
+
+                const managementPromise = manageMotorcycleImages(savedMotorcycle.id, managedImages);
+                
+                await Promise.allSettled([managementPromise, ...uploadPromises]);
+
+                toast.success("Image Processing Complete", {
+                    description: "All image changes have been saved.",
                 });
+            } else if (id) {
+                // If we are editing and there are no images left, we must tell the backend to delete all of them.
+                await manageMotorcycleImages(savedMotorcycle.id, []);
+                toast.success("All images removed");
             }
 
             navigate('/admin/inventory');

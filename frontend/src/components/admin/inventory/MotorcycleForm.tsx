@@ -1,8 +1,7 @@
-// src/components/admin/inventory/MotorcycleForm.tsx
 "use client"
 
 import * as React from 'react';
-import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
+import { useForm, Controller, type SubmitHandler, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,10 +10,21 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from "@/components/ui/switch"
 import type { Bike } from '@/types';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+
+// Represents a unified image object for the form's state
+export type ManagedImage = {
+    id: string; // A unique ID for react-hook-form's useFieldArray (can be db id or new uuid)
+    source_id: number | null; // The database ID if it's an existing image
+    file: File | null; // The File object if it's a new upload
+    previewUrl: string; // The URL for rendering the preview (remote URL or blob URL)
+    order: number;
+}
 
 // This will be the shape of our form data
 export type MotorcycleFormData = Omit<Bike, 'id' | 'images'> & {
-    images: FileList | null;
+    managedImages: ManagedImage[];
 };
 
 interface MotorcycleFormProps {
@@ -24,29 +34,54 @@ interface MotorcycleFormProps {
 }
 
 const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, isLoading }) => {
-    // Separate initial images for preview from form data
-    const [imagePreviews, setImagePreviews] = React.useState<string[]>(initialData?.images.map(img => img.image) || []);
-
+    
     const { register, handleSubmit, control, watch, formState: { errors } } = useForm<MotorcycleFormData>({
-        // Handle defaultValues carefully to avoid type conflicts with the 'images' field
-        defaultValues: initialData ? {
+        defaultValues: {
             ...initialData,
-            images: null, // The form's 'images' field is for new uploads, so it starts as null
-        } : {},
+            managedImages: initialData?.images
+                .sort((a, b) => a.order - b.order)
+                .map(img => ({
+                    id: String(img.id),
+                    source_id: img.id,
+                    file: null,
+                    previewUrl: img.image,
+                    order: img.order,
+                })) || [],
+        },
     });
 
-    const watchImages = watch("images");
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "managedImages"
+    });
 
-    React.useEffect(() => {
-        if (watchImages && watchImages.length > 0) {
-            const newPreviews = Array.from(watchImages).map(file => URL.createObjectURL(file));
-            setImagePreviews(newPreviews);
-
-            return () => {
-                newPreviews.forEach(url => URL.revokeObjectURL(url));
-            };
+    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files) {
+            Array.from(files).forEach((file, index) => {
+                const newImage: ManagedImage = {
+                    id: self.crypto.randomUUID(),
+                    source_id: null,
+                    file: file,
+                    previewUrl: URL.createObjectURL(file),
+                    // Assign a temporary order, can be adjusted by user
+                    order: fields.length + index + 1,
+                };
+                append(newImage);
+            });
         }
-    }, [watchImages]);
+    };
+    
+    // Cleanup blob URLs on unmount
+    React.useEffect(() => {
+        return () => {
+            fields.forEach(field => {
+                if (field.file) {
+                    URL.revokeObjectURL(field.previewUrl);
+                }
+            });
+        };
+    }, [fields]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -108,14 +143,55 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
                         <Textarea id="description" {...register('description')} />
                     </div>
 
+
                     {/* Image Upload */}
                     <div className="space-y-2">
-                        <Label htmlFor="images">Images</Label>
-                        <Input id="images" type="file" multiple {...register('images')} />
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                            {imagePreviews.map((src, index) => (
-                                <img key={index} src={src} alt={`Preview ${index + 1}`} className="w-full h-auto object-cover rounded-md" />
-                            ))}
+                        <Label htmlFor="images">Add Images</Label>
+                        {/* This input is now only for adding new images */}
+                        <Input id="images" type="file" multiple onChange={handleFileSelect} />
+                        
+                        <div className="rounded-md border mt-4">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[100px]">Order</TableHead>
+                                        <TableHead>Preview</TableHead>
+                                        <TableHead>File Name</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {fields.map((field, index) => (
+                                        <TableRow key={field.id}>
+                                            <TableCell>
+                                                <Input
+                                                    type="number"
+                                                    {...register(`managedImages.${index}.order`, { valueAsNumber: true })}
+                                                    className="w-20"
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <img src={field.previewUrl} alt={`Preview ${index + 1}`} className="w-20 h-auto object-cover rounded-md" />
+                                            </TableCell>
+                                            <TableCell>
+                                                {field.file?.name || field.previewUrl.split('/').pop()}
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
+                                                    Remove
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                    {fields.length === 0 && (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="h-24 text-center">
+                                                No images added.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
                         </div>
                     </div>
 

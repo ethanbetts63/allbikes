@@ -1,7 +1,7 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
 import type { AuthResponse, UserProfile, Bike } from "@/types";
-import type { MotorcycleFormData } from "@/components/admin/inventory/MotorcycleForm";
+import type { MotorcycleFormData, ManagedImage } from "@/components/admin/inventory/MotorcycleForm";
 
 /**
  * A centralized module for all API interactions.
@@ -78,7 +78,7 @@ export async function getBikeById(id: string): Promise<Bike> {
     return handleResponse(response);
 }
 
-export async function createMotorcycle(data: Omit<MotorcycleFormData, 'images'>): Promise<Bike> {
+export async function createMotorcycle(data: Omit<MotorcycleFormData, 'managedImages'>): Promise<Bike> {
     const response = await authedFetch('/api/inventory/bikes/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -87,7 +87,7 @@ export async function createMotorcycle(data: Omit<MotorcycleFormData, 'images'>)
     return handleResponse(response);
 }
 
-export async function updateMotorcycle(id: number, data: Omit<MotorcycleFormData, 'images'>): Promise<Bike> {
+export async function updateMotorcycle(id: number, data: Omit<MotorcycleFormData, 'managedImages'>): Promise<Bike> {
     const response = await authedFetch(`/api/inventory/bikes/${id}/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -103,15 +103,28 @@ export async function deleteMotorcycle(id: number): Promise<void> {
     return handleResponse(response);
 }
 
-export async function uploadMotorcycleImage(motorcycleId: number, imageFile: File): Promise<any> {
+export async function uploadMotorcycleImage(motorcycleId: number, imageFile: File, order: number): Promise<any> {
     const formData = new FormData();
     formData.append('image', imageFile);
+    formData.append('order', String(order));
 
-    // Note: When using FormData, we should not set the 'Content-Type' header.
-    // The browser will automatically set it to 'multipart/form-data' with the correct boundary.
     const response = await authedFetch(`/api/inventory/bikes/${motorcycleId}/images/`, {
         method: 'POST',
         body: formData,
+    });
+    return handleResponse(response);
+}
+
+export async function manageMotorcycleImages(motorcycleId: number, images: Pick<ManagedImage, 'source_id' | 'order'>[]): Promise<any> {
+    // We only need to send the database ID and the new order for existing images
+    const payload = images
+        .filter(img => img.source_id !== null)
+        .map(img => ({ id: img.source_id, order: img.order }));
+
+    const response = await authedFetch(`/api/inventory/bikes/${motorcycleId}/manage_images/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: payload }),
     });
     return handleResponse(response);
 }
