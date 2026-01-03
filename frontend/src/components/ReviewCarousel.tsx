@@ -56,7 +56,7 @@ const generateColorForInitial = (name: string) => {
 
 const ReviewCarousel = () => {
   return (
-    <div className="w-full py-12 bg-foreground">
+    <div className="w-full py-12 bg-background">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold tracking-tight text-center mb-8 text-[var(--text-primary)]">What Our Customers Say</h2>
         <div className="flex overflow-x-auto space-x-6 pb-4">
@@ -70,11 +70,8 @@ const ReviewCarousel = () => {
             const backgroundColor = generateColorForInitial(review.author_name);
 
             return (
-                <Card key={review.pk} className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg transform transition-transform hover:-translate-y-1">
-                    <CardHeader>
-                        <p className="text-gray-700 leading-relaxed">"{truncatedText}"</p>
-                    </CardHeader>
-                    <CardFooter className="flex flex-col items-start pt-0 px-6 pb-6"> {/* Adjusted padding */}
+                <Card key={review.pk} className="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg transform transition-transform hover:-translate-y-1 pt-6 px-6 pb-6"> {/* Adjusted padding */}
+                    <CardFooter className="flex flex-col items-start p-0">
                         <div className="flex items-center mb-2">
                             <div 
                                 className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-white font-bold text-lg"
@@ -84,14 +81,16 @@ const ReviewCarousel = () => {
                             </div>
                             <p className="font-semibold text-gray-900">{review.author_name}</p>
                         </div>
-                        <div className="flex">
+                        <div className="flex mb-4">
                             {[...Array(5)].map((_, i) => (
                                 <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                             ))}
                         </div>
+                        <p className="text-gray-700 leading-relaxed">"{truncatedText}"</p>
                     </CardFooter>
                 </Card>
             );
+
           })}
         </div>
       </div>
