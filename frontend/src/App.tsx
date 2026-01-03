@@ -46,6 +46,7 @@ function App() {
                 <Route path="dashboard" element={<AdminHomePage />} />
                 <Route path="inventory" element={<InventoryManagementPage />} />
                 <Route path="add-motorcycle" element={<AddMotorcyclePage />} />
+                <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />
                 <Route path="settings" element={<SiteSettingsPage />} />
               </Route>
 
