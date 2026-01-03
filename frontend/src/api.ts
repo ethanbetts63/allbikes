@@ -13,6 +13,7 @@ export interface PaginatedResponse<T> {
     next: string | null;
     previous: string | null;
     results: T[];
+    page_size: number;
 }
 
 
@@ -60,10 +61,17 @@ export async function getUserProfile(): Promise<UserProfile> {
 
 // --- Inventory Endpoints ---
 
-export async function getBikes(condition?: 'new' | 'used', page: number = 1): Promise<PaginatedResponse<Bike>> {
+export async function getBikes(
+    condition?: 'new' | 'used', 
+    page: number = 1,
+    pageSize?: number
+): Promise<PaginatedResponse<Bike>> {
     let url = `/api/inventory/bikes/?page=${page}`;
     if (condition) {
         url += `&condition=${condition}`;
+    }
+    if (pageSize) {
+        url += `&page_size=${pageSize}`;
     }
     const response = await fetch(url, {
         method: 'GET',

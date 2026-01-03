@@ -4,6 +4,13 @@ import BikeCard from '@/components/BikeCard';
 import type { Bike } from '@/types';
 import { getBikes } from '@/api';
 import { Spinner } from '@/components/ui/spinner';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';
@@ -11,6 +18,8 @@ interface BikeListPageProps {
 
 const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
   const [bikes, setBikes] = useState<Bike[] | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,9 +28,9 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
       try {
         setIsLoading(true);
         setError(null);
-        setBikes(undefined); // Reset on re-fetch
-        const response = await getBikes(bikeCondition);
+        const response = await getBikes(bikeCondition, currentPage);
         setBikes(response.results);
+        setTotalPages(Math.ceil(response.count / response.page_size));
       } catch (err) {
         setError(err instanceof Error ? err.message : "An unknown error occurred.");
         console.error(err);
@@ -30,8 +39,9 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
       }
     };
 
+    window.scrollTo(0, 0); // Scroll to top on page change
     fetchBikes();
-  }, [bikeCondition]);
+  }, [bikeCondition, currentPage]);
 
   const pageTitle = bikeCondition === 'new' ? 'New Bikes' : 'Used Bikes';
 
@@ -58,6 +68,40 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
             ) : (
               <p>No bikes found for this category.</p>
             )}
+          </div>
+        )}
+
+        {totalPages > 1 && (
+          <div className="mt-8">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage((prev) => Math.max(prev - 1, 1));
+                    }}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  <span className="p-2 text-sm">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                    }}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </div>
