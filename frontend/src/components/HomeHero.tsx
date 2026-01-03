@@ -1,19 +1,96 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Assuming react-router-dom for navigation
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { getBikes } from '@/api';
+import type { Bike } from '@/types';
 
 const HomeHero: React.FC = () => {
+  const [newBikeImageUrl, setNewBikeImageUrl] = useState<string | null>(null);
+  const [usedBikeImageUrl, setUsedBikeImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFeaturedBikeImages = async () => {
+      try {
+        // Fetch featured new bikes
+        const newBikesResponse = await getBikes('new', 1, true);
+        if (newBikesResponse.results.length > 0) {
+          const firstNewBike = newBikesResponse.results[0];
+          const sortedImages = [...firstNewBike.images].sort((a, b) => a.order - b.order);
+          setNewBikeImageUrl(sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png');
+        }
+
+        // Fetch featured used bikes
+        const usedBikesResponse = await getBikes('used', 1, true);
+        if (usedBikesResponse.results.length > 0) {
+          const firstUsedBike = usedBikesResponse.results[0];
+          const sortedImages = [...firstUsedBike.images].sort((a, b) => a.order - b.order);
+          setUsedBikeImageUrl(sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png');
+        }
+      } catch (err) {
+        console.error("Failed to fetch featured bike images:", err);
+        setError("Failed to load featured bike images.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedBikeImages();
+  }, []);
+
+  const renderBikeLink = (condition: 'new' | 'used', imageUrl: string | null) => {
+    const linkPath = condition === 'new' ? '/new-bikes' : '/used-bikes';
+    const text = condition === 'new' ? 'New Bikes' : 'Used Bikes';
+    const bgColorClass = condition === 'new' ? 'bg-green-600' : 'bg-blue-600'; // Fallback color
+
+    return (
+      <Link
+        to={linkPath}
+        className={`relative flex-1 flex items-center justify-center p-4 text-white text-3xl font-bold transition-colors duration-300 group ${bgColorClass}`}
+        style={{
+          backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {imageUrl && (
+          <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-20 transition-opacity duration-300"></div>
+        )}
+        <span className="relative z-10">{text}</span>
+      </Link>
+    );
+  };
+
   return (
-    <div className="w-full flex flex-col md:flex-row bg-gray-100 min-h-[500px]"> {/* Full width, responsive columns */}
+    <div className="w-full flex flex-col md:flex-row bg-gray-100 min-h-[500px]">
       {/* Left Column */}
       <div className="md:w-1/2 flex flex-col">
-        {/* Top Row: Used Bikes */}
-        <Link to="/used-bikes" className="flex-1 flex items-center justify-center p-4 bg-blue-600 text-white text-3xl font-bold hover:bg-blue-700 transition-colors duration-300">
-          Used Bikes
-        </Link>
-        {/* Bottom Row: New Bikes */}
-        <Link to="/new-bikes" className="flex-1 flex items-center justify-center p-4 bg-green-600 text-white text-3xl font-bold hover:bg-green-700 transition-colors duration-300">
-          New Bikes
-        </Link>
+        {loading && (
+            <>
+                <div className="flex-1 flex items-center justify-center p-4 bg-gray-300 text-gray-700 text-3xl font-bold">
+                    Loading Used Bikes...
+                </div>
+                <div className="flex-1 flex items-center justify-center p-4 bg-gray-400 text-gray-700 text-3xl font-bold">
+                    Loading New Bikes...
+                </div>
+            </>
+        )}
+        {error && (
+            <>
+                <div className="flex-1 flex items-center justify-center p-4 bg-red-200 text-red-800 text-xl">
+                    {error}
+                </div>
+                <div className="flex-1 flex items-center justify-center p-4 bg-red-300 text-red-800 text-xl">
+                    {error}
+                </div>
+            </>
+        )}
+        {!loading && !error && (
+            <>
+                {renderBikeLink('used', usedBikeImageUrl)}
+                {renderBikeLink('new', newBikeImageUrl)}
+            </>
+        )}
       </div>
 
       {/* Right Column */}
