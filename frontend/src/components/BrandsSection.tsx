@@ -17,7 +17,7 @@ interface BrandProps {
 
 const BrandCard: React.FC<BrandProps> = ({ image, alt, title, description, imageLeft }) => {
   return (
-    <div className={`flex flex-col md:flex-row ${imageLeft ? '' : 'md:flex-row-reverse'} items-center bg-background rounded-lg shadow-lg overflow-hidden my-4`}>
+    <div className={`flex flex-col md:flex-row ${imageLeft ? '' : 'md:flex-row-reverse'} items-center bg-background rounded-lg overflow-hidden my-4`}>
       <div className="w-full md:w-1/2">
         <img src={image} alt={alt} className="w-full h-full object-cover" />
       </div>
@@ -35,18 +35,12 @@ const BrandCard: React.FC<BrandProps> = ({ image, alt, title, description, image
 };
 
 const BrandsSection: React.FC = () => {
-  const symText = `SYM Scooters
-Reliable, Affordable, and Built to Last
-
-Founded in 1954, SYM is a trusted Taiwanese manufacturer known for exceptional build quality and reliability. They strike the perfect balance—offering better quality than many low-end brands, without the high price tag of premium models.
-
+  const symText = `
+Founded in 1954, SYM is a trusted Taiwanese manufacturer known for exceptional build quality and reliability. They strike the perfect balance—offering better quality than many low-end brands, without the high price tag of premium models. 
 We've proudly partnered with them for years—mainly because it just makes sense. Their scooters come back with fewer issues, and our mechanics enjoy working on them.`;
 
-  const segwayText = `Segway Electric Mopeds
-Innovation Meets Reliability
-
+  const segwayText = `
 Best known for their self-balancing transporters, Segway has evolved into a serious player in the electric moped space. As the market changes, Segway stands out with the experience and quality that comes from being an early innovator.
-
 We've tested a lot of brands, but Segway's electric mopeds impressed us with their build quality, design, and performance. We're confident these are vehicles we can stand behind—and that you'll love riding.`;
 
   return (
