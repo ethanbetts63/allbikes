@@ -20,6 +20,26 @@ const NavBar = () => {
             </li>
             <li>
               <NavLink
+                to="/bikes/new"
+                className={({ isActive }) =>
+                  isActive ? "text-blue-300" : "hover:text-gray-300"
+                }
+              >
+                New Bikes
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/bikes/used"
+                className={({ isActive }) =>
+                  isActive ? "text-blue-300" : "hover:text-gray-300"
+                }
+              >
+                Used Bikes
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to="/workshop"
                 className={({ isActive }) =>
                   isActive ? "text-blue-300" : "hover:text-gray-300"

@@ -5,15 +5,18 @@ import sys
 def load_db_from_latest_archive(command):
     base_archive_dir = os.path.join('data_management', 'data', 'archive', 'db_backups')
     load_order = [
-        'payments.tier.json',
-        'payments.price.json',
+        # Independent models can be loaded first
+        'auth.user.json',
+        'auth.group.json',
         'data_management.faq.json',
+        'data_management.sitesettings.json',
         'data_management.termsandconditions.json',
-        'users.user.json',
-        'users.emergencycontact.json',
-        'events.event.json',
-        'notifications.notification.json',
-        'payments.payment.json',
+        'service.servicesettings.json',
+        
+        # Inventory models with dependencies
+        'inventory.motorcyclecondition.json', # Must be loaded before Motorcycle
+        'inventory.motorcycle.json',          # Depends on MotorcycleCondition
+        'inventory.motorcycleimage.json',     # Depends on Motorcycle
     ]
 
     if not os.path.exists(base_archive_dir):

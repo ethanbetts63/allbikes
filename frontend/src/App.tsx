@@ -11,7 +11,8 @@ import { Spinner } from './components/ui/spinner';
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
 const AdminHomePage = lazy(() => import('./pages/admin/AdminHomePage'));
-const WorkshopPage = lazy(() => import('./pages/WorkshopPage')); // New lazy-loaded page
+const WorkshopPage = lazy(() => import('./pages/WorkshopPage'));
+const BikeListPage = lazy(() => import('./pages/BikeListPage')); // New lazy-loaded page
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -31,7 +32,9 @@ function App() {
               {/* Public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/workshop" element={<WorkshopPage />} /> {/* New workshop route */}
+              <Route path="/workshop" element={<WorkshopPage />} />
+              <Route path="/bikes/new" element={<BikeListPage bikeCondition="new" />} /> {/* New bikes route */}
+              <Route path="/bikes/used" element={<BikeListPage bikeCondition="used" />} /> {/* Used bikes route */}
 
               {/* Admin Section */}
               <Route path="/admin/dashboard" element={<AdminLayout />}>
