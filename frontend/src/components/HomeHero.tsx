@@ -53,7 +53,7 @@ const HomeHero: React.FC = () => {
     if (newBikeImageUrls.length > 1) {
       const interval = setInterval(() => {
         setCurrentNewBikeImageIndex(prevIndex => (prevIndex + 1) % newBikeImageUrls.length);
-      }, 8000); // Change image every 8 seconds
+      }, 10000); // Change image every 8 seconds
       return () => clearInterval(interval); // Clear interval on component unmount
     }
   }, [newBikeImageUrls]);
@@ -63,7 +63,7 @@ const HomeHero: React.FC = () => {
     if (usedBikeImageUrls.length > 1) {
       const interval = setInterval(() => {
         setCurrentUsedBikeImageIndex(prevIndex => (prevIndex + 1) % usedBikeImageUrls.length);
-      }, 5000); // Change image every 5 seconds
+      }, 8000); // Change image every 5 seconds
       return () => clearInterval(interval); // Clear interval on component unmount
     }
   }, [usedBikeImageUrls]);
@@ -98,26 +98,6 @@ const HomeHero: React.FC = () => {
     <div className="w-full flex flex-col md:flex-row bg-gray-100 min-h-[500px]">
       {/* Left Column */}
       <div className="md:w-1/2 flex flex-col">
-        {loading && (
-            <>
-                <div className="flex-1 flex items-center justify-center p-4 bg-gray-300 text-gray-700 text-3xl font-bold">
-                    Loading Used Bikes...
-                </div>
-                <div className="flex-1 flex items-center justify-center p-4 bg-gray-400 text-gray-700 text-3xl font-bold">
-                    Loading New Bikes...
-                </div>
-            </>
-        )}
-        {error && (
-            <>
-                <div className="flex-1 flex items-center justify-center p-4 bg-red-200 text-red-800 text-xl">
-                    {error}
-                </div>
-                <div className="flex-1 flex items-center justify-center p-4 bg-red-300 text-red-800 text-xl">
-                    {error}
-                </div>
-            </>
-        )}
         {!loading && !error && (
             <>
                 {renderBikeLink('new')}
