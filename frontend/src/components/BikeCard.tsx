@@ -7,30 +7,21 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-
-// Updated Bike type to reflect more detailed data structure
-export type Bike = {
-  id: number;
-  make: string;
-  model: string;
-  year: number;
-  price: number;
-  condition: 'new' | 'used' | 'demo';
-  imageUrl: string;
-  odometer: number;
-  engine_size: number;
-};
+import type { Bike } from "@/types"; // Import from shared types
 
 interface BikeCardProps {
   bike: Bike;
 }
 
 const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
+  // Derive imageUrl from the first image in the array, or use a placeholder
+  const imageUrl = bike.images[0]?.image || '/src/assets/motorcycle_images/placeholder.png'; // Assuming you have a placeholder image
+
   return (
     <Card className="w-full overflow-hidden flex flex-col">
       <CardHeader className="p-0">
         <div className="relative aspect-video">
-          <img src={bike.imageUrl} alt={`${bike.year} ${bike.make} ${bike.model}`} className="w-full h-full object-cover"/>
+          <img src={imageUrl} alt={`${bike.year} ${bike.make} ${bike.model}`} className="w-full h-full object-cover"/>
           <Badge className="absolute top-2 right-2 capitalize">{bike.condition}</Badge>
         </div>
       </CardHeader>

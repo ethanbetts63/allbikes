@@ -1,10 +1,19 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse, UserProfile } from "@/types";
+import type { AuthResponse, UserProfile, Bike } from "@/types";
 
 /**
  * A centralized module for all API interactions.
  */
+
+// --- Type for Paginated API responses ---
+export interface PaginatedResponse<T> {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: T[];
+}
+
 
 // --- Helper Functions ---
 
@@ -43,6 +52,15 @@ export async function loginUser(email: string, password: string): Promise<AuthRe
 
 export async function getUserProfile(): Promise<UserProfile> {
     const response = await authedFetch('/api/data-management/me/', {
+        method: 'GET',
+    });
+    return handleResponse(response);
+}
+
+// --- Inventory Endpoints ---
+
+export async function getBikes(condition: 'new' | 'used', page: number = 1): Promise<PaginatedResponse<Bike>> {
+    const response = await fetch(`/api/inventory/bikes/?condition=${condition}&page=${page}`, {
         method: 'GET',
     });
     return handleResponse(response);
