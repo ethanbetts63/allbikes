@@ -14,6 +14,12 @@ const HomeHero: React.FC = () => {
 
   const defaultPlaceholderImage = '/src/assets/motorcycle_images/placeholder.png';
 
+  const preloadImage = (url: string) => {
+    if (url) {
+      new Image().src = url;
+    }
+  };
+
   useEffect(() => {
     const fetchFeaturedBikeImages = async () => {
       try {
@@ -52,8 +58,12 @@ const HomeHero: React.FC = () => {
   useEffect(() => {
     if (newBikeImageUrls.length > 1) {
       const interval = setInterval(() => {
-        setCurrentNewBikeImageIndex(prevIndex => (prevIndex + 1) % newBikeImageUrls.length);
-      }, 10000); // Change image every 8 seconds
+        setCurrentNewBikeImageIndex(prevIndex => {
+          const nextIndex = (prevIndex + 1) % newBikeImageUrls.length;
+          preloadImage(newBikeImageUrls[nextIndex]); // Preload the next image
+          return nextIndex;
+        });
+      }, 8000); // Change image every 8 seconds
       return () => clearInterval(interval); // Clear interval on component unmount
     }
   }, [newBikeImageUrls]);
@@ -62,8 +72,12 @@ const HomeHero: React.FC = () => {
   useEffect(() => {
     if (usedBikeImageUrls.length > 1) {
       const interval = setInterval(() => {
-        setCurrentUsedBikeImageIndex(prevIndex => (prevIndex + 1) % usedBikeImageUrls.length);
-      }, 8000); // Change image every 5 seconds
+        setCurrentUsedBikeImageIndex(prevIndex => {
+          const nextIndex = (prevIndex + 1) % usedBikeImageUrls.length;
+          preloadImage(usedBikeImageUrls[nextIndex]); // Preload the next image
+          return nextIndex;
+        });
+      }, 8000); // Change image every 8 seconds
       return () => clearInterval(interval); // Clear interval on component unmount
     }
   }, [usedBikeImageUrls]);
