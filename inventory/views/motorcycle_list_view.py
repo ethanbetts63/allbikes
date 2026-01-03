@@ -24,16 +24,20 @@ class MotorcycleListView(ListAPIView):
         Optionally restricts the returned motorcycles by filtering against
         a `condition` query parameter in the URL. This now filters against
         the `name` field of the related MotorcycleCondition model.
+        
+        If the condition is not a valid choice (e.g., 'new', 'used'), all bikes are returned.
         """
         queryset = Motorcycle.objects.filter(status='for_sale').order_by('-date_posted')
         
         condition = self.request.query_params.get('condition')
-        if condition:
-            # The name of the related MotorcycleCondition object
+        
+        # Only filter if the condition is a valid, recognized value
+        if condition in ['new', 'used']:
             if condition == 'used':
                 # The "used" page should show both "used" and "demo" bikes
                 queryset = queryset.filter(conditions__name__in=['used', 'demo'])
             else:
-                queryset = queryset.filter(conditions__name=condition)
+                # This handles 'new'
+                queryset = queryset.filter(conditions__name__iexact=condition)
         
         return queryset
