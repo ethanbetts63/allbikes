@@ -84,7 +84,7 @@ const BookingPage: React.FC = () => {
 
     return (
         <div className="container mx-auto py-10 max-w-3xl">
-            <h1 className="text-4xl font-bold text-center mb-8">Book a Service</h1>
+            <h1 className="text-4xl font-bold text-center mb-8 text-[var(--text-primary)] ">Book a Service</h1>
             
             {/* We can add a progress bar here later */}
             
