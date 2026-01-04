@@ -30,7 +30,7 @@ const AdminLayout: React.FC = () => {
       <Seo title="Admin | Allbikes" noindex={true} />
       <div className="flex h-screen">
         {/* Vertical Nav */}
-        <aside className="w-64 flex-shrink-0 border-r p-4 bg-background">
+        <aside className="w-64 flex-shrink-0 border-r p-4 bg-foreground text-[var(--text-primary)]">
           <nav className="flex flex-col space-y-2">
             <h2 className="text-lg font-semibold tracking-tight mb-2 px-2">Admin Menu</h2>
             <Button asChild variant="ghost">

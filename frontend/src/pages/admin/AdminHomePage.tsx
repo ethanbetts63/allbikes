@@ -6,13 +6,12 @@ const AdminHomePage: React.FC = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-      <p className="text-muted-foreground mt-2">
+      <h1 className="text-3xl font-bold text-[var(--text-primary)]">Admin Dashboard</h1>
+      <p className="text-[var(--text-primary)] mt-2">
         Welcome, {user?.first_name || user?.email}.
       </p>
       
-      <div className="mt-8">
-        {/* Dashboard content will go here */}
+      <div className="mt-8 text-[var(--text-secondary)]">
         <p>This is the main admin dashboard page.</p>
       </div>
     </>
