@@ -35,7 +35,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                     getUnavailableDays(),
                     getServiceSettings()
                 ]);
-                setJobTypes(jobs.job_type_names || []);
+                setJobTypes(jobs || []);
                 setUnavailableDays(unavailable.unavailable_days || []);
                 setServiceSettings(settings);
             } catch (error) {
@@ -100,7 +100,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                             <PopoverTrigger asChild>
                                 <Button
                                     variant={"outline"}
-                                    className={cn("w-full justify-start text-left font-normal", !selectedDate && "text-muted-foreground")}
+                                    className={cn("w-full justify-start text-left font-normal")}
                                 >
                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                     {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
@@ -131,7 +131,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 </div>
 
                 <div>
-                    <Label>Services Required</Label>
+                    <Label>Job Type</Label>
                     <div className="space-y-2 mt-2 p-4 border rounded-md max-h-48 overflow-y-auto">
                         {jobTypes.length > 0 ? jobTypes.map((job: string) => (
                             <div key={job} className="flex items-center space-x-2">
@@ -144,14 +144,6 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                             </div>
                         )) : <p className="text-sm text-muted-foreground">Loading services...</p>}
                     </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                    <Checkbox id="courtesy" 
-                        onCheckedChange={(checked: boolean | 'indeterminate') => setFormData({...formData, courtesy_vehicle_requested: checked})}
-                        checked={formData.courtesy_vehicle_requested}
-                    />
-                    <Label htmlFor="courtesy">Request a courtesy vehicle</Label>
                 </div>
                 
                 <div>
