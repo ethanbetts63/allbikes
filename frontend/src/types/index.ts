@@ -65,7 +65,13 @@ export type MotorcycleFormData = Omit<Bike, 'id' | 'images'> & {
 };
   
   // --- Site Settings Types ---
-  export interface SiteSettings {
+export interface Brand {
+  id: number;
+  name: string;
+  serviceable: boolean;
+}
+
+export interface SiteSettings {
     id: number;
     enable_motorcycle_mover: boolean;
     enable_banner: boolean;

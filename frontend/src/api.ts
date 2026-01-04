@@ -1,10 +1,11 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse, UserProfile, Bike, FooterSettings, PaginatedResponse, MotorcycleFormData, ManagedImage } from "@/types";
+import type { AuthResponse, UserProfile, Bike, Brand, FooterSettings, PaginatedResponse, MotorcycleFormData, ManagedImage } from "@/types";
 
 /**
  * A centralized module for all API interactions.
  */
+
 
 const API_BASE_URL = '/api/data'; // Define API base URL for data-related endpoints
 
@@ -57,6 +58,11 @@ export async function getFooterSettings(): Promise<FooterSettings> {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
     return response.json();
+}
+
+export async function getBrands(): Promise<Brand[]> {
+  const response = await fetch(`${API_BASE_URL}/brands/`);
+  return handleResponse(response);
 }
 
 // --- Inventory Endpoints ---
