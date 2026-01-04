@@ -35,13 +35,13 @@ const ServiceBrands: React.FC = () => {
     }
 
     return (
-        <div className="py-12 bg-white text-black">
+        <div className="py-12 bg-foreground text-[var(--text-primary)]">
             <div className="container mx-auto">
                 <div className="grid grid-cols-1md:grid-cols-2 gap-8 items-center">
                     {/* Left Column: Title and Text */}
                     <div className="md:pr-8">
                         <h2 className="text-3xl font-bold mb-4">Brands We Work On</h2>
-                        <p className="text-lg text-gray-700">
+                        <p className="text-lg text-[var(--text-secondary)]">
                             We service almost all motorcycle brands, and most scooter brands. We do not service the excluded scooter brands due to ongoing concerns around build quality and/or the availability of reliable parts, which prevents us from guaranteeing the standard of work we stand by. Scooter brands not listed may be considered, however parts availability and long-term reliability are key factors.
                         </p>
                     </div>
@@ -52,7 +52,7 @@ const ServiceBrands: React.FC = () => {
                             <Badge
                                 key={brand.id}
                                 className={cn(
-                                    "text-lg text-white",
+                                    "text-lg text-[var(--text-primary)]",
                                     {
                                         "bg-green-600 hover:bg-green-700": brand.serviceable,
                                         "bg-red-600 hover:bg-red-700": !brand.serviceable,
