@@ -11,7 +11,7 @@ class MechanicsDeskService:
     def _make_request(self, method, endpoint, params=None, data=None):
         """Helper method to make requests to the MechanicDesk API."""
         if not self.token:
-            # Handle case where token is not set
+            print("ERROR: MechanicDesk API token is not configured.")
             return {"error": "MechanicDesk API token is not configured."}
 
         url = f"{self.BASE_URL}/{endpoint}"
@@ -26,12 +26,21 @@ class MechanicsDeskService:
                 data = {}
             data['token'] = self.token
 
+        print(f"Making {method} request to {url}")
+        if data:
+            print(f"Request payload: {data}")
+
         try:
             response = requests.request(method, url, params=params, json=data)
-            response.raise_for_status()  # Raise an exception for bad status codes (4xx or 5xx)
+            response.raise_for_status()
             return response.json()
+        except requests.exceptions.HTTPError as e:
+            print(f"HTTP Error occurred: {e}")
+            print(f"Response status code: {e.response.status_code}")
+            print(f"Response content: {e.response.text}")
+            return {"error": f"An error occurred: {e}", "details": e.response.text}
         except requests.exceptions.RequestException as e:
-            # Handle network errors
+            print(f"Request Exception occurred: {e}")
             return {"error": f"An error occurred: {e}"}
 
     def get_job_types(self):

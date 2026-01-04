@@ -42,9 +42,22 @@ class BookingSerializer(serializers.Serializer):
 
     def validate(self, data):
         """
-        Combine first_name and last_name to create the full 'name' field
-        if it's not provided.
+        Combine first_name and last_name to create the full 'name' field,
+        and convert numeric/boolean fields to strings for the MechanicDesk API.
         """
+        # Ensure 'name' is created if not present, but keep first/last name
         if 'name' not in data or not data['name']:
             data['name'] = f"{data.get('first_name', '')} {data.get('last_name', '')}".strip()
+
+        # Convert numeric fields to strings if they exist
+        if 'year' in data and data['year'] is not None:
+            data['year'] = str(data['year'])
+        
+        if 'odometer' in data and data['odometer'] is not None:
+            data['odometer'] = str(data['odometer'])
+
+        # Convert boolean to string "true" or "false"
+        if 'courtesy_vehicle_requested' in data:
+            data['courtesy_vehicle_requested'] = "true" if data['courtesy_vehicle_requested'] else "false"
+            
         return data
