@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getJobTypes } from '@/services/bookingService';
 import type { EnrichedJobType } from '@/types';
 import WorkshopJobTypes from '@/components/WorkshopJobTypes';
-import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import ServiceBrands from "@/components/ServiceBrands";
 import MotorcycleMovers from "@/components/MotorcycleMovers";
@@ -29,16 +28,10 @@ const WorkshopPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="container mx-auto py-2">            
-            {isLoading ? (
-                <div className="flex justify-center">
-                    <Spinner />
-                </div>
-            ) : (
-                <WorkshopJobTypes jobTypes={jobTypes} />
-            )}
+        <div className="container mx-auto py-8">
+            <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} />
 
-            <div className="mt-4">
+            <div className="mt-12">
                 <ServiceBrands />
             </div>
 

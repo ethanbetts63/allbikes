@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getJobTypes, getUnavailableDays, getServiceSettings, type ServiceSettings, type EnrichedJobType } from '@/services/bookingService';
+import { getJobTypes, getUnavailableDays, getServiceSettings } from '@/services/bookingService';
+import type { ServiceSettings, EnrichedJobType } from '@/types';
 import { format, add, parse } from 'date-fns';
 
 import { Button } from "@/components/ui/button";

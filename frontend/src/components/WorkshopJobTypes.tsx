@@ -2,13 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import type { EnrichedJobType } from '@/types';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Cog } from 'lucide-react';
+import { Spinner } from "@/components/ui/spinner";
 
 interface WorkshopJobTypesProps {
   jobTypes: EnrichedJobType[];
+  isLoading: boolean;
 }
 
-const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes }) => {
+const SkeletonLoader = () => (
+    <div className="bg-foreground p-6 rounded-lg shadow-md flex items-center justify-center h-[120px]">
+        <Spinner />
+    </div>
+);
+
+const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading }) => {
   return (
     <div className="w-full flex flex-col md:flex-row bg-background text-[var(--text-primary)] rounded-lg overflow-hidden">
       {/* Left Column */}
@@ -29,20 +37,31 @@ const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes }) => {
       {/* Right Column */}
       <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto max-h-[600px]">
         <div className="grid grid-cols-1 gap-6">
-          {(!jobTypes || jobTypes.length === 0) ? (
-            <div className="bg-foreground p-6 rounded-lg">
-                <h3 className="text-xl font-bold mb-2">Services Loading...</h3>
-                <p className="text-[var(--text-secondary)]">
-                    If services do not appear, please try refreshing the page or contact us directly.
-                </p>
+          {isLoading ? (
+            <>
+              <SkeletonLoader />
+              <SkeletonLoader />
+            </>
+          ) : !jobTypes || jobTypes.length === 0 ? (
+            <div className="bg-foreground p-6 rounded-lg flex items-center gap-4">
+                <Cog className="h-8 w-8 text-primary flex-shrink-0" />
+                <div>
+                    <h3 className="text-xl font-bold mb-2">No Services Currently Listed</h3>
+                    <p className="text-[var(--text-secondary)]">
+                        Please check back again later or contact us directly for booking inquiries.
+                    </p>
+                </div>
             </div>
           ) : (
             jobTypes.map((job) => (
-              <div key={job.name} className="bg-foreground p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">{job.name}</h3>
-                <p className="text-[var(--text-secondary)]">
-                  {job.description || 'Detailed description coming soon.'}
-                </p>
+              <div key={job.name} className="bg-foreground p-6 rounded-lg shadow-md flex items-center gap-4">
+                <Cog className="h-8 w-8 text-primary flex-shrink-0" />
+                <div>
+                    <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">{job.name}</h3>
+                    <p className="text-[var(--text-secondary)]">
+                      {job.description || 'Detailed description coming soon.'}
+                    </p>
+                </div>
               </div>
             ))
           )}
@@ -53,4 +72,3 @@ const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes }) => {
 };
 
 export default WorkshopJobTypes;
-
