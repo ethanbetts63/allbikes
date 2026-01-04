@@ -17,6 +17,7 @@ const SiteSettingsPage = lazy(() => import('./pages/admin/SiteSettingsPage'));
 const WorkshopPage = lazy(() => import('./pages/WorkshopPage'));
 const BikeListPage = lazy(() => import('./pages/BikeListPage'));
 const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
+const BookingPage = lazy(() => import('./pages/BookingPage'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -40,6 +41,7 @@ function App() {
               <Route path="/bikes/new" element={<BikeListPage bikeCondition="new" />} />
               <Route path="/bikes/used" element={<BikeListPage bikeCondition="used" />} />
               <Route path="/bikes/:id" element={<BikeDetailPage />} />
+              <Route path="/booking" element={<BookingPage />} />
 
               {/* Admin Section */}
               <Route path="/admin" element={<AdminLayout />}>
