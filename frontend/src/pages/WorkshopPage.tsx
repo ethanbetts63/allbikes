@@ -1,6 +1,7 @@
 import React from 'react';
 import Seo from '@/components/Seo';
 import ServiceBrands from '@/components/ServiceBrands';
+import MotorcycleMovers from '@/components/MotorcycleMovers';
 
 const WorkshopPage: React.FC = () => {
   return (
@@ -14,6 +15,10 @@ const WorkshopPage: React.FC = () => {
         </p>
         
         <ServiceBrands />
+
+        <div className="mt-8">
+            <MotorcycleMovers />
+        </div>
 
         {/* Add more content here later */}
       </div>
