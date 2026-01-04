@@ -43,7 +43,7 @@ const BikeDetailsForm: React.FC<BikeDetailsFormProps> = ({ formData, setFormData
         </div>
         
         <div className="flex justify-between pt-4">
-          <Button variant="outline" onClick={prevStep}>
+          <Button variant="destructive" className="text-white" onClick={prevStep}>
             Back
           </Button>
           <Button onClick={nextStep}>
