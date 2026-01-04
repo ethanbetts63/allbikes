@@ -46,6 +46,7 @@ export type Bike = {
   rego_exp: string;
   stock_number: string;
   warranty_months: number;
+  transmission: string;
   images: BikeImage[];
 };
 
