@@ -100,26 +100,26 @@ const BikeDetailPage: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-white">
+            <div className="flex justify-center items-center h-screen bg-[var(--text-primary)]">
                 <Spinner className="h-12 w-12" />
             </div>
         );
     }
 
     if (error) {
-        return <p className="text-red-500 text-center mt-8 bg-white text-black">{error}</p>;
+        return <p className="text-red-500 text-center mt-8 bg-[var(--text-primary)] text-black">{error}</p>;
     }
 
     if (!bike) {
-        return <p className="text-center mt-8 bg-white text-black">Bike not found.</p>;
+        return <p className="text-center mt-8 bg-[var(--text-primary)] text-black">Bike not found.</p>;
     }
     
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
     return (
-        <div className="bg-white text-black">
+        <div className="bg-background text-black">
             <Seo title={`${pageTitle} | Allbikes`} />
-            <div className="container mx-auto p-4 lg:p-8">
+            <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)]">
                 <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
                 <div className="text-center mb-8 flex justify-center gap-2">
                     <Badge className="text-lg capitalize">{bike.condition}</Badge>
