@@ -1,4 +1,4 @@
-import { apiClient } from '../apiClient';
+import { authedFetch } from '../apiClient';
 
 // Type for the form data, should match the backend serializer
 // It's good practice to define this in a types file, but placing here for now.
@@ -43,40 +43,34 @@ export interface ServiceSettings {
  * Fetches the service settings from the backend.
  */
 export const getServiceSettings = async (): Promise<ServiceSettings> => {
-    try {
-        const response = await apiClient.get('/service/settings/');
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching service settings:", error);
-        throw error;
+    const response = await authedFetch('/api/service/settings/');
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
     }
+    return response.json();
 };
 
 /**
  * Fetches the list of available job types from the backend.
  */
-export const getJobTypes = async (): Promise<any> => {
-    try {
-        const response = await apiClient.get('/service/job-types/');
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching job types:", error);
-        throw error;
+export const getJobTypes = async (): Promise<{ job_type_names: string[] }> => {
+    const response = await authedFetch('/api/service/job-types/');
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
     }
+    return response.json();
 };
 
 /**
  * Fetches the list of unavailable days from the backend.
  * @param in_days - Number of days to look ahead.
  */
-export const getUnavailableDays = async (in_days: number = 30): Promise<any> => {
-    try {
-        const response = await apiClient.get(`/service/unavailable-days/?in_days=${in_days}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching unavailable days:", error);
-        throw error;
+export const getUnavailableDays = async (in_days: number = 30): Promise<{ unavailable_days: string[] }> => {
+    const response = await authedFetch(`/api/service/unavailable-days/?in_days=${in_days}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
     }
+    return response.json();
 };
 
 /**
@@ -84,11 +78,14 @@ export const getUnavailableDays = async (in_days: number = 30): Promise<any> => 
  * @param formData - The booking form data.
  */
 export const createBooking = async (formData: BookingFormData): Promise<any> => {
-    try {
-        const response = await apiClient.post('/service/create-booking/', formData);
-        return response.data;
-    } catch (error) {
-        console.error("Error creating booking:", error);
-        throw error;
+    const response = await authedFetch('/api/service/create-booking/', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+        // Try to parse the error response from the server
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Booking creation failed');
     }
+    return response.json();
 };

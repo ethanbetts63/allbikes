@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { getJobTypes, getUnavailableDays, getServiceSettings, type ServiceSettings } from '@/services/bookingService';
 import { format, add, parse } from 'date-fns';
 
@@ -123,7 +124,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                                 <SelectValue placeholder="Select a time" />
                             </SelectTrigger>
                             <SelectContent>
-                                {timeSlots.map(slot => <SelectItem key={slot} value={slot}>{slot}</SelectItem>)}
+                                {timeSlots.map((slot: string) => <SelectItem key={slot} value={slot}>{slot}</SelectItem>)}
                             </SelectContent>
                         </Select>
                     </div>
@@ -132,7 +133,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 <div>
                     <Label>Services Required</Label>
                     <div className="space-y-2 mt-2 p-4 border rounded-md max-h-48 overflow-y-auto">
-                        {jobTypes.length > 0 ? jobTypes.map(job => (
+                        {jobTypes.length > 0 ? jobTypes.map((job: string) => (
                             <div key={job} className="flex items-center space-x-2">
                                 <Checkbox 
                                     id={job} 
