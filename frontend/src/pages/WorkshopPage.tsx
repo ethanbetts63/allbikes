@@ -29,7 +29,7 @@ const WorkshopPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="container mx-auto py-8">            
+        <div className="container mx-auto py-2">            
             {isLoading ? (
                 <div className="flex justify-center">
                     <Spinner />
@@ -38,7 +38,7 @@ const WorkshopPage: React.FC = () => {
                 <WorkshopJobTypes jobTypes={jobTypes} />
             )}
 
-            <div className="mt-12">
+            <div className="mt-4">
                 <ServiceBrands />
             </div>
 
