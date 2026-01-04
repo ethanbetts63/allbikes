@@ -15,9 +15,10 @@ const ServiceBrands: React.FC = () => {
             try {
                 setIsLoading(true);
                 const data = await getBrands();
-                // Sort brands: serviceable first, then non-serviceable
-                const sortedData = data.sort((a, b) => Number(b.serviceable) - Number(a.serviceable));
-                setBrands(sortedData);
+                // Separate brands into serviceable and non-serviceable, then combine
+                const serviceableBrands = data.filter(brand => brand.serviceable);
+                const nonServiceableBrands = data.filter(brand => !brand.serviceable);
+                setBrands([...serviceableBrands, ...nonServiceableBrands]);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "An unknown error occurred.");
             } finally {
@@ -39,7 +40,7 @@ const ServiceBrands: React.FC = () => {
     return (
         <div className="p-8 bg-foreground text-[var(--text-primary)] rounded-lg">
             <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
                     {/* Left Column: Title and Text (2/3 width) */}
                     <div className="md:col-span-2 md:pr-8">
                         <h2 className="text-3xl font-bold mb-4">Brands We Work On</h2>
