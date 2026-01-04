@@ -32,6 +32,26 @@ export interface BookingFormData {
 }
 
 
+export interface ServiceSettings {
+    id: number;
+    booking_advance_notice: number;
+    drop_off_start_time: string; // e.g., "09:00:00"
+    drop_off_end_time: string;   // e.g., "17:00:00"
+}
+
+/**
+ * Fetches the service settings from the backend.
+ */
+export const getServiceSettings = async (): Promise<ServiceSettings> => {
+    try {
+        const response = await apiClient.get('/service/settings/');
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching service settings:", error);
+        throw error;
+    }
+};
+
 /**
  * Fetches the list of available job types from the backend.
  */

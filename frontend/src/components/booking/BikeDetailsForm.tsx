@@ -1,4 +1,7 @@
 import React from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface BikeDetailsFormProps {
   formData: any;
@@ -8,39 +11,44 @@ interface BikeDetailsFormProps {
 }
 
 const BikeDetailsForm: React.FC<BikeDetailsFormProps> = ({ formData, setFormData, nextStep, prevStep }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev: any) => ({ ...prev, [id]: value }));
+  };
+
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Step 2: Bike Details</h2>
+      <h2 className="text-2xl font-bold mb-6">Step 2: Bike Details</h2>
       <div className="space-y-4">
-        {/* Placeholder for Bike Details */}
+        
         <div>
-          <label className="block text-sm font-medium">Registration Number</label>
-          <input type="text" placeholder="e.g., 1AB-234" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="registration_number">Registration Number</Label>
+          <Input id="registration_number" value={formData.registration_number || ''} onChange={handleChange} placeholder="e.g., 1AB-234" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Make</label>
-          <input type="text" placeholder="e.g., Honda" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="make">Make</Label>
+          <Input id="make" value={formData.make || ''} onChange={handleChange} placeholder="e.g., Honda" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Model</label>
-          <input type="text" placeholder="e.g., CBR500R" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="model">Model</Label>
+          <Input id="model" value={formData.model || ''} onChange={handleChange} placeholder="e.g., CBR500R" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Year</label>
-          <input type="number" placeholder="e.g., 2022" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="year">Year</Label>
+          <Input id="year" type="number" value={formData.year || ''} onChange={handleChange} placeholder="e.g., 2022" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Odometer</label>
-          <input type="number" placeholder="e.g., 15000" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="odometer">Odometer (km)</Label>
+          <Input id="odometer" type="number" value={formData.odometer || ''} onChange={handleChange} placeholder="e.g., 15000" />
         </div>
         
-        <div className="flex justify-between">
-          <button onClick={prevStep} className="px-4 py-2 bg-gray-600 text-white rounded-md">
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={prevStep}>
             Back
-          </button>
-          <button onClick={nextStep} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+          </Button>
+          <Button onClick={nextStep}>
             Next
-          </button>
+          </Button>
         </div>
       </div>
     </div>

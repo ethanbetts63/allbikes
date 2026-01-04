@@ -1,4 +1,7 @@
 import React from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface PersonalDetailsFormProps {
   formData: any;
@@ -8,35 +11,40 @@ interface PersonalDetailsFormProps {
 }
 
 const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, setFormData, prevStep, handleSubmit }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev: any) => ({ ...prev, [id]: value }));
+  };
+
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Step 3: Personal Details</h2>
+      <h2 className="text-2xl font-bold mb-6">Step 3: Personal Details</h2>
       <div className="space-y-4">
-        {/* Placeholder for Personal Details */}
+        
         <div>
-          <label className="block text-sm font-medium">First Name</label>
-          <input type="text" placeholder="John" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="first_name">First Name</Label>
+          <Input id="first_name" value={formData.first_name || ''} onChange={handleChange} placeholder="John" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Last Name</label>
-          <input type="text" placeholder="Doe" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="last_name">Last Name</Label>
+          <Input id="last_name" value={formData.last_name || ''} onChange={handleChange} placeholder="Doe" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input type="email" placeholder="john.doe@example.com" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" value={formData.email || ''} onChange={handleChange} placeholder="john.doe@example.com" />
         </div>
         <div>
-          <label className="block text-sm font-medium">Phone</label>
-          <input type="tel" placeholder="0412 345 678" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" />
+          <Label htmlFor="phone">Phone</Label>
+          <Input id="phone" type="tel" value={formData.phone || ''} onChange={handleChange} placeholder="0412 345 678" />
         </div>
 
-        <div className="flex justify-between">
-          <button onClick={prevStep} className="px-4 py-2 bg-gray-600 text-white rounded-md">
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={prevStep}>
             Back
-          </button>
-          <button onClick={handleSubmit} className="px-4 py-2 bg-green-600 text-white rounded-md">
+          </Button>
+          <Button onClick={handleSubmit}>
             Submit Booking
-          </button>
+          </Button>
         </div>
       </div>
     </div>

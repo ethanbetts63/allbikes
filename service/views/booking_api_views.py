@@ -3,8 +3,20 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .mechanics_desk_service import MechanicsDeskService
-from ..serializers import BookingSerializer
+from ..serializers import BookingSerializer, ServiceSettingsSerializer
 from ..models import ServiceSettings, BookingRequestLog
+
+class GetServiceSettingsView(APIView):
+    """
+    An API view to fetch the service settings.
+    """
+    def get(self, request, *args, **kwargs):
+        settings = ServiceSettings.objects.first()
+        if not settings:
+            return Response({"error": "Service settings not configured."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ServiceSettingsSerializer(settings)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class GetJobTypesView(APIView):
     """
