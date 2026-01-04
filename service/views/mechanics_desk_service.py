@@ -1,5 +1,6 @@
 import requests
 from django.conf import settings
+from json import JSONDecodeError
 
 
 class MechanicsDeskService:
@@ -16,24 +17,40 @@ class MechanicsDeskService:
 
         url = f"{self.BASE_URL}/{endpoint}"
         
+        request_args = {'params': params}
+        
         # Add the token to the request
         if method.upper() == "GET":
             if params is None:
                 params = {}
             params['token'] = self.token
+            request_args['params'] = params
         elif method.upper() == "POST":
             if data is None:
                 data = {}
             data['token'] = self.token
+            # Send as JSON, which was working
+            request_args['json'] = data
 
         print(f"Making {method} request to {url}")
         if data:
-            print(f"Request payload: {data}")
+            print(f"Request payload: {request_args.get('json', {})}")
 
         try:
-            response = requests.request(method, url, params=params, json=data)
+            response = requests.request(method, url, **request_args)
             response.raise_for_status()
-            return response.json()
+
+            # For successful POST, MechanicDesk returns HTML, not JSON.
+            # We just need to know it was successful.
+            if method.upper() == "POST" and response.ok:
+                return {"status": "success", "message": "Booking request sent successfully."}
+
+            try:
+                return response.json()
+            except JSONDecodeError:
+                print("Response was not JSON. Raw response text:")
+                print(response.text)
+                return {"error": "Received non-JSON response from external service", "details": response.text}
         except requests.exceptions.HTTPError as e:
             print(f"HTTP Error occurred: {e}")
             print(f"Response status code: {e.response.status_code}")
