@@ -119,7 +119,7 @@ const BikeDetailPage: React.FC = () => {
     return (
         <div className="bg-background text-black">
             <Seo title={`${pageTitle} | Allbikes`} />
-            <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)]">
+            <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)] rounded-lg mt-8">
                 <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
                 <div className="text-center mb-8 flex justify-center gap-2">
                     <Badge className="text-lg capitalize">{bike.condition}</Badge>
@@ -181,7 +181,7 @@ const BikeDetailPage: React.FC = () => {
                 </div>
             </div>
             
-            <div className="mt-16">
+            <div className="mt-4 mb-4">
                 {bike.condition.toLowerCase() === 'new' && newBikes.length > 0 && (
                     <FeaturedBikes
                         title="Featured New Bikes"
