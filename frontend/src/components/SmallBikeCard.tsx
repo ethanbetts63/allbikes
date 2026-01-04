@@ -18,7 +18,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
         <div className="relative h-32">
           <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover" />
         </div>
-        <CardContent className="p-2 flex-grow flex flex-col justify-between">
+        <CardContent className="pt-0 px-2 pb-2 flex-grow flex flex-col justify-between">
           <div className="flex flex-col items-center">
             <h3 className="text-lg font-bold mb-1">{cardTitle}</h3>
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
