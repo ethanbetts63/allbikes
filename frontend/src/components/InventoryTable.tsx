@@ -161,9 +161,27 @@ const InventoryTable = () => {
   return (
     <div className="w-full bg-white text-black p-4 rounded-lg">
       <div className="flex items-center space-x-2 py-4">
-        <Button variant={!conditionFilter ? "secondary" : "outline"} onClick={() => handleFilterChange(null)} className="text-black border-gray-300">All</Button>
-        <Button variant={conditionFilter === 'new' ? "secondary" : "outline"} onClick={() => handleFilterChange('new')} className="text-black border-gray-300">New</Button>
-        <Button variant={conditionFilter === 'used' ? "secondary" : "outline"} onClick={() => handleFilterChange('used')} className="text-black border-gray-300">Used</Button>
+        <Button 
+          variant="outline"
+          onClick={() => handleFilterChange(null)} 
+          className={!conditionFilter ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
+        >
+          All
+        </Button>
+        <Button 
+          variant="outline"
+          onClick={() => handleFilterChange('new')} 
+          className={conditionFilter === 'new' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
+        >
+          New
+        </Button>
+        <Button 
+          variant="outline"
+          onClick={() => handleFilterChange('used')} 
+          className={conditionFilter === 'used' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
+        >
+          Used
+        </Button>
       </div>
       <div className="rounded-md border border-gray-300">
         <Table>
