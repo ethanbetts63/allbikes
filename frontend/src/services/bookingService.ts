@@ -39,6 +39,11 @@ export interface ServiceSettings {
     drop_off_end_time: string;   // e.g., "17:00:00"
 }
 
+export interface EnrichedJobType {
+    name: string;
+    description: string | null;
+}
+
 /**
  * Fetches the service settings from the backend.
  */
@@ -51,9 +56,9 @@ export const getServiceSettings = async (): Promise<ServiceSettings> => {
 };
 
 /**
- * Fetches the list of available job types from the backend.
+ * Fetches the list of available job types from the backend, enriched with descriptions.
  */
-export const getJobTypes = async (): Promise<{ job_type_names: string[] }> => {
+export const getJobTypes = async (): Promise<EnrichedJobType[]> => {
     const response = await authedFetch('/api/service/job-types/');
     if (!response.ok) {
         throw new Error('Network response was not ok');

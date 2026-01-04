@@ -1,5 +1,5 @@
 import { authedFetch } from '../apiClient';
-import { JobType } from '../types';
+import type { JobType } from '../types';
 
 export const getJobTypesAdmin = async (): Promise<JobType[]> => {
     const response = await authedFetch('/api/service/admin/job-types/');

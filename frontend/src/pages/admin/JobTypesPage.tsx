@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback, FormEvent } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import type { FormEvent } from 'react';
 import { toast } from 'sonner';
 
 import { getJobTypesAdmin, createJobType, updateJobType, deleteJobType } from '@/services/jobTypeService';
-import { JobType } from '@/types';
+import type { JobType } from '@/types';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
@@ -110,7 +111,7 @@ const JobTypesPage: React.FC = () => {
     return (
         <Card>
             <CardHeader>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center ">
                     <div>
                         <CardTitle>Manage Job Types</CardTitle>
                         <CardDescription>Add, edit, or delete job type descriptions for the booking form.</CardDescription>
@@ -181,7 +182,7 @@ const JobTypesPage: React.FC = () => {
                                 <Button type="button" variant="secondary">Cancel</Button>
                             </DialogClose>
                             <Button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? <Spinner size="sm" /> : 'Save'}
+                                {isSubmitting ? <Spinner className="size-4" /> : 'Save'}
                             </Button>
                         </DialogFooter>
                     </form>

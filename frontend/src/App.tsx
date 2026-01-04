@@ -15,6 +15,7 @@ const InventoryManagementPage = lazy(() => import('./pages/admin/InventoryManage
 const AddMotorcyclePage = lazy(() => import('./pages/admin/AddMotorcyclePage'));
 const SiteSettingsPage = lazy(() => import('./pages/admin/SiteSettingsPage'));
 const ServiceSettingsPage = lazy(() => import('./pages/admin/ServiceSettingsPage'));
+const JobTypesPage = lazy(() => import('./pages/admin/JobTypesPage'));
 const WorkshopPage = lazy(() => import('./pages/WorkshopPage'));
 const BikeListPage = lazy(() => import('./pages/BikeListPage'));
 const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
@@ -54,6 +55,7 @@ function App() {
                 <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />
                 <Route path="settings" element={<SiteSettingsPage />} />
                 <Route path="service-settings" element={<ServiceSettingsPage />} />
+                <Route path="job-types" element={<JobTypesPage />} />
               </Route>
 
             </Routes>

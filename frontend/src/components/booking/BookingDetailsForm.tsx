@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getJobTypes, getUnavailableDays, getServiceSettings, type ServiceSettings } from '@/services/bookingService';
+import { getJobTypes, getUnavailableDays, getServiceSettings, type ServiceSettings, type EnrichedJobType } from '@/services/bookingService';
 import { format, add, parse } from 'date-fns';
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ interface BookingDetailsFormProps {
 }
 
 const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFormData, nextStep }) => {
-    const [jobTypes, setJobTypes] = useState<string[]>([]);
+    const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
     const [unavailableDays, setUnavailableDays] = useState<string[]>([]);
     const [serviceSettings, setServiceSettings] = useState<ServiceSettings | null>(null);
     
@@ -35,7 +35,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                     getUnavailableDays(),
                     getServiceSettings()
                 ]);
-                setJobTypes(jobs.job_type_names || []);
+                setJobTypes(jobs || []);
                 setUnavailableDays(unavailable.unavailable_days || []);
                 setServiceSettings(settings);
             } catch (error) {
@@ -132,15 +132,22 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
 
                 <div>
                     <Label className="mb-2 block">Job Type</Label>
-                    <div className="space-y-2 mt-2 p-4 border rounded-md max-h-48 overflow-y-auto">
-                        {jobTypes.length > 0 ? jobTypes.map((job: string) => (
-                            <div key={job} className="flex items-center space-x-2">
-                                <Checkbox 
-                                    id={job} 
-                                    onCheckedChange={() => handleJobTypeChange(job)}
-                                    checked={formData.job_type_names?.includes(job)}
-                                />
-                                <Label htmlFor={job} className="font-normal">{job}</Label>
+                    <div className="space-y-4 mt-2 p-4 border rounded-md max-h-64 overflow-y-auto">
+                        {jobTypes.length > 0 ? jobTypes.map((job) => (
+                            <div key={job.name}>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox 
+                                        id={job.name} 
+                                        onCheckedChange={() => handleJobTypeChange(job.name)}
+                                        checked={formData.job_type_names?.includes(job.name)}
+                                    />
+                                    <Label htmlFor={job.name} className="font-semibold">{job.name}</Label>
+                                </div>
+                                {job.description && (
+                                    <p className="text-sm text-muted-foreground ml-6 mt-1">
+                                        {job.description}
+                                    </p>
+                                )}
                             </div>
                         )) : <p className="text-sm text-muted-foreground">Loading services...</p>}
                     </div>
