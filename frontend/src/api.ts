@@ -1,7 +1,6 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse, UserProfile, Bike } from "@/types";
-import type { MotorcycleFormData, ManagedImage } from "@/components/admin/inventory/MotorcycleForm";
+import type { AuthResponse, UserProfile, Bike, FooterSettings } from "@/types";
 
 /**
  * A centralized module for all API interactions.
@@ -17,24 +16,7 @@ export interface PaginatedResponse<T> {
     results: T[];
 }
 
-export interface FooterSettings {
-    phone_number: string;
-    email_address: string;
-    street_address: string;
-    address_locality: string;
-    address_region: string;
-    postal_code: string;
-    abn_number: string;
-    md_number: string;
-    mrb_number: string;
-    opening_hours_monday: string;
-    opening_hours_tuesday: string;
-    opening_hours_wednesday: string;
-    opening_hours_thursday: string;
-    opening_hours_friday: string;
-    opening_hours_saturday: string;
-    opening_hours_sunday: string;
-}
+export { FooterSettings };
 
 // --- Helper Functions ---
 
