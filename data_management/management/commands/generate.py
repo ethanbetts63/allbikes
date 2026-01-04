@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from data_management.utils.generation_utils.faq_generator import FaqUpdateOrchestrator
 from data_management.utils.generation_utils.terms_generator import TermsUpdateOrchestrator
+from data_management.utils.generation_utils.brand_generator import BrandUpdateOrchestrator
 from data_management.utils.archive_db.database_archiver import DatabaseArchiver
 
 class Command(BaseCommand):
@@ -22,6 +23,11 @@ class Command(BaseCommand):
             action='store_true',
             help='Archive the current database state to JSON files.',
         )
+        parser.add_argument(
+            '--brands',
+            action='store_true',
+            help='Generate Brands from the JSONL data file.',
+        )
 
     def handle(self, *args, **options):
         something_generated = False
@@ -42,6 +48,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS('Starting database archive...'))
             archiver = DatabaseArchiver(command=self)
             archiver.run()
+
+        if options['brands']:
+            something_generated = True
+            self.stdout.write(self.style.SUCCESS('Starting Brand generation...'))
+            orchestrator = BrandUpdateOrchestrator(command=self)
+            orchestrator.run()
 
         if not something_generated:
             self.stdout.write(self.style.WARNING(
