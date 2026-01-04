@@ -35,7 +35,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                     getUnavailableDays(),
                     getServiceSettings()
                 ]);
-                setJobTypes(jobs || []);
+                setJobTypes(jobs.job_type_names || []);
                 setUnavailableDays(unavailable.unavailable_days || []);
                 setServiceSettings(settings);
             } catch (error) {
@@ -95,12 +95,12 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <Label htmlFor="date">Drop-off Date</Label>
+                        <Label htmlFor="date" className="mb-2 block">Drop-off Date</Label>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
                                     variant={"outline"}
-                                    className={cn("w-full justify-start text-left font-normal")}
+                                    className={cn("w-full justify-start text-left font-normal bg-white dark:bg-gray-950 text-black dark:text-white")}
                                 >
                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                     {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
@@ -118,7 +118,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                         </Popover>
                     </div>
                     <div>
-                        <Label htmlFor="time">Drop-off Time</Label>
+                        <Label htmlFor="time" className="mb-2 block">Drop-off Time</Label>
                         <Select onValueChange={setSelectedTime} value={selectedTime} disabled={!selectedDate}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select a time" />
@@ -131,7 +131,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 </div>
 
                 <div>
-                    <Label>Job Type</Label>
+                    <Label className="mb-2 block">Job Type</Label>
                     <div className="space-y-2 mt-2 p-4 border rounded-md max-h-48 overflow-y-auto">
                         {jobTypes.length > 0 ? jobTypes.map((job: string) => (
                             <div key={job} className="flex items-center space-x-2">
@@ -147,7 +147,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 </div>
                 
                 <div>
-                    <Label htmlFor="notes">Notes</Label>
+                    <Label htmlFor="notes" className="mb-2 block">Notes</Label>
                     <Textarea 
                         id="notes"
                         placeholder="Add any notes for the mechanic (e.g., details about the issue)" 

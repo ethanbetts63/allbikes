@@ -84,7 +84,7 @@ class BookingViewSet(viewsets.ViewSet):
         job_types = service.get_job_types()
         if "error" in job_types:
             return Response(job_types, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(job_types, status=status.HTTP_200_OK)
+        return Response({'job_type_names': job_types}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
     def unavailable_days(self, request):
