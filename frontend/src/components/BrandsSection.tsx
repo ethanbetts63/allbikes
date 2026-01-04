@@ -46,7 +46,7 @@ Best known for their self-balancing transporters, Segway has evolved into a seri
 We've tested a lot of brands, but Segway's electric mopeds impressed us with their build quality, design, and performance. We're confident these are vehicles we can stand behind—and that you'll love riding.`;
 
   return (
-    <section className="w-full py-12">
+    <section className="w-full py-6">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl font-bold text-center text-[var(--text-primary)] mb-2">Our Featured Brands</h2>
         <BrandCard
