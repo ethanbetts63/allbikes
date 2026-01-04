@@ -22,7 +22,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
   return (
-    <Card className="w-full overflow-hidden flex flex-col">
+    <Card className="w-full overflow-hidden flex flex-col pt-0 border border-foreground">
       <CardHeader className="p-0">
         <div className="relative aspect-video">
           <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover"/>
