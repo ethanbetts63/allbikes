@@ -45,8 +45,20 @@ const HomePage = () => {
         <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={loading} error={error} />
         <ReviewCarousel />
         <BrandsSection />
-        <FeaturedBikes title="Featured New Bikes" bikes={newBikes} />
-        <FeaturedBikes title="Featured Used Bikes" bikes={usedBikes} />
+        <FeaturedBikes
+          title="Featured New Bikes"
+          bikes={newBikes}
+          description="Check out some of our latest new models available now."
+          linkTo="/bikes/new"
+          linkText="All New Bikes"
+        />
+        <FeaturedBikes
+          title="Featured Used Bikes"
+          bikes={usedBikes}
+          description="Explore our range of quality pre-owned motorcycles and scooters."
+          linkTo="/bikes/used"
+          linkText="All Used Bikes"
+        />
     </div>
   );
 };
