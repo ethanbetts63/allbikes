@@ -57,8 +57,8 @@ const ServiceBrands: React.FC = () => {
                                 className={cn(
                                     "text-lg text-[var(--text-primary)]",
                                     {
-                                        "bg-green-600 hover:bg-green-700": brand.serviceable,
-                                        "bg-red-600 hover:bg-red-700": !brand.serviceable,
+                                        "bg-primary hover:bg-primary/90": brand.serviceable,
+                                        "bg-red-800 hover:bg-red-900": !brand.serviceable,
                                     }
                                 )}
                             >
