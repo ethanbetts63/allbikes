@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { createBooking } from '@/services/bookingService';
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/sonner"
-
 
 // Import the step components
 import BookingDetailsForm from '@/components/booking/BookingDetailsForm';
@@ -29,7 +27,6 @@ const initialFormData = {
 };
 
 const BookingPage: React.FC = () => {
-    const { toast } = useToast();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState(() => {
         try {
@@ -57,8 +54,7 @@ const BookingPage: React.FC = () => {
         try {
             // Here you might add final validation before submitting
             await createBooking(formData);
-            toast({
-                title: "Booking Submitted!",
+            toast.success("Booking Submitted!", {
                 description: "Thank you! We have received your booking request and will be in touch shortly.",
             });
             // Clear saved data and reset form
@@ -67,10 +63,8 @@ const BookingPage: React.FC = () => {
             setStep(1);
         } catch (error) {
             console.error("Booking submission error:", error);
-            toast({
-                title: "Submission Failed",
+            toast.error("Submission Failed", {
                 description: "There was an error submitting your booking. Please try again.",
-                variant: "destructive",
             });
         }
     };
@@ -97,7 +91,6 @@ const BookingPage: React.FC = () => {
             <div className="p-8 border rounded-lg shadow-lg bg-card">
                 {renderStep()}
             </div>
-            <Toaster />
         </div>
     );
 };
