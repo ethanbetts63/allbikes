@@ -3,41 +3,48 @@ import HomeHero from '@/components/HomeHero';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
 import FeaturedBikes from '@/components/FeaturedBikes';
-import { getBikes } from '@/api';
-import type { Bike } from "@/types";
+import { FaqSection } from '@/components/FaqSection';
+import { getBikes, getFooterSettings } from '@/api';
+import type { Bike, FooterSettings } from "@/types";
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
   const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
+  const [siteSettings, setSiteSettings] = useState<FooterSettings | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchFeaturedBikes = async () => {
+    const fetchData = async () => {
       try {
-        // Fetch featured new bikes
-        const newBikesResponse = await getBikes('new', 1, true);
+        // Fetch settings and bikes in parallel
+        const [settingsResponse, newBikesResponse, usedBikesResponse] = await Promise.all([
+          getFooterSettings(),
+          getBikes('new', 1, true),
+          getBikes('used', 1, true)
+        ]);
+
+        setSiteSettings(settingsResponse);
+
         const availableNewBikes = newBikesResponse.results.filter(
           bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable'
         );
         setNewBikes(availableNewBikes);
 
-        // Fetch featured used bikes
-        const usedBikesResponse = await getBikes('used', 1, true);
         const availableUsedBikes = usedBikesResponse.results.filter(
           bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable'
         );
         setUsedBikes(availableUsedBikes);
 
       } catch (err) {
-        console.error("Failed to fetch featured bikes:", err);
-        setError("Failed to load featured bikes.");
+        console.error("Failed to fetch page data:", err);
+        setError("Failed to load page data.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFeaturedBikes();
+    fetchData();
   }, []);
 
   return (
@@ -59,6 +66,7 @@ const HomePage = () => {
           linkTo="/bikes/used"
           linkText="All Used Bikes"
         />
+        <FaqSection title="Frequently Asked Questions" siteSettings={siteSettings} />
     </div>
   );
 };

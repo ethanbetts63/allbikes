@@ -49,7 +49,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
     <>
       <Seo title={`${pageTitle} | Allbikes`} />
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-8">{pageTitle}</h1>
+        <h1 className="text-3xl font-bold mb-8 text-[var(--text-primary)]">{pageTitle}</h1>
         
         {isLoading && (
             <div className="flex justify-center items-center h-64">
