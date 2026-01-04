@@ -5,8 +5,26 @@ import type { Bike } from '@/types';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import FeaturedBikes from "@/components/FeaturedBikes";
+import {
+    DollarSign,
+    Hash,
+    Gauge,
+    Cog,
+    Calendar,
+    GitCommit,
+    FileText,
+    CalendarClock,
+    ShieldCheck
+} from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+interface Specification {
+    label: string;
+    value: string | number | null | undefined;
+    icon: React.ElementType;
+    formatter?: (val: any) => string;
+}
 
 const BikeDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -66,43 +84,43 @@ const BikeDetailPage: React.FC = () => {
         return [...bike.images].sort((a, b) => a.order - b.order);
     }, [bike]);
     
-    const specifications = bike ? [
-        { label: "Price", value: bike.price, formatter: (val: string) => `$${parseInt(val).toLocaleString()}` },
-        { label: "Stock Number", value: bike.stock_number },
-        { label: "Odometer", value: bike.odometer, formatter: (val: number) => `${val.toLocaleString()} km` },
-        { label: "Engine Size", value: bike.engine_size, formatter: (val: number) => `${val}cc` },
-        { label: "Year", value: bike.year },
-        { label: "Transmission", value: bike.transmission },
-        { label: "Registration", value: bike.rego },
-        { label: "Rego Expiry", value: bike.rego_exp },
-        { label: "Warranty", value: bike.warranty_months, formatter: (val: number) => `${val} months` },
+    const specifications: Specification[] = bike ? [
+        { label: "Price", value: bike.price, icon: DollarSign, formatter: (val: string) => `$${parseInt(val).toLocaleString()}` },
+        { label: "Stock Number", value: bike.stock_number, icon: Hash },
+        { label: "Odometer", value: bike.odometer, icon: Gauge, formatter: (val: number) => `${val.toLocaleString()} km` },
+        { label: "Engine Size", value: bike.engine_size, icon: Cog, formatter: (val: number) => `${val}cc` },
+        { label: "Year", value: bike.year, icon: Calendar },
+        { label: "Transmission", value: bike.transmission, icon: GitCommit },
+        { label: "Registration", value: bike.rego, icon: FileText },
+        { label: "Rego Expiry", value: bike.rego_exp, icon: CalendarClock },
+        { label: "Warranty", value: bike.warranty_months, icon: ShieldCheck, formatter: (val: number) => `${val} months` },
     ] : [];
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex justify-center items-center h-screen bg-white">
                 <Spinner className="h-12 w-12" />
             </div>
         );
     }
 
     if (error) {
-        return <p className="text-red-500 text-center mt-8">{error}</p>;
+        return <p className="text-red-500 text-center mt-8 bg-white text-black">{error}</p>;
     }
 
     if (!bike) {
-        return <p className="text-center mt-8">Bike not found.</p>;
+        return <p className="text-center mt-8 bg-white text-black">Bike not found.</p>;
     }
     
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
     return (
-        <>
+        <div className="bg-white text-black">
             <Seo title={`${pageTitle} | Allbikes`} />
             <div className="container mx-auto p-4 lg:p-8">
-                <h1 className="text-3xl md:text-4xl font-bold text-center my-4">{cardTitle}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
                 <div className="text-center mb-8 flex justify-center gap-2">
                     <Badge className="text-lg capitalize">{bike.condition}</Badge>
                 </div>
@@ -130,29 +148,34 @@ const BikeDetailPage: React.FC = () => {
 
                     {/* Right Column: Specifications & Description */}
                     <div>
-                        <Card className="bg-white text-black mb-8">
-                            <CardHeader>
-                                <CardTitle className="text-2xl font-bold">Specifications</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <ul className="space-y-2">
-                                    {specifications.map((spec) => {
-                                        if (spec.value === null || spec.value === undefined || spec.value === '') return null;
-                                        const displayValue = spec.formatter ? spec.formatter(spec.value as any) : spec.value;
-                                        return (
-                                            <li key={spec.label} className="flex justify-between py-2 border-b border-gray-200">
-                                                <span className="font-semibold text-gray-600">{spec.label}:</span>
-                                                <span className="text-gray-900">{displayValue}</span>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </CardContent>
-                        </Card>
+                        <div className="mb-8">
+                            <h2 className="text-2xl font-bold border-b pb-2 mb-4 text-black">Specifications</h2>
+                            <ul className="space-y-2">
+                                {specifications.map((spec) => {
+                                    if (spec.value === null || spec.value === undefined || spec.value === '') return null;
+                                    const displayValue = spec.formatter ? spec.formatter(spec.value) : spec.value;
+                                    return (
+                                        <li key={spec.label} className="flex justify-between items-center py-2 border-b border-gray-200">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <spec.icon className="h-6 w-6 text-black" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>{spec.label}</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                            <span className="text-black text-lg">{displayValue}</span>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
 
-                        <h2 className="text-2xl font-bold border-b pb-2 mb-4">Description</h2>
-                        <div className="prose max-w-none">
-                            <p>{bike.description || 'No description available.'}</p>
+                        <h2 className="text-2xl font-bold border-b pb-2 mb-4 text-black">Description</h2>
+                        <div className="prose max-w-none text-black">
+                            <p className="text-black">{bike.description || 'No description available.'}</p>
                         </div>
                     </div>
                 </div>
@@ -178,7 +201,7 @@ const BikeDetailPage: React.FC = () => {
                     />
                 )}
             </div>
-        </>
+        </div>
     );
 };
 
