@@ -28,7 +28,7 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
           scrollbar-width: none;
         }
       `}</style>
-      <div className="w-full py-12">
+      <div className="w-full pt-4 pb-4">
         <div className="container mx-auto">
           <div className="bg-foreground rounded-lg p-8 flex flex-col md:flex-row items-center">
             {/* Left Column: Title, Description, Button */}

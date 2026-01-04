@@ -53,47 +53,61 @@ const generateColorForInitial = (name: string) => {
   return `hsl(${hue}, 70%, 60%)`; // Use HSL for a vibrant color
 };
 
+// CSS to hide the scrollbar
+const scrollbarHideStyle = `
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`;
+
 const ReviewCarousel = () => {
   return (
-    <div className="w-full py-12 bg-foreground">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold tracking-tight text-center mb-8 text-[var(--text-primary)]">What Our Customers Say</h2>
-        <div className="flex overflow-x-auto space-x-6 pb-4">
-          {reviewData.map((review) => {
-            const charLimit = 200;
-            const truncatedText = review.text.length > charLimit 
-              ? review.text.substring(0, charLimit) + "..." 
-              : review.text;
-            
-            const initial = review.author_name.charAt(0).toUpperCase();
-            const backgroundColor = generateColorForInitial(review.author_name);
+    <>
+      <style>{scrollbarHideStyle}</style>
+      <div className="w-full py-12 bg-foreground">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold tracking-tight text-center mb-8 text-[var(--text-primary)]">What Our Customers Say</h2>
+          <div className="flex overflow-x-auto space-x-6 pb-4 no-scrollbar">
+            {reviewData.map((review) => {
+              const charLimit = 200;
+              const truncatedText = review.text.length > charLimit 
+                ? review.text.substring(0, charLimit) + "..." 
+                : review.text;
+              
+              const initial = review.author_name.charAt(0).toUpperCase();
+              const backgroundColor = generateColorForInitial(review.author_name);
 
-            return (
-                <Card key={review.pk} className="flex-shrink-0 w-80 bg-white rounded-xl transform transition-transform hover:-translate-y-1 pt-6 px-6 pb-6"> {/* Adjusted padding */}
-                    <CardFooter className="flex flex-col items-start p-0">
-                        <div className="flex items-center mb-2">
-                            <div 
-                                className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-[var(--text-primary)] font-bold text-lg"
-                                style={{ backgroundColor: backgroundColor }}
-                            >
-                                {initial}
-                            </div>
-                            <p className="font-semibold text-gray-900">{review.author_name}</p>
-                        </div>
-                        <div className="flex mb-4">
-                            {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                            ))}
-                        </div>
-                        <p className="text-gray-700 leading-relaxed">"{truncatedText}"</p>
-                    </CardFooter>
-                </Card>
-            );
+              return (
+                  <Card key={review.pk} className="flex-shrink-0 w-80 bg-white rounded-xl transform transition-transform hover:-translate-y-1 pt-6 px-6 pb-6"> {/* Adjusted padding */}
+                      <CardFooter className="flex flex-col items-start p-0">
+                          <div className="flex items-center mb-2">
+                              <div 
+                                  className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-[var(--text-primary)] font-bold text-lg"
+                                  style={{ backgroundColor: backgroundColor }}
+                              >
+                                  {initial}
+                              </div>
+                              <p className="font-semibold text-gray-900">{review.author_name}</p>
+                          </div>
+                          <div className="flex mb-4">
+                              {[...Array(5)].map((_, i) => (
+                                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                              ))}
+                          </div>
+                          <p className="text-gray-700 leading-relaxed">"{truncatedText}"</p>
+                      </CardFooter>
+                  </Card>
+              );
 
-          })}
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

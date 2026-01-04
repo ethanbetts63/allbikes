@@ -107,7 +107,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
 
       {/* Right Column */}
       <div className="md:w-1/2 flex flex-col items-center justify-center p-12 text-center bg-background">
-        <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-8">
+        <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-8 leading-snug">
           Perth Motorcycle/Scooter Mechanic & Dealership
         </h1>
         <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-12">
