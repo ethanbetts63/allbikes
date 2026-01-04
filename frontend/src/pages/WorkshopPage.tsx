@@ -28,14 +28,14 @@ const WorkshopPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto py-0">
             <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} />
 
-            <div className="mt-12">
+            <div className="mt-0">
                 <ServiceBrands />
             </div>
 
-            <div className="mt-12">
+            <div className="mt-8 mb-16">
                 <MotorcycleMovers />
             </div>
         </div>

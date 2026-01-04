@@ -43,13 +43,6 @@ const NavBar = () => {
                 Workshop
               </Link>
             </li>
-            <li>
-              <Link
-                to="/booking"
-              >
-                Book Service
-              </Link>
-            </li>
           </ul>
         </nav>
 
