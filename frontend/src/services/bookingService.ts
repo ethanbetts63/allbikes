@@ -1,4 +1,4 @@
-import apiClient from '../apiClient';
+import { apiClient } from '../apiClient';
 
 // Type for the form data, should match the backend serializer
 // It's good practice to define this in a types file, but placing here for now.

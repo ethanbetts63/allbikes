@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { getJobTypes, getUnavailableDays, getServiceSettings, ServiceSettings } from '@/services/bookingService';
+import { getJobTypes, getUnavailableDays, getServiceSettings, type ServiceSettings } from '@/services/bookingService';
 import { format, add, parse } from 'date-fns';
 
 import { Button } from "@/components/ui/button";
@@ -148,7 +147,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
 
                 <div className="flex items-center space-x-2">
                     <Checkbox id="courtesy" 
-                        onCheckedChange={(checked) => setFormData({...formData, courtesy_vehicle_requested: checked})}
+                        onCheckedChange={(checked: boolean | 'indeterminate') => setFormData({...formData, courtesy_vehicle_requested: checked})}
                         checked={formData.courtesy_vehicle_requested}
                     />
                     <Label htmlFor="courtesy">Request a courtesy vehicle</Label>
