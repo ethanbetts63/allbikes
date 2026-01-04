@@ -19,7 +19,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   return (
     <Link to={`/bikes/${bike.id}`} className="block">
       <Card className="w-full overflow-hidden flex flex-col h-full transform transition-transform hover:-translate-y-1">
-        <div className="relative aspect-video">
+        <div className="relative h-32">
           <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover"/>
         </div>
         <CardContent className="p-3 flex-grow flex flex-col">

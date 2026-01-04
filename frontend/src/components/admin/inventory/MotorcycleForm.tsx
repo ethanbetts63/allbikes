@@ -7,25 +7,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from "@/components/ui/switch"
-import type { Bike } from '@/types/index';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-
-// Represents a unified image object for the form's state
-export type ManagedImage = {
-    id: string; // A unique ID for react-hook-form's useFieldArray (can be db id or new uuid)
-    source_id: number | null; // The database ID if it's an existing image
-    file: File | null; // The File object if it's a new upload
-    previewUrl: string; // The URL for rendering the preview (remote URL or blob URL)
-    order: number;
-}
-
-// This will be the shape of our form data
-export type MotorcycleFormData = Omit<Bike, 'id' | 'images'> & {
-    managedImages: ManagedImage[];
-};
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import type { Bike, ManagedImage, MotorcycleFormData } from '@/types/index';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 
 interface MotorcycleFormProps {
     initialData?: Bike;

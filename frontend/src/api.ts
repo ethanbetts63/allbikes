@@ -1,22 +1,12 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse, UserProfile, Bike, FooterSettings } from "@/types";
+import type { AuthResponse, UserProfile, Bike, FooterSettings, PaginatedResponse, MotorcycleFormData, ManagedImage } from "@/types";
 
 /**
  * A centralized module for all API interactions.
  */
 
 const API_BASE_URL = '/api/data'; // Define API base URL for data-related endpoints
-
-// --- Type for Paginated API responses ---
-export interface PaginatedResponse<T> {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: T[];
-}
-
-export { FooterSettings };
 
 // --- Helper Functions ---
 

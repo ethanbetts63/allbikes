@@ -1,3 +1,11 @@
+// --- Generic API Types ---
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
 // --- Auth Types ---
 export interface AuthResponse {
   access: string;
@@ -39,6 +47,20 @@ export type Bike = {
   stock_number: string;
   warranty_months: number;
   images: BikeImage[];
+};
+
+// Represents a unified image object for the form's state
+export type ManagedImage = {
+    id: string; // A unique ID for react-hook-form's useFieldArray (can be db id or new uuid)
+    source_id: number | null; // The database ID if it's an existing image
+    file: File | null; // The File object if it's a new upload
+    previewUrl: string; // The URL for rendering the preview (remote URL or blob URL)
+    order: number;
+}
+
+// This will be the shape of our form data
+export type MotorcycleFormData = Omit<Bike, 'id' | 'images'> & {
+    managedImages: ManagedImage[];
 };
   
   // --- Site Settings Types ---
