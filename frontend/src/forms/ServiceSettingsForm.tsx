@@ -39,7 +39,7 @@ const ServiceSettingsForm: React.FC<ServiceSettingsFormProps> = ({
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div>
-                            <Label htmlFor="booking_advance_notice">Booking Advance Notice (Days)</Label>
+                            <Label htmlFor="booking_advance_notice" className="block mb-2">Booking Advance Notice (Days)</Label>
                             <Input 
                                 id="booking_advance_notice" 
                                 name="booking_advance_notice" 
@@ -57,7 +57,7 @@ const ServiceSettingsForm: React.FC<ServiceSettingsFormProps> = ({
                     </CardHeader>
                     <CardContent className="space-y-4">
                        <div>
-                            <Label htmlFor="drop_off_start_time">Drop-off Start Time</Label>
+                            <Label htmlFor="drop_off_start_time" className="block mb-2">Drop-off Start Time</Label>
                             <Input 
                                 id="drop_off_start_time" 
                                 name="drop_off_start_time" 
@@ -67,7 +67,7 @@ const ServiceSettingsForm: React.FC<ServiceSettingsFormProps> = ({
                             />
                         </div>
                         <div>
-                            <Label htmlFor="drop_off_end_time">Drop-off End Time</Label>
+                            <Label htmlFor="drop_off_end_time" className="block mb-2">Drop-off End Time</Label>
                             <Input 
                                 id="drop_off_end_time" 
                                 name="drop_off_end_time" 

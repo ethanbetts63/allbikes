@@ -132,4 +132,8 @@ export interface JobType {
     name: string;
     description: string;
 }
-  
+
+export interface EnrichedJobType {
+    name: string;
+    description: string | null;
+}

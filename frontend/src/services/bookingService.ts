@@ -1,4 +1,5 @@
 import { authedFetch } from '../apiClient';
+import type { ServiceSettings, EnrichedJobType } from '../types';
 
 // Type for the form data, should match the backend serializer
 // It's good practice to define this in a types file, but placing here for now.
@@ -31,18 +32,6 @@ export interface BookingFormData {
     note?: string;
 }
 
-
-export interface ServiceSettings {
-    id: number;
-    booking_advance_notice: number;
-    drop_off_start_time: string; // e.g., "09:00:00"
-    drop_off_end_time: string;   // e.g., "17:00:00"
-}
-
-export interface EnrichedJobType {
-    name: string;
-    description: string | null;
-}
 
 /**
  * Fetches the service settings from the backend.
