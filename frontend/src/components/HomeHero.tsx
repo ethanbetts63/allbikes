@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getBikes } from '@/api';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import type { Bike } from "@/types";
 
-const HomeHero: React.FC = () => {
+interface HomeHeroProps {
+  newBikes: Bike[];
+  usedBikes: Bike[];
+  loading: boolean;
+  error: string | null;
+}
+
+const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error }) => {
   const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([]);
   const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([]);
   const [currentNewBikeImageIndex, setCurrentNewBikeImageIndex] = useState(0);
   const [currentUsedBikeImageIndex, setCurrentUsedBikeImageIndex] = useState(0);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   const defaultPlaceholderImage = '/src/assets/motorcycle_images/placeholder.png';
 
@@ -21,38 +26,18 @@ const HomeHero: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchFeaturedBikeImages = async () => {
-      try {
-        // Fetch featured new bikes
-        const newBikesResponse = await getBikes('new', 1, true); // Assuming first page is enough for cycling
-        const newUrls: string[] = newBikesResponse.results
-          .filter(bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable')
-          .map(bike => {
-            const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-            return sortedImages[0]?.image || defaultPlaceholderImage;
-          });
-        setNewBikeImageUrls(newUrls.length > 0 ? newUrls : [defaultPlaceholderImage]);
+    const newUrls = newBikes.map(bike => {
+      const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
+      return sortedImages[0]?.image || defaultPlaceholderImage;
+    });
+    setNewBikeImageUrls(newUrls.length > 0 ? newUrls : [defaultPlaceholderImage]);
 
-        // Fetch featured used bikes
-        const usedBikesResponse = await getBikes('used', 1, true); // Assuming first page is enough for cycling
-        const usedUrls: string[] = usedBikesResponse.results
-          .filter(bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable')
-          .map(bike => {
-            const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-            return sortedImages[0]?.image || defaultPlaceholderImage;
-          });
-        setUsedBikeImageUrls(usedUrls.length > 0 ? usedUrls : [defaultPlaceholderImage]);
-
-      } catch (err) {
-        console.error("Failed to fetch featured bike images for cycling:", err);
-        setError("Failed to load featured bike images for cycling.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeaturedBikeImages();
-  }, []); // Empty dependency array means this runs once on mount
+    const usedUrls = usedBikes.map(bike => {
+      const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
+      return sortedImages[0]?.image || defaultPlaceholderImage;
+    });
+    setUsedBikeImageUrls(usedUrls.length > 0 ? usedUrls : [defaultPlaceholderImage]);
+  }, [newBikes, usedBikes]);
 
   // Image cycling effect for New Bikes
   useEffect(() => {
@@ -137,6 +122,3 @@ const HomeHero: React.FC = () => {
     </div>
   );
 };
-
-
-export default HomeHero;

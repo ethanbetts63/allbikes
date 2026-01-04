@@ -9,7 +9,7 @@ const NavBar = () => {
     )}>
       <div className="container flex h-20 items-center justify-between">
         {/* Left Section: Logo */}
-        <div className="flex items-center p-4">
+        <div className="flex items-center p-0">
           <Link to="/" className="flex items-center">
             <img 
               src={logo} 
