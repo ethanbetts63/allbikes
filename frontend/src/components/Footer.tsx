@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from './ui/button'; // Assuming button component is in the same folder or similar path
-import { getFooterSettings, type FooterSettings } from '@/api'; // Import the new API function and interface
+import { getFooterSettings } from '@/api';
+import type { FooterSettings } from '@/types';
 
 const Footer = () => {
   const { user, logout } = useAuth(); // Destructure logout from useAuth
@@ -23,11 +24,11 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="bg-gray-800 text-white p-8 mt-auto">
+    <footer className="bg-gray-800 text-[var(--text-primary)] p-8 mt-auto">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-300">
         {/* Contact Info */}
         <div>
-          <h4 className="font-bold text-lg mb-4 text-white">Contact Us</h4>
+          <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Contact Us</h4>
           {error && <p className="text-red-400">{error}</p>}
           {footerSettings ? (
             <>
@@ -43,7 +44,7 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div>
-          <h4 className="font-bold text-lg mb-4 text-white">Quick Links</h4>
+          <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Quick Links</h4>
           <ul>
             <li className="mb-2"><Link to="/bikes/new" className="hover:underline text-gray-300">New Bikes</Link></li>
             <li className="mb-2"><Link to="/bikes/used" className="hover:underline text-gray-300">Used Bikes</Link></li>
@@ -69,7 +70,7 @@ const Footer = () => {
 
         {/* Opening Hours & Business Info */}
         <div>
-          <h4 className="font-bold text-lg mb-4 text-white">Opening Hours</h4>
+          <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Opening Hours</h4>
           {footerSettings ? (
             <>
               <p>Monday: {footerSettings.opening_hours_monday}</p>

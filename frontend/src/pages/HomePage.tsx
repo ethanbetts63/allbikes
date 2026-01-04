@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import HomeHero from '@/components/HomeHero';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
@@ -43,10 +43,10 @@ const HomePage = () => {
   return (
     <div>
         <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={loading} error={error} />
-        <FeaturedBikes title="Featured New Bikes" bikes={newBikes} />
-        <FeaturedBikes title="Featured Used Bikes" bikes={usedBikes} />
         <ReviewCarousel />
         <BrandsSection />
+        <FeaturedBikes title="Featured New Bikes" bikes={newBikes} />
+        <FeaturedBikes title="Featured Used Bikes" bikes={usedBikes} />
     </div>
   );
 };

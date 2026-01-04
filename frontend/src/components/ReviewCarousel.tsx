@@ -73,7 +73,7 @@ const ReviewCarousel = () => {
                     <CardFooter className="flex flex-col items-start p-0">
                         <div className="flex items-center mb-2">
                             <div 
-                                className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-white font-bold text-lg"
+                                className="w-10 h-10 rounded-full flex items-center justify-center mr-3 text-[var(--text-primary)] font-bold text-lg"
                                 style={{ backgroundColor: backgroundColor }}
                             >
                                 {initial}

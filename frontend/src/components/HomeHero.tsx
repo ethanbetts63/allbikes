@@ -80,7 +80,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
     return (
       <Link
         to={linkPath}
-        className={`relative flex-1 flex items-center justify-center p-4 text-white text-3xl font-bold transition-all duration-1000 ease-in-out group ${bgColorClass} min-h-[200px]`}
+        className={`relative flex-1 flex items-center justify-center p-4 text-[var(--text-primary)] text-3xl font-bold transition-all duration-1000 ease-in-out group ${bgColorClass} min-h-[200px]`}
         style={{ // Added a minimum height for smaller screens
           backgroundImage: `url(${currentImageUrl})`,
           backgroundSize: 'cover',
@@ -122,3 +122,5 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
     </div>
   );
 };
+
+export default HomeHero;
