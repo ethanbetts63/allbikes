@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getJobTypes } from '@/services/bookingService';
 import type { EnrichedJobType } from '@/types';
-import WorkshopJobTypes from '@/components/WorkshopJobTypes';
+import WorkshopJobTypes from '@/components/workshop/WorkshopJobTypes';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
+import ServiceBrands from "@/components/ServiceBrands";
+import MotorcycleMovers from "@/components/MotorcycleMovers";
 
 const WorkshopPage: React.FC = () => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
@@ -37,6 +39,14 @@ const WorkshopPage: React.FC = () => {
             ) : (
                 <WorkshopJobTypes jobTypes={jobTypes} />
             )}
+
+            <div className="mt-12">
+                <ServiceBrands />
+            </div>
+
+            <div className="mt-12">
+                <MotorcycleMovers />
+            </div>
         </div>
     );
 };

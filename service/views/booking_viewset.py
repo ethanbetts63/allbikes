@@ -83,10 +83,17 @@ class BookingViewSet(viewsets.ViewSet):
         service = MechanicsDeskService()
         mechanicdesk_data = service.get_job_types()
 
-        # The service returns a dict, e.g., {'job_type_names': ['Type 1', 'Type 2']}
-        job_type_names = mechanicdesk_data.get('job_type_names', [])
-        if "error" in job_type_names:
-            return Response(job_type_names, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # The service returns a list of job type names, e.g., ['Type 1', 'Type 2']
+        if not isinstance(mechanicdesk_data, list):
+            # Handle potential error responses which are dicts
+            if isinstance(mechanicdesk_data, dict) and 'error' in mechanicdesk_data:
+                return Response(mechanicdesk_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Or if the format is just wrong for some other reason
+            return Response({'error': 'Unexpected data format from external service.'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        job_type_names = mechanicdesk_data
+
         
         # Get local descriptions
         local_job_types = JobType.objects.all()
