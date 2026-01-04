@@ -18,25 +18,25 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
         <div className="relative h-32">
           <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover" />
         </div>
-        <CardContent className="p-3 flex-grow flex flex-col justify-between">
-          <div>
-            <h3 className="text-lg font-bold mb-2 flex-grow">{cardTitle}</h3>
-            <div className="text-sm text-muted-foreground space-y-1">
+        <CardContent className="p-2 flex-grow flex flex-col justify-between">
+          <div className="flex flex-col items-center">
+            <h3 className="text-lg font-bold mb-1">{cardTitle}</h3>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
               {bike.engine_size && (
                 <div className="flex items-center">
-                  <Wrench className="h-4 w-4 mr-2" />
+                  <Wrench className="h-4 w-4 mr-1" />
                   <span>{bike.engine_size}cc</span>
                 </div>
               )}
               {bike.transmission && (
                 <div className="flex items-center">
-                  <Cog className="h-4 w-4 mr-2" />
+                  <Cog className="h-4 w-4 mr-1" />
                   <span>{bike.transmission}</span>
                 </div>
               )}
             </div>
           </div>
-          <p className="text-lg font-bold text-primary mt-2 text-right">
+          <p className="text-2xl font-bold text-primary text-center">
             ${parseFloat(bike.price).toLocaleString()}
           </p>
         </CardContent>
