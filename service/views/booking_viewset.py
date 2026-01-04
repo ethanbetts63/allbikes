@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from .mechanics_desk_service import MechanicsDeskService
 from ..serializers import BookingSerializer, ServiceSettingsSerializer
-from ..models import ServiceSettings, BookingRequestLog
+from ..models import ServiceSettings, BookingRequestLog, JobType
 
 
 class BookingViewSet(viewsets.ViewSet):
@@ -77,14 +77,30 @@ class BookingViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def job_types(self, request):
         """
-        Fetches the list of available job types from MechanicsDesk.
-        Maps to GET /api/service/booking/job_types/
+        Fetches the list of available job types from MechanicsDesk and enriches
+        them with descriptions from the local database.
         """
         service = MechanicsDeskService()
-        job_types = service.get_job_types()
-        if "error" in job_types:
-            return Response(job_types, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({'job_type_names': job_types}, status=status.HTTP_200_OK)
+        mechanicdesk_data = service.get_job_types()
+
+        # The service returns a dict, e.g., {'job_type_names': ['Type 1', 'Type 2']}
+        job_type_names = mechanicdesk_data.get('job_type_names', [])
+        if "error" in job_type_names:
+            return Response(job_type_names, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        # Get local descriptions
+        local_job_types = JobType.objects.filter(is_active=True)
+        descriptions = {jt.name.lower().strip(): jt.description for jt in local_job_types}
+
+        # Combine the data
+        enriched_job_types = []
+        for name in job_type_names:
+            enriched_job_types.append({
+                'name': name,
+                'description': descriptions.get(name.lower().strip(), None)
+            })
+
+        return Response(enriched_job_types, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
     def unavailable_days(self, request):

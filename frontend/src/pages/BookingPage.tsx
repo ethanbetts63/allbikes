@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { createBooking } from '@/services/bookingService';
 
@@ -28,6 +29,7 @@ const initialFormData = {
 
 const BookingPage: React.FC = () => {
     const [step, setStep] = useState(1);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState(() => {
         try {
             const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -52,15 +54,12 @@ const BookingPage: React.FC = () => {
 
     const handleSubmit = async () => {
         try {
-            // Here you might add final validation before submitting
             await createBooking(formData);
-            toast.success("Booking Submitted!", {
-                description: "Thank you! We have received your booking request and will be in touch shortly.",
-            });
-            // Clear saved data and reset form
+            
+            // Clear saved data and navigate to success page
             localStorage.removeItem(LOCAL_STORAGE_KEY);
-            setFormData(initialFormData);
-            setStep(1);
+            navigate('/booking/success');
+
         } catch (error) {
             console.error("Booking submission error:", error);
             toast.error("Submission Failed", {
@@ -78,6 +77,7 @@ const BookingPage: React.FC = () => {
             case 3:
                 return <PersonalDetailsForm formData={formData} setFormData={setFormData} prevStep={prevStep} handleSubmit={handleSubmit} />;
             default:
+                // This case should ideally not be reached if navigation happens on submit
                 return <div>Form complete. Thank you!</div>;
         }
     }

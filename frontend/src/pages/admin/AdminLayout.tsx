@@ -63,6 +63,12 @@ const AdminLayout: React.FC = () => {
                 Service Settings
               </NavLink>
             </Button>
+            <Button asChild variant="ghost">
+              <NavLink to="/admin/job-types" className={getNavLinkClass}>
+                <Wrench className="h-4 w-4" />
+                Job Types
+              </NavLink>
+            </Button>
           </nav>
         </aside>
 
