@@ -57,6 +57,12 @@ const AdminLayout: React.FC = () => {
                 Site Settings
               </NavLink>
             </Button>
+            <Button asChild variant="ghost">
+              <NavLink to="/admin/service-settings" className={getNavLinkClass}>
+                <Wrench className="h-4 w-4" />
+                Service Settings
+              </NavLink>
+            </Button>
           </nav>
         </aside>
 

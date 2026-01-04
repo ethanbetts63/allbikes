@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import ServiceSettings
+from ..models.service_settings import ServiceSettings
 
 class ServiceSettingsSerializer(serializers.ModelSerializer):
     class Meta:

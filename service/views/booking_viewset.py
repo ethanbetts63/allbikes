@@ -63,7 +63,7 @@ class BookingViewSet(viewsets.ViewSet):
             return Response(log_payload['response_body'], status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['get'])
-    def get_service_settings(self, request):
+    def fetch_service_config(self, request):
         """
         Fetches the service settings.
         Maps to GET /api/service/settings/

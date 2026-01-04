@@ -18,7 +18,22 @@ class ServiceSettings(models.Model):
     )
 
     def __str__(self):
-        return (f"Booking notice: {self.booking_advance_notice} days, "
-                f"Drop-off: {self.drop_off_start_time.strftime('%I:%M %p')} - {self.drop_off_end_time.strftime('%I:%M %p')}")
+        return "Service Settings"
+
+    class Meta:
+        verbose_name = "Service Settings"
+        verbose_name_plural = "Service Settings"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and ServiceSettings.objects.exists():
+            # If you are creating a new instance and one already exists
+            raise ValueError("There can be only one ServiceSettings instance")
+        return super(ServiceSettings, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        # Gets the singleton instance, creating it if it doesn't exist
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
 
 
