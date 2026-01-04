@@ -89,7 +89,7 @@ class BookingViewSet(viewsets.ViewSet):
             return Response(job_type_names, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         # Get local descriptions
-        local_job_types = JobType.objects.filter(is_active=True)
+        local_job_types = JobType.objects.all()
         descriptions = {jt.name.lower().strip(): jt.description for jt in local_job_types}
 
         # Combine the data

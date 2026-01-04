@@ -14,10 +14,6 @@ class JobType(models.Model):
         blank=True,
         help_text="A customer-facing description of what the service includes."
     )
-    is_active = models.BooleanField(
-        default=True,
-        help_text="Designates whether this job type is active and should be displayed."
-    )
 
     def __str__(self):
         return self.name

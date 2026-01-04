@@ -8,7 +8,6 @@ import type { JobType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
@@ -22,11 +21,10 @@ const JobTypesPage: React.FC = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [editingJobType, setEditingJobType] = useState<JobType | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    
+
     // Form state
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [isActive, setIsActive] = useState(true);
     const [formError, setFormError] = useState('');
 
 
@@ -52,11 +50,9 @@ const JobTypesPage: React.FC = () => {
         if (jobType) {
             setName(jobType.name);
             setDescription(jobType.description);
-            setIsActive(jobType.is_active);
         } else {
             setName('');
             setDescription('');
-            setIsActive(true);
         }
         setFormError('');
         setIsDialogOpen(true);
@@ -70,15 +66,15 @@ const JobTypesPage: React.FC = () => {
         }
         setFormError('');
         setIsSubmitting(true);
-        
-        const data = { name, description, is_active: isActive };
+
+        const data = { name, description };
 
         try {
             if (editingJobType) {
                 await updateJobType(editingJobType.id, data);
                 toast.success('Job type updated successfully!');
             } else {
-                await createJobType(data);
+                await createJobType(data as Omit<JobType, 'id'>);
                 toast.success('Job type created successfully!');
             }
             await fetchJobTypes();
@@ -127,7 +123,6 @@ const JobTypesPage: React.FC = () => {
                         <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
-                            <TableHead>Active</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -136,7 +131,6 @@ const JobTypesPage: React.FC = () => {
                             <TableRow key={job.id}>
                                 <TableCell className="font-medium">{job.name}</TableCell>
                                 <TableCell>{job.description}</TableCell>
-                                <TableCell>{job.is_active ? 'Yes' : 'No'}</TableCell>
                                 <TableCell className="text-right">
                                     <Button variant="ghost" size="icon" onClick={() => openDialog(job)}>
                                         <Edit className="h-4 w-4" />
@@ -152,30 +146,22 @@ const JobTypesPage: React.FC = () => {
             </CardContent>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent>
+                <DialogContent className="bg-white">
                     <DialogHeader>
-                        <DialogTitle>{editingJobType ? 'Edit Job Type' : 'Add New Job Type'}</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className="text-black">{editingJobType ? 'Edit Job Type' : 'Add New Job Type'}</DialogTitle>
+                        <DialogDescription className="text-black">
                             The 'Name' must exactly match the job type name in MechanicDesk.
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="name" className="text-black block mb-2">Name</Label>
                             <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                             {formError && <p className="text-sm text-destructive mt-1">{formError}</p>}
                         </div>
                         <div>
-                            <Label htmlFor="description">Description</Label>
+                            <Label htmlFor="description" className="text-black block mb-2">Description</Label>
                             <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                        </div>
-                        <div className="flex items-center space-x-2">
-                             <Checkbox
-                                id="is_active"
-                                checked={isActive}
-                                onCheckedChange={(checked) => setIsActive(checked as boolean)}
-                            />
-                            <Label htmlFor="is_active">Is Active</Label>
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
