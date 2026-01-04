@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getBikeById } from '@/api';
+import { getBikeById, getBikes } from '@/api';
 import type { Bike } from '@/types';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import FeaturedBikes from "@/components/FeaturedBikes";
 
 const BikeDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -12,6 +14,8 @@ const BikeDetailPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedImage, setSelectedImage] = useState<string>('');
+    const [newBikes, setNewBikes] = useState<Bike[]>([]);
+    const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
 
     useEffect(() => {
         if (!id) return;
@@ -22,13 +26,11 @@ const BikeDetailPage: React.FC = () => {
                 setError(null);
                 const data = await getBikeById(id);
                 
-                // Sort images by order before setting state
                 const sortedImages = [...data.images].sort((a, b) => a.order - b.order);
-                data.images = sortedImages; //
+                data.images = sortedImages;
                 
                 setBike(data);
 
-                // Set the initial selected image from the sorted list
                 if (data.images && data.images.length > 0) {
                     setSelectedImage(data.images[0].image);
                 } else {
@@ -42,15 +44,39 @@ const BikeDetailPage: React.FC = () => {
             }
         };
 
+        const fetchFeaturedBikes = async () => {
+            try {
+                const newBikesData = await getBikes('new', 1, true);
+                setNewBikes(newBikesData.results);
+                
+                const usedBikesData = await getBikes('used', 1, true);
+                const demoBikesData = await getBikes('demo', 1, true);
+                setUsedBikes([...usedBikesData.results, ...demoBikesData.results]);
+            } catch (error) {
+                console.error("Failed to fetch featured bikes:", error);
+            }
+        };
+
         fetchBike();
+        fetchFeaturedBikes();
     }, [id]);
 
-    // Memoize the sorted image list for rendering
     const sortedImages = React.useMemo(() => {
         if (!bike?.images) return [];
-        // The list is already sorted in useEffect, but this ensures it
         return [...bike.images].sort((a, b) => a.order - b.order);
     }, [bike]);
+    
+    const specifications = bike ? [
+        { label: "Price", value: bike.price, formatter: (val: string) => `$${parseInt(val).toLocaleString()}` },
+        { label: "Stock Number", value: bike.stock_number },
+        { label: "Odometer", value: bike.odometer, formatter: (val: number) => `${val.toLocaleString()} km` },
+        { label: "Engine Size", value: bike.engine_size, formatter: (val: number) => `${val}cc` },
+        { label: "Year", value: bike.year },
+        { label: "Transmission", value: bike.transmission },
+        { label: "Registration", value: bike.rego },
+        { label: "Rego Expiry", value: bike.rego_exp },
+        { label: "Warranty", value: bike.warranty_months, formatter: (val: number) => `${val} months` },
+    ] : [];
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
 
@@ -70,17 +96,6 @@ const BikeDetailPage: React.FC = () => {
         return <p className="text-center mt-8">Bike not found.</p>;
     }
     
-    // Helper to render a specification row if the value exists
-    const renderSpec = (label: string, value: string | number | null | undefined) => {
-        if (value === null || value === undefined || value === '') return null;
-        return (
-            <li className="flex justify-between py-2 border-b">
-                <span className="font-semibold text-gray-600">{label}:</span>
-                <span className="text-gray-800">{value}</span>
-            </li>
-        );
-    };
-
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
     return (
@@ -115,17 +130,25 @@ const BikeDetailPage: React.FC = () => {
 
                     {/* Right Column: Specifications & Description */}
                     <div>
-                        <h2 className="text-2xl font-bold border-b pb-2 mb-4">Specifications</h2>
-                        <ul className="space-y-2 mb-8">
-                            {renderSpec("Price", `$${bike.price.toLocaleString()}`)}
-                            {renderSpec("Stock Number", bike.stock_number)}
-                            {renderSpec("Odometer", `${bike.odometer.toLocaleString()} km`)}
-                            {renderSpec("Engine Size", `${bike.engine_size}cc`)}
-                            {renderSpec("Year", bike.year)}
-                            {renderSpec("Registration", bike.rego)}
-                            {renderSpec("Rego Expiry", bike.rego_exp)}
-                            {renderSpec("Warranty", bike.warranty_months ? `${bike.warranty_months} months` : null)}
-                        </ul>
+                        <Card className="bg-white text-black mb-8">
+                            <CardHeader>
+                                <CardTitle className="text-2xl font-bold">Specifications</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className="space-y-2">
+                                    {specifications.map((spec) => {
+                                        if (spec.value === null || spec.value === undefined || spec.value === '') return null;
+                                        const displayValue = spec.formatter ? spec.formatter(spec.value as any) : spec.value;
+                                        return (
+                                            <li key={spec.label} className="flex justify-between py-2 border-b border-gray-200">
+                                                <span className="font-semibold text-gray-600">{spec.label}:</span>
+                                                <span className="text-gray-900">{displayValue}</span>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </CardContent>
+                        </Card>
 
                         <h2 className="text-2xl font-bold border-b pb-2 mb-4">Description</h2>
                         <div className="prose max-w-none">
@@ -133,6 +156,27 @@ const BikeDetailPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <div className="mt-16">
+                {bike.condition.toLowerCase() === 'new' && newBikes.length > 0 && (
+                    <FeaturedBikes
+                        title="Featured New Bikes"
+                        bikes={newBikes}
+                        description="Check out our latest models, fresh from the factory."
+                        linkTo="/inventory/new"
+                        linkText="View All New"
+                    />
+                )}
+                {(bike.condition.toLowerCase() === 'used' || bike.condition.toLowerCase() === 'demo') && usedBikes.length > 0 && (
+                    <FeaturedBikes
+                        title="Featured Used & Demo Bikes"
+                        bikes={usedBikes}
+                        description="Great value pre-owned and demonstrator bikes."
+                        linkTo="/inventory/used"
+                        linkText="View All Used"
+                    />
+                )}
             </div>
         </>
     );
