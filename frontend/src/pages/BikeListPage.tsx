@@ -61,6 +61,18 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
 
   const isNew = bikeCondition === 'new';
   const pageTitle = isNew ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
+  const responsivePageTitle = isNew ? (
+    <>
+      <span className="hidden md:inline">New Motorcycles and Scooters</span>
+      <span className="md:hidden">New Bikes</span>
+    </>
+  ) : (
+    <>
+      <span className="hidden md:inline">Used Motorcycles and Scooters</span>
+      <span className="md:hidden">Used Bikes</span>
+    </>
+  );
+
   const description = isNew 
     ? "Browse our range of new motorcycles and scooters available in Perth, including petrol and electric models. All New Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership. All New Motorcycles and Scooters come with a warranty."
     : "Browse our range of used motorcycles and scooters available in Perth, including petrol and electric models. All Used Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership.";
@@ -73,7 +85,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
         canonicalPath={isNew ? '/bikes/new' : '/bikes/used'}
       />
       <BikeListHero 
-        title={pageTitle}
+        title={responsivePageTitle}
         description={description}
         imageUrl={SymImage}
       />

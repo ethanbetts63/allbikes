@@ -18,7 +18,7 @@ export const FloatingActionButton: React.FC = () => {
                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
                  z-50" // Ensure it floats above other content
     >
-      <span className="hidden sm:inline">Book Service Online</span>
+      <span className="">Book Service</span>
       <ArrowRight className="h-6 w-6" />
     </Link>
   );

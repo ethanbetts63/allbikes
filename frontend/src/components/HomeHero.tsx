@@ -70,7 +70,17 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
 
   const renderBikeLink = (condition: 'new' | 'used') => {
     const linkPath = condition === 'new' ? '/bikes/new' : '/bikes/used';
-    const text = condition === 'new' ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
+    const text = condition === 'new' ? (
+      <>
+        <span className="hidden md:inline">New Motorcycles and Scooters</span>
+        <span className="md:hidden">New Bikes</span>
+      </>
+    ) : (
+      <>
+        <span className="hidden md:inline">Used Motorcycles and Scooters</span>
+        <span className="md:hidden">Used Bikes</span>
+      </>
+    );
     const bgColorClass = 'bg-foreground';
 
     const currentImageUrl = condition === 'new'
@@ -108,7 +118,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
       {/* Right Column */}
       <div className="md:w-1/2 flex flex-col items-center justify-center p-4 md:p-12 text-center bg-background">
         <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-8 leading-snug">
-          Perth Motorcycle/Scooter Mechanic & Dealership
+          Perth Motorcycle / Scooter Mechanic & Dealership
         </h1>
         <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-12">
           Operating in Perth for over 30 years, we are a motorcycle and scooter mechanic and dealership offering new and used sales across petrol and electric models. We provide motorcycle and scooter servicing, including tyre changes, maintenance, and general repairs. 

@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface BikeListHeroProps {
-  title: string;
+  title: React.ReactNode;
   description: string;
   imageUrl: string;
 }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 interface FeaturedBikesProps {
-  title: string;
+  title: React.ReactNode;
   bikes: Bike[];
   description: string;
   linkTo: string;
@@ -43,7 +43,7 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
             </div>
 
             {/* Right Column: Scrollable Bike Cards */}
-            <div className="md:w-4/5 md:pl-8 flex overflow-x-auto space-x-6 pb-4 hide-scrollbar">
+            <div className="w-full md:w-4/5 md:pl-8 flex overflow-x-auto space-x-6 pb-4 hide-scrollbar">
               {bikes.map((bike) => (
                 <div key={bike.id} className="flex-shrink-0 w-64">
                   <SmallBikeCard bike={bike} />

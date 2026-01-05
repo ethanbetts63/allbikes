@@ -80,14 +80,14 @@ const HomePage = () => {
         <ReviewCarousel />
         <BrandsSection />
         <FeaturedBikes
-          title="Featured New Motorcycles and Scooters"
+          title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
           bikes={newBikes}
           description="Check out some of our latest new models available now."
           linkTo="/bikes/new"
           linkText="All New Bikes"
         />
         <FeaturedBikes
-          title="Featured Used Motorcycles and Scooters"
+          title={<>Featured <span className="hidden md:inline">Used Motorcycles and Scooters</span><span className="md:hidden">Used Bikes</span></>}
           bikes={usedBikes}
           description="Explore our range of quality pre-owned motorcycles and scooters."
           linkTo="/bikes/used"
