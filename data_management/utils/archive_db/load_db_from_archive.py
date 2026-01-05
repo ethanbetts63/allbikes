@@ -5,9 +5,6 @@ import sys
 def load_db_from_latest_archive(command):
     base_archive_dir = os.path.join('data_management', 'data', 'archive', 'db_backups')
     load_order = [
-        'auth.user.json',
-        'auth.group.json',
-        'data_management.faq.json',
         'data_management.sitesettings.json',
         'data_management.termsandconditions.json',
         'service.servicesettings.json',
