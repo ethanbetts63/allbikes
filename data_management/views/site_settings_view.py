@@ -2,8 +2,6 @@ from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAdminUser, AllowAny
 from ..models import SiteSettings
 from ..serializers.site_settings_serializer import SiteSettingsSerializer
-
-# Import caching decorators
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 

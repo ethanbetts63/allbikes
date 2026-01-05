@@ -1,12 +1,12 @@
 import React from 'react';
 
-interface BikeListHeroProps {
+interface HeroProps {
   title: React.ReactNode;
   description: string;
   imageUrl: string;
 }
 
-const BikeListHero: React.FC<BikeListHeroProps> = ({ title, description, imageUrl }) => {
+const Hero: React.FC<HeroProps> = ({ title, description, imageUrl }) => {
   return (
     <div
       className="relative w-full h-80 bg-cover bg-center"
@@ -21,4 +21,4 @@ const BikeListHero: React.FC<BikeListHeroProps> = ({ title, description, imageUr
   );
 };
 
-export default BikeListHero;
+export default Hero;

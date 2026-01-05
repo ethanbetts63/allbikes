@@ -11,7 +11,7 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
-import BikeListHero from '@/components/BikeListHero';
+import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
 import FilterSort, { type FilterSortOptions } from '@/components/FilterSort';
 import { FaqSection } from '@/components/FaqSection'; 
@@ -131,7 +131,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
         description={description}
         canonicalPath={isNew ? '/bikes/new' : '/bikes/used'}
       />
-      <BikeListHero 
+      <Hero 
         title={responsivePageTitle}
         description={description}
         imageUrl={SymImage}
