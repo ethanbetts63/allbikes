@@ -63,7 +63,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ title, faqData }) => {
                       className="flex justify-between items-center p-6 cursor-pointer"
                       onClick={() => toggleFaq(index)}
                     >
-                      <h3 className="text-2xl font-semibold text-black">{faq.question}</h3>
+                      <h3 className="text-xl font-semibold text-black">{faq.question}</h3>
                       <ChevronDown
                         className={`h-6 w-6 text-gray-500 transition-transform duration-300 ${openIndex === index ? 'transform rotate-180' : ''
                           }`}
