@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 class Motorcycle(models.Model):
     STATUS_CHOICES = [
@@ -32,6 +33,13 @@ class Motorcycle(models.Model):
         null=True,
         blank=True,
         help_text="Sale price (if applicable)",
+    )
+
+    slug = models.SlugField(
+        max_length=255, 
+        unique=True, 
+        blank=True, 
+        null=True
     )
 
     condition = models.CharField(
@@ -115,4 +123,14 @@ class Motorcycle(models.Model):
     )
 
     def __str__(self):
-        return f"{self.year} {self.make} {self.model}"
+        name = f"{self.year} {self.make} {self.model}" if self.year else f"{self.make} {self.model}"
+        return name.strip()
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+        expected_slug = slugify(f"{self.year or 'bike'}-{self.make}-{self.model}-{self.id}")
+        
+        if self.slug != expected_slug:
+            Motorcycle.objects.filter(pk=self.pk).update(slug=expected_slug)
+            self.slug = expected_slug
