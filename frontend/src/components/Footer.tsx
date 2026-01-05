@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from './ui/button'; // Assuming button component is in the same folder or similar path
-import { getFooterSettings } from '@/api';
-import type { FooterSettings } from '@/types';
+import { Button } from './ui/button'; 
 
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 
