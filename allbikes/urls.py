@@ -6,6 +6,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import MotorcycleSitemap, StaticViewSitemap
+
+sitemaps = {
+    'motorcycles': MotorcycleSitemap,
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -14,6 +21,9 @@ urlpatterns = [
     path("api/data/", include("data_management.urls")),
     path("api/service/", include("service.urls")),
     path("api/inventory/", include("inventory.urls")),
+
+    # Sitemap
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     # JWT Token Authentication Endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
