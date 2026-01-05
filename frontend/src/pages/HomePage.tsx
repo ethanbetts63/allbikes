@@ -8,6 +8,7 @@ import { FaqSection } from '@/components/FaqSection';
 import { getBikes } from '@/api';
 import type { Bike } from "@/types";
 import { useSiteSettings } from '@/context/SiteSettingsContext';
+import { FloatingActionButton } from '@/components/FloatingActionButton'; // Import the new component
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
@@ -93,6 +94,7 @@ const HomePage = () => {
           linkText="All Used Bikes"
         />
         <FaqSection title="Frequently Asked Questions" faqData={faqData} />
+        <FloatingActionButton /> {/* Render the floating action button */}
     </div>
   );
 };

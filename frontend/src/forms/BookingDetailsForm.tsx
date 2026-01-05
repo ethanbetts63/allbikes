@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Spinner } from "@/components/ui/spinner"; // Import Spinner
 
 interface BookingDetailsFormProps {
     formData: any;
@@ -23,6 +24,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
     const [unavailableDays, setUnavailableDays] = useState<string[]>([]);
     const [serviceSettings, setServiceSettings] = useState<ServiceSettings | null>(null);
+    const [isLoadingUnavailableDays, setIsLoadingUnavailableDays] = useState(true); // New loading state
     
     const [selectedDate, setSelectedDate] = useState<Date | undefined>();
     const [selectedTime, setSelectedTime] = useState<string>('');
@@ -30,6 +32,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoadingUnavailableDays(true); // Set loading to true
             try {
                 const [jobs, unavailable, settings] = await Promise.all([
                     getJobTypes(),
@@ -41,6 +44,8 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 setServiceSettings(settings);
             } catch (error) {
                 console.error("Failed to fetch booking details data", error);
+            } finally {
+                setIsLoadingUnavailableDays(false); // Set loading to false
             }
         };
         fetchData();
@@ -102,9 +107,18 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                                 <Button
                                     variant={"outline"}
                                     className={cn("w-full justify-start text-left font-normal bg-white dark:bg-gray-950 text-black dark:text-white")}
+                                    disabled={isLoadingUnavailableDays} // Disable when loading
                                 >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                                    {isLoadingUnavailableDays ? ( // Show spinner when loading
+                                        <div className="flex items-center">
+                                            <Spinner className="mr-2 h-4 w-4" /> Loading...
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                                        </>
+                                    )}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0">
