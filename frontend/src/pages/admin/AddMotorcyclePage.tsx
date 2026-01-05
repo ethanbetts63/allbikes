@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from "sonner"
-import MotorcycleForm from "@/components/admin/inventory/MotorcycleForm";
+import MotorcycleForm from "@/forms/MotorcycleForm";
 import type { MotorcycleFormData } from "@/types";
 import { 
     createMotorcycle, 

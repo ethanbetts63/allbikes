@@ -4,9 +4,9 @@ import { toast } from 'sonner';
 import { createBooking } from '@/services/bookingService';
 
 // Import the step components
-import BookingDetailsForm from '@/components/booking/BookingDetailsForm';
-import BikeDetailsForm from '@/components/booking/BikeDetailsForm';
-import PersonalDetailsForm from '@/components/booking/PersonalDetailsForm';
+import BookingDetailsForm from '@/forms/BookingDetailsForm';
+import BikeDetailsForm from '@/forms/BikeDetailsForm';
+import PersonalDetailsForm from '@/forms/PersonalDetailsForm';
 
 const LOCAL_STORAGE_KEY = 'bookingFormProgress';
 

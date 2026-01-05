@@ -47,6 +47,29 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  const faqData = [
+    {
+      "question": "How can I contact you?",
+      "answer": `You can contact us by phone on ${siteSettings?.phone_number || '{phone}'}, by email at ${siteSettings?.email_address || '{email}'}, or via our Contact Us page.`
+    },
+    {
+      "question": "What types of motorcycles and scooters do you service?",
+      "answer": "We service all motorcycles and most scooters. For scooters, we specialise in Italian brands and mid to upper-end Asian brands. Some brands are excluded due to parts availability and build quality concerns, allowing us to maintain reliable, long-lasting repairs. Full details are listed on our service page."
+    },
+    {
+      "question": "What areas of Perth do you service?",
+      "answer": `Our workshop is based in Dianella at ${siteSettings?.street_address || '{address}'}. While we service surrounding suburbs, many customers visit us from across Greater Perth. We can recommend a motorcycle mover service, so distance is not an issue. More information is available on our service page.`
+    },
+    {
+      "question": "Do you service electric motorcycles and scooters?",
+      "answer": "Yes, we service electric motorcycles and electric mopeds."
+    },
+    {
+      "question": "Do you sell or service electric kick scooters?",
+      "answer": "No. We sell and service electric mopeds and electric motorcycles, but we do not work on electric kick scooters. The term “electric scooter” is often used for both, despite being very different vehicles."
+    }
+  ];
+
   return (
     <div>
         <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={loading} error={error} />
@@ -66,7 +89,7 @@ const HomePage = () => {
           linkTo="/bikes/used"
           linkText="All Used Bikes"
         />
-        <FaqSection title="Frequently Asked Questions" siteSettings={siteSettings} />
+        <FaqSection title="Frequently Asked Questions" siteSettings={siteSettings} faqData={faqData} />
     </div>
   );
 };
