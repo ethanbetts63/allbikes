@@ -9,6 +9,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
         model = Motorcycle
         fields = [
             'id',
+            'slug',
             'make',
             'model',
             'year',
@@ -27,3 +28,4 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'transmission',
             'images', 
         ]
+        read_only_fields = ('slug',)

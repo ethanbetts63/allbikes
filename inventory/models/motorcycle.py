@@ -126,11 +126,20 @@ class Motorcycle(models.Model):
         name = f"{self.year} {self.make} {self.model}" if self.year else f"{self.make} {self.model}"
         return name.strip()
 
-    def save(self, *args, **kwargs):
+    def get_absolute_url(self):
+        return f"/inventory/motorcycles/{self.slug}"
 
+    def save(self, *args, **kwargs):
+        # First, save the object to ensure it has an ID, especially for new objects.
         super().save(*args, **kwargs)
+
+        # Now, generate the expected slug and check if it matches the current one.
+        # This handles both initial slug creation and updates if the bike's details change.
         expected_slug = slugify(f"{self.year or 'bike'}-{self.make}-{self.model}-{self.id}")
         
         if self.slug != expected_slug:
+            # Use a queryset update() to set the slug. This is crucial because it
+            # bypasses this custom save() method, preventing infinite recursion.
             Motorcycle.objects.filter(pk=self.pk).update(slug=expected_slug)
+            # We also update the instance in memory so the caller has the correct slug.
             self.slug = expected_slug
