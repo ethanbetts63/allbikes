@@ -39,7 +39,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
     setUsedBikeImageUrls(usedUrls.length > 0 ? usedUrls : [defaultPlaceholderImage]);
   }, [newBikes, usedBikes]);
 
-  // Image cycling effect for New Bikes
+  // Image cycling effect for New Motorcycles and Scooters
   useEffect(() => {
     if (newBikeImageUrls.length > 1) {
       const interval = setInterval(() => {
@@ -53,7 +53,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
     }
   }, [newBikeImageUrls]);
 
-  // Image cycling effect for Used Bikes
+  // Image cycling effect for Used Motorcycles and Scooters
   useEffect(() => {
     if (usedBikeImageUrls.length > 1) {
       const interval = setInterval(() => {
@@ -70,7 +70,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
 
   const renderBikeLink = (condition: 'new' | 'used') => {
     const linkPath = condition === 'new' ? '/bikes/new' : '/bikes/used';
-    const text = condition === 'new' ? 'New Bikes' : 'Used Bikes';
+    const text = condition === 'new' ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
     const bgColorClass = 'bg-foreground';
 
     const currentImageUrl = condition === 'new'

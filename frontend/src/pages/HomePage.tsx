@@ -73,14 +73,14 @@ const HomePage = () => {
         <ReviewCarousel />
         <BrandsSection />
         <FeaturedBikes
-          title="Featured New Bikes"
+          title="Featured New Motorcycles and Scooters"
           bikes={newBikes}
           description="Check out some of our latest new models available now."
           linkTo="/bikes/new"
           linkText="All New Bikes"
         />
         <FeaturedBikes
-          title="Featured Used Bikes"
+          title="Featured Used Motorcycles and Scooters"
           bikes={usedBikes}
           description="Explore our range of quality pre-owned motorcycles and scooters."
           linkTo="/bikes/used"

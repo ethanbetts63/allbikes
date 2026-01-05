@@ -26,14 +26,14 @@ const NavBar = () => {
               <Link
                 to="/bikes/new"
               >
-                New Bikes
+                New Motorcycles and Scooters
               </Link>
             </li>
             <li>
               <Link
                 to="/bikes/used"
               >
-                Used Bikes
+                Used Motorcycles and Scooters
               </Link>
             </li>
             <li>

@@ -184,7 +184,7 @@ const BikeDetailPage: React.FC = () => {
             <div className="mt-4 mb-4">
                 {bike.condition.toLowerCase() === 'new' && newBikes.length > 0 && (
                     <FeaturedBikes
-                        title="Featured New Bikes"
+                        title="Featured New Motorcycles and Scooters"
                         bikes={newBikes}
                         description="Check out our latest models, fresh from the factory."
                         linkTo="/inventory/new"

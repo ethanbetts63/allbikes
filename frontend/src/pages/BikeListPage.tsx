@@ -62,8 +62,8 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
   const isNew = bikeCondition === 'new';
   const pageTitle = isNew ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
   const description = isNew 
-    ? "Browse our range of new motorcycles and scooters available in Perth, including petrol and electric models. All new bikes are workshop-prepared and available for local purchase through our Perth dealership. All new bikes come with a warranty."
-    : "Browse our range of used motorcycles and scooters available in Perth, including petrol and electric models. All used bikes are workshop-prepared and available for local purchase through our Perth dealership.";
+    ? "Browse our range of new motorcycles and scooters available in Perth, including petrol and electric models. All New Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership. All New Motorcycles and Scooters come with a warranty."
+    : "Browse our range of used motorcycles and scooters available in Perth, including petrol and electric models. All Used Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership.";
 
   return (
     <>

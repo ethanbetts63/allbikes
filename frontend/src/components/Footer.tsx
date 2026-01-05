@@ -28,8 +28,8 @@ const Footer = () => {
         <div>
           <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Quick Links</h4>
           <ul>
-            <li className="mb-2"><Link to="/bikes/new" className="hover:underline text-gray-300">New Bikes</Link></li>
-            <li className="mb-2"><Link to="/bikes/used" className="hover:underline text-gray-300">Used Bikes</Link></li>
+            <li className="mb-2"><Link to="/bikes/new" className="hover:underline text-gray-300">New Motorcycles and Scooters</Link></li>
+            <li className="mb-2"><Link to="/bikes/used" className="hover:underline text-gray-300">Used Motorcycles and Scooters</Link></li>
             <li className="mb-2"><Link to="/workshop" className="hover:underline text-gray-300">Workshop</Link></li>
             {user ? (
               <>
