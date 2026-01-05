@@ -86,7 +86,7 @@ const BookingPage: React.FC = () => {
     return (
         <div className="container mx-auto py-10 max-w-3xl">
             <Seo
-                title="Book a Motorcycle or Scooter Service | Allbikes Perth"
+                title="Book a Motorcycle or Scooter Service | Allbikes Vespa Warehouse Perth"
                 description="Schedule your motorcycle or scooter service online with Allbikes. Our expert technicians are ready to help you with maintenance, repairs, and more."
                 canonicalPath="/booking"
             />

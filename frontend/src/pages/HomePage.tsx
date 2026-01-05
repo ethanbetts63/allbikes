@@ -71,7 +71,7 @@ const HomePage = () => {
   return (
     <div>
       <Seo
-        title="Allbikes - Perth's Premier Motorcycle and Scooter Dealership"
+        title="Allbikes Vespa Warehouse - Perth's Motorcycle and Scooter Dealership"
         description="Discover a wide range of new and used motorcycles and scooters at Allbikes. We offer sales, servicing, and expert advice for riders in Perth."
         canonicalPath="/"
       />

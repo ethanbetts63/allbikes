@@ -59,7 +59,7 @@ const WorkshopPage: React.FC = () => {
     return (
         <div className="container mx-auto py-0">
             <Seo
-                title="Motorcycle and Scooter Workshop Services | Allbikes Perth"
+                title="Motorcycle/Scooter Servicing and Tyre Fitting | Allbikes Vespa Warehouse"
                 description="Expert motorcycle and scooter servicing, repairs, and tyre changes in Perth. We service all major brands, including Vespa, Piaggio, and more."
                 canonicalPath="/workshop"
             />

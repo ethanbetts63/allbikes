@@ -120,7 +120,7 @@ const BikeDetailPage: React.FC = () => {
         <div className="bg-background text-black">
             <Seo
                 title={`${pageTitle} | Allbikes`}
-                description={bike.description || `Check out the ${pageTitle} at Allbikes, Perth's premier motorcycle and scooter dealership.`}
+                description={bike.description || `Check out the ${pageTitle} at Allbikes Vespa Warehouse, Perth's most experienced motorcycle and scooter dealership.`}
                 canonicalPath={`/bike/${id}`}
                 ogImage={selectedImage}
             />
