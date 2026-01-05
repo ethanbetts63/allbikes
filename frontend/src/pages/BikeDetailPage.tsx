@@ -6,6 +6,7 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from "@/components/ui/badge";
 import FeaturedBikes from "@/components/FeaturedBikes";
+import { generateBikeSlug } from '@/utils/slugify';
 import {
     DollarSign,
     Hash,
@@ -27,7 +28,7 @@ interface Specification {
 }
 
 const BikeDetailPage: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const { slug } = useParams<{ slug: string }>();
     const [bike, setBike] = useState<Bike | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -36,7 +37,14 @@ const BikeDetailPage: React.FC = () => {
     const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
 
     useEffect(() => {
-        if (!id) return;
+        if (!slug) return;
+
+        const id = slug.split('-').pop();
+        if (!id) {
+            setError("Invalid bike identifier.");
+            setIsLoading(false);
+            return;
+        }
 
         const fetchBike = async () => {
             try {
@@ -77,7 +85,7 @@ const BikeDetailPage: React.FC = () => {
 
         fetchBike();
         fetchFeaturedBikes();
-    }, [id]);
+    }, [slug]);
 
     const sortedImages = React.useMemo(() => {
         if (!bike?.images) return [];
@@ -121,7 +129,7 @@ const BikeDetailPage: React.FC = () => {
             <Seo
                 title={`${pageTitle} | Allbikes`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes Vespa Warehouse, Perth's most experienced motorcycle and scooter dealership.`}
-                canonicalPath={`/bike/${id}`}
+                canonicalPath={`/inventory/motorcycles/${slug}`}
                 ogImage={selectedImage}
             />
             <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)] rounded-lg mt-8">

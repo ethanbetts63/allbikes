@@ -21,12 +21,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites", # Added for Django Sites Framework
+    "django.contrib.sitemaps", # Added for Django Sitemaps Framework
     "rest_framework", # Added for Django Rest Framework
     "rest_framework_simplejwt", # Added for JWT authentication
     "data_management",
     "inventory",
     "service",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
