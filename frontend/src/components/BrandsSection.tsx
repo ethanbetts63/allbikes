@@ -47,7 +47,7 @@ We've tested a lot of brands, but Segway's electric mopeds impressed us with the
 
   return (
     <section className="w-full py-6">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto md:px-4">
         <h2 className="text-4xl font-bold text-center text-[var(--text-primary)] mb-2">Our Featured Brands</h2>
         <BrandCard
           image={symImage}
