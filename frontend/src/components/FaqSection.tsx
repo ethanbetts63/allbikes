@@ -60,7 +60,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ title, faqData }) => {
                 <Card className="bg-white text-black rounded-lg shadow-md">
                   <CardContent className="p-0">
                     <div
-                      className="flex justify-between items-center p-6 cursor-pointer"
+                      className="flex justify-between items-center p-4 cursor-pointer"
                       onClick={() => toggleFaq(index)}
                     >
                       <h3 className="text-xl font-semibold text-black">{faq.question}</h3>
