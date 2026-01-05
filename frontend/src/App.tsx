@@ -47,7 +47,7 @@ function App() {
                 {/* Public routes */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/workshop" element={<WorkshopPage />} />
+                <Route path="/service" element={<WorkshopPage />} />
                 <Route path="/inventory/motorcycles/new" element={<BikeListPage bikeCondition="new" />} />
                 <Route path="/inventory/motorcycles/used" element={<BikeListPage bikeCondition="used" />} />
                 <Route path="/inventory/motorcycles/:id" element={<BikeDetailPage />} />

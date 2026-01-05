@@ -123,7 +123,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
         <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-12">
           Operating in Perth for over 30 years, we are a motorcycle and scooter mechanic and dealership offering new and used sales across petrol and electric models. We provide motorcycle and scooter servicing, including tyre changes, maintenance, and general repairs. 
         </p>
-        <Link to="/workshop">
+        <Link to="/service">
           <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
             Book a Service <ArrowRight className="h-5" />
           </Button>

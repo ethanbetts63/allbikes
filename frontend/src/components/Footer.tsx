@@ -40,7 +40,7 @@ const Footer = () => {
                 <span className="md:hidden">Used Bikes</span>
               </Link>
             </li>
-            <li className="mb-2"><Link to="/workshop" className="hover:underline text-gray-300">Workshop</Link></li>
+            <li className="mb-2"><Link to="/service" className="hover:underline text-gray-300">Workshop</Link></li>
             <li className="mb-2"><Link to="/terms" className="hover:underline text-gray-300">Terms and Conditions</Link></li>
             {user ? (
               <>
