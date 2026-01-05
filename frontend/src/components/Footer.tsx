@@ -29,13 +29,13 @@ const Footer = () => {
           <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Quick Links</h4>
           <ul>
             <li className="mb-2">
-              <Link to="/bikes/new" className="hover:underline text-gray-300">
+              <Link to="/inventory/motorcycles/new" className="hover:underline text-gray-300">
                 <span className="hidden md:inline">New Motorcycles and Scooters</span>
                 <span className="md:hidden">New Bikes</span>
               </Link>
             </li>
             <li className="mb-2">
-              <Link to="/bikes/used" className="hover:underline text-gray-300">
+              <Link to="/inventory/motorcycles/used" className="hover:underline text-gray-300">
                 <span className="hidden md:inline">Used Motorcycles and Scooters</span>
                 <span className="md:hidden">Used Bikes</span>
               </Link>

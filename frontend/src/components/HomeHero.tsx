@@ -69,7 +69,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
 
 
   const renderBikeLink = (condition: 'new' | 'used') => {
-    const linkPath = condition === 'new' ? '/bikes/new' : '/bikes/used';
+    const linkPath = condition === 'new' ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used';
     const text = condition === 'new' ? (
       <>
         <span className="hidden md:inline">New Motorcycles and Scooters</span>

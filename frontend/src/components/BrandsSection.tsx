@@ -26,7 +26,7 @@ const BrandCard: React.FC<BrandProps> = ({ image, alt, title, subtitle, descript
         <h3 className="text-3xl font-bold text-[var(--text-primary)] mb-2">{title}</h3>
         <p className="text-xl italic text-[var(--text-primary)] mb-4">{subtitle}</p>
         <p className="text-lg text-[var(--text-primary)] leading-relaxed mb-6">{description}</p>
-        <Link to="/bikes/new" className="self-start">
+        <Link to="/inventory/motorcycles/new" className="self-start">
           <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
             <span className="hidden md:inline">See New Motorcycles and Scooters</span>
             <span className="md:hidden">See New Bikes</span>

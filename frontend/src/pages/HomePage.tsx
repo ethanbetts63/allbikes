@@ -83,14 +83,14 @@ const HomePage = () => {
           title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
           bikes={newBikes}
           description="Check out some of our latest new models available now."
-          linkTo="/bikes/new"
+          linkTo="/inventory/motorcycles/new"
           linkText="All New Bikes"
         />
         <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">Used Motorcycles and Scooters</span><span className="md:hidden">Used Bikes</span></>}
           bikes={usedBikes}
           description="Explore our range of quality pre-owned motorcycles and scooters."
-          linkTo="/bikes/used"
+          linkTo="/inventory/motorcycles/used"
           linkText="All Used Bikes"
         />
         <FaqSection title="Frequently Asked Questions" faqData={faqData} />

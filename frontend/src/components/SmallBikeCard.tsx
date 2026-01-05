@@ -13,7 +13,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
   return (
-    <Link to={`/bikes/${bike.id}`} className="block h-full">
+    <Link to={`/inventory/motorcycles/${bike.id}`} className="block h-full">
       <Card className="w-full overflow-hidden flex flex-col h-full transform transition-transform hover:-translate-y-1 pt-0 border-foreground">
         <div className="relative h-32">
           <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover" />

@@ -51,13 +51,13 @@ const NavBar = () => {
         <nav className="hidden md:flex flex-1 justify-center items-center gap-4 px-4 text-[var(--text-primary)] text-bold text-lg">
           <ul className="flex items-center space-x-8 lg:space-x-24">
             <li>
-              <Link to="/bikes/new" className="hover:text-secondary">
+              <Link to="/inventory/motorcycles/new" className="hover:text-secondary">
                 <span className="hidden lg:inline">New Motorcycles and Scooters</span>
                 <span className="lg:hidden">New Bikes</span>
               </Link>
             </li>
             <li>
-              <Link to="/bikes/used" className="hover:text-secondary">
+              <Link to="/inventory/motorcycles/used" className="hover:text-secondary">
                 <span className="hidden lg:inline">Used Motorcycles and Scooters</span>
                 <span className="lg:hidden">Used Bikes</span>
               </Link>
@@ -82,8 +82,8 @@ const NavBar = () => {
       {isMenuOpen && (
         <div ref={menuRef} className="md:hidden bg-background border-t border-foreground">
           <nav className="flex flex-col items-center gap-4 py-4 text-[var(--text-primary)] text-bold text-lg">
-            <Link to="/bikes/new" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">New Motorcycles and Scooters</Link>
-            <Link to="/bikes/used" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Used Motorcycles and Scooters</Link>
+            <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">New Motorcycles and Scooters</Link>
+            <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Used Motorcycles and Scooters</Link>
             <Link to="/workshop" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Workshop</Link>
           </nav>
         </div>

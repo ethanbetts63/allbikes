@@ -44,7 +44,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Link to={`/bikes/${bike.id}`} className="w-full">
+        <Link to={`/inventory/motorcycles/${bike.id}`} className="w-full">
             <Button className="w-full">View Details</Button>
         </Link>
       </CardFooter>

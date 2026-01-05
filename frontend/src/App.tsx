@@ -48,9 +48,9 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/workshop" element={<WorkshopPage />} />
-                <Route path="/bikes/new" element={<BikeListPage bikeCondition="new" />} />
-                <Route path="/bikes/used" element={<BikeListPage bikeCondition="used" />} />
-                <Route path="/bikes/:id" element={<BikeDetailPage />} />
+                <Route path="/inventory/motorcycles/new" element={<BikeListPage bikeCondition="new" />} />
+                <Route path="/inventory/motorcycles/used" element={<BikeListPage bikeCondition="used" />} />
+                <Route path="/inventory/motorcycles/:id" element={<BikeDetailPage />} />
                 <Route path="/booking" element={<BookingPage />} />
                 <Route path="/booking/success" element={<BookingSuccessPage />} />
                 <Route path="/terms" element={<TermsAndConditionsPage />} />

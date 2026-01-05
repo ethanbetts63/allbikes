@@ -192,7 +192,7 @@ const BikeDetailPage: React.FC = () => {
                         title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
                         bikes={newBikes}
                         description="Check out our latest models, fresh from the factory."
-                        linkTo="/inventory/new"
+                        linkTo="/inventory/motorcycles/new"
                         linkText="View All New"
                     />
                 )}
