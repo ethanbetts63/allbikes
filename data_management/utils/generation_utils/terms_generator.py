@@ -7,7 +7,7 @@ from django.utils.timezone import now
 class TermsUpdateOrchestrator:
     def __init__(self, command):
         self.command = command
-        self.data_dir = os.path.join(settings.BASE_DIR, 'data_management', 'data', 'legal')
+        self.data_dir = os.path.join(settings.BASE_DIR, 'data_management', 'data')
 
     def run(self):
         self.command.stdout.write(self.command.style.SUCCESS("Starting Terms and Conditions update..."))

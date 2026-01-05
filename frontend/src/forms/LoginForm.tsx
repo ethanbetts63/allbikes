@@ -40,7 +40,7 @@ export function LoginForm({
 
   return (
     <div className={cn("flex justify-center items-center h-full", className)} {...props}>
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
           <CardDescription>Enter your credentials to access the admin dashboard.</CardDescription>

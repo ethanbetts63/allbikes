@@ -96,7 +96,7 @@ Provides tools for database archiving and restoration:
 ### `generation_utils/`
 Contains orchestrators for generating specific data types:
 -   `brand_generator.py`: `BrandUpdateOrchestrator` reads `brands.jsonl` and `update_or_create` `Brand` instances.
--   `terms_generator.py`: `TermsUpdateOrchestrator` scans `data_management/data/legal/` for `terms_v*.html` files, extracts versions, and creates new `TermsAndConditions` objects.
+-   `terms_generator.py`: `TermsUpdateOrchestrator` scans `data_management/data/` for `terms_v*.html` files, extracts versions, and creates new `TermsAndConditions` objects.
 
 ## Installation
 

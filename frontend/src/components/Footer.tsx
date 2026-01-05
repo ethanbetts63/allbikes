@@ -31,6 +31,7 @@ const Footer = () => {
             <li className="mb-2"><Link to="/bikes/new" className="hover:underline text-gray-300">New Motorcycles and Scooters</Link></li>
             <li className="mb-2"><Link to="/bikes/used" className="hover:underline text-gray-300">Used Motorcycles and Scooters</Link></li>
             <li className="mb-2"><Link to="/workshop" className="hover:underline text-gray-300">Workshop</Link></li>
+            <li className="mb-2"><Link to="/terms" className="hover:underline text-gray-300">Terms and Conditions</Link></li>
             {user ? (
               <>
                 {user.is_staff && (

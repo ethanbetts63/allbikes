@@ -1,6 +1,6 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse, UserProfile, Bike, Brand, SiteSettings, PaginatedResponse, MotorcycleFormData, ManagedImage } from "@/types";
+import type { AuthResponse, UserProfile, Bike, Brand, SiteSettings, PaginatedResponse, MotorcycleFormData, ManagedImage, TermsAndConditions } from "@/types";
 
 /**
  * A centralized module for all API interactions.
@@ -170,5 +170,12 @@ export async function manageMotorcycleImages(motorcycleId: number, images: Pick<
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
     });
+    return handleResponse(response);
+}
+
+// --- Legal Endpoints ---
+
+export async function getLatestTermsAndConditions(): Promise<TermsAndConditions> {
+    const response = await fetch(`${API_BASE_URL}/terms/latest/`);
     return handleResponse(response);
 }

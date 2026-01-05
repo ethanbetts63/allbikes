@@ -117,3 +117,10 @@ export interface EnrichedJobType {
     name: string;
     description: string | null;
 }
+
+// --- Legal Types ---
+export interface TermsAndConditions {
+  version: string;
+  content: string;
+  published_at: string;
+}
