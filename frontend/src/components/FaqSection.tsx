@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "./ui/card";
 import { ChevronDown } from 'lucide-react';
-import type { FooterSettings } from '@/types';
 
 // Define the FAQ item type locally
 interface FaqItem {

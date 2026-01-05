@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -26,13 +26,23 @@ interface FilterSortProps {
 }
 
 const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
+  const [localOptions, setLocalOptions] = useState<FilterSortOptions>(options);
+
+  useEffect(() => {
+    setLocalOptions(options);
+  }, [options]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    onFilterChange({ ...options, [name]: value ? Number(value) : undefined });
+    setLocalOptions({ ...localOptions, [name]: value ? Number(value) : undefined });
   };
 
   const handleOrderingChange = (value: string) => {
-    onFilterChange({ ...options, ordering: value });
+    setLocalOptions({ ...localOptions, ordering: value });
+  };
+
+  const handleApplyFilters = () => {
+    onFilterChange(localOptions);
   };
 
   return (
@@ -41,7 +51,7 @@ const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
         {/* Ordering */}
         <div className="flex flex-col">
           <Label htmlFor="ordering" className="mb-2 font-semibold">Sort By</Label>
-          <Select onValueChange={handleOrderingChange} value={options.ordering}>
+          <Select onValueChange={handleOrderingChange} value={localOptions.ordering}>
             <SelectTrigger id="ordering">
               <SelectValue placeholder="Default" />
             </SelectTrigger>
@@ -64,14 +74,14 @@ const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
               type="number"
               name="min_price"
               placeholder="Min"
-              value={options.min_price || ''}
+              value={localOptions.min_price || ''}
               onChange={handleInputChange}
             />
             <Input
               type="number"
               name="max_price"
               placeholder="Max"
-              value={options.max_price || ''}
+              value={localOptions.max_price || ''}
               onChange={handleInputChange}
             />
           </div>
@@ -85,14 +95,14 @@ const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
               type="number"
               name="min_year"
               placeholder="Min"
-              value={options.min_year || ''}
+              value={localOptions.min_year || ''}
               onChange={handleInputChange}
             />
             <Input
               type="number"
               name="max_year"
               placeholder="Max"
-              value={options.max_year || ''}
+              value={localOptions.max_year || ''}
               onChange={handleInputChange}
             />
           </div>
@@ -106,21 +116,21 @@ const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
               type="number"
               name="min_engine_size"
               placeholder="Min"
-              value={options.min_engine_size || ''}
+              value={localOptions.min_engine_size || ''}
               onChange={handleInputChange}
             />
             <Input
               type="number"
               name="max_engine_size"
               placeholder="Max"
-              value={options.max_engine_size || ''}
+              value={localOptions.max_engine_size || ''}
               onChange={handleInputChange}
             />
           </div>
         </div>
 
         <div className="flex items-end">
-            <Button onClick={() => onFilterChange(options)} className="w-full">
+            <Button onClick={handleApplyFilters} className="w-full">
                 Apply Filters
             </Button>
         </div>
@@ -130,3 +140,4 @@ const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
 };
 
 export default FilterSort;
+

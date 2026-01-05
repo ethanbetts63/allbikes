@@ -20,8 +20,8 @@ const HomePage = () => {
         // Fetch settings and bikes in parallel
         const [settingsResponse, newBikesResponse, usedBikesResponse] = await Promise.all([
           getFooterSettings(),
-          getBikes('new', 1, true),
-          getBikes('used', 1, true)
+          getBikes({ condition: 'new', page: 1, is_featured: true }),
+          getBikes({ condition: 'used', page: 1, is_featured: true })
         ]);
 
         setSiteSettings(settingsResponse);
@@ -89,7 +89,7 @@ const HomePage = () => {
           linkTo="/bikes/used"
           linkText="All Used Bikes"
         />
-        <FaqSection title="Frequently Asked Questions" siteSettings={siteSettings} faqData={faqData} />
+        <FaqSection title="Frequently Asked Questions" faqData={faqData} />
     </div>
   );
 };

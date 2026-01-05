@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Seo from '@/components/Seo';
 import BikeCard from '@/components/BikeCard';
 import type { Bike } from '@/types';
-import { getBikes, GetBikesOptions } from '@/api';
+import { getBikes, type GetBikesOptions } from '@/api';
 import { Spinner } from '@/components/ui/spinner';
 import {
   Pagination,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/pagination";
 import BikeListHero from '@/components/BikeListHero';
 import SymImage from '@/assets/sym_22.webp';
-import FilterSort, { FilterSortOptions } from '@/components/FilterSort';
+import FilterSort, { type FilterSortOptions } from '@/components/FilterSort';
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';

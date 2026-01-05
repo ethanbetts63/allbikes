@@ -64,11 +64,11 @@ const BikeDetailPage: React.FC = () => {
 
         const fetchFeaturedBikes = async () => {
             try {
-                const newBikesData = await getBikes('new', 1, true);
+                const newBikesData = await getBikes({ condition: 'new', page: 1, is_featured: true });
                 setNewBikes(newBikesData.results);
                 
-                const usedBikesData = await getBikes('used', 1, true);
-                const demoBikesData = await getBikes('demo', 1, true);
+                const usedBikesData = await getBikes({ condition: 'used', page: 1, is_featured: true });
+                const demoBikesData = await getBikes({ condition: 'demo', page: 1, is_featured: true });
                 setUsedBikes([...usedBikesData.results, ...demoBikesData.results]);
             } catch (error) {
                 console.error("Failed to fetch featured bikes:", error);
