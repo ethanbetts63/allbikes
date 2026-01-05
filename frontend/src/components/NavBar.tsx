@@ -40,7 +40,7 @@ const NavBar = () => {
               <Link
                 to="/workshop"
               >
-                Book a Service
+                 Workshop
               </Link>
             </li>
           </ul>
