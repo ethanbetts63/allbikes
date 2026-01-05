@@ -11,11 +11,10 @@ interface FaqItem {
 
 interface FaqSectionProps {
   title: string;
-  siteSettings: FooterSettings | null;
   faqData: FaqItem[];
 }
 
-export const FaqSection: React.FC<FaqSectionProps> = ({ title, siteSettings, faqData }) => {
+export const FaqSection: React.FC<FaqSectionProps> = ({ title, faqData }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {

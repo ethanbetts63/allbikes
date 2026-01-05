@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Seo from '@/components/Seo';
 import BikeCard from '@/components/BikeCard';
 import type { Bike } from '@/types';
-import { getBikes } from '@/api';
+import { getBikes, GetBikesOptions } from '@/api';
 import { Spinner } from '@/components/ui/spinner';
 import {
   Pagination,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/pagination";
 import BikeListHero from '@/components/BikeListHero';
 import SymImage from '@/assets/sym_22.webp';
+import FilterSort, { FilterSortOptions } from '@/components/FilterSort';
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';
@@ -24,26 +25,39 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterOptions, setFilterOptions] = useState<FilterSortOptions>({});
+
+  const fetchBikes = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const options: GetBikesOptions = {
+        condition: bikeCondition,
+        page: currentPage,
+        ...filterOptions,
+      };
+
+      const response = await getBikes(options);
+      setBikes(response.results);
+      setTotalPages(Math.ceil(response.count / 12)); // Page size is 12 from backend
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unknown error occurred.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [bikeCondition, currentPage, filterOptions]);
 
   useEffect(() => {
-    const fetchBikes = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const response = await getBikes(bikeCondition, currentPage);
-        setBikes(response.results);
-        setTotalPages(Math.ceil(response.count / 12)); // Page size is 12 from backend
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An unknown error occurred.");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     window.scrollTo(0, 0); // Scroll to top on page change
     fetchBikes();
-  }, [bikeCondition, currentPage]);
+  }, [fetchBikes]);
+
+  const handleFilterChange = (newOptions: FilterSortOptions) => {
+    setCurrentPage(1); // Reset to first page on filter change
+    setFilterOptions(newOptions);
+  };
 
   const isNew = bikeCondition === 'new';
   const pageTitle = isNew ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
@@ -60,6 +74,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
         imageUrl={SymImage}
       />
       <div className="container mx-auto p-4">
+        <FilterSort options={filterOptions} onFilterChange={handleFilterChange} />
         
         {isLoading && (
             <div className="flex justify-center items-center h-64">

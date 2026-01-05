@@ -67,21 +67,51 @@ export async function getBrands(): Promise<Brand[]> {
 
 // --- Inventory Endpoints ---
 
-export async function getBikes(
-    condition?: 'new' | 'used' | 'demo', 
-    page: number = 1,
-    is_featured?: boolean
-): Promise<PaginatedResponse<Bike>> {
-    let url = `/api/inventory/bikes/?page=${page}`;
-    if (condition) {
-        url += `&condition=${condition}`;
-    }
-    if (is_featured) {
-        url += `&is_featured=true`;
-    }
-    const response = await fetch(url, {
+export interface GetBikesOptions {
+    condition?: 'new' | 'used' | 'demo';
+    page?: number;
+    is_featured?: boolean;
+    ordering?: string;
+    min_price?: number;
+    max_price?: number;
+    min_year?: number;
+    max_year?: number;
+    min_engine_size?: number;
+    max_engine_size?: number;
+}
+
+export async function getBikes(options: GetBikesOptions = {}): Promise<PaginatedResponse<Bike>> {
+    const {
+        condition,
+        page = 1,
+        is_featured,
+        ordering,
+        min_price,
+        max_price,
+        min_year,
+        max_year,
+        min_engine_size,
+        max_engine_size,
+    } = options;
+
+    const params = new URLSearchParams({
+        page: String(page),
+    });
+
+    if (condition) params.append('condition', condition);
+    if (is_featured) params.append('is_featured', 'true');
+    if (ordering) params.append('ordering', ordering);
+    if (min_price) params.append('min_price', String(min_price));
+    if (max_price) params.append('max_price', String(max_price));
+    if (min_year) params.append('min_year', String(min_year));
+    if (max_year) params.append('max_year', String(max_year));
+    if (min_engine_size) params.append('min_engine_size', String(min_engine_size));
+    if (max_engine_size) params.append('max_engine_size', String(max_engine_size));
+
+    const response = await fetch(`/api/inventory/bikes/?${params.toString()}`, {
         method: 'GET',
     });
+
     return handleResponse(response);
 }
 

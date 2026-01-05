@@ -57,7 +57,7 @@ const InventoryTable = () => {
     const fetchBikes = async () => {
       try {
         // Tanstack table is 0-indexed, API is 1-indexed
-        const response = await getBikes(conditionFilter || undefined, pageIndex + 1);
+        const response = await getBikes({ condition: conditionFilter || undefined, page: pageIndex + 1 });
         setData(response.results);
         setPageCount(Math.ceil(response.count / pageSize));
       } catch (error) {
@@ -73,7 +73,7 @@ const InventoryTable = () => {
       try {
         await deleteMotorcycle(id);
         // Refetch the current page to show the updated data
-        const response = await getBikes(conditionFilter || undefined, pageIndex + 1);
+        const response = await getBikes({ condition: conditionFilter || undefined, page: pageIndex + 1 });
         setData(response.results);
         setPageCount(Math.ceil(response.count / pageSize));
         toast.success("Motorcycle deleted successfully");

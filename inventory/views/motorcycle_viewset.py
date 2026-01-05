@@ -24,18 +24,58 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Optionally restricts the returned motorcycles by condition or featured status
-        by filtering against query parameters in the URL.
+        Optionally restricts the returned motorcycles by condition, featured status,
+        and applies ordering and filtering, by using query parameters in the URL.
         """
-        queryset = super().get_queryset()
+        queryset = Motorcycle.objects.all()
         
+        # Filtering by condition
         condition = self.request.query_params.get('condition')
         if condition in ['new', 'used', 'demo']:
             queryset = queryset.filter(condition=condition)
             
+        # Filtering by featured status
         is_featured = self.request.query_params.get('is_featured')
         if is_featured and is_featured.lower() == 'true':
             queryset = queryset.filter(is_featured=True)
+
+        # Range filtering
+        for param, lookup in [
+            ('min_price', 'price__gte'),
+            ('max_price', 'price__lte'),
+            ('min_year', 'year__gte'),
+            ('max_year', 'year__lte'),
+            ('min_engine_size', 'engine_size__gte'),
+            ('max_engine_size', 'engine_size__lte'),
+        ]:
+            value = self.request.query_params.get(param)
+            if value is not None:
+                try:
+                    # For numeric fields, convert the value to an integer or float
+                    numeric_value = float(value)
+                    queryset = queryset.filter(**{lookup: numeric_value})
+                except (ValueError, TypeError):
+                    # Silently ignore invalid filter values
+                    pass
+
+        # Ordering logic
+        ordering = self.request.query_params.get('ordering')
+        if ordering:
+            ordering_map = {
+                'price_asc': 'price',
+                'price_desc': '-price',
+                'year_asc': 'year',
+                'year_desc': '-year',
+                'engine_size_asc': 'engine_size',
+                'engine_size_desc': '-engine_size',
+            }
+            ordering_field = ordering_map.get(ordering)
+            if ordering_field:
+                queryset = queryset.order_by(ordering_field)
+            else:
+                queryset = queryset.order_by('-date_posted')
+        else:
+            queryset = queryset.order_by('-date_posted')
             
         return queryset
 
