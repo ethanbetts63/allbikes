@@ -1,0 +1,286 @@
+[
+{
+  "model": "service.bookingrequestlog",
+  "pk": 1,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": 2020,
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": 20000,
+      "last_name": "Betts",
+      "first_name": "Ethan",
+      "drop_off_time": "07/01/2026 10:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": false
+    },
+    "response_status_code": 500,
+    "response_body": {
+      "error": "An error occurred: 500 Server Error: Internal Server Error for url: https://www.mechanicdesk.com.au/booking_requests/create_booking"
+    },
+    "created_at": "2026-01-04T14:42:19.472Z",
+    "status": "Failed"
+  }
+},
+{
+  "model": "service.bookingrequestlog",
+  "pk": 2,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": 2020,
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": 20000,
+      "last_name": "Betts",
+      "first_name": "Ethan",
+      "drop_off_time": "14/01/2026 11:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": false
+    },
+    "response_status_code": 500,
+    "response_body": {
+      "error": "An error occurred: 500 Server Error: Internal Server Error for url: https://www.mechanicdesk.com.au/booking_requests/create_booking",
+      "details": ""
+    },
+    "created_at": "2026-01-04T14:46:12.762Z",
+    "status": "Failed"
+  }
+},
+{
+  "model": "service.bookingrequestlog",
+  "pk": 3,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": 2020,
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": 20000,
+      "drop_off_time": "14/01/2026 11:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": false
+    },
+    "response_status_code": 500,
+    "response_body": {
+      "error": "An error occurred: 500 Server Error: Internal Server Error for url: https://www.mechanicdesk.com.au/booking_requests/create_booking",
+      "details": ""
+    },
+    "created_at": "2026-01-04T14:49:57.429Z",
+    "status": "Failed"
+  }
+},
+{
+  "model": "service.bookingrequestlog",
+  "pk": 4,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": "2020",
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": "20000",
+      "last_name": "Betts",
+      "first_name": "Ethan",
+      "drop_off_time": "14/01/2026 11:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": "false"
+    },
+    "response_status_code": 500,
+    "response_body": {
+      "error": "An error occurred: Expecting value: line 1 column 1 (char 0)"
+    },
+    "created_at": "2026-01-04T14:55:52.669Z",
+    "status": "Failed"
+  }
+},
+{
+  "model": "service.bookingrequestlog",
+  "pk": 5,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": "2020",
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": "20000",
+      "last_name": "Betts",
+      "first_name": "Ethan",
+      "drop_off_time": "14/01/2026 11:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": "false"
+    },
+    "response_status_code": 500,
+    "response_body": {
+      "error": "Received non-JSON response from external service",
+      "details": "<!DOCTYPE html><html id=\"ng-app\" ng-app=\"auto_workshop\"><head><title>MechanicDesk</title><link href=\"https://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic,900,900italic,300italic,300,100italic,100&#39;\" rel=\"stylesheet\" /><link href=\"/assets/lib/bootstrap_and_overrides-d063123a629a4e10bb097faeea50e495.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/lib/fullcalendar-80082fb3f0f4addb7472329c3ea7d556.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/recaptcha-eb9b53f30e94d83a48940c571a1319df.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/styles/admin/application-77b5e44b1136d58853825ce6d14a4a20.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/font-awesome-5d65b7d43cac99735eaeb9c72b2b8361.css\" media=\"all\" rel=\"stylesheet\" /><link crossorigin=\"anonymous\" href=\"https://pro.fontawesome.com/releases/v5.7.2/css/all.css\" integrity=\"sha384-6jHF7Z3XI3fF4XZixAuSu0gGKrXwoX/w3uFPxC56OtjChio7wtTGJWRW53Nhx6Ev\" media=\"screen\" rel=\"stylesheet\" /><link href=\"/assets/select2-a0d8cf05490120cf9f8457cecf7d6362.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/lib/spectrum-3ca06d9e0128523281d071263486b367.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/lib/selectize-b2fe4ceb9f490233d58c356f4d3a9b83.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/lib/selectize-bootstrap2-5189eb20a9f7fc9b4d67155ac770c18e.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/lib/mdcalculator-114267c1892b2600f05134e42587b614.css\" media=\"all\" rel=\"stylesheet\" /><script src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyBiMGyZtJknpP_PDBn9iylRcwLXGehvG0M&amp;libraries=places\"></script><script src=\"/assets/auto_workshop/app-ad0ff11108d19b4b087e4ff57e2def1d.js\"></script><script src=\"/assets/lib/angular-1.0.7/i18n/angular-locale_en-au-adf6175de7490cd9ab520dbcc533ada6.js\"></script><link href=\"/assets/favicon-dfa09e9e829fbc3b1b4c72e6a6fb8c95.ico\" rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" /><link href=\"/images/apple-icon-114x114.png\" rel=\"apple-touch-icon\" sizes=\"114x114\" /><meta content=\"authenticity_token\" name=\"csrf-param\" />\n<meta content=\"Tw6a3rGwx21OcFXpuol8eRmexf55yTfyqeGYyW2m5aw=\" name=\"csrf-token\" /><meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\" /><style type=\"text/css\">a {cursor:pointer;}</style></head><!DOCTYPE html><html><head><title>Booking</title><link href=\"/assets/lib/bootstrap_and_overrides-d063123a629a4e10bb097faeea50e495.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/recaptcha-eb9b53f30e94d83a48940c571a1319df.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/styles/admin/application-77b5e44b1136d58853825ce6d14a4a20.css\" media=\"all\" rel=\"stylesheet\" /><link href=\"/assets/font-awesome-5d65b7d43cac99735eaeb9c72b2b8361.css\" media=\"all\" rel=\"stylesheet\" /><meta content=\"authenticity_token\" name=\"csrf-param\" />\n<meta content=\"Tw6a3rGwx21OcFXpuol8eRmexf55yTfyqeGYyW2m5aw=\" name=\"csrf-token\" /></head><body><div style=\"margin-left: 10px; margin-top: 10px\"><div class=\"bold\">Your booking request has been sent. We will confirm your booking shortly.</div><h5>Booking details</h5><div><span class=\"bold\">Name:</span> <span>Ethan Betts</span></div><div><span class=\"bold\">Contact Number:</span> <span>91749128</span></div><div><span class=\"bold\">Email:</span> <span>ethanbetts63@gmail.com</span></div><div><span class=\"bold\">Registration Number:</span> <span>1heb123</span></div><div><span class=\"bold\">Make:</span> <span>honda</span></div><div><span class=\"bold\">Model:</span> <span>something</span></div><div><span class=\"bold\">Year:</span> <span>2020</span></div><div style=\"display: flex;\"><div class=\"inline bold\">Note:</div> <div class=\"inline\" style=\"padding-left: 5px;\"><pre class=\"no-style\">this is ethan doing a test.</pre></div></div><br /><div><a class=\"btn btn-primary\" href=\"/booking_requests/211001/edit?booking_token=053df908cdc2083a409e38bd97f3d6cacd8c011b&amp;token=2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1\">Change</a></div></div></body></html><script type=\"text/javascript\">version = \"90\"</script></html>"
+    },
+    "created_at": "2026-01-04T14:58:31.427Z",
+    "status": "Failed"
+  }
+},
+{
+  "model": "service.bookingrequestlog",
+  "pk": 6,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": "2020",
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": "20000",
+      "last_name": "Betts",
+      "first_name": "Ethan",
+      "drop_off_time": "14/01/2026 11:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": "false"
+    },
+    "response_status_code": 500,
+    "response_body": {
+      "error": "An error occurred: 500 Server Error: Internal Server Error for url: https://www.mechanicdesk.com.au/booking_requests/create_booking",
+      "details": ""
+    },
+    "created_at": "2026-01-04T15:00:00.512Z",
+    "status": "Failed"
+  }
+},
+{
+  "model": "service.bookingrequestlog",
+  "pk": 7,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": "2020",
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": "20000",
+      "last_name": "Betts",
+      "first_name": "Ethan",
+      "drop_off_time": "14/01/2026 11:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": "false"
+    },
+    "response_status_code": 500,
+    "response_body": {
+      "error": "An error occurred: 500 Server Error: Internal Server Error for url: https://www.mechanicdesk.com.au/booking_requests/create_booking",
+      "details": ""
+    },
+    "created_at": "2026-01-04T15:00:15.960Z",
+    "status": "Failed"
+  }
+},
+{
+  "model": "service.bookingrequestlog",
+  "pk": 8,
+  "fields": {
+    "customer_name": "Ethan Betts",
+    "customer_email": "ethanbetts63@gmail.com",
+    "vehicle_registration": "1heb123",
+    "request_payload": {
+      "make": "honda",
+      "name": "Ethan Betts",
+      "note": "this is ethan doing a test.",
+      "year": "2020",
+      "email": "ethanbetts63@gmail.com",
+      "model": "something",
+      "phone": "91749128",
+      "token": "2cc5df9efc5c3180f3a93bd086e5a2a0399dbbe1",
+      "odometer": "20000",
+      "last_name": "Betts",
+      "first_name": "Ethan",
+      "drop_off_time": "14/01/2026 11:30",
+      "job_type_names": [
+        "Major Service",
+        "Tyre Fitting"
+      ],
+      "registration_number": "1heb123",
+      "courtesy_vehicle_requested": "false"
+    },
+    "response_status_code": 200,
+    "response_body": {
+      "status": "success",
+      "message": "Booking request sent successfully."
+    },
+    "created_at": "2026-01-04T15:01:54.202Z",
+    "status": "Success"
+  }
+}
+]

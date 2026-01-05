@@ -1,0 +1,10 @@
+[
+{
+  "model": "sites.site",
+  "pk": 1,
+  "fields": {
+    "domain": "https://www.allbikesvespawarehouse.com.au/",
+    "name": "https://www.allbikesvespawarehouse.com.au/"
+  }
+}
+]

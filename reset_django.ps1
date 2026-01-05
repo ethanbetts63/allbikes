@@ -69,6 +69,7 @@ git commit -m "reset_django.ps1"
 git push
 
 python manage.py generate --terms
+python manage.py generate --brands
 python manage.py fix_site_domains
 python manage.py createsuperuser --username ethanbetts63@gmail.com --email ethanbetts63@gmail.com
 

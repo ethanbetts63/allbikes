@@ -1,0 +1,18 @@
+[
+{
+  "model": "service.jobtype",
+  "pk": 2,
+  "fields": {
+    "name": "major service",
+    "description": "This is a major service."
+  }
+},
+{
+  "model": "service.jobtype",
+  "pk": 3,
+  "fields": {
+    "name": "Tyre Fitting",
+    "description": "New tyre fitting"
+  }
+}
+]
