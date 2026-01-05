@@ -22,6 +22,8 @@ const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
 const BookingSuccessPage = lazy(() => import('./pages/BookingSuccessPage'));
 const TermsAndConditionsPage = lazy(() => import('./pages/TermsAndConditionsPage'));
+const SecurityPolicyPage = lazy(() => import('./pages/SecurityPolicyPage')); // New lazy-loaded page
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage')); // New lazy-loaded page
 
 import { SiteSettingsProvider } from './context/SiteSettingsContext';
 
@@ -54,6 +56,8 @@ function App() {
                 <Route path="/booking" element={<BookingPage />} />
                 <Route path="/booking/success" element={<BookingSuccessPage />} />
                 <Route path="/terms" element={<TermsAndConditionsPage />} />
+                <Route path="/security" element={<SecurityPolicyPage />} /> {/* New route */}
+                <Route path="/privacy" element={<PrivacyPolicyPage />} /> {/* New route */}
 
                 {/* Admin Section */}
                 <Route path="/admin" element={<AdminLayout />}>
