@@ -43,11 +43,11 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
           </ul>
         </div>
         {bike.condition === 'new' && (
-            <div className="mt-2 mb-0 text-blue-600 text-m font-semibold">
-                {"Comes with 3 months rego!"}
-                {bike.warranty_months && bike.warranty_months > 0 && (
-                    ` and ${bike.warranty_months} months warranty!`
-                )}
+            <div className="mt-2 text-blue-600 text-m font-semibold">
+                {bike.warranty_months && bike.warranty_months > 0
+                    ? `Comes with 3 months rego and ${bike.warranty_months} months warranty!`
+                    : `Comes with 3 months rego!`
+                }
             </div>
         )}
       </CardContent>
