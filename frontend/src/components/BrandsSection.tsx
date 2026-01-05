@@ -18,9 +18,9 @@ interface BrandProps {
 
 const BrandCard: React.FC<BrandProps> = ({ image, alt, title, subtitle, description, imageLeft }) => {
   return (
-    <div className={`flex flex-col md:flex-row ${imageLeft ? '' : 'md:flex-row-reverse'} items-center bg-background rounded-lg overflow-hidden`}>
+    <div className={`flex flex-col md:flex-row ${imageLeft ? '' : 'md:flex-row-reverse'} items-center bg-background rounded-none lg:rounded-lg overflow-hidden`}>
       <div className="w-full md:w-1/2">
-        <img src={image} alt={alt} className="w-full h-full object-cover rounded-lg" />
+        <img src={image} alt={alt} className="w-full h-full object-cover rounded-none lg:rounded-lg" />
       </div>
       <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
         <h3 className="text-3xl font-bold text-[var(--text-primary)] mb-2">{title}</h3>
