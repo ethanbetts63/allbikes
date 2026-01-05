@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from './ui/button'; 
-
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 
 const Footer = () => {
