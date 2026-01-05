@@ -59,6 +59,22 @@ The API endpoints are configured as follows:
 -   `/bikes/`: Handled by `MotorcycleViewSet`, providing list and detail views with CRUD capabilities.
 -   `/bikes/<int:motorcycle_pk>/images/`: Handled by `MotorcycleImageView` for uploading new images for a specific motorcycle.
 
+## Frontend URL Structure
+
+While the backend API uses simple ID-based lookups, the frontend application employs a more descriptive, SEO-friendly URL structure for displaying bikes to users.
+
+### List Pages
+-   **New Bikes**: `/inventory/motorcycles/new`
+-   **Used Bikes**: `/inventory/motorcycles/used`
+
+### Detail Page
+The detail page for a single bike uses a "slug" for better readability and search engine optimization.
+-   **Structure**: `/inventory/motorcycles/:slug`
+-   **Slug Format**: The slug is generated in the frontend and follows the pattern `year-make-model-id`.
+    -   **Example**: A 2011 Piaggio Fly 150 with a database ID of `15` will have the following URL:
+        `/inventory/motorcycles/2011-piaggio-fly-150-15`
+-   **Functionality**: The frontend extracts the unique `id` from the end of the slug to fetch the correct bike data from the `/api/inventory/bikes/{id}/` backend endpoint.
+
 ## How to Use
 
 ### API Endpoints

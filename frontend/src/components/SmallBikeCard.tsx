@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Wrench, Cog } from "lucide-react"; // Import icons
 import type { Bike } from "@/types";
+import { generateBikeSlug } from "@/utils/slugify";
 
 interface SmallBikeCardProps {
   bike: Bike;
@@ -11,9 +12,10 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
   const imageUrl = sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png';
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
+  const slug = generateBikeSlug(bike);
 
   return (
-    <Link to={`/inventory/motorcycles/${bike.id}`} className="block h-full">
+    <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
       <Card className="w-full overflow-hidden flex flex-col h-full transform transition-transform hover:-translate-y-1 pt-0 border-foreground">
         <div className="relative h-32">
           <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover" />
