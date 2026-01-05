@@ -5,23 +5,11 @@ import { Button } from './ui/button'; // Assuming button component is in the sam
 import { getFooterSettings } from '@/api';
 import type { FooterSettings } from '@/types';
 
+import { useSiteSettings } from '@/context/SiteSettingsContext';
+
 const Footer = () => {
   const { user, logout } = useAuth(); // Destructure logout from useAuth
-  const [footerSettings, setFooterSettings] = useState<FooterSettings | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const settings = await getFooterSettings();
-        setFooterSettings(settings);
-      } catch (err) {
-        console.error("Failed to fetch footer settings:", err);
-        setError("Failed to load footer information.");
-      }
-    };
-    fetchSettings();
-  }, []);
+  const { settings, loading } = useSiteSettings();
 
   return (
     <footer className="bg-foreground text-[var(--text-primary)] p-8 mt-auto">
@@ -29,16 +17,14 @@ const Footer = () => {
         {/* Contact Info */}
         <div>
           <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Contact Us</h4>
-          {error && <p className="text-red-400">{error}</p>}
-          {footerSettings ? (
+          {loading && <p>Loading contact information...</p>}
+          {settings && (
             <>
-              <p>{footerSettings.street_address}</p>
-              <p>{footerSettings.address_locality}, {footerSettings.address_region} {footerSettings.postal_code}</p>
-              <p>Phone: {footerSettings.phone_number}</p>
-              <p>Email: {footerSettings.email_address}</p>
+              <p>{settings.street_address}</p>
+              <p>{settings.address_locality}, {settings.address_region} {settings.postal_code}</p>
+              <p>Phone: {settings.phone_number}</p>
+              <p>Email: {settings.email_address}</p>
             </>
-          ) : (
-            <p>Loading contact information...</p>
           )}
         </div>
 
@@ -71,26 +57,25 @@ const Footer = () => {
         {/* Opening Hours & Business Info */}
         <div>
           <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Opening Hours</h4>
-          {footerSettings ? (
+          {loading && <p>Loading opening hours...</p>}
+          {settings && (
             <>
-              <p>Monday: {footerSettings.opening_hours_monday}</p>
-              <p>Tuesday: {footerSettings.opening_hours_tuesday}</p>
-              <p>Wednesday: {footerSettings.opening_hours_wednesday}</p>
-              <p>Thursday: {footerSettings.opening_hours_thursday}</p>
-              <p>Friday: {footerSettings.opening_hours_friday}</p>
-              <p>Saturday: {footerSettings.opening_hours_saturday}</p>
-              <p>Sunday: {footerSettings.opening_hours_sunday}</p>
+              <p>Monday: {settings.opening_hours_monday}</p>
+              <p>Tuesday: {settings.opening_hours_tuesday}</p>
+              <p>Wednesday: {settings.opening_hours_wednesday}</p>
+              <p>Thursday: {settings.opening_hours_thursday}</p>
+              <p>Friday: {settings.opening_hours_friday}</p>
+              <p>Saturday: {settings.opening_hours_saturday}</p>
+              <p>Sunday: {settings.opening_hours_sunday}</p>
             </>
-          ) : (
-            <p>Loading opening hours...</p>
           )}
         </div>
       </div>
       <div className="container mx-auto text-center mt-8 pt-4 border-t border-gray-700">
         <p className="text-gray-400">&copy; {new Date().getFullYear()} Allbikes. All rights reserved.</p>
-        {footerSettings && (
+        {settings && (
           <p className="text-sm mt-2 text-gray-400">
-            ABN: {footerSettings.abn_number} | MD: {footerSettings.md_number} | MRB: {footerSettings.mrb_number}
+            ABN: {settings.abn_number} | MD: {settings.md_number} | MRB: {settings.mrb_number}
           </p>
         )}
       </div>

@@ -22,47 +22,54 @@ const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
 const BookingSuccessPage = lazy(() => import('./pages/BookingSuccessPage'));
 
+import { SiteSettingsProvider } from './context/SiteSettingsContext';
+
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
     <Spinner className="h-12 w-12" />
   </div>
 );
 
+import Banner from './components/Banner';
+
 function App() {
   return (
     <HelmetProvider>
-      <div className="min-h-screen flex flex-col">
-        <NavBar />
-        <Toaster position="top-center" />
-        <main className="flex-grow">
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/workshop" element={<WorkshopPage />} />
-              <Route path="/bikes/new" element={<BikeListPage bikeCondition="new" />} />
-              <Route path="/bikes/used" element={<BikeListPage bikeCondition="used" />} />
-              <Route path="/bikes/:id" element={<BikeDetailPage />} />
-              <Route path="/booking" element={<BookingPage />} />
-              <Route path="/booking/success" element={<BookingSuccessPage />} />
+      <SiteSettingsProvider>
+        <div className="min-h-screen flex flex-col">
+          <NavBar />
+          <Banner />
+          <Toaster position="top-center" />
+          <main className="flex-grow">
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/workshop" element={<WorkshopPage />} />
+                <Route path="/bikes/new" element={<BikeListPage bikeCondition="new" />} />
+                <Route path="/bikes/used" element={<BikeListPage bikeCondition="used" />} />
+                <Route path="/bikes/:id" element={<BikeDetailPage />} />
+                <Route path="/booking" element={<BookingPage />} />
+                <Route path="/booking/success" element={<BookingSuccessPage />} />
 
-              {/* Admin Section */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route path="dashboard" element={<AdminHomePage />} />
-                <Route path="inventory" element={<InventoryManagementPage />} />
-                <Route path="add-motorcycle" element={<AddMotorcyclePage />} />
-                <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />
-                <Route path="settings" element={<SiteSettingsPage />} />
-                <Route path="service-settings" element={<ServiceSettingsPage />} />
-                <Route path="job-types" element={<JobTypesPage />} />
-              </Route>
+                {/* Admin Section */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route path="dashboard" element={<AdminHomePage />} />
+                  <Route path="inventory" element={<InventoryManagementPage />} />
+                  <Route path="add-motorcycle" element={<AddMotorcyclePage />} />
+                  <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />
+                  <Route path="settings" element={<SiteSettingsPage />} />
+                  <Route path="service-settings" element={<ServiceSettingsPage />} />
+                  <Route path="job-types" element={<JobTypesPage />} />
+                </Route>
 
-            </Routes>
-          </Suspense>
-        </main>
-        <Footer />
-      </div>
+              </Routes>
+            </Suspense>
+          </main>
+          <Footer />
+        </div>
+      </SiteSettingsProvider>
     </HelmetProvider>
   );
 }
