@@ -14,7 +14,7 @@ import {
 import BikeListHero from '@/components/BikeListHero';
 import SymImage from '@/assets/sym_22.webp';
 import FilterSort, { type FilterSortOptions } from '@/components/FilterSort';
-import { FaqSection } from '@/components/FaqSection'; // Import FaqSection
+import { FaqSection } from '@/components/FaqSection'; 
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';
