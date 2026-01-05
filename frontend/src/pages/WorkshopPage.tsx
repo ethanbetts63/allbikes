@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Seo from '@/components/Seo';
 import { getJobTypes } from '@/services/bookingService';
 import type { EnrichedJobType } from '@/types';
 import WorkshopJobTypes from '@/components/WorkshopJobTypes';
@@ -57,6 +58,11 @@ const WorkshopPage: React.FC = () => {
 
     return (
         <div className="container mx-auto py-0">
+            <Seo
+                title="Motorcycle and Scooter Workshop Services | Allbikes Perth"
+                description="Expert motorcycle and scooter servicing, repairs, and tyre changes in Perth. We service all major brands, including Vespa, Piaggio, and more."
+                canonicalPath="/workshop"
+            />
             <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} />
 
             <div className="mt-0">

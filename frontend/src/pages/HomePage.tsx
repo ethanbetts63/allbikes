@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Seo from '@/components/Seo';
 import HomeHero from '@/components/HomeHero';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
@@ -69,6 +70,11 @@ const HomePage = () => {
 
   return (
     <div>
+      <Seo
+        title="Allbikes - Perth's Premier Motorcycle and Scooter Dealership"
+        description="Discover a wide range of new and used motorcycles and scooters at Allbikes. We offer sales, servicing, and expert advice for riders in Perth."
+        canonicalPath="/"
+      />
         <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={bikesLoading || settingsLoading} error={error} />
         <ReviewCarousel />
         <BrandsSection />

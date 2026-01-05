@@ -74,17 +74,13 @@ This directory contains custom Django management commands for various data opera
     -   `--terms`: Generating `TermsAndConditions` from HTML files.
     -   `--archive`: Archiving the current database state to JSON files.
     -   `--brands`: Generating `Brand` data from a JSONL file.
-    -   *(Note: The command references `--faqs` but this flag is not defined in `add_arguments`.)*
--   `organize_images.py`: Organizes downloaded motorcycle images into a structured directory within the frontend assets, making them ready for responsive web delivery.
--   `resize_images.py`: Resizes a given image to multiple widths and converts it to WEBP format for responsive web optimization.
 -   `update.py`: A utility for loading the database from the latest JSON archive. It performs a destructive `flush` before loading data and requires explicit user confirmation.
 
 ## Data Files (`data/`)
 
 This directory holds raw data files used by various generation and update processes:
 -   `brands.jsonl`: Contains `Brand` data in JSON Lines format, used by `BrandUpdateOrchestrator`.
--   `faqs.jsonl`: (Currently empty) Intended to hold FAQ data, likely for a `Faq` model or similar data structure.
--   `reviews.jsonl`: (Currently empty) Likely intended for review data.
+structure.
 -   `terms_v1.html`: (Currently empty) Intended to hold the HTML content for a specific version of terms and conditions.
 -   `archive/db_backups/`: Directory where database archives are stored by `DatabaseArchiver`.
 

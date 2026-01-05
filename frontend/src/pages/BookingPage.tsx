@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { createBooking } from '@/services/bookingService';
+import Seo from '@/components/Seo';
 
 // Import the step components
 import BookingDetailsForm from '@/forms/BookingDetailsForm';
@@ -84,6 +85,11 @@ const BookingPage: React.FC = () => {
 
     return (
         <div className="container mx-auto py-10 max-w-3xl">
+            <Seo
+                title="Book a Motorcycle or Scooter Service | Allbikes Perth"
+                description="Schedule your motorcycle or scooter service online with Allbikes. Our expert technicians are ready to help you with maintenance, repairs, and more."
+                canonicalPath="/booking"
+            />
             <h1 className="text-4xl font-bold text-center mb-8 text-[var(--text-primary)] ">Book a Service</h1>
             
             {/* We can add a progress bar here later */}
