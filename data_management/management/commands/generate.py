@@ -25,12 +25,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         something_generated = False
-        if options['faqs']:
-            something_generated = True
-            self.stdout.write(self.style.SUCCESS('Starting FAQ generation...'))
-            orchestrator = FaqUpdateOrchestrator(command=self)
-            orchestrator.run()
-
         if options['terms']:
             something_generated = True
             self.stdout.write(self.style.SUCCESS('Starting Terms and Conditions generation...'))
@@ -51,5 +45,5 @@ class Command(BaseCommand):
 
         if not something_generated:
             self.stdout.write(self.style.WARNING(
-                'No generation flag specified. Please use --faqs, --tiers, or other available options.'
+                'No generation flag specified. '
             ))
