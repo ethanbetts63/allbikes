@@ -4,27 +4,24 @@ import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
 import FeaturedBikes from '@/components/FeaturedBikes';
 import { FaqSection } from '@/components/FaqSection';
-import { getBikes, getFooterSettings } from '@/api';
-import type { Bike, FooterSettings } from "@/types";
+import { getBikes } from '@/api';
+import type { Bike } from "@/types";
+import { useSiteSettings } from '@/context/SiteSettingsContext';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
   const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
-  const [siteSettings, setSiteSettings] = useState<FooterSettings | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { settings, loading: settingsLoading } = useSiteSettings();
+  const [bikesLoading, setBikesLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchBikes = async () => {
       try {
-        // Fetch settings and bikes in parallel
-        const [settingsResponse, newBikesResponse, usedBikesResponse] = await Promise.all([
-          getFooterSettings(),
+        const [newBikesResponse, usedBikesResponse] = await Promise.all([
           getBikes({ condition: 'new', page: 1, is_featured: true }),
           getBikes({ condition: 'used', page: 1, is_featured: true })
         ]);
-
-        setSiteSettings(settingsResponse);
 
         const availableNewBikes = newBikesResponse.results.filter(
           bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable'
@@ -40,17 +37,17 @@ const HomePage = () => {
         console.error("Failed to fetch page data:", err);
         setError("Failed to load page data.");
       } finally {
-        setLoading(false);
+        setBikesLoading(false);
       }
     };
 
-    fetchData();
+    fetchBikes();
   }, []);
 
   const faqData = [
     {
       "question": "How can I contact you?",
-      "answer": `You can contact us by phone on ${siteSettings?.phone_number || '{phone}'}, by email at ${siteSettings?.email_address || '{email}'}, or via our Contact Us page.`
+      "answer": `You can contact us by phone on ${settings?.phone_number || '{phone}'}, by email at ${settings?.email_address || '{email}'}, or via our Contact Us page.`
     },
     {
       "question": "What types of motorcycles and scooters do you service?",
@@ -58,7 +55,7 @@ const HomePage = () => {
     },
     {
       "question": "What areas of Perth do you service?",
-      "answer": `Our workshop is based in Dianella at ${siteSettings?.street_address || '{address}'}. While we service surrounding suburbs, many customers visit us from across Greater Perth. We can recommend a motorcycle mover service, so distance is not an issue. More information is available on our service page.`
+      "answer": `Our workshop is based in Dianella at ${settings?.street_address || '{address}'}. While we service surrounding suburbs, many customers visit us from across Greater Perth. We can recommend a motorcycle mover service, so distance is not an issue. More information is available on our service page.`
     },
     {
       "question": "Do you service electric motorcycles and scooters?",
@@ -72,7 +69,7 @@ const HomePage = () => {
 
   return (
     <div>
-        <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={loading} error={error} />
+        <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={bikesLoading || settingsLoading} error={error} />
         <ReviewCarousel />
         <BrandsSection />
         <FeaturedBikes
