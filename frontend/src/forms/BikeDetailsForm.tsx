@@ -22,23 +22,23 @@ const BikeDetailsForm: React.FC<BikeDetailsFormProps> = ({ formData, setFormData
       <div className="space-y-4">
         
         <div>
-          <Label htmlFor="registration_number">Registration Number</Label>
+          <Label htmlFor="registration_number">Registration Number <span className="text-red-500">*</span></Label>
           <Input id="registration_number" value={formData.registration_number || ''} onChange={handleChange} placeholder="e.g., 1AB-234" />
         </div>
         <div>
-          <Label htmlFor="make">Make</Label>
+          <Label htmlFor="make">Make <span className="text-red-500">*</span></Label>
           <Input id="make" value={formData.make || ''} onChange={handleChange} placeholder="e.g., Honda" />
         </div>
         <div>
-          <Label htmlFor="model">Model</Label>
+          <Label htmlFor="model">Model <span className="text-red-500">*</span></Label>
           <Input id="model" value={formData.model || ''} onChange={handleChange} placeholder="e.g., CBR500R" />
         </div>
         <div>
-          <Label htmlFor="year">Year</Label>
+          <Label htmlFor="year">Year <span className="text-red-500">*</span></Label>
           <Input id="year" type="number" value={formData.year || ''} onChange={handleChange} placeholder="e.g., 2022" />
         </div>
         <div>
-          <Label htmlFor="odometer">Odometer (km)</Label>
+          <Label htmlFor="odometer">Odometer (km) <span className="text-red-500">*</span></Label>
           <Input id="odometer" type="number" value={formData.odometer || ''} onChange={handleChange} placeholder="e.g., 15000" />
         </div>
         

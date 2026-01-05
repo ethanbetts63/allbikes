@@ -96,7 +96,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <Label htmlFor="date" className="mb-2 block">Drop-off Date</Label>
+                        <Label htmlFor="date" className="mb-2 block">Drop-off Date <span className="text-red-500">*</span></Label>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
@@ -119,7 +119,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                         </Popover>
                     </div>
                     <div>
-                        <Label htmlFor="time" className="mb-2 block">Drop-off Time</Label>
+                        <Label htmlFor="time" className="mb-2 block">Preferred Drop-off Time <span className="text-red-500">*</span></Label>
                         <Select onValueChange={setSelectedTime} value={selectedTime} disabled={!selectedDate}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select a time" />
@@ -132,7 +132,8 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 </div>
 
                 <div>
-                    <Label className="mb-2 block">Job Type</Label>
+                    <Label className="mb-2 block">Job Type <span className="text-red-500">*</span></Label>
+                    <p className="text-sm text-muted-foreground mb-2">Please select one or more job types that best describe the service you require.</p>
                     <div className="space-y-4 mt-2 p-4 border rounded-md max-h-64 overflow-y-auto">
                         {jobTypes.length > 0 ? jobTypes.map((job) => (
                             <div key={job.name}>
@@ -156,6 +157,7 @@ const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFo
                 
                 <div>
                     <Label htmlFor="notes" className="mb-2 block">Notes</Label>
+                    <p className="text-sm text-muted-foreground mb-2">Please provide details about your service requirements. (e.g., specific issues, weird sounds, the circumstances it broke under, etc.)</p>
                     <Textarea 
                         id="notes"
                         placeholder="Add any notes for the mechanic (e.g., details about the issue)" 

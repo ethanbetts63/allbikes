@@ -28,19 +28,19 @@ const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, set
       <div className="space-y-4">
         
         <div>
-          <Label htmlFor="first_name">First Name</Label>
+          <Label htmlFor="first_name">First Name <span className="text-red-500">*</span></Label>
           <Input id="first_name" value={formData.first_name || ''} onChange={handleChange} placeholder="John" />
         </div>
         <div>
-          <Label htmlFor="last_name">Last Name</Label>
+          <Label htmlFor="last_name">Last Name <span className="text-red-500">*</span></Label>
           <Input id="last_name" value={formData.last_name || ''} onChange={handleChange} placeholder="Doe" />
         </div>
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
           <Input id="email" type="email" value={formData.email || ''} onChange={handleChange} placeholder="john.doe@example.com" />
         </div>
         <div>
-          <Label htmlFor="phone">Phone</Label>
+          <Label htmlFor="phone">Phone <span className="text-red-500">*</span></Label>
           <Input id="phone" type="tel" value={formData.phone || ''} onChange={handleChange} placeholder="0412 345 678" />
         </div>
 
