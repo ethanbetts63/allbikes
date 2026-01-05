@@ -5,11 +5,11 @@ import { cn } from '@/lib/utils'; // Assuming this path is correct for your cn u
 const NavBar = () => {
   return (
     <header className={cn(
-      "sticky top-0 z-50 w-full border-b border-foreground bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300"
+      "sticky top-0 z-50 w-full border-b border-foreground bg-background transition-all duration-300"
     )}>
       <div className="container flex h-20 items-center justify-between">
         {/* Left Section: Logo */}
-        <div className="flex items-center p-0">
+        <div className="flex items-center p-8">
           <Link to="/" className="flex items-center">
             <img 
               src={logo} 
