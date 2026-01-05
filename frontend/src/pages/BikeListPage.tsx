@@ -14,10 +14,57 @@ import {
 import BikeListHero from '@/components/BikeListHero';
 import SymImage from '@/assets/sym_22.webp';
 import FilterSort, { type FilterSortOptions } from '@/components/FilterSort';
+import { FaqSection } from '@/components/FaqSection'; // Import FaqSection
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';
 }
+
+const newBikeFaqs = [
+  {
+    question: "What new motorcycles and scooters do you sell?",
+    answer: "We sell brand‑new SYM scooters and Segway electric scooters or electric motorcycles. These are the only brands we offer new, so we can confidently stand behind their quality and reliability."
+  },
+  {
+    question: "Can I buy a Vespa or Piaggio new from you?",
+    answer: "No. We do not sell new Vespa or new Piaggio models. When available, we offer them only as used or pre‑owned stock."
+  },
+  {
+    question: "Is your dealership in Perth?",
+    answer: "Yes. Our motorcycle and scooter dealership and showroom are in Perth, where you can view and buy new SYM or Segway models in person."
+  },
+  {
+    question: "Do you sell electric scooters or electric motorcycles?",
+    answer: "Yes. We sell electric scooters and electric motorcycles, including the Segway range, for commuting and everyday riding in Perth."
+  },
+  {
+    question: "Do you have a showroom for new vehicles?",
+    answer: "Yes. We operate a scooter and motorcycle showroom in Perth, displaying current new SYM and Segway inventory for direct purchase."
+  }
+];
+
+const usedBikeFaqs = [
+  {
+    question: "What used scooters and motorcycles do you sell?",
+    answer: "We sell used and second‑hand motorcycles and scooters across a wide range of brands. Each bike is chosen based on condition, reliability, and overall quality—only what we can stand behind is listed."
+  },
+  {
+    question: "Do you sell used Vespa or Piaggio?",
+    answer: "Yes. We regularly offer used Vespa and used Piaggio scooters when they meet our standards for quality and reliability."
+  },
+  {
+    question: "Are used bikes inspected before sale?",
+    answer: "Yes. All used motorcycles and scooters are inspected and prepared by our workshop before being listed for sale, ensuring a reliable purchase."
+  },
+  {
+    question: "Can I view used bikes at your Perth dealership?",
+    answer: "Yes. You can view used motorcycles and scooters at our Perth location unless a listing specifically states otherwise."
+  },
+  {
+    question: "Do you sell second‑hand motorcycles as well as scooters?",
+    answer: "Yes. Our pre‑owned inventory includes both second‑hand motorcycles and second‑hand scooters, depending on availability and condition."
+  }
+];
 
 const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
   const [bikes, setBikes] = useState<Bike[] | undefined>(undefined);
@@ -146,6 +193,10 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
           </div>
         )}
       </div>
+      <FaqSection 
+        title={isNew ? "New Bike FAQs" : "Used Bike FAQs"} 
+        faqData={isNew ? newBikeFaqs : usedBikeFaqs} 
+      />
     </>
   );
 };
