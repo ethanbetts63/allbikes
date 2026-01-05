@@ -56,7 +56,7 @@ const TermsAndConditionsPage: React.FC = () => {
     return (
         <>
             <Seo title="Terms & Conditions | Allbikes" />
-            <div className="container mx-auto px-4 py-8 max-w-4xl prose dark:prose-invert">
+            <div className="container mx-auto px-4 py-8 max-w-4xl prose dark:prose-invert text-[var(--text-primary)]">
                 {renderContent()}
             </div>
         </>

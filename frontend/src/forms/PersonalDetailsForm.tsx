@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Link } from 'react-router-dom';
 
 interface PersonalDetailsFormProps {
   formData: any;
@@ -14,6 +16,10 @@ const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, set
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [id]: value }));
+  };
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData((prev: any) => ({ ...prev, terms_accepted: checked }));
   };
 
   return (
@@ -38,11 +44,26 @@ const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, set
           <Input id="phone" type="tel" value={formData.phone || ''} onChange={handleChange} placeholder="0412 345 678" />
         </div>
 
+        <div className="flex items-center space-x-2 mt-4">
+            <Checkbox
+                id="terms_accepted"
+                checked={formData.terms_accepted}
+                onCheckedChange={handleCheckboxChange}
+            />
+            <Label htmlFor="terms_accepted">
+                I have read and accept the{' '}
+                <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                    service terms and conditions
+                </Link>
+                .
+            </Label>
+        </div>
+
         <div className="flex justify-between pt-4">
           <Button variant="destructive" className="text-white" onClick={prevStep}>
             Back
           </Button>
-          <Button onClick={handleSubmit}>
+          <Button onClick={handleSubmit} disabled={!formData.terms_accepted}>
             Submit Booking
           </Button>
         </div>

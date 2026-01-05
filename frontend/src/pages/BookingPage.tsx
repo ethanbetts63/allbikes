@@ -25,7 +25,8 @@ const initialFormData = {
     job_type_names: [],
     drop_off_time: '',
     courtesy_vehicle_requested: false,
-    note: ''
+    note: '',
+    terms_accepted: false
 };
 
 const BookingPage: React.FC = () => {
