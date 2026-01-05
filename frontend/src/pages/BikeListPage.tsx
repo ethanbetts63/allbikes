@@ -11,6 +11,8 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
+import BikeListHero from '@/components/BikeListHero';
+import SymImage from '@/assets/sym_22.webp';
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';
@@ -43,13 +45,21 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
     fetchBikes();
   }, [bikeCondition, currentPage]);
 
-  const pageTitle = bikeCondition === 'new' ? 'New Bikes' : 'Used Bikes';
+  const isNew = bikeCondition === 'new';
+  const pageTitle = isNew ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
+  const description = isNew 
+    ? "Browse our range of new motorcycles and scooters available in Perth, including petrol and electric models. All new bikes are workshop-prepared and available for local purchase through our Perth dealership. All new bikes come with a warranty."
+    : "Browse our range of used motorcycles and scooters available in Perth, including petrol and electric models. All used bikes are workshop-prepared and available for local purchase through our Perth dealership.";
 
   return (
     <>
       <Seo title={`${pageTitle} | Allbikes`} />
+      <BikeListHero 
+        title={pageTitle}
+        description={description}
+        imageUrl={SymImage}
+      />
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-8 text-[var(--text-primary)]">{pageTitle}</h1>
         
         {isLoading && (
             <div className="flex justify-center items-center h-64">
