@@ -35,15 +35,23 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
           ${parseFloat(bike.price).toLocaleString()}
         </p>
         <div className="text-sm text-gray-600">
-          <h3 className="font-semibold mb-1">Specifications:</h3>
+          <h3 className="font-semibold mb-0">Specifications:</h3>
           <ul className="list-disc list-inside">
             {bike.year && <li>Year: {bike.year}</li>}
             <li>Odometer: {bike.odometer.toLocaleString()} km</li>
             <li>Engine: {bike.engine_size}cc</li>
           </ul>
         </div>
+        {bike.condition === 'new' && (
+            <div className="mt-2 mb-0 text-blue-600 text-m font-semibold">
+                {"Comes with 3 months rego!"}
+                {bike.warranty_months && bike.warranty_months > 0 && (
+                    ` and ${bike.warranty_months} months warranty!`
+                )}
+            </div>
+        )}
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="px-4 pt-0">
         <Link to={`/inventory/motorcycles/${bike.id}`} className="w-full">
             <Button className="w-full">View Details</Button>
         </Link>
