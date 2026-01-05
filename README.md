@@ -1,27 +1,23 @@
-# Allbikes
+# Allbikes & Vespawarehouse
 
-Calendar apps are for meetings. Allbikes is for consequences. Single reminders get buried, missed or just lost. Allbikes repeats reminders until they’re acknowledged and it uses multi-channel escalation. From email and text to emergency contacts. High stakes deadlines such as visa or IUD expiries, trademark or domain renewals and even warranties, patents or business licences, deserve to have a reminder system that treats them as life and death, not just another dentist appointment. So check out Allbikes today, and find out how it feels to offload the “don’t forget” part of your brain, once and for all.
-
-**Live Site:** [https://www.allbikes.app/]
+Allbikes & Vespawarehouse is a comprehensive web platform for a motorcycle and scooter dealership, providing sales, service, and parts. This full-stack application features a detailed inventory management system, a customer-facing booking system integrated with the MechanicDesk API, and a dynamic frontend for a seamless user experience.
 
 ## Tech Stack
 
-*   **Backend:** Django, Django Rest Framework
-*   **Frontend:** React, Vite, TypeScript, Tailwind CSS
+*   **Backend:** Django, Django REST Framework
+*   **Frontend:** React, Vite, TypeScript, Tailwind CSS, Shadcn UI
 *   **Database:** MySQL
-*   **Payments:** Stripe
-*   **Email:** Mailgun
-*   **Messaging:** Twilio
-*   **Testing:** Pytest
+*   **External APIs:** MechanicDesk (for service bookings)
+*   **Testing:** Pytest, pytest-django, Factory Boy
 
-## Core Backend Concepts
+## Core Project Concepts
 
-The Django project is organized into several applications:
+The project is organized into several key applications, each with a dedicated `README.md` for more detailed information.
 
-*   `users`: Manages the custom user model, authentication, and user profile data including emergency contacts.
-*   `events`: Handles the creation, management, and scheduling of reminder events and their associated notifications.
-*   `payments`: Integrates with Stripe to process payments for different service tiers.
-*   `data_management`: Manages static and semi-static content like FAQs and Terms & Conditions.
+*   `inventory`: Manages the motorcycle and scooter inventory, including vehicle details and images.
+*   `service`: Handles service bookings, with a deep integration into the external MechanicDesk API for managing job types and availability.
+*   `data_management`: A central app for managing global site settings, brand information, terms and conditions, user profiles, and various data import/export/cleanup utilities.
+*   `frontend`: A modern, responsive single-page application built with React and Vite, providing the user interface for the entire platform.
 
 ## Getting Started
 
@@ -44,7 +40,7 @@ Follow these instructions to set up a local development environment.
 2.  **Create and activate a Python virtual environment:**
     ```bash
     python -m venv venv
-    source venv/Scripts/activate  # On Windows
+    .\venv\Scripts\activate  # On Windows
     # source venv/bin/activate    # On macOS/Linux
     ```
 
@@ -54,28 +50,21 @@ Follow these instructions to set up a local development environment.
     ```
 
 4.  **Set up environment variables:**
-    Create a `.env` file in the project root directory. This file stores sensitive configuration.
+    Create a `.env` file in the project root directory. This file stores sensitive configuration. Use the following structure:
     ```env
     # Django Settings
     SECRET_KEY=your_django_secret_key
     DEBUG=True
-    HASHING_SALT=your_hashing_salt
-
-    # Database Settings
-    DB_NAME=allbikes_db
-    DB_USER=root
+    
+    # Database Settings (MySQL)
+    DB_NAME=allbikes
+    DB_USER=your_db_user
     DB_PASSWORD=your_db_password
     DB_HOST=localhost
     DB_PORT=3306
 
-    # API/Service Keys
-    STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-    STRIPE_SECRET_KEY=your_stripe_secret_key
-    MAILGUN_API_KEY=your_mailgun_api_key
-    MAILGUN_DOMAIN=your_mailgun_domain
-
-    # The base URL of the server, used for creating absolute URLs
-    API_SERVER_URL=http://127.0.0.1:8000
+    # API Keys
+    MECHANICDESK_BOOKING_TOKEN=your_mechanicdesk_api_token
     ```
 
 5.  **Run database migrations:**
@@ -115,12 +104,13 @@ Follow these instructions to set up a local development environment.
 
 ## Running Tests
 
-To run the backend test suite, execute the following command from the project root:
+The backend test suite uses `pytest`. For a comprehensive overview of the testing strategy, philosophy, and directory structure, please refer to the [TESTING.md](./TESTING.md) file.
+
+To run the tests, execute the following command from the project root:
 
 ```bash
 pytest
 ```
-The tests are configured via the `pytest.ini` file.
 
 ## Development Utilities
 
@@ -135,7 +125,6 @@ To run the script:
 ```powershell
 .\reset_django.ps1
 ```
-
 The script performs the following actions:
 1.  Prompts you to manually drop and recreate the MySQL database.
 2.  Deletes all `__pycache__` directories and old migration files.
@@ -145,22 +134,21 @@ The script performs the following actions:
 
 ### Custom Management Commands
 
-The project includes several custom Django management commands to help with development:
+The `data_management` application includes several custom Django management commands to help with development and data migration:
 
-*   `python manage.py generate --faqs`: Populates the database with FAQ data.
-*   `python manage.py generate --tiers`: Populates the database with pricing tier data.
-*   `python manage.py generate --terms`: Populates the database with the latest terms and conditions.
-*   `python manage.py fix_site_domains`: Corrects the domain name in the Django Sites framework, which is useful for local development.
+*   `python manage.py generate --brands`: Populates the database with brand data from `data_management/data/brands.jsonl`.
+*   `python manage.py generate --terms`: Populates the database with the latest terms and conditions from HTML files.
+*   `python manage.py generate --archive`: Archives the current state of the database to date-stamped JSON files.
+*   `python manage.py update --archive`: Loads the database from the most recent archive (a destructive operation).
 
-You can run these commands individually after setting up the project.
+## External Integrations
+
+### MechanicDesk API
+
+The `service` application is deeply integrated with the MechanicDesk API for handling service bookings. This integration allows the frontend to fetch available job types, check for unavailable booking days, and submit new booking requests directly into the MechanicDesk system.
+
+For full details on the API endpoints and expected payloads, refer to the local documentation: [service/MechanicDesk_Documentation.txt](./service/MechanicDesk_Documentation.txt).
 
 ## License
 
-This project is licensed under the **Functional Source License 1.1 (FSL-1.1-MIT)**.
-
-### What this means:
-* **Personal & Internal Use:** You are free to use, modify, and distribute this code for personal projects, internal business tools, and educational purposes.
-* **Non-Compete:** You **cannot** use this code to create a commercial product or service that competes with **Allbikes**.
-* **Future Open Source:** This specific version of the code will automatically become fully open-source under the **MIT License** on **December 23, 2027**.
-
-For the full legal terms, please see the [LICENSE.md](./LICENSE.md) file.
+This project is licensed under the terms of the [LICENSE.md](./LICENSE.md) file.
