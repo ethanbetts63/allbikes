@@ -51,11 +51,10 @@ const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, set
                 onCheckedChange={handleCheckboxChange}
             />
             <Label htmlFor="terms_accepted">
-                I have read and accept the{' '}
+                I have read and accept the
                 <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                    service terms and conditions
+                  Service Terms and Conditions.
                 </Link>
-                .
             </Label>
         </div>
 

@@ -7,6 +7,10 @@ from .mechanics_desk_service import MechanicsDeskService
 from ..serializers import BookingSerializer, ServiceSettingsSerializer
 from ..models import ServiceSettings, BookingRequestLog, JobType
 
+# Import caching decorators
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
 
 class BookingViewSet(viewsets.ViewSet):
     """
@@ -62,6 +66,7 @@ class BookingViewSet(viewsets.ViewSet):
             BookingRequestLog.objects.create(**log_payload)
             return Response(log_payload['response_body'], status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @method_decorator(cache_page(60 * 60 * 24), name='dispatch') # Cache for 24 hours
     @action(detail=False, methods=['get'])
     def fetch_service_config(self, request):
         """
@@ -74,6 +79,7 @@ class BookingViewSet(viewsets.ViewSet):
         serializer = ServiceSettingsSerializer(settings)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @method_decorator(cache_page(60 * 60 * 24), name='dispatch') # Cache for 24 hours
     @action(detail=False, methods=['get'])
     def job_types(self, request):
         """
@@ -109,6 +115,7 @@ class BookingViewSet(viewsets.ViewSet):
 
         return Response(enriched_job_types, status=status.HTTP_200_OK)
 
+    @method_decorator(cache_page(60 * 60 * 2), name='dispatch') # Cache for 2 hours
     @action(detail=False, methods=['get'])
     def unavailable_days(self, request):
         """
