@@ -67,6 +67,11 @@ const NavBar = () => {
                  Servicing
               </Link>
             </li>
+            <li>
+              <Link to="/contact" className="hover:text-secondary">
+                 Contact Us
+              </Link>
+            </li>
           </ul>
         </nav>
 
@@ -85,6 +90,7 @@ const NavBar = () => {
             <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">New Motorcycles and Scooters</Link>
             <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Used Motorcycles and Scooters</Link>
             <Link to="/service" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Workshop</Link>
+            <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Contact Us</Link>
           </nav>
         </div>
       )}
