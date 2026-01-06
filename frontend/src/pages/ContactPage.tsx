@@ -38,7 +38,7 @@ const ContactPage: React.FC = () => {
                             <a href={`mailto:${settings.email_address}?`} target="_blank" rel="noopener noreferrer">
                                 <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700">
                                     <Mail className="mr-2 h-6 w-6" />
-                                    Email Us
+                                    Email Us ({settings.email_address})
                                 </Button>
                             </a>
                         </div>

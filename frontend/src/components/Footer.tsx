@@ -40,7 +40,8 @@ const Footer = () => {
                 <span className="md:hidden">Used Bikes</span>
               </Link>
             </li>
-            <li className="mb-2"><Link to="/service" className="hover:underline text-gray-300">Workshop</Link></li>
+            <li className="mb-2"><Link to="/service" className="hover:underline text-gray-300">Servicing</Link></li>
+            <li className="mb-2"><Link to="/contact" className="hover:underline text-gray-300">Contact Us</Link></li>
             <li className="mb-2"><Link to="/terms" className="hover:underline text-gray-300">Terms and Conditions</Link></li>
             <li className="mb-2"><Link to="/privacy" className="hover:underline text-gray-300">Privacy Policy</Link></li>
             <li className="mb-2"><Link to="/security" className="hover:underline text-gray-300">Security Policy</Link></li>
