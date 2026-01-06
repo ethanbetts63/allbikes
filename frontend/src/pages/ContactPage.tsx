@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Phone, Mail } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import OtherSites from '../components/OtherSites';
+import Breadcrumb from '../components/Breadcrumb';
 
 const otherSitesData = [
     {
@@ -26,6 +27,11 @@ const ContactPage: React.FC = () => {
     const { settings } = useSiteSettings();
     const description = "Our Perth workshop is your one-stop shop for motorcycle and scooter servicing and tyre fitting. Our experienced mechanics are here to help you with anything you need. We are located in Dianella, just a short ride from the city.";
 
+    const breadcrumbItems = [
+        { name: 'Home', href: '/' },
+        { name: 'Contact Us', href: '/contact' }
+    ];
+
     return (
         <div>
             <Hero
@@ -33,11 +39,12 @@ const ContactPage: React.FC = () => {
                 description={description}
                 imageUrl={SymImage}
             />
+            <Breadcrumb items={breadcrumbItems} />
             
             {settings && (
                 <div className="bg-background py-0">
                     <div className="container mx-auto flex flex-col items-center justify-center text-center">
-                        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
+                        <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-6">
                             <a href={`tel:${settings.phone_number}`} className="hidden sm:block">
                                 <Button size="lg">
                                     <Phone className="mr-2 h-6 w-6" />
@@ -69,4 +76,3 @@ const ContactPage: React.FC = () => {
 };
 
 export default ContactPage;
-
