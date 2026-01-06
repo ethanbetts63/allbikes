@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo.webp';
+import logo320 from '../assets/logo-320w.webp';
+import logo640 from '../assets/logo-640w.webp';
+import logo768 from '../assets/logo-768w.webp';
+import logo1024 from '../assets/logo-1024w.webp';
+import logo1280 from '../assets/logo-1280w.webp';
 import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
 
@@ -40,7 +44,11 @@ const NavBar = () => {
         <div className="flex items-center p-8">
           <Link to="/" className="flex items-center">
             <img
-              src={logo}
+              src={logo1280}
+              srcSet={`${logo320} 320w, ${logo640} 640w, ${logo768} 768w, ${logo1024} 1024w, ${logo1280} 1280w`}
+              sizes="175px"
+              width="1756"
+              height="810"
               alt="Allbikes Logo"
               className="h-20 w-auto object-contain"
             />
