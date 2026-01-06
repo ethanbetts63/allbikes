@@ -3,15 +3,18 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import type { Bike } from "@/types";
+import ContactButtons from './ContactButtons'; // Import the new component
 
 interface HomeHeroProps {
   newBikes: Bike[];
   usedBikes: Bike[];
   loading: boolean;
   error: string | null;
+  phoneNumber?: string; // Add phoneNumber prop
+  emailAddress?: string; // Add emailAddress prop
 }
 
-const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error }) => {
+const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error, phoneNumber, emailAddress }) => {
   const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([]);
   const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([]);
   const [currentNewBikeImageIndex, setCurrentNewBikeImageIndex] = useState(0);
@@ -123,6 +126,11 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
         <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-12">
           Operating in Perth for over 30 years, we are a motorcycle and scooter mechanic and dealership offering new and used sales across petrol and electric models. We provide motorcycle and scooter servicing, including tyre changes, maintenance, and general repairs. 
         </p>
+        {phoneNumber && emailAddress && (
+          <div className="mb-8">
+            <ContactButtons phoneNumber={phoneNumber} emailAddress={emailAddress} />
+          </div>
+        )}
         <Link to="/service">
           <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
             Book a Service <ArrowRight className="h-5" />

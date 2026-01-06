@@ -3,7 +3,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from inventory.models import Motorcycle
-from inventory.tests.factories import MotorcycleFactory, UserFactory
+from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
+from data_management.tests.factories.user_factory import UserFactory
 
 @pytest.fixture
 def api_client():
