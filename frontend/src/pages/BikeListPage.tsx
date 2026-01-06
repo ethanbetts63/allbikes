@@ -14,7 +14,8 @@ import {
 import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
 import FilterSort, { type FilterSortOptions } from '@/components/FilterSort';
-import { FaqSection } from '@/components/FaqSection'; 
+import { FaqSection } from '@/components/FaqSection';
+import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
 
 interface BikeListPageProps {
   bikeCondition: 'new' | 'used';
@@ -135,25 +136,22 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
       .replace(/[^\w-]+/g, '')
       .replace(/--+/g, '-');
 
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { name: 'Home', href: '/' },
+    { name: pageTitle, href: isNew ? '/bikes/new' : '/bikes/used' }
+  ];
+  
   const structuredData = bikes && bikes.length > 0 ? {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://www.allbikesvespawarehouse.com.au"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": pageTitle,
-            "item": `https://www.allbikesvespawarehouse.com.au/bikes/${bikeCondition}`
-          }
-        ]
+        "itemListElement": breadcrumbItems.map((item, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "name": item.name,
+          "item": `https://www.allbikesvespawarehouse.com.au${item.href}`
+        }))
       },
       {
         "@type": "ItemList",
@@ -199,6 +197,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
         description={description}
         imageUrl={SymImage}
       />
+      <Breadcrumb items={breadcrumbItems} />
       <div className="container mx-auto p-4">
         <FilterSort options={filterOptions} onFilterChange={handleFilterChange} />
         

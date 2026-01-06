@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
 import { getJobTypes } from '@/services/bookingService';
-import type { EnrichedJobType } from '@/types';
+import type { EnrichedJobType, } from '@/types';
 import WorkshopJobTypes from '@/components/WorkshopJobTypes';
 import { toast } from 'sonner';
 import ServiceBrands from "@/components/ServiceBrands";
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
-import { FloatingActionButton } from '@/components/FloatingActionButton'; 
+import { FloatingActionButton } from '@/components/FloatingActionButton';
+import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
 
 const ServiceFaqs = [
   {
@@ -57,13 +58,56 @@ const ServicePage: React.FC = () => {
         fetchJobTypes();
     }, []);
 
+    const breadcrumbItems: BreadcrumbItem[] = [
+        { name: 'Home', href: '/' },
+        { name: 'Servicing & Tyres', href: '/service' },
+    ];
+
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": breadcrumbItems.map((item, index) => ({
+                    "@type": "ListItem",
+                    "position": index + 1,
+                    "name": item.name,
+                    "item": `https://www.allbikesvespawarehouse.com.au${item.href}`
+                }))
+            },
+            {
+                "@type": "Service",
+                "serviceType": "Motorcycle and scooter servicing and repairs",
+                "provider": {
+                    "@type": "Organization",
+                    "name": "Allbikes Vespa Warehouse"
+                },
+                "description": "Expert motorcycle and scooter servicing, repairs, and tyre changes in Perth. We service all major brands, including Vespa, Piaggio, and more.",
+                "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Workshop Services",
+                    "itemListElement": jobTypes.map(job => ({
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": job.name,
+                            "description": job.description
+                        }
+                    }))
+                }
+            }
+        ]
+    };
+
     return (
         <div className="container mx-auto py-0">
             <Seo
                 title="Motorcycle/Scooter Servicing and Tyre Fitting | Allbikes Vespa Warehouse"
                 description="Expert motorcycle and scooter servicing, repairs, and tyre changes in Perth. We service all major brands, including Vespa, Piaggio, and more."
                 canonicalPath="/service"
+                structuredData={structuredData}
             />
+            <Breadcrumb items={breadcrumbItems} />
             <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} />
 
             <div className="mt-0">
@@ -74,7 +118,7 @@ const ServicePage: React.FC = () => {
                 <MotorcycleMovers />
             </div>
             <FaqSection title="Workshop FAQ" faqData={ServiceFaqs} />
-            <FloatingActionButton /> 
+            <FloatingActionButton />
         </div>
     );
 };

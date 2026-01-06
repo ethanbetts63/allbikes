@@ -18,6 +18,7 @@ import {
     ShieldCheck
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
 
 interface Specification {
     label: string;
@@ -105,31 +106,23 @@ const BikeDetailPage: React.FC = () => {
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
 
+    const breadcrumbItems: BreadcrumbItem[] = bike ? [
+        { name: 'Home', href: '/' },
+        { name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes', href: `/bikes/${bike.condition}` },
+        { name: pageTitle, href: `/inventory/motorcycles/${slug}` }
+    ] : [];
+
     const structuredData = bike ? {
         "@context": "https://schema.org",
         "@graph": [
             {
                 "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Home",
-                        "item": "https://www.allbikesvespawarehouse.com.au"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": bike.condition === 'new' ? 'New Bikes' : 'Used Bikes',
-                        "item": `https://www.allbikesvespawarehouse.com.au/bikes/${bike.condition}`
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
-                        "name": pageTitle,
-                        "item": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${slug}`
-                    }
-                ]
+                "itemListElement": breadcrumbItems.map((item, index) => ({
+                    "@type": "ListItem",
+                    "position": index + 1,
+                    "name": item.name,
+                    "item": `https://www.allbikesvespawarehouse.com.au${item.href}`
+                }))
             },
             {
                 "@type": "Product",
@@ -196,7 +189,10 @@ const BikeDetailPage: React.FC = () => {
                 ogImage={selectedImage}
                 structuredData={structuredData}
             />
-            <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)] rounded-lg mt-8">
+            <div className="container mx-auto">
+                <Breadcrumb items={breadcrumbItems} />
+            </div>
+            <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)] rounded-lg mt-2">
                 <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
                 <div className="text-center mb-8 flex justify-center gap-2">
                     <Badge className="text-lg capitalize">{bike.condition}</Badge>
