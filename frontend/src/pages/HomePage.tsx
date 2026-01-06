@@ -13,8 +13,7 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
   const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
-  const { settings, loading: settingsLoading } = useSiteSettings();
-  const [bikesLoading, setBikesLoading] = useState<boolean>(true);
+  const { settings } = useSiteSettings();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,7 +38,6 @@ const HomePage = () => {
         console.error("Failed to fetch page data:", err);
         setError("Failed to load page data.");
       } finally {
-        setBikesLoading(false);
       }
     };
 
