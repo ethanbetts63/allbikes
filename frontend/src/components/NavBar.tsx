@@ -64,7 +64,7 @@ const NavBar = () => {
             </li>
             <li>
               <Link to="/service" className="hover:text-secondary">
-                 Workshop
+                 Servicing
               </Link>
             </li>
           </ul>

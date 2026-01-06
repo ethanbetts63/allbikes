@@ -36,7 +36,7 @@ const ServiceFaqs = [
   }
 ];
 
-const WorkshopPage: React.FC = () => {
+const ServicePage: React.FC = () => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -79,4 +79,4 @@ const WorkshopPage: React.FC = () => {
     );
 };
 
-export default WorkshopPage;
+export default ServicePage;
