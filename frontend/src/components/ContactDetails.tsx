@@ -36,7 +36,7 @@ const ContactDetails: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center">
+                        <CardTitle className="flex items-center text-2xl">
                             <MapPin className="mr-2 h-6 w-6" /> Our Location
                         </CardTitle>
                     </CardHeader>
@@ -54,7 +54,7 @@ const ContactDetails: React.FC = () => {
                 </Card>
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center">
+                        <CardTitle className="flex items-center text-2xl">
                             <Clock className="mr-2 h-6 w-6" /> Opening Hours
                         </CardTitle>
                     </CardHeader>

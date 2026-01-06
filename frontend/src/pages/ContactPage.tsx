@@ -20,14 +20,8 @@ const ContactPage: React.FC = () => {
             />
             
             {settings && (
-                <div className="bg-background py-8">
+                <div className="bg-background py-2">
                     <div className="container mx-auto flex flex-col items-center justify-center text-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                            Get In Touch
-                        </h2>
-                        <p className="mt-4 text-lg leading-8 text-muted-foreground">
-                            Have a question? We're here to help.
-                        </p>
                         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
                             <a href={`tel:${settings.phone_number}`} className="hidden sm:block">
                                 <Button size="lg">
