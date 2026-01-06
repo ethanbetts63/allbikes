@@ -1,17 +1,61 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import ContactDetails from '../components/ContactDetails';
+import StoreFrontImage from '@/assets/allbikes_store_front.webp';
+import { Button } from '@/components/ui/button';
+import { Phone, Mail } from 'lucide-react';
+import { useSiteSettings } from '@/context/SiteSettingsContext';
+
 
 const ContactPage: React.FC = () => {
+    const { settings } = useSiteSettings();
+    const description = "Our Perth workshop is your one-stop shop for motorcycle and scooter servicing, tyres, and genuine parts. Our experienced mechanics are here to help you with anything you need. We are located in Dianella, just a short ride from the city.";
+
     return (
         <div>
             <Hero
                 title="Contact Us"
-                paragraph="We'd love to hear from you. Please feel free to reach out with any questions or comments."
+                description={description}
+                imageUrl={StoreFrontImage}
             />
+            
+            {settings && (
+                <div className="bg-background py-8">
+                    <div className="container mx-auto flex flex-col items-center justify-center text-center">
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                            Get In Touch
+                        </h2>
+                        <p className="mt-4 text-lg leading-8 text-muted-foreground">
+                            Have a question? We're here to help.
+                        </p>
+                        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
+                            <a href={`tel:${settings.phone_number}`} className="hidden sm:block">
+                                <Button size="lg">
+                                    <Phone className="mr-2 h-6 w-6" />
+                                    Call Us ({settings.phone_number})
+                                </Button>
+                            </a>
+                             <a href={`tel:${settings.phone_number}`} className="sm:hidden">
+                                <Button size="lg">
+                                    <Phone className="mr-2 h-6 w-6" />
+                                    Call Us
+                                </Button>
+                            </a>
+                            <a href={`mailto:${settings.email_address}`}>
+                                <Button size="lg" variant="outline">
+                                    <Mail className="mr-2 h-6 w-6" />
+                                    Email Us
+                                </Button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <ContactDetails />
         </div>
     );
 };
 
 export default ContactPage;
+

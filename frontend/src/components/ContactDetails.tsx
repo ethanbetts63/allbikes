@@ -1,35 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { getSiteSettings } from '@/api';
-import type { SiteSettings } from '@/types';
+import React from 'react';
+import { useSiteSettings } from '@/context/SiteSettingsContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 
 const ContactDetails: React.FC = () => {
-    const [settings, setSettings] = useState<SiteSettings | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { settings, loading } = useSiteSettings();
 
-    useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                setIsLoading(true);
-                const data = await getSiteSettings();
-                setSettings(data);
-                setError(null);
-            } catch (err) {
-                setError('Failed to load contact information. Please try again later.');
-                console.error(err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchSettings();
-    }, []);
-
-    if (isLoading) {
+    if (loading) {
         return (
             <div className="flex justify-center items-center py-8">
                 <Spinner />
@@ -37,20 +16,16 @@ const ContactDetails: React.FC = () => {
         );
     }
 
-    if (error) {
+    if (!settings) {
         return (
-            <div className="container mx-auto px-4 py-8">
+             <div className="container mx-auto px-4 py-8">
                 <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
+                    <AlertDescription>Failed to load contact information. Please try again later.</AlertDescription>
                 </Alert>
             </div>
         );
-    }
-
-    if (!settings) {
-        return null; // Or some fallback UI
     }
     
     const fullAddress = `${settings.street_address}\n${settings.address_locality}, ${settings.address_region} ${settings.postal_code}`;
