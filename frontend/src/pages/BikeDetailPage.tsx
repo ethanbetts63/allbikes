@@ -105,6 +105,70 @@ const BikeDetailPage: React.FC = () => {
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
 
+    const structuredData = bike ? {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://www.allbikesvespawarehouse.com.au"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": bike.condition === 'new' ? 'New Bikes' : 'Used Bikes',
+                        "item": `https://www.allbikesvespawarehouse.com.au/bikes/${bike.condition}`
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": pageTitle,
+                        "item": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${slug}`
+                    }
+                ]
+            },
+            {
+                "@type": "Product",
+                "name": pageTitle,
+                "image": bike.images.length > 0 ? `https://www.allbikesvespawarehouse.com.au${bike.images[0].image}` : `https://www.allbikesvespawarehouse.com.au/src/assets/motorcycle_images/placeholder.png`,
+                "description": bike.description,
+                "sku": bike.stock_number,
+                "brand": {
+                    "@type": "Brand",
+                    "name": bike.make
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": bike.price,
+                    "priceCurrency": "AUD",
+                    "availability": bike.status.toLowerCase() === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
+                    "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${slug}`
+                },
+                "vehicle": {
+                    "@type": "Vehicle",
+                    "vehicleIdentificationNumber": bike.rego,
+                    "mileageFromOdometer": {
+                        "@type": "QuantitativeValue",
+                        "value": bike.odometer,
+                        "unitCode": "KMT"
+                    },
+                    "engineDisplacement": {
+                        "@type": "QuantitativeValue",
+                        "value": bike.engine_size,
+                        "unitText": "cc"
+                    },
+                    "vehicleModelDate": bike.year,
+                    "vehicleTransmission": bike.transmission
+                }
+            }
+        ]
+    } : undefined;
+
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-screen bg-[var(--text-primary)]">
@@ -130,6 +194,7 @@ const BikeDetailPage: React.FC = () => {
                 description={bike.description || `Check out the ${pageTitle} at Allbikes Vespa Warehouse, Perth's most experienced motorcycle and scooter dealership.`}
                 canonicalPath={`/inventory/motorcycles/${slug}`}
                 ogImage={selectedImage}
+                structuredData={structuredData}
             />
             <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)] rounded-lg mt-8">
                 <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
