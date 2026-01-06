@@ -10,7 +10,7 @@ def load_db_from_latest_archive(command):
         'data_management.termsandconditions.json',
         'service.servicesettings.json',
         'service.servicesettings.json',
-        'service.bookingrequest_log'
+        'service.bookingrequestlog.json',
         'inventory.motorcycle.json',          
         'inventory.motorcycleimage.json',     
     ]
