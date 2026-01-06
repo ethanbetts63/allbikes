@@ -8,13 +8,49 @@ interface SeoProps {
   ogType?: 'website' | 'article';
   ogImage?: string;
   noindex?: boolean;
-  structuredData?: object;
+  structuredData?: object | any; // Allow for any to handle @graph
 }
 
 const Seo: React.FC<SeoProps> = ({ title, description, canonicalPath, ogType = 'website', ogImage, noindex, structuredData }) => {
-  const siteUrl = 'https://www.allbikesvespawarehouse.com.au'; // This should ideally come from an environment variable
+  const siteUrl = 'https://www.allbikesvespawarehouse.com.au';
   const canonicalUrl = canonicalPath ? `${siteUrl}${canonicalPath}` : undefined;
-  const imageUrl = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/static/default-og-image.jpg`; // Fallback image
+  const imageUrl = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/logo-192x192.png`;
+
+  const defaultOrganizationSchema = {
+    "@type": "Organization",
+    "name": "Allbikes Vespa Warehouse",
+    "url": siteUrl,
+    "logo": `${siteUrl}/logo-512x512.png`,
+    "owner": {
+      "@type": "Person",
+      "name": "Ethan Betts"
+    }
+  };
+
+  let finalStructuredData;
+
+  if (structuredData) {
+    if (structuredData['@graph']) {
+      // If there's already a graph, push the organization schema into it
+      finalStructuredData = {
+        ...structuredData,
+        '@graph': [...structuredData['@graph'], defaultOrganizationSchema]
+      };
+    } else {
+      // If it's a single schema, create a graph with both
+      finalStructuredData = {
+        "@context": "https://schema.org",
+        "@graph": [structuredData, defaultOrganizationSchema]
+      };
+    }
+  } else {
+    // If no page-specific data, just use the organization schema
+    finalStructuredData = {
+      "@context": "https://schema.org",
+      ...defaultOrganizationSchema
+    };
+  }
+
 
   return (
     <Helmet>
@@ -37,12 +73,10 @@ const Seo: React.FC<SeoProps> = ({ title, description, canonicalPath, ogType = '
       {description && <meta name="twitter:description" content={description} />}
       <meta name="twitter:image" content={imageUrl} />
 
-      {/* Render structured data if provided */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      )}
+      {/* Render structured data */}
+      <script type="application/ld+json">
+        {JSON.stringify(finalStructuredData)}
+      </script>
     </Helmet>
   );
 };
