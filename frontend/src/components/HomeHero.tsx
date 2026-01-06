@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import type { Bike } from "@/types";
-import ContactButtons from './ContactButtons'; // Import the new component
+import ContactButtons from './ContactButtons';
 
 interface HomeHeroProps {
   newBikes: Bike[];
   usedBikes: Bike[];
   loading: boolean;
   error: string | null;
-  phoneNumber?: string; // Add phoneNumber prop
-  emailAddress?: string; // Add emailAddress prop
+  phoneNumber?: string;
+  emailAddress?: string; 
 }
 
 const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error, phoneNumber, emailAddress }) => {
@@ -108,6 +108,12 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
     <div className="w-full flex flex-col md:flex-row bg-gray-100 min-h-[500px]">
       {/* Left Column */}
       <div className="md:w-1/2 flex flex-col">
+        {loading && (
+          <>
+            <div className="flex-1 bg-gray-200 animate-pulse min-h-[200px]" />
+            <div className="flex-1 bg-gray-300 animate-pulse min-h-[200px]" />
+          </>
+        )}
         {!loading && !error && (
             <>
                 {renderBikeLink('new')}
