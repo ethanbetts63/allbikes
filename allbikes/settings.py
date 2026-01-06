@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['ethanbetts.pythonanywhere.com', 'https://www.allbikesvespawarehouse.com.au/', 'www.allbikesvespawarehouse.com.au', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['ethanbetts.pythonanywhere.com', 'www.allbikesvespawarehouse.com.au', '127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -20,11 +20,12 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
-    "django.contrib.sites", # Added for Django Sites Framework
-    "django.contrib.sitemaps", # Added for Django Sitemaps Framework
-    "rest_framework", # Added for Django Rest Framework
-    "rest_framework_simplejwt", # Added for JWT authentication
+    "django.contrib.sites",
+    "django.contrib.sitemaps", 
+    "rest_framework", 
+    "rest_framework_simplejwt", 
     "data_management",
     "inventory",
     "service",
@@ -34,6 +35,7 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -47,7 +49,7 @@ ROOT_URLCONF = "allbikes.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'frontend', 'dist')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -96,6 +98,9 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'frontend', 'dist'),
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media files (user-uploaded files)
