@@ -120,22 +120,17 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
 
       {/* Right Column */}
       <div className="md:w-1/2 flex flex-col items-center justify-center p-4 md:p-12 text-center bg-background">
-        <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-8 leading-snug">
+        <h1 className="text-5xl font-extrabold text-[var(--text-primary)] mb-4 leading-snug">
           Perth Motorcycle / Scooter Mechanic & Dealership
         </h1>
-        <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-12">
+        <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-8">
           Operating in Perth for over 30 years, we are a motorcycle and scooter mechanic and dealership offering new and used sales across petrol and electric models. We provide motorcycle and scooter servicing, including tyre changes, maintenance, and general repairs. 
         </p>
         {phoneNumber && emailAddress && (
-          <div className="mb-8">
+          <div className="mb-2">
             <ContactButtons phoneNumber={phoneNumber} emailAddress={emailAddress} />
           </div>
         )}
-        <Link to="/service">
-          <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
-            Book a Service <ArrowRight className="h-5" />
-          </Button>
-        </Link>
       </div>
     </div>
   );

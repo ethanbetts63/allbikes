@@ -21,7 +21,7 @@ class TestMotorcycleViewSetList:
         THEN the response should be 200 OK and contain 2 motorcycles.
         """
         MotorcycleFactory.create_batch(2)
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         response = api_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
@@ -36,7 +36,7 @@ class TestMotorcycleViewSetList:
         """
         MotorcycleFactory(condition='new')
         MotorcycleFactory(condition='used')
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         response = api_client.get(url, {'condition': 'new'})
 
         assert response.status_code == status.HTTP_200_OK
@@ -51,7 +51,7 @@ class TestMotorcycleViewSetList:
         """
         MotorcycleFactory(is_featured=True)
         MotorcycleFactory(is_featured=False)
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         response = api_client.get(url, {'is_featured': 'true'})
 
         assert response.status_code == status.HTTP_200_OK
@@ -67,7 +67,7 @@ class TestMotorcycleViewSetList:
         MotorcycleFactory(price=1000)
         MotorcycleFactory(price=2500)
         MotorcycleFactory(price=5000)
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         response = api_client.get(url, {'min_price': 2000, 'max_price': 3000})
 
         assert response.status_code == status.HTTP_200_OK
@@ -82,7 +82,7 @@ class TestMotorcycleViewSetList:
         """
         m1 = MotorcycleFactory(price=5000)
         m2 = MotorcycleFactory(price=2000)
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         response = api_client.get(url, {'ordering': 'price_asc'})
 
         assert response.status_code == status.HTTP_200_OK
@@ -99,7 +99,7 @@ class TestMotorcycleViewSetList:
         """
         m1 = MotorcycleFactory(year=2020)
         m2 = MotorcycleFactory(year=2023)
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         response = api_client.get(url, {'ordering': 'year_desc'})
 
         assert response.status_code == status.HTTP_200_OK
@@ -126,12 +126,12 @@ class TestMotorcycleViewSetWriteAccess:
         """
         GIVEN valid motorcycle data
         WHEN an unauthenticated user tries to create a motorcycle
-        THEN the response should be 403 Forbidden.
+        THEN the response should be 401 Unauthorized.
         """
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         data = {'make': 'Test', 'model': 'Model'}
         response = api_client.post(url, data)
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_create_motorcycle_authenticated_admin(self, admin_client):
         """
@@ -139,7 +139,7 @@ class TestMotorcycleViewSetWriteAccess:
         WHEN an admin user tries to create a motorcycle
         THEN the response should be 201 Created.
         """
-        url = reverse("motorcycle-list")
+        url = reverse("inventory:motorcycle-list")
         data = {
             "make": "NewMake", "model": "NewModel", "year": 2024, "price": 9999.99,
             "condition": "new", "status": "for_sale"
@@ -156,7 +156,7 @@ class TestMotorcycleViewSetWriteAccess:
         THEN the response should be 200 OK and the motorcycle updated.
         """
         motorcycle = MotorcycleFactory(make="OldMake")
-        url = reverse("motorcycle-detail", kwargs={'pk': motorcycle.pk})
+        url = reverse("inventory:motorcycle-detail", kwargs={'pk': motorcycle.pk})
         data = {"make": "UpdatedMake"}
         response = admin_client.patch(url, data, format='json')
         
@@ -171,7 +171,7 @@ class TestMotorcycleViewSetWriteAccess:
         THEN the response should be 204 No Content and the motorcycle deleted.
         """
         motorcycle = MotorcycleFactory()
-        url = reverse("motorcycle-detail", kwargs={'pk': motorcycle.pk})
+        url = reverse("inventory:motorcycle-detail", kwargs={'pk': motorcycle.pk})
         response = admin_client.delete(url)
         
         assert response.status_code == status.HTTP_204_NO_CONTENT

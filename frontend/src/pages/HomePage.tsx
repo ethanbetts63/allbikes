@@ -162,7 +162,14 @@ const HomePage = () => {
         canonicalPath="/"
         structuredData={structuredData}
       />
-        <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={bikesLoading || settingsLoading} error={error} />
+        <HomeHero 
+            newBikes={newBikes} 
+            usedBikes={usedBikes} 
+            loading={bikesLoading || settingsLoading} 
+            error={error} 
+            phoneNumber={settings?.phone_number} // Pass phoneNumber
+            emailAddress={settings?.email_address} // Pass emailAddress
+        />
         <ReviewCarousel />
         <BrandsSection />
         <FeaturedBikes
@@ -186,3 +193,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
