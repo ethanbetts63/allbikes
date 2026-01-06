@@ -13,7 +13,7 @@ interface BreadcrumbProps {
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
-    <nav className="flex py-4 px-4 sm:px-6 lg:px-8" aria-label="Breadcrumb">
+    <nav className="flex justify-end pt-2 px-4 sm:px-6 lg:px-8" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         {items.map((item, index) => (
           <li key={item.name} className="inline-flex items-center">

@@ -109,7 +109,7 @@ const BikeDetailPage: React.FC = () => {
     const breadcrumbItems: BreadcrumbItem[] = bike ? [
         { name: 'Home', href: '/' },
         { name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes', href: `/bikes/${bike.condition}` },
-        { name: pageTitle, href: `/inventory/motorcycles/${slug}` }
+        { name: pageTitle, href: `/inventory/motorcycles/${bike.slug}` }
     ] : [];
 
     const structuredData = bike ? {
@@ -140,7 +140,7 @@ const BikeDetailPage: React.FC = () => {
                     "priceCurrency": "AUD",
                     "availability": bike.status.toLowerCase() === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
                     "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-                    "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${slug}`
+                    "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${bike.slug}`
                 },
                 "vehicle": {
                     "@type": "Vehicle",
@@ -185,7 +185,7 @@ const BikeDetailPage: React.FC = () => {
             <Seo
                 title={`${pageTitle} | Allbikes`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes Vespa Warehouse, Perth's most experienced motorcycle and scooter dealership.`}
-                canonicalPath={`/inventory/motorcycles/${slug}`}
+                canonicalPath={`/inventory/motorcycles/${bike.slug}`}
                 ogImage={selectedImage}
                 structuredData={structuredData}
             />

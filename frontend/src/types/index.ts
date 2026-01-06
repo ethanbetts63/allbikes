@@ -31,6 +31,7 @@ export type BikeImage = {
 
 export type Bike = {
   id: number;
+  slug: string;
   make: string;
   model: string;
   year: number;
