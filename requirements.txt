@@ -8,3 +8,4 @@ pytest-mock
 requests
 djangorestframework
 djangorestframework-simplejwt
+pytest-django
