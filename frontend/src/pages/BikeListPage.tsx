@@ -124,12 +124,75 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
     ? "Browse our range of new motorcycles and scooters available in Perth, including petrol and electric models. All New Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership. All New Motorcycles and Scooters come with a warranty."
     : "Browse our range of used motorcycles and scooters available in Perth, including petrol and electric models. All Used Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership.";
 
+  const slugify = (text: string) =>
+    text
+      .toString()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]+/g, '')
+      .replace(/--+/g, '-');
+
+  const structuredData = bikes && bikes.length > 0 ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.allbikesvespawarehouse.com.au"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": pageTitle,
+            "item": `https://www.allbikesvespawarehouse.com.au/bikes/${bikeCondition}`
+          }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "itemListElement": bikes.map((bike, index) => {
+          const bikeSlug = `${slugify(bike.make)}-${slugify(bike.model)}-${bike.id}`;
+          return {
+            "@type": "ListItem",
+            "position": index + 1,
+            "item": {
+              "@type": "Product",
+              "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${bikeSlug}`,
+              "name": `${bike.year} ${bike.make} ${bike.model}`,
+              "image": bike.images.length > 0 ? `https://www.allbikesvespawarehouse.com.au${bike.images[0].image}` : `https://www.allbikesvespawarehouse.com.au/src/assets/motorcycle_images/placeholder.png`,
+              "description": bike.description,
+              "brand": {
+                "@type": "Brand",
+                "name": bike.make
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": bike.price,
+                "priceCurrency": "AUD",
+                "availability": bike.status.toLowerCase() === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition'
+              }
+            }
+          }
+        })
+      }
+    ]
+  } : undefined;
+
   return (
     <>
       <Seo 
         title={`${pageTitle} | Allbikes`}
         description={description}
         canonicalPath={isNew ? '/bikes/new' : '/bikes/used'}
+        structuredData={structuredData}
       />
       <Hero 
         title={responsivePageTitle}
