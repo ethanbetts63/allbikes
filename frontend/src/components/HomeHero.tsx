@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
 import type { Bike } from "@/types";
 import ContactButtons from './ContactButtons'; // Import the new component
 
