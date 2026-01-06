@@ -16,9 +16,9 @@ export const FloatingActionButton: React.FC = () => {
                  transition-all duration-300 ease-in-out
                  hover:bg-primary/90 hover:scale-105
                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                 z-50" // Ensure it floats above other content
+                 z-50" 
     >
-      <span className="">Book Service</span>
+      <span className="font-bold text-white">Book Service</span>
       <ArrowRight className="h-6 w-6" />
     </Link>
   );

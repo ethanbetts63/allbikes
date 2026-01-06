@@ -490,7 +490,7 @@
   "pk": 57,
   "fields": {
     "motorcycle": 6,
-    "image": "motorcycles/additional/Red-Crox-50_01.png",
+    "image": "motorcycles/additional/Red-Crox-50_01.webp",
     "order": 0
   }
 },
@@ -499,7 +499,7 @@
   "pk": 58,
   "fields": {
     "motorcycle": 6,
-    "image": "motorcycles/additional/White-Crox-50_01-570x500.png",
+    "image": "motorcycles/additional/White-Crox-50_01-570x500.webp",
     "order": 0
   }
 },

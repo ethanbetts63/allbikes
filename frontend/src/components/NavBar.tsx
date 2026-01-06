@@ -77,7 +77,7 @@ const NavBar = () => {
 
         {/* Right Section: Hamburger Menu for Mobile */}
         <div className="flex items-center md:hidden">
-          <button ref={buttonRef} onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
+          <button ref={buttonRef} onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2" aria-label="Toggle navigation menu" title="Toggle navigation menu">
             {isMenuOpen ? <X size={28} className="text-destructive" /> : <Menu size={28} className="text-primary" />}
           </button>
         </div>

@@ -9,7 +9,7 @@ const Banner: React.FC = () => {
   }
 
   return (
-    <div className="bg-[hsl(150.37,37.67%,42.16%)] text-white text-center p-2">
+    <div className="bg-primary text-white font-semibold text-center p-2">
       <p>{settings.banner_text}</p>
     </div>
   );
