@@ -9,7 +9,7 @@ import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton'; // Import the new component
 
-const workshopFaqs = [
+const ServiceFaqs = [
   {
     question: "Do you offer tyre changes for motorcycles and scooters?",
     answer: "Yes. We provide motorcycle and scooter tyre changes, including tyre replacement, fitting, and balancing. We work on both motorcycles and scooters and can supply and fit tyres or fit tyres you provide, depending on the job."
@@ -73,7 +73,7 @@ const WorkshopPage: React.FC = () => {
             <div className="mt-8 mb-4">
                 <MotorcycleMovers />
             </div>
-            <FaqSection title="Workshop FAQ" faqData={workshopFaqs} />
+            <FaqSection title="Workshop FAQ" faqData={ServiceFaqs} />
             <FloatingActionButton /> {/* Render the floating action button */}
         </div>
     );

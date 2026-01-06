@@ -16,7 +16,7 @@ const AddMotorcyclePage = lazy(() => import('./pages/admin/AddMotorcyclePage'));
 const SiteSettingsPage = lazy(() => import('./pages/admin/SiteSettingsPage'));
 const ServiceSettingsPage = lazy(() => import('./pages/admin/ServiceSettingsPage'));
 const JobTypesPage = lazy(() => import('./pages/admin/JobTypesPage'));
-const WorkshopPage = lazy(() => import('./pages/WorkshopPage'));
+const WorkshopPage = lazy(() => import('./pages/ServicePage'));
 const BikeListPage = lazy(() => import('./pages/BikeListPage'));
 const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
