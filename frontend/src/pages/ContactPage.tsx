@@ -9,7 +9,7 @@ import { useSiteSettings } from '@/context/SiteSettingsContext';
 
 const ContactPage: React.FC = () => {
     const { settings } = useSiteSettings();
-    const description = "Our Perth workshop is your one-stop shop for motorcycle and scooter servicing, tyres, and genuine parts. Our experienced mechanics are here to help you with anything you need. We are located in Dianella, just a short ride from the city.";
+    const description = "Our Perth workshop is your one-stop shop for motorcycle and scooter servicing and tyre fitting. Our experienced mechanics are here to help you with anything you need. We are located in Dianella, just a short ride from the city.";
 
     return (
         <div>
@@ -20,7 +20,7 @@ const ContactPage: React.FC = () => {
             />
             
             {settings && (
-                <div className="bg-background py-2">
+                <div className="bg-background py-0">
                     <div className="container mx-auto flex flex-col items-center justify-center text-center">
                         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
                             <a href={`tel:${settings.phone_number}`} className="hidden sm:block">
@@ -35,8 +35,8 @@ const ContactPage: React.FC = () => {
                                     Call Us
                                 </Button>
                             </a>
-                            <a href={`mailto:${settings.email_address}`}>
-                                <Button size="lg" variant="outline">
+                            <a href={`mailto:${settings.email_address}?`} target="_blank" rel="noopener noreferrer">
+                                <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700">
                                     <Mail className="mr-2 h-6 w-6" />
                                     Email Us
                                 </Button>
