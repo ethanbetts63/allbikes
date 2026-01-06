@@ -27,7 +27,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
     <Card className="w-full overflow-hidden flex flex-col pt-0 border border-foreground">
       <CardHeader className="p-0">
         <div className="relative aspect-video">
-          <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover"/>
+          <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover" loading="lazy"/>
           <Badge className="absolute top-2 right-2 capitalize">{bike.condition}</Badge>
         </div>
       </CardHeader>

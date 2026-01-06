@@ -40,7 +40,8 @@ const BrandCard: React.FC<BrandProps> = ({ image, imageSrcSet, alt, title, subti
             srcSet={imageSrcSet} 
             sizes="(max-width: 768px) 100vw, 50vw"
             alt={alt} 
-            className="w-full h-full object-cover rounded-none lg:rounded-lg" 
+            className="w-full h-full object-cover rounded-none lg:rounded-lg"
+            loading="lazy"
         />
       </div>
       <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
