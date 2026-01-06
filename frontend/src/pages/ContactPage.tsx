@@ -5,7 +5,22 @@ import SymImage from '@/assets/sym_22.webp';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
+import OtherSites from '../components/OtherSites';
 
+const otherSitesData = [
+    {
+        name: "Splitcart",
+        logoSrc: "/src/assets/splitcart_logo.png", 
+        description: "Compare grocery prices across major Australian supermarkets.",
+        url: "https://www.splitcart.com.au", 
+    },
+    {
+        name: "Future Reminder",
+        logoSrc: "/src/assets/futurereminder_logo.png", 
+        description: "Never miss an important event with our persistent reminder service.",
+        url: "https://www.futurereminder.app", 
+    },
+];
 
 const ContactPage: React.FC = () => {
     const { settings } = useSiteSettings();
@@ -47,6 +62,8 @@ const ContactPage: React.FC = () => {
             )}
 
             <ContactDetails />
+
+            <OtherSites sites={otherSitesData} />
         </div>
     );
 };
