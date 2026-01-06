@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { createBooking } from '@/services/bookingService';
 import Seo from '@/components/Seo';
-
-// Import the step components
 import BookingDetailsForm from '@/forms/BookingDetailsForm';
 import BikeDetailsForm from '@/forms/BikeDetailsForm';
 import PersonalDetailsForm from '@/forms/PersonalDetailsForm';
@@ -57,8 +55,6 @@ const BookingPage: React.FC = () => {
     const handleSubmit = async () => {
         try {
             await createBooking(formData);
-            
-            // Clear saved data and navigate to success page
             localStorage.removeItem(LOCAL_STORAGE_KEY);
             navigate('/booking/success');
 
@@ -92,8 +88,6 @@ const BookingPage: React.FC = () => {
                 canonicalPath="/booking"
             />
             <h1 className="text-4xl font-bold text-center mb-8 text-[var(--text-primary)] ">Book a Service</h1>
-            
-            {/* We can add a progress bar here later */}
             
             <div className="p-8 border rounded-lg shadow-lg bg-card">
                 {renderStep()}

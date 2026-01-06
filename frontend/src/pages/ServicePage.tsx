@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import ServiceBrands from "@/components/ServiceBrands";
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
-import { FloatingActionButton } from '@/components/FloatingActionButton'; // Import the new component
+import { FloatingActionButton } from '@/components/FloatingActionButton'; 
 
 const ServiceFaqs = [
   {
@@ -74,7 +74,7 @@ const WorkshopPage: React.FC = () => {
                 <MotorcycleMovers />
             </div>
             <FaqSection title="Workshop FAQ" faqData={ServiceFaqs} />
-            <FloatingActionButton /> {/* Render the floating action button */}
+            <FloatingActionButton /> 
         </div>
     );
 };

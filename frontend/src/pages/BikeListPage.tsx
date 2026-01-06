@@ -87,7 +87,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
 
       const response = await getBikes(options);
       setBikes(response.results);
-      setTotalPages(Math.ceil(response.count / 12)); // Page size is 12 from backend
+      setTotalPages(Math.ceil(response.count / 12)); 
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unknown error occurred.");
       console.error(err);
@@ -97,7 +97,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
   }, [bikeCondition, currentPage, filterOptions]);
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top on page change
+    window.scrollTo(0, 0); 
     fetchBikes();
   }, [fetchBikes]);
 

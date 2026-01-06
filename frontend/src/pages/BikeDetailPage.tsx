@@ -6,7 +6,6 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from "@/components/ui/badge";
 import FeaturedBikes from "@/components/FeaturedBikes";
-import { generateBikeSlug } from '@/utils/slugify';
 import {
     DollarSign,
     Hash,

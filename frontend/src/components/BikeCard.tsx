@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Bike } from "@/types"; // Import from shared types
-import { generateBikeSlug } from "@/utils/slugify";
+
 
 interface BikeCardProps {
   bike: Bike;
@@ -21,7 +21,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
   const imageUrl = sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png';
 
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
-  const slug = generateBikeSlug(bike);
+  const slug = bike.slug;
 
   return (
     <Card className="w-full overflow-hidden flex flex-col pt-0 border border-foreground">
