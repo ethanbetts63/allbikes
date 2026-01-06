@@ -9,3 +9,5 @@ requests
 djangorestframework
 djangorestframework-simplejwt
 pytest-django
+factory-boy
+Faker

@@ -2,12 +2,11 @@ import React from 'react';
 import Hero from '../components/Hero';
 import ContactDetails from '../components/ContactDetails';
 import SymImage from '@/assets/sym_22.webp';
-import { Button } from '@/components/ui/button';
-import { Phone, Mail } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import OtherSites from '../components/OtherSites';
 import Breadcrumb from '../components/Breadcrumb';
 import Seo from '@/components/Seo';
+import ContactButtons from '@/components/ContactButtons'; // Import the new component
 
 const otherSitesData = [
     {
@@ -48,30 +47,10 @@ const ContactPage: React.FC = () => {
             <Breadcrumb items={breadcrumbItems} />
             
             {settings && (
-                <div className="bg-background py-0">
-                    <div className="container mx-auto flex flex-col items-center justify-center text-center">
-                        <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <a href={`tel:${settings.phone_number}`} className="hidden sm:block">
-                                <Button size="lg">
-                                    <Phone className="mr-2 h-6 w-6" />
-                                    Call Us ({settings.phone_number})
-                                </Button>
-                            </a>
-                             <a href={`tel:${settings.phone_number}`} className="sm:hidden">
-                                <Button size="lg">
-                                    <Phone className="mr-2 h-6 w-6" />
-                                    Call Us
-                                </Button>
-                            </a>
-                            <a href={`mailto:${settings.email_address}?`} target="_blank" rel="noopener noreferrer">
-                                <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700">
-                                    <Mail className="mr-2 h-6 w-6" />
-                                    Email Us ({settings.email_address})
-                                </Button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <ContactButtons 
+                    phoneNumber={settings.phone_number} 
+                    emailAddress={settings.email_address} 
+                />
             )}
 
             <ContactDetails />

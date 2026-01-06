@@ -9,6 +9,7 @@ fake = Faker()
 class MotorcycleFactory(DjangoModelFactory):
     class Meta:
         model = Motorcycle
+        skip_postgeneration_save = True
 
     make = factory.LazyFunction(fake.company)
     model = factory.LazyFunction(fake.word)
