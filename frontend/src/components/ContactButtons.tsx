@@ -18,7 +18,7 @@ const ContactButtons: React.FC<ContactButtonsProps> = ({ phoneNumber, emailAddre
         <div className="mt-0 flex flex-col sm:flex-row items-center justify-center gap-6">
           {phoneNumber && (
             <>
-              <a href={`tel:${phoneNumber}`} className="hidden sm:block">
+              <a href={`tel:${phoneNumber}`}>
                 <Button size="lg">
                   <Phone className="mr-2 h-6 w-6" />
                   Call ({phoneNumber})
