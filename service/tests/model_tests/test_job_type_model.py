@@ -24,4 +24,4 @@ class TestJobTypeModel:
         """
         JobTypeFactory(name="Unique Name")
         with pytest.raises(IntegrityError):
-            JobTypeFactory.create(name="Unique Name")
+            JobType.objects.create(name="Unique Name")

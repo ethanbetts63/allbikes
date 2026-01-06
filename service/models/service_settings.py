@@ -25,8 +25,7 @@ class ServiceSettings(models.Model):
         verbose_name_plural = "Service Settings"
 
     def save(self, *args, **kwargs):
-        if not self.pk and ServiceSettings.objects.exists():
-            # If you are creating a new instance and one already exists
+        if ServiceSettings.objects.exists() and self.pk != ServiceSettings.objects.first().pk:
             raise ValueError("There can be only one ServiceSettings instance")
         return super(ServiceSettings, self).save(*args, **kwargs)
 
