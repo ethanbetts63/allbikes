@@ -28,6 +28,7 @@ class StaticViewSitemap(Sitemap):
             '/',
             '/inventory/motorcycles/new',
             '/inventory/motorcycles/used',
+            '/contact',
         ]
 
     def location(self, item):

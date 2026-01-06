@@ -28,4 +28,3 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'transmission',
             'images', 
         ]
-        read_only_fields = ('slug',)

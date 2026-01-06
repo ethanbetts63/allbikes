@@ -6,7 +6,7 @@ class BookingSerializer(serializers.Serializer):
     The fields correspond to the expected payload for the Mechanics Desk API.
     """
     # Customer details
-    name = serializers.CharField(max_length=255, required=False) # Often constructed from first/last name
+    name = serializers.CharField(max_length=255, required=False)
     first_name = serializers.CharField(max_length=100)
     last_name = serializers.CharField(max_length=100)
     phone = serializers.CharField(max_length=20)
