@@ -7,7 +7,7 @@ export const FloatingActionButton: React.FC = () => {
     <Link
       to="/booking"
       className="fixed bottom-8 right-8
-                 bg-primary text-primary-foreground
+                 bg-primary text-white
                  rounded-full shadow-lg
                  p-4
                  flex items-center justify-center
