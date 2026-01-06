@@ -1,7 +1,7 @@
 import pytest
 from django.utils.text import slugify
 from inventory.models import Motorcycle
-from inventory.tests.factories import MotorcycleFactory
+from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 
 @pytest.mark.django_db
 def test_motorcycle_creation():

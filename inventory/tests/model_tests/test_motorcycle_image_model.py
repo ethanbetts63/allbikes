@@ -1,6 +1,7 @@
 import pytest
 from inventory.models import MotorcycleImage
-from inventory.tests.factories import MotorcycleImageFactory, MotorcycleFactory
+from inventory.tests.factories.motorcycle_image_factory import MotorcycleImageFactory
+from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 
 @pytest.mark.django_db
 def test_motorcycle_image_creation():

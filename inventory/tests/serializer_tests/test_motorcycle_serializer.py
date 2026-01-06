@@ -1,6 +1,7 @@
 import pytest
 from inventory.serializers import MotorcycleSerializer
-from inventory.tests.factories import MotorcycleFactory, MotorcycleImageFactory
+from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
+from inventory.tests.factories.motorcycle_image_factory import MotorcycleImageFactory
 
 @pytest.mark.django_db
 def test_motorcycle_serializer_contains_expected_fields():

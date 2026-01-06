@@ -69,12 +69,98 @@ const HomePage = () => {
     }
   ];
 
+  const localBusinessSchema = settings ? {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Allbikes Vespa Warehouse",
+    "image": "https://www.allbikesvespawarehouse.com.au/logo-512x512.png", // Assuming this is the main logo
+    "url": "https://www.allbikesvespawarehouse.com.au",
+    "telephone": settings.phone_number,
+    "email": settings.email_address,
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": settings.street_address,
+        "addressLocality": settings.address_locality,
+        "addressRegion": settings.address_region,
+        "postalCode": settings.postal_code,
+        "addressCountry": "AU" // Assuming Australia
+    },
+    "openingHoursSpecification": [
+        settings.opening_hours_monday && {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Monday",
+            "opens": settings.opening_hours_monday.split('-')[0],
+            "closes": settings.opening_hours_monday.split('-')[1]
+        },
+        settings.opening_hours_tuesday && {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Tuesday",
+            "opens": settings.opening_hours_tuesday.split('-')[0],
+            "closes": settings.opening_hours_tuesday.split('-')[1]
+        },
+        settings.opening_hours_wednesday && {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Wednesday",
+            "opens": settings.opening_hours_wednesday.split('-')[0],
+            "closes": settings.opening_hours_wednesday.split('-')[1]
+        },
+        settings.opening_hours_thursday && {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Thursday",
+            "opens": settings.opening_hours_thursday.split('-')[0],
+            "closes": settings.opening_hours_thursday.split('-')[1]
+        },
+        settings.opening_hours_friday && {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Friday",
+            "opens": settings.opening_hours_friday.split('-')[0],
+            "closes": settings.opening_hours_friday.split('-')[1]
+        },
+        settings.opening_hours_saturday && {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Saturday",
+            "opens": settings.opening_hours_saturday.split('-')[0],
+            "closes": settings.opening_hours_saturday.split('-')[1]
+        },
+        settings.opening_hours_sunday && {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Sunday",
+            "opens": settings.opening_hours_sunday.split('-')[0],
+            "closes": settings.opening_hours_sunday.split('-')[1]
+        },
+    ].filter(Boolean), // Filter out any null/undefined entries if a day's hours are not set
+    "priceRange": "AUD" // Placeholder, if no specific range is available.
+} : null;
+
+  const webSiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Allbikes Vespa Warehouse",
+    "url": "https://www.allbikesvespawarehouse.com.au",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.allbikesvespawarehouse.com.au/search?q={search_term_string}" // Assuming a search page at /search
+        },
+        "queryInput": "required name=search_term_string"
+    }
+  };
+
+  const structuredData = [];
+  if (localBusinessSchema) {
+      structuredData.push(localBusinessSchema);
+  }
+  structuredData.push(webSiteSchema);
+
+
   return (
     <div>
       <Seo
         title="Allbikes Vespa Warehouse - Perth's Motorcycle and Scooter Dealership"
         description="Discover a wide range of new and used motorcycles and scooters at Allbikes. We offer sales, servicing, and expert advice for riders in Perth."
         canonicalPath="/"
+        structuredData={structuredData}
       />
         <HomeHero newBikes={newBikes} usedBikes={usedBikes} loading={bikesLoading || settingsLoading} error={error} />
         <ReviewCarousel />
