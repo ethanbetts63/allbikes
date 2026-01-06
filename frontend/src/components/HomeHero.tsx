@@ -110,8 +110,8 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, loading, error
       <div className="md:w-1/2 flex flex-col">
         {loading && (
           <>
-            <div className="flex-1 bg-background animate-pulse min-h-[200px]" />
-            <div className="flex-1 bg-background animate-pulse min-h-[200px]" />
+            <div className="flex-1 bg-foreground animate-pulse min-h-[200px]" />
+            <div className="flex-1 bg-foreground animate-pulse min-h-[200px]" />
           </>
         )}
         {!loading && !error && (

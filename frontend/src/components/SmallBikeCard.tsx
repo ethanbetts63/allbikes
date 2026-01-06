@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { Wrench, Cog } from "lucide-react"; // Import icons
+import { Wrench, Cog } from "lucide-react"; 
 import type { Bike } from "@/types";
 
 
