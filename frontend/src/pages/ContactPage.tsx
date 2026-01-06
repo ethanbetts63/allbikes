@@ -7,6 +7,7 @@ import { Phone, Mail } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import OtherSites from '../components/OtherSites';
 import Breadcrumb from '../components/Breadcrumb';
+import Seo from '@/components/Seo';
 
 const otherSitesData = [
     {
@@ -34,6 +35,11 @@ const ContactPage: React.FC = () => {
 
     return (
         <div>
+            <Seo
+                title="Contact Us | Allbikes"
+                description={description}
+                canonicalPath="/contact"
+            />
             <Hero
                 title="Contact Us"
                 description={description}
