@@ -165,7 +165,6 @@ const HomePage = () => {
         <HomeHero 
             newBikes={newBikes} 
             usedBikes={usedBikes} 
-            loading={bikesLoading || settingsLoading} 
             error={error} 
             phoneNumber={settings?.phone_number} // Pass phoneNumber
             emailAddress={settings?.email_address} // Pass emailAddress
