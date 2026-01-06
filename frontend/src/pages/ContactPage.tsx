@@ -1,7 +1,7 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import ContactDetails from '../components/ContactDetails';
-import StoreFrontImage from '@/assets/allbikes_store_front.webp';
+import SymImage from '@/assets/sym_22.webp';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
@@ -16,7 +16,7 @@ const ContactPage: React.FC = () => {
             <Hero
                 title="Contact Us"
                 description={description}
-                imageUrl={StoreFrontImage}
+                imageUrl={SymImage}
             />
             
             {settings && (

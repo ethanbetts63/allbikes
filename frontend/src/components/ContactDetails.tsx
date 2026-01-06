@@ -2,7 +2,7 @@ import React from 'react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 
 const ContactDetails: React.FC = () => {
@@ -36,17 +36,27 @@ const ContactDetails: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Our Location</CardTitle>
+                        <CardTitle className="flex items-center">
+                            <MapPin className="mr-2 h-6 w-6" /> Our Location
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="mb-2 whitespace-pre-line">{fullAddress}</p>
-                        <p className="mb-2"><strong>Phone:</strong> {settings.phone_number}</p>
-                        <p><strong>Email:</strong> <a href={`mailto:${settings.email_address}`} className="text-primary hover:underline">{settings.email_address}</a></p>
+                        <p className="mb-4 whitespace-pre-line">{fullAddress}</p>
+                        <div className="flex items-center mb-2">
+                            <Phone className="mr-2 h-5 w-5" />
+                            <span>{settings.phone_number}</span>
+                        </div>
+                        <div className="flex items-center">
+                            <Mail className="mr-2 h-5 w-5" />
+                            <a href={`mailto:${settings.email_address}`} className="text-primary hover:underline">{settings.email_address}</a>
+                        </div>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Opening Hours</CardTitle>
+                        <CardTitle className="flex items-center">
+                            <Clock className="mr-2 h-6 w-6" /> Opening Hours
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <ul className="space-y-2">
