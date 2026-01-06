@@ -1,5 +1,6 @@
 import pytest
 from django.db.utils import IntegrityError
+from service.models import JobType
 from service.tests.factories.job_type_factory import JobTypeFactory
 
 @pytest.mark.django_db

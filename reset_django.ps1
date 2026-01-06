@@ -73,6 +73,7 @@ python manage.py generate --brands
 python manage.py fix_site_domains
 python manage.py update --archive
 python manage.py createsuperuser --username ethanbetts63@gmail.com --email ethanbetts63@gmail.com
+python manage.py createsuperuser --username frankingram001@gmail.com --email frankingram001@gmail.com
 
 cd frontend
 npm config set legacy-peer-deps true

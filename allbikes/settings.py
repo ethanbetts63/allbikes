@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['ethanbetts.pythonanywhere.com', 'https://www.allbikesvespawarehouse.com.au/', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['ethanbetts.pythonanywhere.com', 'https://www.allbikesvespawarehouse.com.au/', 'www.allbikesvespawarehouse.com.au', '127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
