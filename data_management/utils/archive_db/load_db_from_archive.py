@@ -13,6 +13,7 @@ def load_db_from_latest_archive(command):
         'service.bookingrequestlog.json',
         'inventory.motorcycle.json',          
         'inventory.motorcycleimage.json',     
+        'site.site.json'
     ]
 
     if not os.path.exists(base_archive_dir):
