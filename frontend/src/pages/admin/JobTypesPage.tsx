@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { FormEvent } from 'react';
-import { toast } from 'sonner';
 
 import { getJobTypesAdmin, createJobType, updateJobType, deleteJobType } from '@/services/jobTypeService';
 import type { JobType } from '@/types';
@@ -12,8 +11,9 @@ import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, X } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const JobTypesPage: React.FC = () => {
     const [jobTypes, setJobTypes] = useState<JobType[]>([]);
@@ -28,13 +28,15 @@ const JobTypesPage: React.FC = () => {
     const [formError, setFormError] = useState('');
 
 
+    const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
     const fetchJobTypes = useCallback(async () => {
         setIsLoading(true);
         try {
             const data = await getJobTypesAdmin();
             setJobTypes(data);
         } catch (error) {
-            toast.error('Failed to fetch job types.');
+            setNotification({ message: 'Failed to fetch job types.', type: 'error' });
             console.error(error);
         } finally {
             setIsLoading(false);
@@ -46,6 +48,7 @@ const JobTypesPage: React.FC = () => {
     }, [fetchJobTypes]);
 
     const openDialog = (jobType: JobType | null = null) => {
+        setNotification(null);
         setEditingJobType(jobType);
         if (jobType) {
             setName(jobType.name);
@@ -60,6 +63,7 @@ const JobTypesPage: React.FC = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setNotification(null);
         if (!name) {
             setFormError('Name is required');
             return;
@@ -72,15 +76,15 @@ const JobTypesPage: React.FC = () => {
         try {
             if (editingJobType) {
                 await updateJobType(editingJobType.id, data);
-                toast.success('Job type updated successfully!');
+                setNotification({ message: 'Job type updated successfully!', type: 'success' });
             } else {
                 await createJobType(data as Omit<JobType, 'id'>);
-                toast.success('Job type created successfully!');
+                setNotification({ message: 'Job type created successfully!', type: 'success' });
             }
             await fetchJobTypes();
             setIsDialogOpen(false);
         } catch (error) {
-            toast.error(`Failed to ${editingJobType ? 'update' : 'create'} job type.`);
+            setNotification({ message: `Failed to ${editingJobType ? 'update' : 'create'} job type.`, type: 'error' });
             console.error(error);
         } finally {
             setIsSubmitting(false);
@@ -88,13 +92,14 @@ const JobTypesPage: React.FC = () => {
     };
 
     const handleDelete = async (id: number) => {
+        setNotification(null);
         if (window.confirm('Are you sure you want to delete this job type?')) {
             try {
                 await deleteJobType(id);
-                toast.success('Job type deleted successfully!');
+                setNotification({ message: 'Job type deleted successfully!', type: 'success' });
                 await fetchJobTypes();
             } catch (error) {
-                toast.error('Failed to delete job type.');
+                setNotification({ message: 'Failed to delete job type.', type: 'error' });
                 console.error(error);
             }
         }
@@ -118,6 +123,14 @@ const JobTypesPage: React.FC = () => {
                 </div>
             </CardHeader>
             <CardContent>
+                {notification && (
+                    <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
+                        <AlertDescription>{notification.message}</AlertDescription>
+                        <Button variant="ghost" size="icon" onClick={() => setNotification(null)}>
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </Alert>
+                )}
                 <Table>
                     <TableHeader>
                         <TableRow>
