@@ -83,10 +83,34 @@ npm run build
 ```
 This command compiles the TypeScript code, bundles the assets using Vite, and outputs the optimized static files to the `dist/` directory.
 
-## Linting
+## Image Handling (Development vs. Production)
+Image handling differs significantly between the development and production environments. Understanding this is key to avoiding broken images.
 
-To check code quality and adherence to styling rules:
-```bash
-npm run lint
-```
-This command runs ESLint with configurations tailored for TypeScript, React, and React Hooks.
+### Dynamic Images (from API)
+
+These are user-uploaded images, like motorcycle pictures, served from the Django backend.
+*   **Development**: When `DEBUG` is `True` in Django's `settings.py`, the Django development server is configured to serve media files directly from the `mediafiles/` directory. The API will return image URLs like `http://127.0.0.1:8000/media/path/to/image.jpg`, which the browser can resolve because the Django server is running.
+
+*   **Production**: In a production environment, the Django application itself does **not** serve media files for performance and security reasons. A dedicated web server (e.g., Nginx) is configured to intercept requests to `/media/` and serve them directly from the `mediafiles/` filesystem directory.
+
+### Static Images (in Frontend Code)
+
+These are images that are part of the application's design, such as logos, icons, or default placeholders.
+
+*   **Development**: These images are typically stored in the `frontend/src/assets/` directory. To use them, you must `import` them directly into your React components.
+
+    ```tsx
+
+    import myImage from '@/assets/my-image.png';
+
+
+
+    const MyComponent = () => <img src={myImage} alt="Description" />;
+
+    ```
+
+    Vite's development server handles this import, making the image available to the browser.
+
+*   **Production**: During the `npm run build` process, Vite bundles and optimizes these imported images, giving them new, hashed filenames and placing them in the `dist/assets/` directory. The `import` statement ensures your code automatically receives the correct final URL.
+
+    **CRITICAL**: Never use hardcoded string paths to static assets (e.g., `src="/src/assets/my-image.png"`). This will **fail** in production because the `src` directory does not exist in the final build output. Always use `import`.
