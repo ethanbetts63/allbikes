@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 import { createBooking } from '@/services/bookingService';
 import Seo from '@/components/Seo';
 import BookingDetailsForm from '@/forms/BookingDetailsForm';
@@ -74,7 +73,7 @@ const BookingPage: React.FC = () => {
             case 2:
                 return <BikeDetailsForm formData={formData} setFormData={setFormData} nextStep={nextStep} prevStep={prevStep} />;
             case 3:
-                return <PersonalDetailsForm formData={formData} setFormData={setFormData} prevStep={prevStep} handleSubmit={handleSubmit} />;
+                return <PersonalDetailsForm formData={formData} setFormData={setFormData} prevStep={prevStep} handleSubmit={handleSubmit} error={error} />;
             default:
                 // This case should ideally not be reached if navigation happens on submit
                 return <div>Form complete. Thank you!</div>;

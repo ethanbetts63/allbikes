@@ -9,10 +9,13 @@ interface PersonalDetailsFormProps {
   formData: any;
   setFormData: React.Dispatch<React.SetStateAction<any>>;
   prevStep: () => void;
-  handleSubmit: () => void; // This will be the final submission
+  handleSubmit: () => void;
+  error: string | null;
 }
 
-const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, setFormData, prevStep, handleSubmit }) => {
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+
+const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, setFormData, prevStep, handleSubmit, error }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [id]: value }));
@@ -24,6 +27,12 @@ const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, set
 
   return (
     <div>
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <h2 className="text-2xl font-bold mb-6">Step 3: Personal Details</h2>
       <div className="space-y-4">
         
