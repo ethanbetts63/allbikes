@@ -24,7 +24,12 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
   const slug = bike.slug;
 
   return (
-    <Card className="w-full overflow-hidden flex flex-col pt-0 border border-foreground">
+    <Card className="relative w-full overflow-hidden flex flex-col pt-0 border border-foreground">
+      {bike.status === 'sold' && (
+        <div className="absolute top-5 right-[-35px] w-32 transform rotate-45 bg-destructive text-destructive-foreground text-center font-bold z-10 text-white">
+          Sold
+        </div>
+      )}
       <CardHeader className="p-0">
         <div className="relative aspect-video">
           <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover" loading="lazy"/>

@@ -165,7 +165,7 @@ const BikeDetailPage: React.FC = () => {
                     "@type": "Offer",
                     "price": bike.price,
                     "priceCurrency": "AUD",
-                    "availability": bike.status.toLowerCase() === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    "availability": bike.status === 'for_sale' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
                     "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
                     "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${bike.slug}`
                 },
@@ -233,6 +233,9 @@ const BikeDetailPage: React.FC = () => {
                 <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
                 <div className="text-center mb-8 flex justify-center gap-2">
                     <Badge className="text-lg capitalize">{bike.condition}</Badge>
+                    {bike.status === 'sold' && (
+                        <Badge variant="destructive" className="text-lg">Sold</Badge>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
