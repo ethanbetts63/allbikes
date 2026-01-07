@@ -94,6 +94,7 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
                         <div className="space-y-2"><Label htmlFor="model">Model</Label><Input id="model" {...register('model', { required: 'Model is required' })} />{errors.model && <p className="text-red-500 text-sm">{errors.model.message}</p>}</div>
                         <div className="space-y-2"><Label htmlFor="year">Year</Label><Input id="year" type="number" {...register('year', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="price">Price (AUD)</Label><Input id="price" type="number" step="0.01" {...register('price', { valueAsNumber: true })} /></div>
+                        <div className="space-y-2"><Label htmlFor="discount_price">Discount Price (AUD)</Label><Input id="discount_price" type="number" step="0.01" {...register('discount_price', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="odometer">Odometer (km)</Label><Input id="odometer" type="number" {...register('odometer', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="stock_number">Stock Number</Label><Input id="stock_number" {...register('stock_number')} /></div>
                     </div>

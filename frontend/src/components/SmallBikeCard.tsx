@@ -55,9 +55,22 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
               )}
             </div>
           </div>
-          <p className="text-2xl font-bold text-primary text-center">
-            ${parseFloat(bike.price).toLocaleString()}
-          </p>
+          <div className="text-2xl font-bold text-center">
+            {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
+              <div className="flex justify-center items-center space-x-2">
+                <p className="text-red-500 line-through">
+                  ${parseFloat(bike.price).toLocaleString()}
+                </p>
+                <p className="text-green-500">
+                  ${parseFloat(bike.discount_price).toLocaleString()}
+                </p>
+              </div>
+            ) : (
+              <p className="text-primary">
+                ${parseFloat(bike.price).toLocaleString()}
+              </p>
+            )}
+          </div>
         </CardContent>
       </Card>
     </Link>

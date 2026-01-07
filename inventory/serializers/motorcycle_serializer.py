@@ -14,6 +14,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'model',
             'year',
             'price',
+            'discount_price',
             'condition',
             'status',
             'is_featured',

@@ -38,6 +38,7 @@ export type Bike = {
   model: string;
   year: number;
   price: string;
+  discount_price?: string;
   condition: 'new' | 'used' | 'demo';
   status: string;
   is_featured?: boolean;

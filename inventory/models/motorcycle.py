@@ -35,6 +35,14 @@ class Motorcycle(models.Model):
         help_text="Sale price (if applicable)",
     )
 
+    discount_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Discounted price (if applicable)",
+    )
+
     slug = models.SlugField(
         max_length=255, 
         unique=True, 
