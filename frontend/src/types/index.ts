@@ -82,6 +82,7 @@ export interface Brand {
     enable_banner: boolean;
     banner_text: string;
     phone_number: string;
+    mobile_number: string;
     email_address: string;
     street_address: string;
     address_locality: string;
