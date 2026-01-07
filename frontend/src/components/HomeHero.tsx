@@ -167,9 +167,9 @@ const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, error, phoneNu
         <p className="text-lg text-[var(--text-primary)] leading-relaxed max-w-prose mb-8">
           Operating in Perth for over 30 years, we are a motorcycle and scooter mechanic and dealership offering new and used sales across petrol and electric models. We provide motorcycle and scooter servicing, including tyre changes, maintenance, and general repairs. 
         </p>
-        {phoneNumber && emailAddress && (
+        {(phoneNumber || mobileNumber || emailAddress) && (
           <div className="mb-2">
-            <ContactButtons phoneNumber={phoneNumber} emailAddress={emailAddress} />
+            <ContactButtons phoneNumber={phoneNumber} mobileNumber={mobileNumber} emailAddress={emailAddress} />
           </div>
         )}
       </div>
