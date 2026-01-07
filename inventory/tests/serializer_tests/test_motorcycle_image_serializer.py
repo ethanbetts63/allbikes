@@ -10,7 +10,7 @@ def test_motorcycle_image_serializer_contains_expected_fields():
     image = MotorcycleImageFactory()
     serializer = MotorcycleImageSerializer(instance=image)
     data = serializer.data
-    expected_keys = ['id', 'image', 'order', 'motorcycle']
+    expected_keys = ['id', 'image', 'order', 'motorcycle', 'thumbnail', 'medium']
     assert set(data.keys()) == set(expected_keys)
 
 @pytest.mark.django_db
