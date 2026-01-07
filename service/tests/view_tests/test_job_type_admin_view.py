@@ -39,7 +39,7 @@ class TestJobTypeAdminViewSet:
         THEN the response should be 200 OK and contain the job types.
         """
         JobTypeFactory.create_batch(2)
-        url = reverse('service-admin-jobtype-list')
+        url = reverse('service_api:job-type-admin-list')
         response = admin_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
@@ -51,7 +51,7 @@ class TestJobTypeAdminViewSet:
         WHEN an unauthenticated user tries to list them
         THEN the response should be 401 Unauthorized.
         """
-        url = reverse('service-admin-jobtype-list')
+        url = reverse('service_api:job-type-admin-list')
         response = api_client.get(url)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -61,7 +61,7 @@ class TestJobTypeAdminViewSet:
         WHEN a regular user tries to list them
         THEN the response should be 403 Forbidden.
         """
-        url = reverse('service-admin-jobtype-list')
+        url = reverse('service_api:job-type-admin-list')
         response = regular_client.get(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -71,7 +71,7 @@ class TestJobTypeAdminViewSet:
         WHEN an admin creates it
         THEN the response should be 201 Created.
         """
-        url = reverse('service-admin-jobtype-list')
+        url = reverse('service_api:job-type-admin-list')
         data = {'name': 'New Service', 'description': 'A new service description.'}
         response = admin_client.post(url, data)
         
@@ -85,7 +85,7 @@ class TestJobTypeAdminViewSet:
         THEN the response should be 200 OK and the data updated.
         """
         job_type = JobTypeFactory()
-        url = reverse('service-admin-jobtype-detail', kwargs={'pk': job_type.pk})
+        url = reverse('service_api:job-type-admin-detail', kwargs={'pk': job_type.pk})
         data = {'name': 'Updated Name'}
         response = admin_client.patch(url, data)
         
@@ -100,7 +100,7 @@ class TestJobTypeAdminViewSet:
         THEN the response should be 204 No Content.
         """
         job_type = JobTypeFactory()
-        url = reverse('service-admin-jobtype-detail', kwargs={'pk': job_type.pk})
+        url = reverse('service_api:job-type-admin-detail', kwargs={'pk': job_type.pk})
         response = admin_client.delete(url)
         
         assert response.status_code == status.HTTP_204_NO_CONTENT

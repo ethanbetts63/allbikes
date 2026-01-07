@@ -40,7 +40,7 @@ class TestServiceSettingsViewSet:
         """
         ServiceSettingsFactory()
         # The URL for the singleton is typically the detail view with its known pk
-        url = reverse('service-admin-settings-detail', kwargs={'pk': 1})
+        url = reverse('service_api:service-settings-admin')
         response = admin_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
@@ -52,7 +52,7 @@ class TestServiceSettingsViewSet:
         WHEN an unauthenticated user tries to retrieve them
         THEN the response should be 401 Unauthorized.
         """
-        url = reverse('service-admin-settings-detail', kwargs={'pk': 1})
+        url = reverse('service_api:service-settings-admin')
         response = api_client.get(url)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -62,7 +62,7 @@ class TestServiceSettingsViewSet:
         WHEN a regular user tries to retrieve them
         THEN the response should be 403 Forbidden.
         """
-        url = reverse('service-admin-settings-detail', kwargs={'pk': 1})
+        url = reverse('service_api:service-settings-admin')
         response = regular_client.get(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -73,7 +73,7 @@ class TestServiceSettingsViewSet:
         THEN the response should be 200 OK and the settings updated.
         """
         settings = ServiceSettingsFactory(booking_advance_notice=2)
-        url = reverse('service-admin-settings-detail', kwargs={'pk': settings.pk})
+        url = reverse('service_api:service-settings-admin')
         data = {'booking_advance_notice': 5}
         response = admin_client.patch(url, data)
         
@@ -81,13 +81,14 @@ class TestServiceSettingsViewSet:
         settings.refresh_from_db()
         assert settings.booking_advance_notice == 5
         
-    def test_list_action_not_allowed(self, admin_client):
-        """
-        GIVEN the ServiceSettingsViewSet
-        WHEN an admin tries to list all settings objects
-        THEN the response should be 405 Method Not Allowed.
-        """
-        # This ViewSet does not have a 'list' action
-        url = reverse('service-admin-settings-list')
-        response = admin_client.get(url)
-        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+            # def test_list_action_not_allowed(self, admin_client):
+        #     """
+        #     GIVEN the ServiceSettingsViewSet
+        #     WHEN an admin tries to list all settings objects
+        #     THEN the response should be 405 Method Not Allowed.
+        #     """
+        #     # This ViewSet does not have a 'list' action and is not routed,
+        #     # so there is no URL to reverse.
+        #     url = reverse('service-admin-settings-list')
+        #     response = admin_client.get(url)
+        #     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
