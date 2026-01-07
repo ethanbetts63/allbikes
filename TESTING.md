@@ -35,6 +35,10 @@ To keep our tests organized and scalable, we follow a consistent directory struc
 │   │   ├── __init__.py
 │   │   ├── test_<serializer_name>_serializer.py
 │   │   └── ...
+│   ├── management_tests/
+│   │   ├── __init__.py
+│   │   ├── test_<command_name>_command.py
+│   │   └── ...
 │   └── util_tests/
 │       ├── __init__.py
 │       ├── test_<util_name>.py
