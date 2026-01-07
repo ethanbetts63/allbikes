@@ -6,18 +6,20 @@ import { useSiteSettings } from '@/context/SiteSettingsContext';
 import OtherSites from '../components/OtherSites';
 import Breadcrumb from '../components/Breadcrumb';
 import Seo from '@/components/Seo';
-import ContactButtons from '@/components/ContactButtons'; // Import the new component
+import ContactButtons from '@/components/ContactButtons';
+import splitcartLogo from "/src/assets/splitcart_logo.png";
+import futureReminderLogo from "/src/assets/futurereminder_logo.png";
 
 const otherSitesData = [
     {
         name: "Splitcart",
-        logoSrc: "/src/assets/splitcart_logo.png", 
+        logoSrc: splitcartLogo, 
         description: "Compare grocery prices across major Australian supermarkets.",
         url: "https://www.splitcart.com.au", 
     },
     {
         name: "Future Reminder",
-        logoSrc: "/src/assets/futurereminder_logo.png", 
+        logoSrc: futureReminderLogo, 
         description: "Never miss an important event with our persistent reminder service.",
         url: "https://www.futurereminder.app", 
     },
