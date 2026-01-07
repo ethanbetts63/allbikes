@@ -35,3 +35,4 @@ static/
 # Misc
 *.backup
 mediafiles/
+mediafiles/CACHE/
