@@ -49,6 +49,7 @@ export type Bike = {
   warranty_months: number;
   transmission: string;
   images: BikeImage[];
+  date_posted: string;
 };
 
 // Represents a unified image object for the form's state

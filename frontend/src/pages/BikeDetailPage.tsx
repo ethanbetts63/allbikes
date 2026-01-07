@@ -6,6 +6,7 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from "@/components/ui/badge";
 import FeaturedBikes from "@/components/FeaturedBikes";
+import YouTube from 'react-youtube';
 import {
     DollarSign,
     Hash,
@@ -15,7 +16,8 @@ import {
     GitCommit,
     FileText,
     CalendarClock,
-    ShieldCheck
+    ShieldCheck,
+    PlayCircle
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
@@ -27,14 +29,34 @@ interface Specification {
     formatter?: (val: any) => string;
 }
 
+const getYouTubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+    try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname === 'youtu.be') {
+            return urlObj.pathname.slice(1);
+        }
+        if (urlObj.hostname.includes('youtube.com')) {
+            const videoId = urlObj.searchParams.get('v');
+            if (videoId) return videoId;
+        }
+    } catch (error) {
+        console.error("Invalid YouTube URL:", error);
+        return null;
+    }
+    return null;
+};
+
 const BikeDetailPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
     const [bike, setBike] = useState<Bike | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [selectedImage, setSelectedImage] = useState<string>('');
+    const [selectedMedia, setSelectedMedia] = useState<string>('YOUTUBE');
     const [newBikes, setNewBikes] = useState<Bike[]>([]);
     const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
+
+    const videoId = bike?.youtube_link ? getYouTubeVideoId(bike.youtube_link) : null;
 
     useEffect(() => {
         if (!slug) return;
@@ -57,10 +79,12 @@ const BikeDetailPage: React.FC = () => {
                 
                 setBike(data);
 
-                if (data.images && data.images.length > 0) {
-                    setSelectedImage(data.images[0].image);
+                if (data.youtube_link && getYouTubeVideoId(data.youtube_link)) {
+                    setSelectedMedia('YOUTUBE');
+                } else if (data.images && data.images.length > 0) {
+                    setSelectedMedia(data.images[0].image);
                 } else {
-                    setSelectedImage('/src/assets/motorcycle_images/placeholder.png');
+                    setSelectedMedia('/src/assets/motorcycle_images/placeholder.png');
                 }
             } catch (err) {
                 setError(err instanceof Error ? err.message : "An unknown error occurred.");
@@ -105,6 +129,10 @@ const BikeDetailPage: React.FC = () => {
     ] : [];
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
+    
+    const ogImage = selectedMedia === 'YOUTUBE' && videoId 
+        ? `https://img.youtube.com/vi/${videoId}/0.jpg` 
+        : (selectedMedia !== 'YOUTUBE' ? selectedMedia : '/src/assets/motorcycle_images/placeholder.png');
 
     const breadcrumbItems: BreadcrumbItem[] = bike ? [
         { name: 'Home', href: '/' },
@@ -142,6 +170,16 @@ const BikeDetailPage: React.FC = () => {
                     "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
                     "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${bike.slug}`
                 },
+                ...(videoId && {
+                    "video": {
+                        "@type": "VideoObject",
+                        "name": `${pageTitle} - Walkthrough`,
+                        "description": bike.description,
+                        "thumbnailUrl": `https://img.youtube.com/vi/${videoId}/0.jpg`,
+                        "embedUrl": `https://www.youtube.com/embed/${videoId}`,
+                        "uploadDate": bike.date_posted 
+                    }
+                }),
                 "vehicle": {
                     "@type": "Vehicle",
                     "vehicleIdentificationNumber": bike.rego,
@@ -186,7 +224,7 @@ const BikeDetailPage: React.FC = () => {
                 title={`${pageTitle} | Allbikes`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes Vespa Warehouse, Perth's most experienced motorcycle and scooter dealership.`}
                 canonicalPath={`/inventory/motorcycles/${bike.slug}`}
-                ogImage={selectedImage}
+                ogImage={ogImage}
                 structuredData={structuredData}
             />
             <div className="container mx-auto">
@@ -201,21 +239,34 @@ const BikeDetailPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left Column: Image Gallery */}
                     <div>
-                        <div className="aspect-video w-full overflow-hidden rounded-lg mb-4 border">
-                            <img src={selectedImage} alt={cardTitle} className="w-full h-full object-cover" />
+                        <div className="aspect-video w-full overflow-hidden rounded-lg mb-4 border bg-black">
+                            {selectedMedia === 'YOUTUBE' && videoId ? (
+                                <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
+                            ) : (
+                                <img src={selectedMedia} alt={cardTitle} className="w-full h-full object-cover" />
+                            )}
                         </div>
                         <div className="flex space-x-2">
-                            {sortedImages.length > 1 ? (
-                                sortedImages.map((img, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setSelectedImage(img.image)}
-                                        className={`w-20 h-20 overflow-hidden rounded-md border-2 ${selectedImage === img.image ? 'border-blue-500' : 'border-transparent'}`}
-                                    >
-                                        <img src={img.image} alt={`${cardTitle} thumbnail ${index + 1}`} className="w-full h-full object-cover" />
-                                    </button>
-                                ))
-                            ) : null}
+                            {videoId && (
+                                <button
+                                    onClick={() => setSelectedMedia('YOUTUBE')}
+                                    className={`relative w-20 h-20 overflow-hidden rounded-md border-2 ${selectedMedia === 'YOUTUBE' ? 'border-blue-500' : 'border-transparent'}`}
+                                >
+                                    <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                                        <PlayCircle className="h-8 w-8 text-white" />
+                                    </div>
+                                </button>
+                            )}
+                            {sortedImages.map((img, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setSelectedMedia(img.image)}
+                                    className={`w-20 h-20 overflow-hidden rounded-md border-2 ${selectedMedia === img.image ? 'border-blue-500' : 'border-transparent'}`}
+                                >
+                                    <img src={img.image} alt={`${cardTitle} thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                                </button>
+                            ))}
                         </div>
                     </div>
 
