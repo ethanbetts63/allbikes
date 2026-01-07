@@ -3,6 +3,8 @@ import {
     CardFooter,
 } from "@/components/ui/card"
 
+import { Star } from "lucide-react"; 
+
 const reviewData = [
   {
     "pk": 1,
@@ -94,9 +96,7 @@ const ReviewCarousel = () => {
                           </div>
                           <div className="flex mb-4">
                               {[...Array(5)].map((_, i) => (
-                                  <svg key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" aria-hidden="true">
-                                      <use href="/icons.svg#icon-star" />
-                                  </svg>
+                                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                               ))}
                           </div>
                           <p className="text-gray-700 leading-relaxed">"{truncatedText}"</p>
