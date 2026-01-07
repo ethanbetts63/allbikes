@@ -13,10 +13,10 @@ const BookingSuccessPage: React.FC = () => {
                 description="Your service booking has been submitted successfully. We will contact you shortly to confirm."
                 noindex={true}
             />
-            <div className="p-8 border rounded-lg shadow-lg bg-card text-[var(--text-primary)]">
+            <div className="p-8 border rounded-lg shadow-lg bg-card text-black]">
                 <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
                 <h1 className="text-3xl font-bold mb-4">Booking Submitted Successfully!</h1>
-                <p className="text-lg text-[var(--text-secondary)] mb-8">
+                <p className="text-lg text-[var(--text-black)] mb-8">
                     Thank you! We have received your booking request and will be in touch shortly to confirm the details.
                 </p>
                 <Link to="/">
