@@ -2,7 +2,6 @@ import {
     Card,
     CardFooter,
 } from "@/components/ui/card"
-import { Star } from "lucide-react"; // Import Star icon
 
 const reviewData = [
   {
