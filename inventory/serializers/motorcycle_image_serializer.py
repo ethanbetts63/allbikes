@@ -3,7 +3,7 @@ from ..models import MotorcycleImage
 
 class MotorcycleImageSerializer(serializers.ModelSerializer):
     thumbnail = serializers.SerializerMethodField()
-    medium = serializers.ImageField(source='medium', read_only=True)
+    medium = serializers.ImageField(read_only=True)
 
     class Meta:
         model = MotorcycleImage

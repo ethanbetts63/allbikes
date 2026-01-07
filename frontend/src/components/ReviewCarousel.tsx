@@ -95,7 +95,9 @@ const ReviewCarousel = () => {
                           </div>
                           <div className="flex mb-4">
                               {[...Array(5)].map((_, i) => (
-                                  <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                                  <svg key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" aria-hidden="true">
+                                      <use href="/icons.svg#icon-star" />
+                                  </svg>
                               ))}
                           </div>
                           <p className="text-gray-700 leading-relaxed">"{truncatedText}"</p>
