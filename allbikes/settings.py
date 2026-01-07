@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "data_management",
     "inventory",
     "service",
+    "imagekit",
 ]
 
 SITE_ID = 1
