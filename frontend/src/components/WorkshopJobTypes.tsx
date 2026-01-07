@@ -4,26 +4,8 @@ import type { EnrichedJobType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Cog } from 'lucide-react';
 import { Spinner } from "@/components/ui/spinner";
-
-interface WorkshopJobTypesProps {
-  jobTypes: EnrichedJobType[];
-  isLoading: boolean;
-  error?: string | null;
-}
-
-const SkeletonLoader = () => (
-    <div className="bg-foreground p-6 rounded-lg shadow-md flex items-center justify-center h-[120px]">
-        <Spinner />
-    </div>
-);
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import type { EnrichedJobType } from '@/types';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Cog } from 'lucide-react';
-import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+
 
 interface WorkshopJobTypesProps {
   jobTypes: EnrichedJobType[];

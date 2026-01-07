@@ -33,12 +33,7 @@ const AdminLayout: React.FC = () => {
         <aside className="w-64 flex-shrink-0 border-r p-4 bg-foreground text-[var(--text-primary)]">
           <nav className="flex flex-col space-y-2">
             <h2 className="text-lg font-semibold tracking-tight mb-2 px-2">Admin Menu</h2>
-            <Button asChild variant="ghost">
-              <NavLink to="/admin/dashboard" end className={getNavLinkClass}>
-                <LayoutDashboard className="h-4 w-4" />
-                Dashboard
-              </NavLink>
-            </Button>
+
             <Button asChild variant="ghost">
               <NavLink to="/admin/inventory" className={getNavLinkClass}>
                 <Wrench className="h-4 w-4" />

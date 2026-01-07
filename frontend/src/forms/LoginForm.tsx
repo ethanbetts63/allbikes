@@ -32,7 +32,7 @@ export function LoginForm({
       await loginWithPassword(email, password);
       setNotification({ message: "Login successful!", type: 'success' });
       // On success, navigate to the admin dashboard
-      navigate('/admin/dashboard');
+      navigate('/admin/inventory');
     } catch (error) {
       console.error("Login failed", error);
       setNotification({ message: "Login Failed: Please check your email and password and try again.", type: 'error' });

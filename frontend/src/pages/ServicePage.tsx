@@ -3,7 +3,6 @@ import Seo from '@/components/Seo';
 import { getJobTypes } from '@/services/bookingService';
 import type { EnrichedJobType, } from '@/types';
 import WorkshopJobTypes from '@/components/WorkshopJobTypes';
-import { toast } from 'sonner';
 import ServiceBrands from "@/components/ServiceBrands";
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";

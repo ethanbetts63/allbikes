@@ -23,5 +23,5 @@ class TermsAndConditionsSerializerTest(TestCase):
 
         self.assertEqual(data['version'], "1.5")
         self.assertEqual(data['content'], "<p>Test content here.</p>")
-        # Compare timezone-aware strings, slicing off microseconds for compatibility
-        self.assertEqual(data['published_at'][:-7], now.isoformat()[:-6])
+        # Compare the date and time, ignoring microseconds and timezone format differences
+        self.assertEqual(data['published_at'][:19], now.isoformat()[:19])
