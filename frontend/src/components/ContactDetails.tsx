@@ -5,8 +5,43 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 
+const backupContactDetails = {
+    id: 0, // Placeholder ID
+    enable_motorcycle_mover: false,
+    enable_banner: false,
+    banner_text: "",
+    phone_number: "94334613",
+    mobile_number: "0477700005",
+    email_address: "admin@scootershop.com.au",
+    street_address: "Unit 5 / 6 Cleveland Street",
+    address_locality: "Dianella",
+    address_region: "WA",
+    postal_code: "6059",
+    google_places_place_id: "",
+    mrb_number: "",
+    abn_number: "",
+    md_number: "",
+    youtube_link: "",
+    instagram_link: "",
+    facebook_link: "",
+    opening_hours_monday: "9:00 AM - 5:00 PM",
+    opening_hours_tuesday: "9:00 AM - 5:00 PM",
+    opening_hours_wednesday: "9:00 AM - 5:00 PM",
+    opening_hours_thursday: "9:00 AM - 5:00 PM",
+    opening_hours_friday: "9:00 AM - 5:00 PM",
+    opening_hours_saturday: "Closed",
+    opening_hours_sunday: "Closed",
+    last_updated: new Date().toISOString(), // Placeholder for last updated
+};
+
 const ContactDetails: React.FC = () => {
     const { settings, loading } = useSiteSettings();
+
+    let currentSettings = settings;
+
+    if (!settings && !loading) {
+        currentSettings = backupContactDetails;
+    }
 
     if (loading) {
         return (
@@ -15,20 +50,23 @@ const ContactDetails: React.FC = () => {
             </div>
         );
     }
-
-    if (!settings) {
+    
+    // If after all checks, currentSettings is still null (e.g., loading finished, settings still null, and no backup was used, which implies an unexpected state),
+    // or if for some reason the backup is also incomplete, we might still want a fallback.
+    // For this task, we assume backupContactDetails is always available if settings fail to load.
+    if (!currentSettings) {
         return (
              <div className="container mx-auto px-4 py-8">
                 <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>Failed to load contact information. Please try again later.</AlertDescription>
+                    <AlertDescription>Failed to load contact information and no backup is available.</AlertDescription>
                 </Alert>
             </div>
         );
     }
-    
-    const fullAddress = `${settings.street_address}\n${settings.address_locality}, ${settings.address_region} ${settings.postal_code}`;
+
+    const fullAddress = `${currentSettings.street_address}\n${currentSettings.address_locality}, ${currentSettings.address_region} ${currentSettings.postal_code}`;
 
 
     return (
@@ -43,8 +81,8 @@ const ContactDetails: React.FC = () => {
                     <CardContent>
                         <p className="mb-4 whitespace-pre-line">{fullAddress}</p>
                         {(() => {
-                            const phoneNumber = settings.phone_number;
-                            const mobileNumber = settings.mobile_number;
+                            const phoneNumber = currentSettings.phone_number;
+                            const mobileNumber = currentSettings.mobile_number;
                             let displayedPhoneNumbers = '';
                             let primaryPhoneNumber = '';
 
@@ -73,7 +111,7 @@ const ContactDetails: React.FC = () => {
                         })()}
                         <div className="flex items-center">
                             <Mail className="mr-2 h-5 w-5" />
-                            <a href={`mailto:${settings.email_address}`} className="text-primary hover:underline">{settings.email_address}</a>
+                            <a href={`mailto:${currentSettings.email_address}`} className="text-primary hover:underline">{currentSettings.email_address}</a>
                         </div>
                     </CardContent>
                 </Card>
@@ -85,13 +123,13 @@ const ContactDetails: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <ul className="space-y-2">
-                            <li><strong>Monday:</strong> {settings.opening_hours_monday || 'N/A'}</li>
-                            <li><strong>Tuesday:</strong> {settings.opening_hours_tuesday || 'N/A'}</li>
-                            <li><strong>Wednesday:</strong> {settings.opening_hours_wednesday || 'N/A'}</li>
-                            <li><strong>Thursday:</strong> {settings.opening_hours_thursday || 'N/A'}</li>
-                            <li><strong>Friday:</strong> {settings.opening_hours_friday || 'N/A'}</li>
-                            <li><strong>Saturday:</strong> {settings.opening_hours_saturday || 'N/A'}</li>
-                            <li><strong>Sunday:</strong> {settings.opening_hours_sunday || 'N/A'}</li>
+                            <li><strong>Monday:</strong> {currentSettings.opening_hours_monday || 'N/A'}</li>
+                            <li><strong>Tuesday:</strong> {currentSettings.opening_hours_tuesday || 'N/A'}</li>
+                            <li><strong>Wednesday:</strong> {currentSettings.opening_hours_wednesday || 'N/A'}</li>
+                            <li><strong>Thursday:</strong> {currentSettings.opening_hours_thursday || 'N/A'}</li>
+                            <li><strong>Friday:</strong> {currentSettings.opening_hours_friday || 'N/A'}</li>
+                            <li><strong>Saturday:</strong> {currentSettings.opening_hours_saturday || 'N/A'}</li>
+                            <li><strong>Sunday:</strong> {currentSettings.opening_hours_sunday || 'N/A'}</li>
                         </ul>
                     </CardContent>
                 </Card>
