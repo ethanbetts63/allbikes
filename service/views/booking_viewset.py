@@ -29,6 +29,17 @@ class BookingViewSet(viewsets.ViewSet):
 
         validated_data = serializer.validated_data
 
+        # Prepend drop-off time to the note field
+        drop_off_time = validated_data.get('drop_off_time')
+        existing_note = validated_data.get('note', '')
+
+        prefix = f"Preferred drop-off time: {drop_off_time}"
+
+        if existing_note:
+            validated_data['note'] = f"{prefix}\n\n{existing_note}"
+        else:
+            validated_data['note'] = prefix
+
         log_payload = {
             'customer_name': validated_data.get('name'),
             'customer_email': validated_data.get('email'),
