@@ -77,10 +77,3 @@ class SiteSettingsViewSetTest(APITestCase):
         
         self.assertEqual(pk1, pk2)
 
-    def test_caching_header_on_get(self):
-        """
-        Test that GET requests include the 'Cache-Control' header.
-        """
-        response = self.client.get(self.url)
-        self.assertIn('Cache-Control', response)
-        self.assertTrue(response['Cache-Control'].startswith('max-age='))

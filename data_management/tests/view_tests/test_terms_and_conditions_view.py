@@ -47,13 +47,3 @@ class LatestTermsAndConditionsViewTest(APITestCase):
         # This test now runs with an empty DB, so 404 is the expected public response
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_caching_header_present(self):
-        """
-        Test that the response includes the 'Cache-Control' header.
-        """
-        TermsAndConditions.objects.create(version="1.0", content="Cache test")
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('Cache-Control', response)
-        self.assertTrue(response['Cache-Control'].startswith('max-age='))

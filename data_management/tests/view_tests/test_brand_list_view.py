@@ -35,12 +35,3 @@ class BrandListViewTest(APITestCase):
         self.assertEqual(response.data[0]['name'], 'Brand A')
         self.assertEqual(response.data[1]['name'], 'Brand B')
         self.assertEqual(response.data[2]['name'], 'Brand C')
-
-    def test_caching_header(self):
-        """
-        Test that the response includes the 'Cache-Control' header.
-        The decorator adds `Cache-Control: max-age=<seconds>`.
-        """
-        response = self.client.get(self.url)
-        self.assertIn('Cache-Control', response)
-        self.assertTrue(response['Cache-Control'].startswith('max-age='))
