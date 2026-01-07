@@ -67,7 +67,7 @@ const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading
                 <div>
                     <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">{job.name}</h3>
                     <p className="text-[var(--text-secondary)]">
-                      {job.description || 'Detailed description coming soon.'}
+                      {job.description}
                     </p>
                 </div>
               </div>
