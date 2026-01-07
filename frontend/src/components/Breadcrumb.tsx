@@ -23,12 +23,12 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
             {index < items.length - 1 ? (
               <Link
                 to={item.href}
-                className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600"
+                className="inline-flex items-center text-sm font-medium text-white hover:text-grey-800"
               >
                 {item.name}
               </Link>
             ) : (
-              <span className="text-sm font-medium text-gray-500">
+              <span className="text-sm font-medium text-white">
                 {item.name}
               </span>
             )}
