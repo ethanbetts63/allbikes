@@ -42,10 +42,35 @@ const ContactDetails: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <p className="mb-4 whitespace-pre-line">{fullAddress}</p>
-                        <div className="flex items-center mb-2">
-                            <Phone className="mr-2 h-5 w-5" />
-                            <span>{settings.phone_number}</span>
-                        </div>
+                        {(() => {
+                            const phoneNumber = settings.phone_number;
+                            const mobileNumber = settings.mobile_number;
+                            let displayedPhoneNumbers = '';
+                            let primaryPhoneNumber = '';
+
+                            if (phoneNumber && mobileNumber) {
+                                displayedPhoneNumbers = `${phoneNumber} / ${mobileNumber}`;
+                                primaryPhoneNumber = phoneNumber;
+                            } else if (phoneNumber) {
+                                displayedPhoneNumbers = phoneNumber;
+                                primaryPhoneNumber = phoneNumber;
+                            } else if (mobileNumber) {
+                                displayedPhoneNumbers = mobileNumber;
+                                primaryPhoneNumber = mobileNumber;
+                            }
+
+                            if (displayedPhoneNumbers) {
+                                return (
+                                    <div className="flex items-center mb-2">
+                                        <Phone className="mr-2 h-5 w-5" />
+                                        <a href={`tel:${primaryPhoneNumber}`} className="hover:underline">
+                                            <span>{displayedPhoneNumbers}</span>
+                                        </a>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })()}
                         <div className="flex items-center">
                             <Mail className="mr-2 h-5 w-5" />
                             <a href={`mailto:${settings.email_address}`} className="text-primary hover:underline">{settings.email_address}</a>
