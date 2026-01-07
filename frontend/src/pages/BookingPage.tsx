@@ -52,7 +52,10 @@ const BookingPage: React.FC = () => {
     const nextStep = () => setStep(prev => prev + 1);
     const prevStep = () => setStep(prev => prev - 1);
 
+    const [error, setError] = useState<string | null>(null);
+
     const handleSubmit = async () => {
+        setError(null);
         try {
             await createBooking(formData);
             localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -60,9 +63,7 @@ const BookingPage: React.FC = () => {
 
         } catch (error) {
             console.error("Booking submission error:", error);
-            toast.error("Submission Failed", {
-                description: "There was an error submitting your booking. Please try again.",
-            });
+            setError("There was an error submitting your booking. Please try again.");
         }
     };
     

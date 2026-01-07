@@ -40,16 +40,18 @@ const ServiceFaqs = [
 const ServicePage: React.FC = () => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchJobTypes = async () => {
             setIsLoading(true);
+            setError(null);
             try {
                 const data = await getJobTypes();
                 setJobTypes(data);
             } catch (error) {
                 console.error("Failed to fetch job types:", error);
-                toast.error("Could not load our services. Please try again later.");
+                setError("Could not load our services. Please try again later.");
             } finally {
                 setIsLoading(false);
             }
@@ -108,7 +110,7 @@ const ServicePage: React.FC = () => {
                 structuredData={structuredData}
             />
             <Breadcrumb items={breadcrumbItems} />
-            <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} />
+            <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} error={error} />
 
             <div className="mt-0">
                 <ServiceBrands />

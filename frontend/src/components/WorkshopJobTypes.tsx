@@ -8,6 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 interface WorkshopJobTypesProps {
   jobTypes: EnrichedJobType[];
   isLoading: boolean;
+  error?: string | null;
 }
 
 const SkeletonLoader = () => (
@@ -16,7 +17,27 @@ const SkeletonLoader = () => (
     </div>
 );
 
-const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading }) => {
+import React from 'react';
+import { Link } from 'react-router-dom';
+import type { EnrichedJobType } from '@/types';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Cog } from 'lucide-react';
+import { Spinner } from "@/components/ui/spinner";
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+
+interface WorkshopJobTypesProps {
+  jobTypes: EnrichedJobType[];
+  isLoading: boolean;
+  error?: string | null;
+}
+
+const SkeletonLoader = () => (
+    <div className="bg-foreground p-6 rounded-lg shadow-md flex items-center justify-center h-[120px]">
+        <Spinner />
+    </div>
+);
+
+const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading, error }) => {
   return (
     <div className="w-full flex flex-col md:flex-row bg-background text-[var(--text-primary)] rounded-lg overflow-hidden">
       {/* Left Column */}
@@ -42,6 +63,11 @@ const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading
               <SkeletonLoader />
               <SkeletonLoader />
             </>
+          ) : error ? (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           ) : !jobTypes || jobTypes.length === 0 ? (
             <div className="bg-foreground p-6 rounded-lg flex items-center gap-4">
                 <Cog className="h-8 w-8 text-primary flex-shrink-0" />
