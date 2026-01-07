@@ -4,32 +4,44 @@ import { Phone, Mail } from 'lucide-react';
 
 interface ContactButtonsProps {
   phoneNumber?: string;
+  mobileNumber?: string;
   emailAddress?: string;
 }
 
-const ContactButtons: React.FC<ContactButtonsProps> = ({ phoneNumber, emailAddress }) => {
-  if (!phoneNumber && !emailAddress) {
+const ContactButtons: React.FC<ContactButtonsProps> = ({ phoneNumber, mobileNumber, emailAddress }) => {
+  if (!phoneNumber && !mobileNumber && !emailAddress) {
     return null;
+  }
+
+  const primaryPhoneNumber = phoneNumber || mobileNumber;
+  let displayedPhoneNumbers = '';
+
+  if (phoneNumber && mobileNumber) {
+    displayedPhoneNumbers = `${phoneNumber} / ${mobileNumber}`;
+  } else if (phoneNumber) {
+    displayedPhoneNumbers = phoneNumber;
+  } else if (mobileNumber) {
+    displayedPhoneNumbers = mobileNumber;
   }
 
   return (
     <div className="bg-background py-0">
       <div className="container mx-auto flex flex-col items-center justify-center text-center">
         <div className="mt-0 flex flex-col sm:flex-row items-center justify-center gap-6">
-          {phoneNumber && (
+          {primaryPhoneNumber && (
             <>
               {/* This link is only active on small screens */}
-              <a href={`tel:${phoneNumber}`} className="md:hidden">
+              <a href={`tel:${primaryPhoneNumber}`} className="md:hidden">
                 <Button size="lg" className="text-lg">
                   <Phone className="mr-2 h-6 w-6" />
-                  {phoneNumber}
+                  {displayedPhoneNumbers}
                 </Button>
               </a>
               {/* This is a visual, non-clickable button on medium and larger screens */}
               <div className="hidden md:inline-flex">
                 <Button size="lg" className="text-lg cursor-default hover:bg-primary">
                   <Phone className="mr-2 h-6 w-6" />
-                  {phoneNumber}
+                  {displayedPhoneNumbers}
                 </Button>
               </div>
             </>

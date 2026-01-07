@@ -18,7 +18,22 @@ const Footer = () => {
             <>
               <p>{settings.street_address}</p>
               <p>{settings.address_locality}, {settings.address_region} {settings.postal_code}</p>
-              <p>Phone: {settings.phone_number}</p>
+              {/* Phone Numbers Display */}
+              {(() => {
+                const phoneNumber = settings.phone_number;
+                const mobileNumber = settings.mobile_number;
+                let displayedPhoneNumbers = '';
+
+                if (phoneNumber && mobileNumber) {
+                  displayedPhoneNumbers = `${phoneNumber} / ${mobileNumber}`;
+                } else if (phoneNumber) {
+                  displayedPhoneNumbers = phoneNumber;
+                } else if (mobileNumber) {
+                  displayedPhoneNumbers = mobileNumber;
+                }
+
+                return displayedPhoneNumbers ? <p>Phone: {displayedPhoneNumbers}</p> : null;
+              })()}
               <p>Email: {settings.email_address}</p>
             </>
           )}

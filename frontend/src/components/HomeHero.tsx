@@ -26,11 +26,11 @@ interface HomeHeroProps {
   usedBikes: Bike[];
   error: string | null;
   phoneNumber?: string;
-  emailAddress?: string; 
+  mobileNumber?: string;
+  emailAddress?: string;
 }
 
-const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, error, phoneNumber, emailAddress }) => {
-  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImage]);
+const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, emailAddress }) => {  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImage]);
   const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([defaultUsedImage]);
   const [currentNewBikeImageIndex, setCurrentNewBikeImageIndex] = useState(0);
   const [currentUsedBikeImageIndex, setCurrentUsedBikeImageIndex] = useState(0);

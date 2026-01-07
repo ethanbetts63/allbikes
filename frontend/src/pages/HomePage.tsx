@@ -164,8 +164,9 @@ const HomePage = () => {
             newBikes={newBikes} 
             usedBikes={usedBikes} 
             error={error} 
-            phoneNumber={settings?.phone_number} // Pass phoneNumber
-            emailAddress={settings?.email_address} // Pass emailAddress
+            phoneNumber={settings?.phone_number}
+            mobileNumber={settings?.mobile_number} // Add this line
+            emailAddress={settings?.email_address}
         />
         <ReviewCarousel />
         <BrandsSection />

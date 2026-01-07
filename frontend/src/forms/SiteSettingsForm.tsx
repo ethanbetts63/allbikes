@@ -84,6 +84,10 @@ const SiteSettingsForm: React.FC<SiteSettingsFormProps> = ({
                                 <Input id="phone_number" name="phone_number" value={settings.phone_number} onChange={handleChange} />
                             </div>
                             <div>
+                                <Label htmlFor="mobile_number" className="block mb-2">Mobile Number</Label>
+                                <Input id="mobile_number" name="mobile_number" value={settings.mobile_number} onChange={handleChange} />
+                            </div>
+                            <div>
                                 <Label htmlFor="email_address" className="block mb-2">Email Address</Label>
                                 <Input id="email_address" name="email_address" type="email" value={settings.email_address} onChange={handleChange} />
                             </div>
