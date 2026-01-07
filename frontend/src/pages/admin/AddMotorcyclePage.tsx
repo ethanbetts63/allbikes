@@ -16,6 +16,7 @@ const AddMotorcyclePage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [initialData, setInitialData] = React.useState<Bike | undefined>(undefined);
+    const [isLoading, setIsLoading] = React.useState(false);
     const [notification, setNotification] = React.useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
 
     React.useEffect(() => {

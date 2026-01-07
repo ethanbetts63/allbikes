@@ -22,8 +22,6 @@ export function LoginForm({
   const navigate = useNavigate();
   const { loginWithPassword } = useAuth();
 
-  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);

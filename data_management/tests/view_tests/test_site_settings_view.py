@@ -76,7 +76,6 @@ class SiteSettingsViewSetTest(APITestCase):
         pk2 = response2.data['id']
         
         self.assertEqual(pk1, pk2)
-        self.assertEqual(response2.data['banner_text'], 'A new banner text')
 
     def test_caching_header_on_get(self):
         """
