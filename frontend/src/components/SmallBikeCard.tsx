@@ -28,7 +28,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
     <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
       <Card className="relative w-full overflow-hidden flex flex-col h-full transform transition-transform hover:-translate-y-1 pt-0 border-foreground">
         {bike.status === 'sold' && (
-            <div className="absolute top-4 right-[-25px] w-24 transform rotate-45 bg-destructive text-destructive-foreground text-center font-bold z-10 text-sm text-white">
+            <div className="absolute top-4 right-[-25px] w-24 transform rotate-45 bg-destructive text-white text-center font-bold z-10 text-lg">
                 Sold
             </div>
         )}

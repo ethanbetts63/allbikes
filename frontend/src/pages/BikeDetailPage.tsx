@@ -234,7 +234,7 @@ const BikeDetailPage: React.FC = () => {
                 <div className="text-center mb-8 flex justify-center gap-2">
                     <Badge className="text-lg capitalize">{bike.condition}</Badge>
                     {bike.status === 'sold' && (
-                        <Badge variant="destructive" className="text-lg">Sold</Badge>
+                        <Badge variant="destructive" className="text-xl text-white">Sold</Badge>
                     )}
                 </div>
 

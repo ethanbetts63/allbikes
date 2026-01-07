@@ -26,7 +26,7 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
   return (
     <Card className="relative w-full overflow-hidden flex flex-col pt-0 border border-foreground">
       {bike.status === 'sold' && (
-        <div className="absolute top-5 right-[-35px] w-32 transform rotate-45 bg-destructive text-destructive-foreground text-center font-bold z-10 text-white">
+        <div className="absolute top-5 right-[-35px] w-32 transform rotate-45 bg-destructive text-white text-center font-bold z-10 text-xl">
           Sold
         </div>
       )}
