@@ -2,10 +2,7 @@ from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAdminUser, AllowAny
 from ..models import SiteSettings
 from ..serializers.site_settings_serializer import SiteSettingsSerializer
-from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
 
-@method_decorator(cache_page(60 * 60 * 24), name='dispatch') # Cache for 24 hours
 class SiteSettingsViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,

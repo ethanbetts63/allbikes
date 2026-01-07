@@ -33,9 +33,22 @@ const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <CardTitle className="text-lg font-bold mb-2">{cardTitle}</CardTitle>
-        <p className="text-xl font-semibold text-gray-800 mb-4">
-          ${parseFloat(bike.price).toLocaleString()}
-        </p>
+        <div className="text-xl font-semibold mb-4">
+          {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
+            <div className="flex items-center space-x-2">
+              <p className="text-destructive line-through">
+                ${parseFloat(bike.price).toLocaleString()}
+              </p>
+              <p className="text-primary">
+                ${parseFloat(bike.discount_price).toLocaleString()}
+              </p>
+            </div>
+          ) : (
+            <p className="text-primary">
+              ${parseFloat(bike.price).toLocaleString()}
+            </p>
+          )}
+        </div>
         <div className="text-sm text-gray-600">
           <h3 className="font-semibold mb-0">Specifications:</h3>
           <ul className="list-disc list-inside">

@@ -5,15 +5,12 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from ..models import Motorcycle, MotorcycleImage
 from ..serializers.motorcycle_serializer import MotorcycleSerializer
-from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 12
     page_size_query_param = 'page_size'
     max_page_size = 100
 
-#@method_decorator(cache_page(60 * 60 * 24), name='dispatch') # Cache for 24 hours
 class MotorcycleViewSet(viewsets.ModelViewSet):
     """
     A ViewSet for viewing, creating, editing, and deleting motorcycles.

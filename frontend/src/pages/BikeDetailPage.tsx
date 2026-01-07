@@ -117,7 +117,6 @@ const BikeDetailPage: React.FC = () => {
     }, [bike]);
     
     const specifications: Specification[] = bike ? [
-        { label: "Price", value: bike.price, icon: DollarSign, formatter: (val: string) => `$${parseInt(val).toLocaleString()}` },
         { label: "Stock Number", value: bike.stock_number, icon: Hash },
         { label: "Odometer", value: bike.odometer, icon: Gauge, formatter: (val: number) => `${val.toLocaleString()} km` },
         { label: "Engine Size", value: bike.engine_size, icon: Cog, formatter: (val: number) => `${val}cc` },
@@ -274,6 +273,28 @@ const BikeDetailPage: React.FC = () => {
                     <div>
                         <div className="mb-8">
                             <h2 className="text-2xl font-bold border-b pb-2 mb-4 text-black">Specifications</h2>
+                            <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                                <div className="flex items-center space-x-2">
+                                    <DollarSign className="h-6 w-6 text-black" />
+                                    <span className="text-black">Price</span>
+                                </div>
+                                <div className="text-lg font-semibold">
+                                    {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
+                                        <div className="flex items-center space-x-2">
+                                            <p className="text-destructive line-through">
+                                                ${parseFloat(bike.price).toLocaleString()}
+                                            </p>
+                                            <p className="text-primary">
+                                                ${parseFloat(bike.discount_price).toLocaleString()}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <p className="text-primary">
+                                            ${parseFloat(bike.price).toLocaleString()}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
                             <ul className="space-y-2">
                                 {specifications.map((spec) => {
                                     if (spec.value === null || spec.value === undefined || spec.value === '') return null;

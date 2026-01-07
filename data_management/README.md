@@ -49,7 +49,6 @@ A `ModelSerializer` for Django's built-in `User` model.
 ### `LatestTermsAndConditionsView`
 -   An `APIView` that returns the most recent version of the `TermsAndConditions`.
 -   **Permissions**: Publicly accessible (`AllowAny`).
--   **Caching**: Utilizes `@cache_page(60 * 60 * 24)` to cache the response for 24 hours, optimizing performance for this static content.
 
 ### `UserProfileView`
 -   An `APIView` for retrieving the authenticated user's profile.
