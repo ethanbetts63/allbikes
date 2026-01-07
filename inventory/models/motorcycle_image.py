@@ -12,13 +12,13 @@ class MotorcycleImage(models.Model):
     thumbnail = ImageSpecField(source='image',
                                       processors=[ResizeToFill(400, 400)],
                                       format='WEBP',
-                                      options={'quality': 80})
+                                      options={'quality': 75})
 
     # Medium size for detail pages
     medium = ImageSpecField(source='image',
                                     processors=[ResizeToFill(800, 600)],
                                     format='WEBP',
-                                    options={'quality': 85})
+                                    options={'quality': 80})
 
     order = models.IntegerField(default=0)
 
