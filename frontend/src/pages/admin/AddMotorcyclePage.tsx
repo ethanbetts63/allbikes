@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from "sonner"
 import MotorcycleForm from "@/forms/MotorcycleForm";
 import type { MotorcycleFormData } from "@/types";
 import { 
@@ -11,13 +10,13 @@ import {
     manageMotorcycleImages
 } from "@/api";
 import type { Bike } from '@/types';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AddMotorcyclePage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [initialData, setInitialData] = React.useState<Bike | undefined>(undefined);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [error, setError] = React.useState<string | null>(null);
+    const [notification, setNotification] = React.useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
 
     React.useEffect(() => {
         if (id) {
@@ -27,8 +26,7 @@ const AddMotorcyclePage = () => {
                     const bike = await getBikeById(id);
                     setInitialData(bike);
                 } catch (err) {
-                    setError("Failed to fetch motorcycle data.");
-                    toast.error("Error", { description: "Failed to fetch motorcycle data." });
+                    setNotification({ message: "Failed to fetch motorcycle data.", type: 'error' });
                 } finally {
                     setIsLoading(false);
                 }
@@ -39,7 +37,7 @@ const AddMotorcyclePage = () => {
 
     const handleFormSubmit = async (data: MotorcycleFormData) => {
         setIsLoading(true);
-        setError(null);
+        setNotification(null);
 
         try {
             const { managedImages, ...motorcycleData } = data;
@@ -48,14 +46,16 @@ const AddMotorcyclePage = () => {
             if (id) {
                 // Update existing motorcycle
                 savedMotorcycle = await updateMotorcycle(Number(id), motorcycleData);
-                toast.success("Motorcycle Updated", {
-                    description: `${savedMotorcycle.year} ${savedMotorcycle.make} ${savedMotorcycle.model} has been updated.`,
+                setNotification({
+                    message: `Motorcycle Updated: ${savedMotorcycle.year} ${savedMotorcycle.make} ${savedMotorcycle.model} has been updated.`,
+                    type: 'success'
                 });
             } else {
                 // Create new motorcycle
                 savedMotorcycle = await createMotorcycle(motorcycleData);
-                toast.success("Motorcycle Created", {
-                    description: `${savedMotorcycle.year} ${savedMotorcycle.make} ${savedMotorcycle.model} has been saved.`,
+                setNotification({
+                    message: `Motorcycle Created: ${savedMotorcycle.year} ${savedMotorcycle.make} ${savedMotorcycle.model} has been saved.`,
+                    type: 'success'
                 });
             }
 
@@ -63,8 +63,9 @@ const AddMotorcyclePage = () => {
             const hasImageChanges = managedImages && managedImages.length > 0;
 
             if (hasImageChanges) {
-                toast.info("Processing Images...", {
-                    description: `Updating image order and uploading new images. Please wait.`,
+                setNotification({
+                    message: "Processing Images... Updating image order and uploading new images. Please wait.",
+                    type: 'info'
                 });
                 
                 const uploadPromises = managedImages
@@ -75,13 +76,11 @@ const AddMotorcyclePage = () => {
                 
                 await Promise.allSettled([managementPromise, ...uploadPromises]);
 
-                toast.success("Image Processing Complete", {
-                    description: "All image changes have been saved.",
-                });
+                setNotification({ message: "Image Processing Complete: All image changes have been saved.", type: 'success' });
             } else if (id) {
                 // If we are editing and there are no images left, we must tell the backend to delete all of them.
                 await manageMotorcycleImages(savedMotorcycle.id, []);
-                toast.success("All images removed");
+                setNotification({ message: "All images removed", type: 'success' });
             }
 
             navigate('/admin/inventory');
@@ -89,10 +88,7 @@ const AddMotorcyclePage = () => {
         } catch (err: any) {
             const errorMessage = err.data?.detail || err.message || "An unknown error occurred.";
             const action = id ? 'update' : 'create';
-            setError(`Failed to ${action} motorcycle: ${errorMessage}`);
-            toast.error("Error", {
-                description: `Failed to ${action} motorcycle: ${errorMessage}`,
-            });
+            setNotification({ message: `Failed to ${action} motorcycle: ${errorMessage}`, type: 'error' });
             console.error(err);
         } finally {
             setIsLoading(false);
@@ -106,7 +102,11 @@ const AddMotorcyclePage = () => {
     
     return (
         <div>
-            {error && <div className="mb-4 text-red-500 text-center bg-red-100 p-4 rounded-md">{error}</div>}
+            {notification && (
+                <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
+                    <AlertDescription>{notification.message}</AlertDescription>
+                </Alert>
+            )}
             <MotorcycleForm
                 initialData={initialData}
                 onSubmit={handleFormSubmit}
@@ -114,6 +114,7 @@ const AddMotorcyclePage = () => {
             />
         </div>
     );
+
 };
 
 export default AddMotorcyclePage;

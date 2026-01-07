@@ -30,8 +30,8 @@ import {
 } from "@/components/ui/pagination"
 import { useNavigate } from "react-router-dom"
 import { deleteMotorcycle, getBikes } from "@/api"
-import { toast } from "sonner"
 import type { Bike } from "@/types"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 // Main InventoryTable Component
 const InventoryTable = () => {
@@ -53,6 +53,8 @@ const InventoryTable = () => {
     [pageIndex, pageSize]
   );
 
+  const [notification, setNotification] = React.useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
   React.useEffect(() => {
     const fetchBikes = async () => {
       try {
@@ -62,13 +64,14 @@ const InventoryTable = () => {
         setPageCount(Math.ceil(response.count / pageSize));
       } catch (error) {
         console.error("Failed to fetch bikes:", error);
-        toast.error("Failed to fetch bikes");
+        setNotification({ message: "Failed to fetch bikes", type: 'error' });
       }
     };
     fetchBikes();
   }, [pageIndex, pageSize, conditionFilter]);
 
   const handleDelete = async (id: number) => {
+    setNotification(null);
     if (window.confirm("Are you sure you want to delete this motorcycle?")) {
       try {
         await deleteMotorcycle(id);
@@ -76,10 +79,10 @@ const InventoryTable = () => {
         const response = await getBikes({ condition: conditionFilter || undefined, page: pageIndex + 1 });
         setData(response.results);
         setPageCount(Math.ceil(response.count / pageSize));
-        toast.success("Motorcycle deleted successfully");
+        setNotification({ message: "Motorcycle deleted successfully", type: 'success' });
       } catch (error) {
         console.error("Failed to delete motorcycle:", error);
-        toast.error("Failed to delete motorcycle");
+        setNotification({ message: "Failed to delete motorcycle", type: 'error' });
       }
     }
   };
@@ -160,6 +163,11 @@ const InventoryTable = () => {
 
   return (
     <div className="w-full bg-white text-black p-4 rounded-lg">
+      {notification && (
+        <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
+          <AlertDescription>{notification.message}</AlertDescription>
+        </Alert>
+      )}
       <div className="flex items-center space-x-2 py-4">
         <Button 
           variant="outline"

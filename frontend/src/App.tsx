@@ -4,7 +4,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
-import { Toaster } from "@/components/ui/sonner"
 import { Spinner } from './components/ui/spinner';
 
 // --- Lazy-loaded Pages ---
@@ -43,7 +42,6 @@ function App() {
         <div className="min-h-screen flex flex-col">
           <NavBar />
           <Banner />
-          <Toaster position="top-center" />
           <main className="flex-grow">
             <Suspense fallback={<LoadingFallback />}>
               <Routes>

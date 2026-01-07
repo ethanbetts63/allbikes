@@ -8,8 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuth } from "@/context/AuthContext";
-import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function LoginForm({
   className,
@@ -18,22 +18,24 @@ export function LoginForm({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const navigate = useNavigate();
   const { loginWithPassword } = useAuth();
+
+  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
+    setNotification(null);
     try {
       await loginWithPassword(email, password);
-      toast.success("Login successful!");
+      setNotification({ message: "Login successful!", type: 'success' });
       // On success, navigate to the admin dashboard
       navigate('/admin/dashboard');
     } catch (error) {
       console.error("Login failed", error);
-      toast.error("Login Failed", {
-        description: "Please check your email and password and try again.",
-      });
+      setNotification({ message: "Login Failed: Please check your email and password and try again.", type: 'error' });
       setIsLoading(false);
     }
   };
@@ -46,6 +48,11 @@ export function LoginForm({
           <CardDescription>Enter your credentials to access the admin dashboard.</CardDescription>
         </CardHeader>
         <CardContent>
+          {notification && (
+            <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
+              <AlertDescription>{notification.message}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
             
             {/* Email Field */}
