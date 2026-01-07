@@ -282,10 +282,10 @@ const BikeDetailPage: React.FC = () => {
                                         <li key={spec.label} className="flex justify-between items-center py-2 border-b border-gray-200">
                                             <TooltipProvider>
                                                 <Tooltip>
-                                                    <TooltipTrigger>
-                                                        <spec.icon className="h-6 w-6 text-black" />
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
+                                                                                                <TooltipTrigger className="flex items-center space-x-2">
+                                                                                                    <spec.icon className="h-6 w-6 text-black" />
+                                                                                                    <span className="text-black">{spec.label}</span>
+                                                                                                </TooltipTrigger>                                                    <TooltipContent>
                                                         <p>{spec.label}</p>
                                                     </TooltipContent>
                                                 </Tooltip>
