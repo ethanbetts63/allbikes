@@ -18,7 +18,7 @@ The `frontend` application is a modern, responsive web interface built with Reac
 -   **Icons**: Lucide React (`lucide-react`)
 -   **Forms**: React Hook Form
 -   **Date Pickers**: React Day Picker (`react-day-picker`) with `date-fns`
--   **State Management**: React Context API (`AuthContext`, `SiteSettingsContext`)
+-   **State Management**: React Context API (`AuthContext`)
 -   **Data Tables**: TanStack React Table (`@tanstack/react-table`)
 -   **Authentication**: JWT Decode (`jwt-decode`) for token parsing.
 -   **SEO/Head Management**: React Helmet Async (`react-helmet-async`)

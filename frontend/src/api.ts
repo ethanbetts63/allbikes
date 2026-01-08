@@ -1,6 +1,6 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse, UserProfile, Bike, Brand, SiteSettings, PaginatedResponse, MotorcycleFormData, ManagedImage, TermsAndConditions } from "@/types";
+import type { AuthResponse, UserProfile, Bike, Brand, PaginatedResponse, MotorcycleFormData, ManagedImage, TermsAndConditions } from "@/types";
 
 /**
  * A centralized module for all API interactions.

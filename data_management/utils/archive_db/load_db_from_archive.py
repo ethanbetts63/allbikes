@@ -6,7 +6,6 @@ def load_db_from_latest_archive(command):
     base_archive_dir = os.path.join('data_management', 'data', 'archive', 'db_backups')
     load_order = [
         'data_management.brand.json',
-        'data_management.sitesettings.json',
         'data_management.termsandconditions.json',
         'service.servicesettings.json',
         'service.servicesettings.json',

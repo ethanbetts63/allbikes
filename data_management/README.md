@@ -3,12 +3,6 @@
 The `data_management` application is a central hub for managing various static and dynamic data elements across the Allbikes platform. It encompasses brand information, terms and conditions, and user profiles, along with robust utilities for data generation, archiving, and maintenance.
 
 ## Models
-
-### `SiteSettings`
-A singleton model containing global configuration for the website.
--   **Fields**: Feature toggles (`enable_motorcycle_mover`, `enable_banner`), banner text, contact information (`phone_number`, `email_address`, `street_address`, `address_locality`, `address_region`, `postal_code`), business registration numbers (`mrb_number`, `abn_number`, `md_number`), social media links (`youtube_link`, `instagram_link`, `facebook_link`), and daily `opening_hours`.
--   **Purpose**: Provides a centralized, editable source for dynamic site-wide parameters.
-
 ### `Brand`
 Stores information about motorcycle/scooter brands.
 -   **Fields**: `name` (unique), `serviceable` (boolean indicating if the brand is serviceable).
@@ -20,14 +14,9 @@ Manages different versions of the terms and conditions.
 -   **Purpose**: Ensures proper versioning and access to legal documents displayed on the site.
 
 ## Admin Interface (`admin.py`)
-
--   `SiteSettings` and `TermsAndConditions` models are registered, allowing administrators to manage global site configurations and publish new versions of terms.
 -   The `Brand` model is not directly registered, suggesting its management might occur through data generation commands or other automated processes.
 
 ## Serializers (`serializers/`)
-
-### `SiteSettingsSerializer`
-A `ModelSerializer` for the `SiteSettings` model, exposing all its fields for API access.
 
 ### `BrandSerializer`
 A `ModelSerializer` for the `Brand` model, exposing `id`, `name`, and `serviceable` fields.
@@ -38,10 +27,6 @@ A `ModelSerializer` for Django's built-in `User` model.
 -   **Purpose**: Provides a standardized way to expose authenticated user profile data, likely for frontend display or administrative user management.
 
 ## Views (`views/`)
-
-### `SiteSettingsViewSet`
--   Manages the singleton `SiteSettings` object.
--   **Permissions**: Publicly accessible for `retrieve` operations (`AllowAny`), but `update` and `partial_update` operations require `IsAdminUser`.
 
 ### `BrandListView`
 -   A `ListAPIView` providing a publicly accessible (`AllowAny`) list of all `Brand` objects, ordered by name.
