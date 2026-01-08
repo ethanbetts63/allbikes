@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import SiteSettings, TermsAndConditions
+from .models import TermsAndConditions
 
-admin.site.register(SiteSettings)
 admin.site.register(TermsAndConditions)
