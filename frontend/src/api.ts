@@ -51,15 +51,6 @@ export async function getUserProfile(): Promise<UserProfile> {
     return handleResponse(response);
 }
 
-// --- Site Settings Endpoints ---
-export async function getSiteSettings(): Promise<SiteSettings> {
-    const response = await fetch(`${API_BASE_URL}/settings/`);
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-}
-
 export async function getBrands(): Promise<Brand[]> {
   const response = await fetch(`${API_BASE_URL}/brands/`);
   return handleResponse(response);

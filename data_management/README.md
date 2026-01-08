@@ -1,6 +1,6 @@
 # Data Management Application
 
-The `data_management` application is a central hub for managing various static and dynamic data elements across the Allbikes platform. It encompasses global site settings, brand information, terms and conditions, and user profiles, along with robust utilities for data generation, archiving, and maintenance.
+The `data_management` application is a central hub for managing various static and dynamic data elements across the Allbikes platform. It encompasses brand information, terms and conditions, and user profiles, along with robust utilities for data generation, archiving, and maintenance.
 
 ## Models
 
@@ -58,9 +58,7 @@ A `ModelSerializer` for Django's built-in `User` model.
 
 The API endpoints are:
 -   `GET /api/data/me/`: Retrieve the authenticated user's profile.
--   `GET, PUT, PATCH /api/data/settings/`: Retrieve (public) and update (admin-only) global site settings.
 -   `GET /api/data/brands/`: Retrieve a list of all brands.
--   *(Note: The view for Terms and Conditions is present but not explicitly mapped in the provided `urls.py` snippet for this app. It's expected to be mapped in the project's root `urls.py` or another app that includes it.)*
 
 ## Management Commands (`management/commands/`)
 

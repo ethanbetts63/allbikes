@@ -10,7 +10,7 @@ export const siteSettings: SiteSettings = {
   enable_banner: true,
   banner_text: "Formerly known as Scootershop Fremantle. Same expert, new location! Unit 5 / 6 Cleveland Street, Dianella, 6059.",
   phone_number: "94334613",
-  mobile_number: "", // This was missing from the backup, added to satisfy the type
+  mobile_number: "0477700005",
   email_address: "admin@scootershop.com.au",
   street_address: "Unit 5 / 6 Cleveland Street",
   address_locality: "Dianella",
@@ -20,9 +20,9 @@ export const siteSettings: SiteSettings = {
   mrb_number: "MRB5092",
   abn_number: "46157594161",
   md_number: "28276",
-  youtube_link: "", // Was null, converted to empty string
-  instagram_link: "", // Was null, converted to empty string
-  facebook_link: "", // Was null, converted to empty string
+  youtube_link: "", 
+  instagram_link: "", 
+  facebook_link: "", 
   opening_hours_monday: "9:00 AM - 5:00 PM",
   opening_hours_tuesday: "9:00 AM - 5:00 PM",
   opening_hours_wednesday: "9:00 AM - 5:00 PM",

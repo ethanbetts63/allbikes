@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import Seo from '@/components/Seo';
-import { Wrench, PlusSquare, Settings } from 'lucide-react';
+import { Wrench, PlusSquare } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
   const { user, isLoading: isAuthLoading } = useAuth();

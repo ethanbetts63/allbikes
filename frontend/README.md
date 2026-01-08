@@ -48,7 +48,7 @@ The `frontend/src` directory is organized into logical modules:
 -   **Modular Design**: Clear separation of concerns with dedicated folders for components, pages, services, and utilities.
 -   **Responsive UI**: Built with Tailwind CSS and Shadcn UI, ensuring a consistent and responsive experience across various devices.
 -   **Lazy Loading**: Pages are lazy-loaded using `React.lazy` and `Suspense` to improve initial load performance.
--   **Global State Management**: Utilizes React Context for managing application-wide state such as authentication status and site settings.
+-   **Global State Management**: Utilizes React Context for managing application-wide state such as authentication status.
 -   **Form Handling**: Efficient form management using React Hook Form, providing validation and state control.
 -   **API Integration**: Centralized API client and service modules ensure consistent and maintainable communication with the backend.
 -   **Theming**: Support for theming (e.g., dark mode) through CSS variables and `next-themes`.

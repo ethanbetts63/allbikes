@@ -16,7 +16,7 @@ The project is organized into several key applications, each with a dedicated `R
 
 *   `inventory`: Manages the motorcycle and scooter inventory, including vehicle details and images.
 *   `service`: Handles service bookings, with a deep integration into the external MechanicDesk API for managing job types and availability.
-*   `data_management`: A central app for managing global site settings, brand information, terms and conditions, user profiles, and various data import/export/cleanup utilities.
+*   `data_management`: A central app for managing brand information, terms and conditions, user profiles, and various data import/export/cleanup utilities.
 *   `frontend`: A modern, responsive single-page application built with React and Vite, providing the user interface for the entire platform.
 
 ## Getting Started
