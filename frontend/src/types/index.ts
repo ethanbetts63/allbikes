@@ -57,10 +57,10 @@ export type Bike = {
 
 // Represents a unified image object for the form's state
 export type ManagedImage = {
-    id: string; // A unique ID for react-hook-form's useFieldArray (can be db id or new uuid)
-    source_id: number | null; // The database ID if it's an existing image
-    file: File | null; // The File object if it's a new upload
-    previewUrl: string; // The URL for rendering the preview (remote URL or blob URL)
+    id: string; 
+    source_id: number | null; 
+    file: File | null; 
+    previewUrl: string; 
     order: number;
 }
 
