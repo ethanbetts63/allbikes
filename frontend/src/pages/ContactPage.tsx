@@ -9,6 +9,7 @@ import Seo from '@/components/Seo';
 import ContactButtons from '@/components/ContactButtons';
 import splitcartLogo from "/src/assets/splitcart_logo.png";
 import futureReminderLogo from "/src/assets/futurereminder_logo.png";
+import { FaqSection } from '@/components/FaqSection';
 
 const otherSitesData = [
     {
@@ -25,6 +26,28 @@ const otherSitesData = [
     },
 ];
 
+const faqData = [
+    {
+      "question": "How can I contact you?",
+      "answer": `You can contact us by phone on ${siteSettings.phone_number || '{phone}'}, by email at ${siteSettings.email_address || '{email}'}, or via our Contact Us page.`
+    },
+    {
+      "question": "What types of motorcycles and scooters do you service?",
+      "answer": "We service all motorcycles and most scooters. For scooters, we specialise in Italian brands and mid to upper-end Asian brands. Some brands are excluded due to parts availability and build quality concerns, allowing us to maintain reliable, long-lasting repairs. Full details are listed on our service page."
+    },
+    {
+      "question": "What areas of Perth do you service?",
+      "answer": `Our workshop is based in Dianella at ${siteSettings.street_address || '{address}'}. If you are looking for "motorcycle mechanics near me" or "scooter mechanics near me", Allbikes Vespa Warehouse frequently services the areas of Dianella, Morley, Fremantle, Yokine, CBD, Menora, Cottesloe, Mount Lawley, North Perth, Northbridge, Inglewood and many other Perth suburbs. If you are more distant, or are unable to move your bike, we work closely with and can recommend Perth Motorcycle and Scooter Movers. More information is available on our service page.`
+    },
+    {
+      "question": "Do you service electric motorcycles and scooters?",
+      "answer": "Yes, we service electric motorcycles and electric mopeds."
+    },
+    {
+      "question": "Do you sell or service electric kick scooters?",
+      "answer": "No. We sell and service electric mopeds and electric motorcycles, but we do not work on electric kick scooters. The term “electric scooter” is often used for both, despite being very different vehicles."
+    }
+  ];
 const ContactPage: React.FC = () => {
     const description = "Our Perth workshop is your one-stop shop for motorcycle and scooter servicing and tyre fitting. Our experienced mechanics are here to help you with anything you need. We are located in Dianella, just a short ride from the city.";
 
@@ -56,7 +79,10 @@ const ContactPage: React.FC = () => {
 
             <ContactDetails />
 
+            <FaqSection title="Frequently Asked Questions" faqData={faqData} />
+
             <OtherSites sites={otherSitesData} />
+
         </div>
     );
 };
