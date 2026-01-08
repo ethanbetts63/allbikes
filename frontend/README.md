@@ -32,7 +32,7 @@ The `frontend/src` directory is organized into logical modules:
 -   `src/assets/`: Static assets like images.
 -   `src/components/`: **Custom components** specific to this application (e.g., `BikeCard`, `FaqSection`, `HomeHero`).
 -   `src/components/ui/`: **Shadcn UI components**. This directory contains the UI components generated and managed by Shadcn CLI, built on Radix UI and styled with Tailwind CSS.
--   `src/context/`: React Context providers for global state management (e.g., `AuthContext`, `SiteSettingsContext`).
+-   `src/context/`: React Context providers for global state management (e.g., `AuthContext`).
 -   `src/forms/`: Components and logic related to complex forms.
 -   `src/lib/`: Utility functions and helper modules (e.g., `utils.ts` for `cn` function).
 -   `src/pages/`: Top-level page components, often lazy-loaded for performance. Includes both public and admin-specific pages.
