@@ -1,9 +1,6 @@
 import React from 'react';
-import { useSiteSettings } from '@/context/SiteSettingsContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { Spinner } from '@/components/ui/spinner';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 const backupContactDetails = {
     id: 0, // Placeholder ID
@@ -35,36 +32,7 @@ const backupContactDetails = {
 };
 
 const ContactDetails: React.FC = () => {
-    const { settings, loading } = useSiteSettings();
-
-    let currentSettings = settings;
-
-    if (!settings && !loading) {
-        currentSettings = backupContactDetails;
-    }
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center py-8">
-                <Spinner />
-            </div>
-        );
-    }
-    
-    // If after all checks, currentSettings is still null (e.g., loading finished, settings still null, and no backup was used, which implies an unexpected state),
-    // or if for some reason the backup is also incomplete, we might still want a fallback.
-    // For this task, we assume backupContactDetails is always available if settings fail to load.
-    if (!currentSettings) {
-        return (
-             <div className="container mx-auto px-4 py-8">
-                <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>Failed to load contact information and no backup is available.</AlertDescription>
-                </Alert>
-            </div>
-        );
-    }
+    const currentSettings = backupContactDetails;
 
     const fullAddress = `${currentSettings.street_address}\n${currentSettings.address_locality}, ${currentSettings.address_region} ${currentSettings.postal_code}`;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Hero from '../components/Hero';
 import ContactDetails from '../components/ContactDetails';
 import SymImage from '@/assets/sym_22.webp';
-import { useSiteSettings } from '@/context/SiteSettingsContext';
+import { siteSettings } from '@/config/siteSettings';
 import OtherSites from '../components/OtherSites';
 import Breadcrumb from '../components/Breadcrumb';
 import Seo from '@/components/Seo';
@@ -26,7 +26,6 @@ const otherSitesData = [
 ];
 
 const ContactPage: React.FC = () => {
-    const { settings } = useSiteSettings();
     const description = "Our Perth workshop is your one-stop shop for motorcycle and scooter servicing and tyre fitting. Our experienced mechanics are here to help you with anything you need. We are located in Dianella, just a short ride from the city.";
 
     const breadcrumbItems = [
@@ -48,10 +47,10 @@ const ContactPage: React.FC = () => {
             />
             <Breadcrumb items={breadcrumbItems} />
             
-            {settings && (
+            {siteSettings && (
                 <ContactButtons 
-                    phoneNumber={settings.phone_number} 
-                    emailAddress={settings.email_address} 
+                    phoneNumber={siteSettings.phone_number} 
+                    emailAddress={siteSettings.email_address} 
                 />
             )}
 

@@ -1,26 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useSiteSettings } from '@/context/SiteSettingsContext';
+import React from 'react';
+import { siteSettings } from '@/config/siteSettings';
 
 const Banner: React.FC = () => {
-  const { settings, loading } = useSiteSettings();
-  
-  const defaultBannerText = "Formerly known as Scootershop Fremantle. Same expert, new location! Unit 5 / 6 Cleveland Street, Dianella, 6059.";
+  const isVisible = siteSettings.enable_banner;
+  const bannerText = siteSettings.banner_text;
 
-  const [isVisible, setIsVisible] = useState(true);
-  const [bannerText, setBannerText] = useState(defaultBannerText);
-
-  useEffect(() => {
-    if (!loading) {
-      if (settings && settings.enable_banner) {
-        setIsVisible(true);
-        setBannerText(settings.banner_text || defaultBannerText);
-      } else {
-        setIsVisible(false);
-      }
-    }
-  }, [settings, loading]);
-
-  if (!isVisible) {
+  if (!isVisible || !bannerText) {
     return null;
   }
 

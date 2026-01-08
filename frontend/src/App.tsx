@@ -12,7 +12,6 @@ const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
 const AdminHomePage = lazy(() => import('./pages/admin/AdminHomePage'));
 const InventoryManagementPage = lazy(() => import('./pages/admin/InventoryManagementPage'));
 const AddMotorcyclePage = lazy(() => import('./pages/admin/AddMotorcyclePage'));
-const SiteSettingsPage = lazy(() => import('./pages/admin/SiteSettingsPage'));
 const ServiceSettingsPage = lazy(() => import('./pages/admin/ServiceSettingsPage'));
 const JobTypesPage = lazy(() => import('./pages/admin/JobTypesPage'));
 const ServicePage = lazy(() => import('./pages/ServicePage'));
@@ -25,8 +24,6 @@ const SecurityPolicyPage = lazy(() => import('./pages/SecurityPolicyPage')); // 
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage')); // New lazy-loaded page
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 
-import { SiteSettingsProvider } from './context/SiteSettingsContext';
-
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
     <Spinner className="h-12 w-12" />
@@ -38,7 +35,6 @@ import Banner from './components/Banner';
 function App() {
   return (
     <HelmetProvider>
-      <SiteSettingsProvider>
         <div className="min-h-screen flex flex-col">
           <NavBar />
           <Banner />
@@ -65,7 +61,6 @@ function App() {
                   <Route path="inventory" element={<InventoryManagementPage />} />
                   <Route path="add-motorcycle" element={<AddMotorcyclePage />} />
                   <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />
-                  <Route path="settings" element={<SiteSettingsPage />} />
                   <Route path="service-settings" element={<ServiceSettingsPage />} />
                   <Route path="job-types" element={<JobTypesPage />} />
                 </Route>
@@ -75,7 +70,6 @@ function App() {
           </main>
           <Footer />
         </div>
-      </SiteSettingsProvider>
     </HelmetProvider>
   );
 }

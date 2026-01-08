@@ -7,13 +7,12 @@ import FeaturedBikes from '@/components/FeaturedBikes';
 import { FaqSection } from '@/components/FaqSection';
 import { getBikes } from '@/api';
 import type { Bike } from "@/types";
-import { useSiteSettings } from '@/context/SiteSettingsContext';
+import { siteSettings } from '@/config/siteSettings';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
   const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
-  const { settings } = useSiteSettings();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -47,7 +46,7 @@ const HomePage = () => {
   const faqData = [
     {
       "question": "How can I contact you?",
-      "answer": `You can contact us by phone on ${settings?.phone_number || '{phone}'}, by email at ${settings?.email_address || '{email}'}, or via our Contact Us page.`
+      "answer": `You can contact us by phone on ${siteSettings.phone_number || '{phone}'}, by email at ${siteSettings.email_address || '{email}'}, or via our Contact Us page.`
     },
     {
       "question": "What types of motorcycles and scooters do you service?",
@@ -55,7 +54,7 @@ const HomePage = () => {
     },
     {
       "question": "What areas of Perth do you service?",
-      "answer": `Our workshop is based in Dianella at ${settings?.street_address || '{address}'}. If you are looking for "motorcycle mechanics near me" or "scooter mechanics near me", Allbikes Vespa Warehouse frequently services the areas of Dianella, Morley, Fremantle, Yokine, CBD, Menora, Cottesloe, Mount Lawley, North Perth, Northbridge, Inglewood and many other Perth suburbs. If you are more distant, or are unable to move your bike, we work closely with and can recommend Perth Motorcycle and Scooter Movers. More information is available on our service page.`
+      "answer": `Our workshop is based in Dianella at ${siteSettings.street_address || '{address}'}. If you are looking for "motorcycle mechanics near me" or "scooter mechanics near me", Allbikes Vespa Warehouse frequently services the areas of Dianella, Morley, Fremantle, Yokine, CBD, Menora, Cottesloe, Mount Lawley, North Perth, Northbridge, Inglewood and many other Perth suburbs. If you are more distant, or are unable to move your bike, we work closely with and can recommend Perth Motorcycle and Scooter Movers. More information is available on our service page.`
     },
     {
       "question": "Do you service electric motorcycles and scooters?",
@@ -67,64 +66,64 @@ const HomePage = () => {
     }
   ];
 
-  const localBusinessSchema = settings ? {
+  const localBusinessSchema = siteSettings ? {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Allbikes Vespa Warehouse",
     "image": "https://www.allbikesvespawarehouse.com.au/logo-512x512.png", // Assuming this is the main logo
     "url": "https://www.allbikesvespawarehouse.com.au",
-    "telephone": settings.phone_number,
-    "email": settings.email_address,
+    "telephone": siteSettings.phone_number,
+    "email": siteSettings.email_address,
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": settings.street_address,
-        "addressLocality": settings.address_locality,
-        "addressRegion": settings.address_region,
-        "postalCode": settings.postal_code,
+        "streetAddress": siteSettings.street_address,
+        "addressLocality": siteSettings.address_locality,
+        "addressRegion": siteSettings.address_region,
+        "postalCode": siteSettings.postal_code,
         "addressCountry": "AU" // Assuming Australia
     },
     "openingHoursSpecification": [
-        settings.opening_hours_monday && {
+        siteSettings.opening_hours_monday && {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": "Monday",
-            "opens": settings.opening_hours_monday.split('-')[0],
-            "closes": settings.opening_hours_monday.split('-')[1]
+            "opens": siteSettings.opening_hours_monday.split('-')[0],
+            "closes": siteSettings.opening_hours_monday.split('-')[1]
         },
-        settings.opening_hours_tuesday && {
+        siteSettings.opening_hours_tuesday && {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": "Tuesday",
-            "opens": settings.opening_hours_tuesday.split('-')[0],
-            "closes": settings.opening_hours_tuesday.split('-')[1]
+            "opens": siteSettings.opening_hours_tuesday.split('-')[0],
+            "closes": siteSettings.opening_hours_tuesday.split('-')[1]
         },
-        settings.opening_hours_wednesday && {
+        siteSettings.opening_hours_wednesday && {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": "Wednesday",
-            "opens": settings.opening_hours_wednesday.split('-')[0],
-            "closes": settings.opening_hours_wednesday.split('-')[1]
+            "opens": siteSettings.opening_hours_wednesday.split('-')[0],
+            "closes": siteSettings.opening_hours_wednesday.split('-')[1]
         },
-        settings.opening_hours_thursday && {
+        siteSettings.opening_hours_thursday && {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": "Thursday",
-            "opens": settings.opening_hours_thursday.split('-')[0],
-            "closes": settings.opening_hours_thursday.split('-')[1]
+            "opens": siteSettings.opening_hours_thursday.split('-')[0],
+            "closes": siteSettings.opening_hours_thursday.split('-')[1]
         },
-        settings.opening_hours_friday && {
+        siteSettings.opening_hours_friday && {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": "Friday",
-            "opens": settings.opening_hours_friday.split('-')[0],
-            "closes": settings.opening_hours_friday.split('-')[1]
+            "opens": siteSettings.opening_hours_friday.split('-')[0],
+            "closes": siteSettings.opening_hours_friday.split('-')[1]
         },
-        settings.opening_hours_saturday && {
+        siteSettings.opening_hours_saturday && {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": "Saturday",
-            "opens": settings.opening_hours_saturday.split('-')[0],
-            "closes": settings.opening_hours_saturday.split('-')[1]
+            "opens": siteSettings.opening_hours_saturday.split('-')[0],
+            "closes": siteSettings.opening_hours_saturday.split('-')[1]
         },
-        settings.opening_hours_sunday && {
+        siteSettings.opening_hours_sunday && {
             "@type": "OpeningHoursSpecification",
             "dayOfWeek": "Sunday",
-            "opens": settings.opening_hours_sunday.split('-')[0],
-            "closes": settings.opening_hours_sunday.split('-')[1]
+            "opens": siteSettings.opening_hours_sunday.split('-')[0],
+            "closes": siteSettings.opening_hours_sunday.split('-')[1]
         },
     ].filter(Boolean), // Filter out any null/undefined entries if a day's hours are not set
     "priceRange": "AUD" // Placeholder, if no specific range is available.
@@ -164,9 +163,9 @@ const HomePage = () => {
             newBikes={newBikes} 
             usedBikes={usedBikes} 
             error={error} 
-            phoneNumber={settings?.phone_number}
-            mobileNumber={settings?.mobile_number} // Add this line
-            emailAddress={settings?.email_address}
+            phoneNumber={siteSettings.phone_number}
+            mobileNumber={siteSettings.mobile_number} // Add this line
+            emailAddress={siteSettings.email_address}
         />
         <ReviewCarousel />
         <BrandsSection />
