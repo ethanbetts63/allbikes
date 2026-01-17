@@ -140,7 +140,7 @@ const HomePage = () => {
             "@type": "EntryPoint",
             "urlTemplate": "https://www.allbikesvespawarehouse.com.au/search?q={search_term_string}" // Assuming a search page at /search
         },
-        "queryInput": "required name=search_term_string"
+        "query-input": "required name=search_term_string"
     }
   };
 
