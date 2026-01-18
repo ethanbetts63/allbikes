@@ -9,6 +9,7 @@ import Seo from '@/components/Seo';
 import ContactButtons from '@/components/ContactButtons';
 import splitcartLogo from "/src/assets/splitcart_logo.png";
 import futureReminderLogo from "/src/assets/futurereminder_logo.png";
+import foreverFlowerLogo from "/src/assets/foreverflower_logo.png";
 import { FaqSection } from '@/components/FaqSection';
 
 const otherSitesData = [
@@ -23,6 +24,12 @@ const otherSitesData = [
         logoSrc: futureReminderLogo, 
         description: "Never miss an important event with our persistent reminder service.",
         url: "https://www.futurereminder.app", 
+    },
+    {
+        name: "Forever Flower",
+        logoSrc: foreverFlowerLogo, 
+        description: "The only annual flower subscription app in existence. Pre arrange flowers to be sent to someone for anniversaries, birthdays, or just because on the same date every year.",
+        url: "https://www.foreverflower.app", 
     },
 ];
 
