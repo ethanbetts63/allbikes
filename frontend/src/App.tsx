@@ -15,6 +15,7 @@ const AddMotorcyclePage = lazy(() => import('./pages/admin/AddMotorcyclePage'));
 const ServiceSettingsPage = lazy(() => import('./pages/admin/ServiceSettingsPage'));
 const JobTypesPage = lazy(() => import('./pages/admin/JobTypesPage'));
 const ServicePage = lazy(() => import('./pages/ServicePage'));
+const TyreFittingPage = lazy(() => import('./pages/TyreFittingPage'));
 const BikeListPage = lazy(() => import('./pages/BikeListPage'));
 const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
@@ -45,6 +46,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/service" element={<ServicePage />} />
+                <Route path="/tyre-fitting" element={<TyreFittingPage />} />
                 <Route path="/inventory/motorcycles/new" element={<BikeListPage bikeCondition="new" />} />
                 <Route path="/inventory/motorcycles/used" element={<BikeListPage bikeCondition="used" />} />
                 <Route path="/inventory/motorcycles/:slug" element={<BikeDetailPage />} />
