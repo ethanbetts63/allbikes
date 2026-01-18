@@ -11,30 +11,31 @@ import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
 
 const ServiceFaqs = [
   {
-    question: "Do you offer tyre changes for motorcycles and scooters?",
-    answer: "Yes. We provide motorcycle and scooter tyre changes, including tyre replacement, fitting, and balancing. We work on both motorcycles and scooters and can supply and fit tyres or fit tyres you provide, depending on the job."
+    question: "Do you offer motorcycle and scooter tyre fitting?",
+    answer: "Yes. We specialise in motorcycle and scooter tyre fitting, including tyre install, motorcycle tyre change, and scooter tyre change. We can supply and fit tyres or install tyres you provide, depending on the job."
   },
   {
-    question: "Do you service Vespa or Piaggio scooters?",
-    answer: "Yes. We have long specialised in Vespa and Piaggio scooters and have extensive experience servicing and repairing both brands. The business has a strong history with Vespa in Perth, with owner Frank previously operating the primary Vespa dealership in the area."
+    question: "Do you fit tyres on Vespa and Piaggio scooters?",
+    answer: "Yes. We have extensive experience fitting scooter tyres on Vespa and Piaggio models. This includes scooter tyre replacement, tyre repair, and flat tyre repair. The business has a long history with Vespa in Perth, with owner Frank previously operating the primary Vespa dealership."
   },
   {
-    question: "Do you service 50cc scooters?",
-    answer: "Yes. We service 50cc scooters as well as larger-capacity scooters, providing servicing, repairs, and tyre changes where applicable."
+    question: "Do you do tyre changes on 50cc scooters?",
+    answer: "Yes. We perform tyre fitting and scooter tyre replacement on 50cc scooters, as well as larger-capacity scooters, including puncture repair and tyre install where applicable."
   },
   {
-    question: "Do you service dirt bikes?",
-    answer: "Yes. We service dirt bikes, providing maintenance and mechanical repairs. If you’re unsure whether your specific model is suitable, feel free to get in touch."
+    question: "Do you fit tyres on dirt bikes?",
+    answer: "Yes. We offer motorcycle tyre replacement and tyre fitting for dirt bikes, including flat tyre repair and puncture repair. If you’re unsure whether your specific bike is suitable, feel free to get in touch."
   },
   {
-    question: "Do you service electric scooters?",
-    answer: "Yes. We service electric scooters and electric mopeds, including electric motorcycle-style scooters. We do not service electric kick scooters."
+    question: "Do you work on electric scooter tyres?",
+    answer: "Yes. We provide tyre fitting and tyre repair for electric scooters and electric motorcycle-style scooters. We do not work on electric kick scooter tires."
   },
   {
-    question: "Do you offer mobile motorcycle or scooter mechanic services?",
-    answer: "We work closely with Perth Motorcycle and Scooter Movers. If you’re unable to transport your bike, pickup and delivery can be arranged easily and affordably to and from our workshop."
+    question: "Can you help if I have a flat tyre and can’t transport my bike?",
+    answer: "Yes. If you’re dealing with a flat tyre repair or motorcycle tyre change and can’t transport your bike, we work closely with Perth Motorcycle and Scooter Movers to arrange affordable pickup and delivery."
   }
 ];
+
 
 const ServicePage: React.FC = () => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
@@ -114,7 +115,7 @@ const ServicePage: React.FC = () => {
                 isLoading={isLoading}
                 error={error}
                 title="Book Your Service"
-                paragraph="Ready to get your motorcycle or scooter in top shape? Our expert mechanics are here to help. From routine maintenance to complex repairs, we've got you covered. Use our online booking system to find a time that works for you."
+                paragraph="Ready to get your motorcycle or scooter in top shape? Our expert mechanics are here to help. From routine maintenance to complex repairs, we've got you covered. Use our online booking system to find a motorcycle or moped tyre fitting time that works for you."
                 buttonText="Book Service Online"
             />
 
