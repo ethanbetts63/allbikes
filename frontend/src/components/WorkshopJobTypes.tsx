@@ -11,6 +11,9 @@ interface WorkshopJobTypesProps {
   jobTypes: EnrichedJobType[];
   isLoading: boolean;
   error?: string | null;
+  title: string;
+  paragraph: string;
+  buttonText: string;
 }
 
 const SkeletonLoader = () => (
@@ -19,20 +22,20 @@ const SkeletonLoader = () => (
     </div>
 );
 
-const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading, error }) => {
+const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading, error, title, paragraph, buttonText }) => {
   return (
     <div className="w-full flex flex-col md:flex-row bg-background text-[var(--text-primary)] rounded-lg overflow-hidden">
       {/* Left Column */}
       <div className="md:w-1/2 flex flex-col items-start justify-center p-8 md:p-12">
         <h2 className="text-4xl font-extrabold mb-6 leading-tight">
-          Book Your Service
+          {title}
         </h2>
         <p className="text-lg text-[var(--text-secondary)] leading-relaxed max-w-prose mb-10">
-          Ready to get your motorcycle or scooter in top shape? Our expert mechanics are here to help. From routine maintenance to complex repairs, we've got you covered. Use our online booking system to find a time that works for you.
+          {paragraph}
         </p>
         <Link to="/booking">
           <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
-            Book Online Now <ArrowRight className="h-5" />
+            {buttonText} <ArrowRight className="h-5" />
           </Button>
         </Link>
       </div>

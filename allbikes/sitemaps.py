@@ -19,7 +19,7 @@ class StaticViewSitemap(Sitemap):
     """
     Sitemap for static pages.
     """
-    priority = 0.5
+    priority = 0.7
     changefreq = 'daily'
     protocol = 'https'
 
@@ -29,6 +29,8 @@ class StaticViewSitemap(Sitemap):
             '/inventory/motorcycles/new',
             '/inventory/motorcycles/used',
             '/contact',
+            '/service', 
+            '/tyre-fitting',
         ]
 
     def location(self, item):

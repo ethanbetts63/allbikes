@@ -109,7 +109,14 @@ const ServicePage: React.FC = () => {
                 structuredData={structuredData}
             />
             <Breadcrumb items={breadcrumbItems} />
-            <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} error={error} />
+            <WorkshopJobTypes
+                jobTypes={jobTypes}
+                isLoading={isLoading}
+                error={error}
+                title="Book Your Service"
+                paragraph="Ready to get your motorcycle or scooter in top shape? Our expert mechanics are here to help. From routine maintenance to complex repairs, we've got you covered. Use our online booking system to find a time that works for you."
+                buttonText="Book Service Online"
+            />
 
             <div className="mt-0">
                 <ServiceBrands />

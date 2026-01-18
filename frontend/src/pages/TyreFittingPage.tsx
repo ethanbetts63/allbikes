@@ -47,8 +47,7 @@ const TyreFittingPage: React.FC = () => {
             setError(null);
             try {
                 const data = await getJobTypes();
-                const tyreJobTypes = data.filter(job => job.job_type.toLowerCase().includes('tyre'));
-                setJobTypes(tyreJobTypes);
+                setJobTypes(data);
             } catch (error) {
                 console.error("Failed to fetch job types:", error);
                 setError("Could not load our services. Please try again later.");
@@ -110,7 +109,14 @@ const TyreFittingPage: React.FC = () => {
                 structuredData={structuredData}
             />
             <Breadcrumb items={breadcrumbItems} />
-            <WorkshopJobTypes jobTypes={jobTypes} isLoading={isLoading} error={error} />
+            <WorkshopJobTypes
+                jobTypes={jobTypes}
+                isLoading={isLoading}
+                error={error}
+                title="Book Your Tyre Fitting"
+                paragraph="Ready for new tyres? Our expert mechanics are here to help. From tyre fitting to wheel balancing, we've got you covered. Use our online booking system to find a time that works for you."
+                buttonText="Book Tyre Fitting Online"
+            />
 
             <div className="mt-0">
                 <ServiceBrands />
