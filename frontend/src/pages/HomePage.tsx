@@ -80,7 +80,7 @@ const HomePage = () => {
         "addressLocality": siteSettings.address_locality,
         "addressRegion": siteSettings.address_region,
         "postalCode": siteSettings.postal_code,
-        "addressCountry": "AU" // Assuming Australia
+        "addressCountry": "AU" 
     },
     "openingHoursSpecification": [
         siteSettings.opening_hours_monday && {
@@ -138,7 +138,7 @@ const HomePage = () => {
         "@type": "SearchAction",
         "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://www.allbikesvespawarehouse.com.au/search?q={search_term_string}" // Assuming a search page at /search
+            "urlTemplate": "https://www.allbikesvespawarehouse.com.au/search?q={search_term_string}" 
         },
         "query-input": "required name=search_term_string"
     }
@@ -164,7 +164,7 @@ const HomePage = () => {
             usedBikes={usedBikes} 
             error={error} 
             phoneNumber={siteSettings.phone_number}
-            mobileNumber={siteSettings.mobile_number} // Add this line
+            mobileNumber={siteSettings.mobile_number} 
             emailAddress={siteSettings.email_address}
         />
         <ReviewCarousel />
