@@ -70,7 +70,7 @@ const HomePage = () => {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Allbikes Vespa Warehouse",
-    "image": "https://www.allbikesvespawarehouse.com.au/logo-512x512.png", // Assuming this is the main logo
+    "image": "https://www.allbikesvespawarehouse.com.au/logo-512x512.png",
     "url": "https://www.allbikesvespawarehouse.com.au",
     "telephone": siteSettings.phone_number,
     "email": siteSettings.email_address,
