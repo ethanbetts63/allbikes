@@ -74,6 +74,10 @@ const HomePage = () => {
     "url": "https://www.allbikesvespawarehouse.com.au",
     "telephone": siteSettings.phone_number,
     "email": siteSettings.email_address,
+    "founder": {
+      "@type": "Person",
+      "name": "Ethan Betts"
+    },
     "address": {
         "@type": "PostalAddress",
         "streetAddress": siteSettings.street_address,
