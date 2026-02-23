@@ -26,10 +26,10 @@ const otherSitesData = [
         url: "https://www.futurereminder.app", 
     },
     {
-        name: "Forever Flower",
+        name: "FutureFlower",
         logoSrc: foreverFlowerLogo, 
-        description: "The only annual flower subscription app in existence. Pre arrange flowers to be sent to someone for anniversaries, birthdays, or just because on the same date every year.",
-        url: "https://www.foreverflower.app", 
+        description: "Flower delivery and subscription service.",
+        url: "https://www.futureflower.app", 
     },
 ];
 

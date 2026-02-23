@@ -1,0 +1,35 @@
+This session involved extensive debugging and feature implementation for the ForeverFlower project, focusing primarily on financial calculation accuracy and Stripe subscription integration.
+
+**1. Initial Bug: `TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'`**
+The session began with a `TypeError` in `events/utils/upfront_price_calc.py`. Investigation revealed that `float` literals were being used in calculations with `Decimal` objects, leading to type incompatibility. The `forever_flower_upfront_price` function was modified to consistently use `Decimal` types for all financial parameters and literals, ensuring precision and resolving the error. A redundant `Decimal()` cast in `calculate_final_plan_cost` was also removed.
+
+**2. Related Bug: `TypeError` in `SubscriptionPlanViewSet.calculate_price`**
+A similar `TypeError` was identified in `events/views/subscription_plan_view.py`. The `SubscriptionPlanViewSet.calculate_price` method was updated to use `Decimal` for `budget`, `commission_pct`, and `min_fee`, along with importing `Decimal` and `InvalidOperation`, to align with best practices for financial calculations.
+
+**3. `ModuleNotFoundError: No module named 'events.subscription_plan_view'`**
+A `ModuleNotFoundError` in `events/urls.py` was reported. This was caused by an incorrect import path. The import statement in `events/urls.py` was corrected from `from .subscription_plan_view import SubscriptionPlanViewSet` to `from .views.subscription_plan_view import SubscriptionPlanViewSet`.
+
+**4. Backend Validation Error: `"fortnightly" is not a valid choice."`**
+After adding new frequency options (weekly, fortnightly) to the frontend, the backend rejected these choices, indicating a validation error. The `FREQUENCY_CHOICES` tuple in `events/models/subscription_plan.py` was updated to include `'weekly'` and `'fortnightly'` for the `SubscriptionPlan` model, resolving the validation issue.
+
+**5. `price_per_delivery` Not Updating & Backend Redesign for Price Validation**
+A problem arose where `price_per_delivery` remained `null` after saving, despite being sent by the frontend. Investigation traced this to `price_per_delivery` being in `read_only_fields` within `events/serializers/subscription_plan_serializer.py`. This led to a critical discussion about implementing a "propose and check" validation mechanism for prices.
+    *   **Decision:** The frontend would propose a calculated `price_per_delivery`, and the backend would recalculate it based on provided variables, compare the two, and only save if they matched.
+    *   **Implementation:**
+        *   The price calculation logic was extracted into a reusable `_calculate_price_per_delivery` method within `SubscriptionPlanViewSet`.
+        *   `SubscriptionPlanSerializer` was modified: `price_per_delivery` was removed from `read_only_fields`, and its `update` method was overridden to perform the server-side comparison using the view's calculation logic.
+
+**6. "Proceed to Payment" Button Greyed Out (`!plan.stripe_price_id`) & Stripe Subscription Workflow Overhaul**
+The "Proceed to Payment" button was disabled on the confirmation page because `plan.stripe_price_id` was missing. It was determined that this field was not present in the backend `SubscriptionPlan` model.
+    *   **Discussion:** An extensive explanation of Stripe's subscription model for unique, per-user pricing was provided, focusing on inline `price_data` and the use of trial periods to delay the first charge until 7 days before the first delivery.
+    *   **Overhaul of Stripe Integration:**
+        *   **`payments/views/create_subscription_view.py`:** The view was updated to use inline `price_data` with a single Stripe Product ID (from settings), implement a comprehensive frequency mapping, and add `trial_end` logic (7 days before the plan's `start_date`) to delay initial billing.
+        *   **`payments/utils/webhook_handlers.py`:** This file was heavily refactored. The erroneous subscription creation logic from `handle_payment_intent_succeeded` for new subscriptions was removed (it now just activates the plan). The `handle_invoice_payment_succeeded` was updated to correctly calculate and schedule next delivery dates for all frequencies, including the newly added 'weekly' and 'fortnightly' options.
+
+**7. `NameError: name 'datetime' is not defined` in `webhook_handlers.py`**
+A `NameError` occurred in `payments/utils/webhook_handlers.py` due to a missing import for `datetime`. The line `from datetime import datetime` was added to resolve this.
+
+**8. Recurring `TypeError` in Upfront Plan View (`calc_upfront_price_for_plan`)**
+Another `TypeError` (float and Decimal incompatibility) was reported in `events/views/upfront_plan_view.py`, specifically affecting `calc_upfront_price_for_plan`, `UpfrontPlanViewSet.perform_create`, and `UpfrontPlanViewSet.partial_update`. The fix involved systematically replacing `float()` conversions for `budget` parameters with `Decimal()` (or removing them if `budget` was already a `Decimal`), and updating `except` blocks to handle `InvalidOperation`.
+
+The session successfully addressed all reported issues, significantly enhanced the accuracy of financial calculations, improved the robustness of the Stripe subscription integration, and aligned the application with specified business logic and best practices.
