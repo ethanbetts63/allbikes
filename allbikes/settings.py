@@ -109,6 +109,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'TIMEOUT': 900,  # 15 minutes
+        'OPTIONS': {
+            'MAX_ENTRIES': 500
+        }
+    }
+}
+
 # Django Rest Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
