@@ -9,7 +9,7 @@ import { getBikes } from '@/api';
 import type { Bike } from "@/types";
 import { siteSettings } from '@/config/siteSettings';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-import ServiceCTA from '@/components/ServiceCTA';
+import ServiceCTAV2 from '@/components/ServiceCTAV2';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
@@ -173,9 +173,8 @@ const HomePage = () => {
             emailAddress={siteSettings.email_address}
         />
         <ReviewCarousel />
-        <BrandsSection />
-        <ServiceCTA />
-        <FeaturedBikes
+        <ServiceCTAV2 />
+                <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
           bikes={newBikes}
           description="Check out some of our latest new models available now."
@@ -189,6 +188,8 @@ const HomePage = () => {
           linkTo="/inventory/motorcycles/used"
           linkText="All Used Bikes"
         />
+        <BrandsSection />
+
         <FaqSection title="Frequently Asked Questions" faqData={faqData} />
         <FloatingActionButton /> 
     </div>
