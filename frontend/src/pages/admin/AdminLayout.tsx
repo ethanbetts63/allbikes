@@ -28,7 +28,7 @@ const AdminLayout: React.FC = () => {
   return (
     <>
       <Seo title="Admin | Allbikes" noindex={true} />
-      <div className="flex h-screen">
+      <div className="flex min-h-screen">
         {/* Vertical Nav */}
         <aside className="w-64 flex-shrink-0 border-r p-4 bg-foreground text-[var(--text-primary)]">
           <nav className="flex flex-col space-y-2">
@@ -62,7 +62,7 @@ const AdminLayout: React.FC = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-grow border-l p-8 overflow-auto">
+        <main className="flex-grow border-l p-8">
           <Outlet />
         </main>
       </div>
