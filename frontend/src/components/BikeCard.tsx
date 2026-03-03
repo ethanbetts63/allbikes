@@ -1,79 +1,110 @@
-import { Link } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import type { Bike } from "@/types"; // Import from shared types
-
+import { Link, useNavigate } from "react-router-dom";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import type { Bike } from "@/types";
 
 interface BikeCardProps {
   bike: Bike;
 }
 
-const BikeCard: React.FC<BikeCardProps> = ({ bike }) => {
-  // Sort images by order and get the one with the lowest order number
+const BikeCard = ({ bike }: BikeCardProps) => {
+  const navigate = useNavigate();
   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
   const imageUrl = sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png';
-
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
-  const slug = bike.slug;
 
   return (
-    <Card className="relative w-full overflow-hidden flex flex-col pt-0 border border-foreground">
+    <Card
+      onClick={() => navigate(`/inventory/motorcycles/${bike.slug}`)}
+      className="relative w-full overflow-hidden flex flex-col pt-0 cursor-pointer border border-border hover:shadow-xl transition-shadow duration-300 group"
+    >
+      {/* Status ribbons */}
       {bike.status === 'sold' && (
         <div className="absolute top-5 right-[-35px] w-32 transform rotate-45 bg-destructive text-white text-center font-bold z-10 text-xl">
           Sold
         </div>
       )}
-      <CardHeader className="p-0">
-        <div className="relative aspect-video">
-          <img src={imageUrl} alt={cardTitle} className="w-full h-full object-cover" loading="lazy"/>
-          <Badge className="absolute top-2 right-2 capitalize">{bike.condition}</Badge>
+      {bike.status === 'available_soon' && (
+        <div className="absolute top-5 right-[-35px] w-32 transform rotate-45 bg-blue-500 text-white text-center font-bold z-10 text-sm">
+          Coming Soon
         </div>
-      </CardHeader>
-      <CardContent className="p-4 flex-grow">
-        <CardTitle className="text-lg font-bold mb-2">{cardTitle}</CardTitle>
-        <div className="text-xl font-semibold mb-4">
+      )}
+
+      {/* Image */}
+      <div className="relative overflow-hidden aspect-[4/3]">
+        <img
+          src={imageUrl}
+          alt={cardTitle}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+        <Badge className="absolute bottom-2 left-2 capitalize bg-black/60 hover:bg-black/60 text-white border-0">
+          {bike.condition}
+        </Badge>
+      </div>
+
+      {/* Body */}
+      <CardContent className="p-4 flex-grow flex flex-col gap-3">
+        {/* Make + model */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">
+            {bike.make}
+          </p>
+          <h3 className="font-bold text-lg leading-tight">
+            {bike.year && (
+              <span className="text-muted-foreground font-normal text-base">{bike.year} </span>
+            )}
+            {bike.model}
+          </h3>
+        </div>
+
+        {/* Price */}
+        <div>
           {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
-            <div className="flex items-center space-x-2">
-              <p className="text-destructive line-through">
-                ${parseFloat(bike.price).toLocaleString()}
-              </p>
-              <p className="text-primary">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold text-primary">
                 ${parseFloat(bike.discount_price).toLocaleString()}
-              </p>
+              </span>
+              <span className="text-sm text-destructive line-through">
+                ${parseFloat(bike.price).toLocaleString()}
+              </span>
             </div>
           ) : (
-            <p className="text-primary">
+            <span className="text-xl font-bold text-primary">
               ${parseFloat(bike.price).toLocaleString()}
-            </p>
+            </span>
           )}
         </div>
-        <div className="text-sm text-gray-600">
-          <h3 className="font-semibold mb-0">Specifications:</h3>
-          <ul className="list-disc list-inside">
-            {bike.year && <li>Year: {bike.year}</li>}
-            <li>Odometer: {bike.odometer.toLocaleString()} km</li>
-            <li>Engine: {bike.engine_size}cc</li>
-          </ul>
+
+        {/* Specs */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span>{bike.odometer.toLocaleString()} km</span>
+          {bike.engine_size && (
+            <>
+              <span>·</span>
+              <span>{bike.engine_size}cc</span>
+            </>
+          )}
         </div>
+
+        {/* New bike warranty */}
         {bike.condition === 'new' && (
-            <div className="mt-2 text-blue-600 text-m font-semibold">
-                {bike.warranty_months && bike.warranty_months > 0
-                    ? `Comes with 3 months rego and ${bike.warranty_months} months warranty!`
-                    : `Comes with 3 months rego!`
-                }
-            </div>
+          <p className="text-sm text-blue-600 font-medium">
+            {bike.warranty_months && bike.warranty_months > 0
+              ? `Includes 3 months rego & ${bike.warranty_months} months warranty`
+              : 'Includes 3 months rego'}
+          </p>
         )}
       </CardContent>
-      <CardFooter className="px-4 pt-0">
-        <Link to={`/inventory/motorcycles/${slug}`} className="w-full">
-            <Button className="w-full">View Details</Button>
+
+      <CardFooter className="px-4 pb-4 pt-0">
+        <Link
+          to={`/inventory/motorcycles/${bike.slug}`}
+          className="w-full"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Button className="w-full">View Details</Button>
         </Link>
       </CardFooter>
     </Card>

@@ -14,7 +14,6 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
 @method_decorator(cache_page(900), name='list')
-@method_decorator(cache_page(900), name='retrieve')
 class MotorcycleViewSet(viewsets.ModelViewSet):
     """
     A ViewSet for viewing, creating, editing, and deleting motorcycles.

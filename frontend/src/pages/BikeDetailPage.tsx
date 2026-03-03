@@ -231,21 +231,36 @@ const BikeDetailPage: React.FC = () => {
             </div>
             <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)] rounded-lg mt-2">
                 <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
-                <div className="text-center mb-8 flex justify-center gap-2">
-                    <Badge className="text-lg capitalize">{bike.condition}</Badge>
-                    {bike.status === 'sold' && (
-                        <Badge variant="destructive" className="text-xl text-white">Sold</Badge>
+                <div className="text-center mb-8">
+                    <div className="flex justify-center gap-2 mb-3">
+                        <Badge className="text-lg capitalize">{bike.condition}</Badge>
+                        {bike.status === 'sold' && (
+                            <Badge variant="destructive" className="text-xl text-white">Sold</Badge>
+                        )}
+                        {bike.status === 'available_soon' && (
+                            <Badge className="text-xl text-white bg-blue-500 hover:bg-blue-500">Coming Soon</Badge>
+                        )}
+                    </div>
+                    {bike.status === 'available_soon' && (
+                        <p className="text-sm text-gray-600 max-w-md mx-auto">
+                            This bike is currently being inspected by our mechanic. It's not quite ready for sale yet, but if you're interested feel free to <a href="/contact" className="text-blue-500 underline hover:text-blue-700">get in touch</a> and we'll keep you in the loop.
+                        </p>
                     )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left Column: Image Gallery */}
                     <div>
-                        <div className="aspect-video w-full overflow-hidden rounded-lg mb-4 border bg-black">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-4 border bg-black">
                             {selectedMedia === 'YOUTUBE' && videoId ? (
                                 <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
                             ) : (
                                 <img src={selectedMedia} alt={cardTitle} className="w-full h-full object-cover" />
+                            )}
+                            {bike.status === 'sold' && (
+                                <div className="absolute top-8 right-[-45px] w-44 transform rotate-45 bg-destructive text-white text-center font-bold z-10 text-2xl py-1">
+                                    Sold
+                                </div>
                             )}
                         </div>
                         <div className="flex space-x-2">
