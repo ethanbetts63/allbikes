@@ -1,6 +1,4 @@
 from django.db import transaction
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -13,7 +11,6 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100
 
-@method_decorator(cache_page(900), name='list')
 class MotorcycleViewSet(viewsets.ModelViewSet):
     """
     A ViewSet for viewing, creating, editing, and deleting motorcycles.

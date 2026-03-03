@@ -68,16 +68,34 @@ const AddMotorcyclePage = () => {
                     message: "Processing Images... Updating image order and uploading new images. Please wait.",
                     type: 'info'
                 });
-                
-                const uploadPromises = managedImages
-                    .filter(img => img.file !== null) // Filter for new uploads
-                    .map(img => uploadMotorcycleImage(savedMotorcycle.id, img.file!, img.order));
 
-                const managementPromise = manageMotorcycleImages(savedMotorcycle.id, managedImages);
-                
-                await Promise.allSettled([managementPromise, ...uploadPromises]);
+                await manageMotorcycleImages(savedMotorcycle.id, managedImages);
 
-                setNotification({ message: "Image Processing Complete: All image changes have been saved.", type: 'success' });
+                const newImages = managedImages.filter(img => img.file !== null);
+                const uploadErrors: string[] = [];
+
+                for (let i = 0; i < newImages.length; i++) {
+                    const img = newImages[i];
+                    setNotification({
+                        message: `Uploading image ${i + 1} of ${newImages.length}...`,
+                        type: 'info'
+                    });
+                    try {
+                        await uploadMotorcycleImage(savedMotorcycle.id, img.file!, img.order);
+                    } catch (err: any) {
+                        uploadErrors.push(img.file!.name);
+                    }
+                }
+
+                if (uploadErrors.length > 0) {
+                    setNotification({
+                        message: `Saved, but ${uploadErrors.length} image(s) failed to upload: ${uploadErrors.join(', ')}`,
+                        type: 'error'
+                    });
+                    return; // Stay on page so the error is visible
+                } else {
+                    setNotification({ message: "Image Processing Complete: All image changes have been saved.", type: 'success' });
+                }
             } else if (id) {
                 // If we are editing and there are no images left, we must tell the backend to delete all of them.
                 await manageMotorcycleImages(savedMotorcycle.id, []);
