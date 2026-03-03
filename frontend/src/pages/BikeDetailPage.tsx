@@ -61,6 +61,12 @@ const BikeDetailPage: React.FC = () => {
     useEffect(() => {
         if (!slug) return;
 
+        if (/^\d+$/.test(slug)) {
+            setError("Page not found.");
+            setIsLoading(false);
+            return;
+        }
+
         const id = slug.split('-').pop();
         if (!id) {
             setError("Invalid bike identifier.");
