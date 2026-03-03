@@ -9,6 +9,7 @@ import { getBikes } from '@/api';
 import type { Bike } from "@/types";
 import { siteSettings } from '@/config/siteSettings';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
+import ServiceCTA from '@/components/ServiceCTA';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
@@ -173,6 +174,7 @@ const HomePage = () => {
         />
         <ReviewCarousel />
         <BrandsSection />
+        <ServiceCTA />
         <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
           bikes={newBikes}
