@@ -87,7 +87,16 @@ const AddMotorcyclePage = () => {
             navigate('/admin/inventory');
 
         } catch (err: any) {
-            const errorMessage = err.data?.detail || err.message || "An unknown error occurred.";
+            let errorMessage: string;
+            if (err.data?.detail) {
+                errorMessage = err.data.detail;
+            } else if (err.data && typeof err.data === 'object') {
+                errorMessage = Object.entries(err.data)
+                    .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+                    .join(' | ');
+            } else {
+                errorMessage = err.message || "An unknown error occurred.";
+            }
             const action = id ? 'update' : 'create';
             setNotification({ message: `Failed to ${action} motorcycle: ${errorMessage}`, type: 'error' });
             console.error(err);
