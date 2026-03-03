@@ -1,6 +1,6 @@
 # Allbikes & Vespawarehouse
 
-Allbikes & Vespawarehouse is a comprehensive web platform for a motorcycle and scooter dealership, providing sales, service, and parts. This full-stack application features a detailed inventory management system, a customer-facing booking system integrated with the MechanicDesk API, and a dynamic frontend for a seamless user experience.
+Allbikes & Vespawarehouse is a comprehensive web platform for a Perth based motorcycle and scooter dealership, providing sales, service, and parts. This full-stack application features a detailed inventory management system, a customer-facing booking system integrated with the MechanicDesk API, and a dynamic frontend for a seamless user experience.
 
 ## Tech Stack
 

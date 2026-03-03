@@ -97,10 +97,14 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
                         <div className="space-y-2"><Label htmlFor="discount_price">Discount Price (AUD)</Label><Input id="discount_price" type="number" step="0.01" {...register('discount_price', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="odometer">Odometer (km)</Label><Input id="odometer" type="number" {...register('odometer', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="stock_number">Stock Number</Label><Input id="stock_number" {...register('stock_number')} /></div>
+                        <div className="space-y-2"><Label htmlFor="rego">Rego</Label><Input id="rego" {...register('rego')} /></div>
+                        <div className="space-y-2"><Label htmlFor="rego_exp">Rego Expiry</Label><Input id="rego_exp" type="date" {...register('rego_exp')} /></div>
+                        <div className="space-y-2"><Label htmlFor="range">Range (km)</Label><Input id="range" type="number" {...register('range', { valueAsNumber: true })} /></div>
+                        <div className="space-y-2"><Label htmlFor="seats">Seats</Label><Input id="seats" type="number" {...register('seats', { valueAsNumber: true })} /></div>
                     </div>
 
-                    {/* Status, Condition, and Featured Switch */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    {/* Status, Condition, Transmission, and Featured Switch */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                         <div className="space-y-2">
                             <Label>Status</Label>
                             <Controller name="status" control={control} render={({ field }) => (
@@ -108,6 +112,7 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
                                     <SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="for_sale">For Sale</SelectItem>
+                                        <SelectItem value="available_soon">Available Soon</SelectItem>
                                         <SelectItem value="sold">Sold</SelectItem>
                                         <SelectItem value="reserved">Reserved</SelectItem>
                                         <SelectItem value="unavailable">Unavailable</SelectItem>
@@ -124,6 +129,19 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
                                         <SelectItem value="new">New</SelectItem>
                                         <SelectItem value="used">Used</SelectItem>
                                         <SelectItem value="demo">Demo</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            )} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Transmission</Label>
+                            <Controller name="transmission" control={control} render={({ field }) => (
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <SelectTrigger><SelectValue placeholder="Select transmission" /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="automatic">Automatic</SelectItem>
+                                        <SelectItem value="manual">Manual</SelectItem>
+                                        <SelectItem value="semi-auto">Semi-Automatic</SelectItem>
                                     </SelectContent>
                                 </Select>
                             )} />

@@ -4,6 +4,7 @@ from django.utils.text import slugify
 class Motorcycle(models.Model):
     STATUS_CHOICES = [
         ("for_sale", "For Sale"),
+        ("available_soon", "Available Soon"),
         ("sold", "Sold"),
         ("reserved", "Reserved"),
         ("unavailable", "Unavailable"),

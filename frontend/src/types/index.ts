@@ -44,6 +44,8 @@ export type Bike = {
   is_featured?: boolean;
   odometer: number;
   engine_size: number;
+  range: number;
+  seats: number;
   description: string;
   youtube_link: string;
   rego: string;
