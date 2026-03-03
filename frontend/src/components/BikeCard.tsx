@@ -17,7 +17,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
   return (
     <Card
       onClick={() => navigate(`/inventory/motorcycles/${bike.slug}`)}
-      className="relative w-full overflow-hidden flex flex-col pt-0 cursor-pointer border border-border hover:shadow-xl transition-shadow duration-300 group"
+      className="relative w-full overflow-hidden flex flex-col pt-0 cursor-pointer border border-border hover:border-green-400 hover:-translate-y-0.5 transition-all duration-300 group"
     >
       {/* Status ribbons */}
       {bike.status === 'sold' && (
