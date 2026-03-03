@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /dashboard/
 Disallow: /api/
+Disallow: /login
+Disallow: /booking/success
 
 Sitemap: https://www.allbikesvespawarehouse.com.au/sitemap.xml
