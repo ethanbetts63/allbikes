@@ -102,7 +102,7 @@ const AddMotorcyclePage = () => {
                 setNotification({ message: "All images removed", type: 'success' });
             }
 
-            navigate('/admin/inventory');
+            navigate('/dashboard/inventory');
 
         } catch (err: any) {
             let errorMessage: string;

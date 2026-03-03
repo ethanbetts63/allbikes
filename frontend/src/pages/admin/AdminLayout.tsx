@@ -35,25 +35,25 @@ const AdminLayout: React.FC = () => {
             <h2 className="text-lg font-semibold tracking-tight mb-2 px-2">Admin Menu</h2>
 
             <Button asChild variant="ghost">
-              <NavLink to="/admin/inventory" className={getNavLinkClass}>
+              <NavLink to="/dashboard/inventory" className={getNavLinkClass}>
                 <Wrench className="h-4 w-4" />
                 Inventory Management
               </NavLink>
             </Button>
             <Button asChild variant="ghost">
-              <NavLink to="/admin/add-motorcycle" className={getNavLinkClass}>
+              <NavLink to="/dashboard/add-motorcycle" className={getNavLinkClass}>
                 <PlusSquare className="h-4 w-4" />
                 Add Motorcycle
               </NavLink>
             </Button>
             <Button asChild variant="ghost">
-              <NavLink to="/admin/service-settings" className={getNavLinkClass}>
+              <NavLink to="/dashboard/service-settings" className={getNavLinkClass}>
                 <Wrench className="h-4 w-4" />
                 Service Settings
               </NavLink>
             </Button>
             <Button asChild variant="ghost">
-              <NavLink to="/admin/job-types" className={getNavLinkClass}>
+              <NavLink to="/dashboard/job-types" className={getNavLinkClass}>
                 <Wrench className="h-4 w-4" />
                 Job Types
               </NavLink>

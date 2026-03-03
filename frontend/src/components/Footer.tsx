@@ -61,7 +61,7 @@ const Footer = () => {
               <>
                 {user.is_staff && (
                   <li className="mb-2">
-                    <Link to="/admin/inventory" className="hover:underline text-gray-300">Inventory Management</Link>
+                    <Link to="/dashboard/inventory" className="hover:underline text-gray-300">Inventory Management</Link>
                   </li>
                 )}
                 <li className="mb-2">

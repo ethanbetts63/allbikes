@@ -57,9 +57,9 @@ function App() {
                 <Route path="/security" element={<SecurityPolicyPage />} /> {/* New route */}
                 <Route path="/privacy" element={<PrivacyPolicyPage />} /> {/* New route */}
 
-                {/* Admin Section */}
-                <Route path="/admin" element={<AdminLayout />}>
-                  <Route path="dashboard" element={<AdminHomePage />} />
+                {/* Dashboard Section */}
+                <Route path="/dashboard" element={<AdminLayout />}>
+                  <Route path="home" element={<AdminHomePage />} />
                   <Route path="inventory" element={<InventoryManagementPage />} />
                   <Route path="add-motorcycle" element={<AddMotorcyclePage />} />
                   <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />

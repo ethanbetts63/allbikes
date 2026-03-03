@@ -97,7 +97,7 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
                         <div className="space-y-2"><Label htmlFor="discount_price">Discount Price (AUD)</Label><Input id="discount_price" type="number" step="0.01" {...register('discount_price', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="odometer">Odometer (km)</Label><Input id="odometer" type="number" {...register('odometer', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="stock_number">Stock Number</Label><Input id="stock_number" {...register('stock_number', { setValueAs: (v) => v === '' ? null : v })} /></div>
-                        <div className="space-y-2"><Label htmlFor="rego">Rego</Label><Input id="rego" {...register('rego')} /></div>
+                        <div className="space-y-2"><Label htmlFor="rego">Rego</Label><Input id="rego" {...register('rego', { setValueAs: (v) => v === '' ? null : v })} /></div>
                         <div className="space-y-2"><Label htmlFor="rego_exp">Rego Expiry</Label><Input id="rego_exp" type="date" {...register('rego_exp', { setValueAs: (v) => v === '' ? null : v })} /></div>
                         <div className="space-y-2"><Label htmlFor="range">Range (km)</Label><Input id="range" type="number" {...register('range', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="seats">Seats</Label><Input id="seats" type="number" {...register('seats', { valueAsNumber: true })} /></div>

@@ -88,7 +88,7 @@ const InventoryTable = () => {
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/admin/edit-motorcycle/${id}`);
+    navigate(`/dashboard/edit-motorcycle/${id}`);
   };
   
   const handleFilterChange = (filter: 'new' | 'used' | null) => {
