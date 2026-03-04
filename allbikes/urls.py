@@ -3,12 +3,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from django.http import HttpResponsePermanentRedirect
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import MotorcycleSitemap, StaticViewSitemap
+
+def strip_trailing_slash(request, path):
+    return HttpResponsePermanentRedirect(f'/{path}')
 
 sitemaps = {
     'motorcycles': MotorcycleSitemap,
@@ -36,6 +40,9 @@ urlpatterns += [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
+    # Redirect trailing slashes to canonical non-slash URLs (301)
+    re_path(r'^(?!api/|admin/|sitemap\.xml)(.+)/$', strip_trailing_slash),
+
     # Catch-all for the React frontend
     re_path(r'^(?!api/|admin/|sitemap\.xml).*$', TemplateView.as_view(template_name="index.html")),
 ]
