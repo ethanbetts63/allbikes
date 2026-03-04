@@ -21,8 +21,8 @@ const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
 const BookingSuccessPage = lazy(() => import('./pages/BookingSuccessPage'));
 const TermsAndConditionsPage = lazy(() => import('./pages/TermsAndConditionsPage'));
-const SecurityPolicyPage = lazy(() => import('./pages/SecurityPolicyPage')); // New lazy-loaded page
-const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage')); // New lazy-loaded page
+const SecurityPolicyPage = lazy(() => import('./pages/SecurityPolicyPage')); 
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage')); 
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 const LoadingFallback = () => (
@@ -54,8 +54,8 @@ function App() {
                 <Route path="/booking/success" element={<BookingSuccessPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/terms" element={<TermsAndConditionsPage />} />
-                <Route path="/security" element={<SecurityPolicyPage />} /> {/* New route */}
-                <Route path="/privacy" element={<PrivacyPolicyPage />} /> {/* New route */}
+                <Route path="/security" element={<SecurityPolicyPage />} /> 
+                <Route path="/privacy" element={<PrivacyPolicyPage />} /> 
 
                 {/* Dashboard Section */}
                 <Route path="/dashboard" element={<AdminLayout />}>

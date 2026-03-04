@@ -175,7 +175,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
       <Seo 
         title={`${pageTitle} | Allbikes`}
         description={description}
-        canonicalPath={isNew ? '/bikes/new' : '/bikes/used'}
+        canonicalPath={isNew ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used'}
         structuredData={structuredData}
       />
       <Hero 
