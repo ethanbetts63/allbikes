@@ -4,9 +4,9 @@ import Seo from '@/components/Seo';
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
+import ServiceCTAV2 from '@/components/ServiceCTAV2';
 
 const ServiceFaqs = [
   {
@@ -53,7 +53,7 @@ const services = [
   },
 ];
 
-const breadcrumbItems: BreadcrumbItem[] = [
+const breadcrumbItems = [
     { name: 'Home', href: '/' },
     { name: 'Servicing & Tyres', href: '/service' },
 ];
@@ -104,23 +104,7 @@ const ServicePage: React.FC = () => {
                 structuredData={structuredData}
             />
 
-            {/* Hero */}
-            <div className="bg-foreground">
-                <Breadcrumb items={breadcrumbItems} />
-                <div className="container mx-auto px-4 py-16 md:py-24 text-center">
-                    <h1 className="text-5xl md:text-6xl font-bold text-[var(--text-primary)] mb-6">
-                        Workshop & Servicing
-                    </h1>
-                    <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-10">
-                        Perth's trusted motorcycle and scooter mechanics. From routine servicing to complex diagnostics — we've got you covered.
-                    </p>
-                    <Link to="/booking">
-                        <Button className="bg-primary text-[var(--text-primary)] font-bold px-10 py-6 text-xl hover:bg-primary/90 inline-flex items-center gap-2">
-                            Book a Service <ArrowRight className="h-5 w-5" />
-                        </Button>
-                    </Link>
-                </div>
-            </div>
+            <ServiceCTAV2 />
 
             {/* Services */}
             <div className="bg-background py-16">
