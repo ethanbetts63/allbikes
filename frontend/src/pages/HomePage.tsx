@@ -55,7 +55,7 @@ const HomePage = () => {
     },
     {
       "question": "What areas of Perth do you service?",
-      "answer": `Our workshop is based in Dianella at ${siteSettings.street_address || '{address}'}. If you are looking for "motorcycle mechanics near me" or "scooter mechanics near me", Allbikes Vespa Warehouse frequently services the areas of Dianella, Morley, Fremantle, Yokine, CBD, Menora, Cottesloe, Mount Lawley, North Perth, Northbridge, Inglewood and many other Perth suburbs. If you are more distant, or are unable to move your bike, we work closely with and can recommend Perth Motorcycle and Scooter Movers. More information is available on our service page.`
+      "answer": `Our workshop is based in Dianella at ${siteSettings.street_address || '{address}'}. If you are looking for "motorcycle mechanics near me" or "scooter mechanics near me", Allbikes & Scooters frequently services the areas of Dianella, Morley, Fremantle, Yokine, CBD, Menora, Cottesloe, Mount Lawley, North Perth, Northbridge, Inglewood and many other Perth suburbs. If you are more distant, or are unable to move your bike, we work closely with and can recommend Perth Motorcycle and Scooter Movers. More information is available on our service page.`
     },
     {
       "question": "Do you service electric motorcycles and scooters?",
@@ -70,9 +70,9 @@ const HomePage = () => {
   const localBusinessSchema = siteSettings ? {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Allbikes Vespa Warehouse",
-    "image": "https://www.allbikesvespawarehouse.com.au/logo-512x512.png",
-    "url": "https://www.allbikesvespawarehouse.com.au",
+    "name": "Allbikes & Scooters",
+    "image": "https://www.scootershop.com.au/logo-512x512.png",
+    "url": "https://www.scootershop.com.au",
     "telephone": siteSettings.phone_number,
     "email": siteSettings.email_address,
     "founder": {
@@ -137,13 +137,13 @@ const HomePage = () => {
   const webSiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Allbikes Vespa Warehouse",
-    "url": "https://www.allbikesvespawarehouse.com.au",
+    "name": "Allbikes & Scooters",
+    "url": "https://www.scootershop.com.au",
     "potentialAction": {
         "@type": "SearchAction",
         "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://www.allbikesvespawarehouse.com.au/search?q={search_term_string}" 
+            "urlTemplate": "https://www.scootershop.com.au/search?q={search_term_string}" 
         },
         "query-input": "required name=search_term_string"
     }
@@ -159,7 +159,7 @@ const HomePage = () => {
   return (
     <div>
       <Seo
-        title="Allbikes Vespa Warehouse - Perth's Motorcycle and Scooter Dealership"
+        title="Allbikes & Scooters - Perth's Motorcycle and Scooter Dealership"
         description="Discover a wide range of new and used motorcycles and scooters at Allbikes. We offer sales, servicing, and expert advice for riders in Perth."
         canonicalPath="/"
         structuredData={structuredData}

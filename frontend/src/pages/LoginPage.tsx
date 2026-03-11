@@ -5,8 +5,8 @@ const LoginPage = () => {
   return (
     <div className="bg-background flex h-full flex-col items-center justify-center py-12">
       <Seo
-        title="Admin Login | Allbikes Vespa Warehouse"
-        description="Login to the Allbikes Vespa Warehouse administration dashboard."
+        title="Admin Login | Allbikes & Scooters"
+        description="Login to the Allbikes & Scooters administration dashboard."
         canonicalPath="/login"
         noindex={true}
       />

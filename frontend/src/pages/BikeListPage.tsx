@@ -139,7 +139,7 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
           "@type": "ListItem",
           "position": index + 1,
           "name": item.name,
-          "item": `https://www.allbikesvespawarehouse.com.au${item.href}`
+          "item": `https://www.scootershop.com.au${item.href}`
         }))
       },
       {
@@ -149,9 +149,9 @@ const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
             "position": index + 1,
             "item": {
               "@type": "Product",
-              "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${bike.slug}`,
+              "url": `https://www.scootershop.com.au/inventory/motorcycles/${bike.slug}`,
               "name": `${bike.year} ${bike.make} ${bike.model}`,
-              "image": bike.images.length > 0 ? `https://www.allbikesvespawarehouse.com.au${bike.images[0].image}` : `https://www.allbikesvespawarehouse.com.au/src/assets/motorcycle_images/placeholder.png`,
+              "image": bike.images.length > 0 ? `https://www.scootershop.com.au${bike.images[0].image}` : `https://www.scootershop.com.au/src/assets/motorcycle_images/placeholder.png`,
               "description": bike.description,
               "brand": {
                 "@type": "Brand",

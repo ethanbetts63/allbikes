@@ -154,13 +154,13 @@ const BikeDetailPage: React.FC = () => {
                     "@type": "ListItem",
                     "position": index + 1,
                     "name": item.name,
-                    "item": `https://www.allbikesvespawarehouse.com.au${item.href}`
+                    "item": `https://www.scootershop.com.au${item.href}`
                 }))
             },
             {
                 "@type": "Product",
                 "name": pageTitle,
-                "image": bike.images.length > 0 ? `https://www.allbikesvespawarehouse.com.au${bike.images[0].image}` : `https://www.allbikesvespawarehouse.com.au/src/assets/motorcycle_images/placeholder.png`,
+                "image": bike.images.length > 0 ? `https://www.scootershop.com.au${bike.images[0].image}` : `https://www.scootershop.com.au/src/assets/motorcycle_images/placeholder.png`,
                 "description": bike.description,
                 "sku": bike.stock_number,
                 "brand": {
@@ -173,7 +173,7 @@ const BikeDetailPage: React.FC = () => {
                     "priceCurrency": "AUD",
                     "availability": bike.status === 'for_sale' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
                     "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-                    "url": `https://www.allbikesvespawarehouse.com.au/inventory/motorcycles/${bike.slug}`
+                    "url": `https://www.scootershop.com.au/inventory/motorcycles/${bike.slug}`
                 },
                 ...(videoId && {
                     "video": {
@@ -227,7 +227,7 @@ const BikeDetailPage: React.FC = () => {
         <div className="bg-background text-black">
             <Seo
                 title={`${pageTitle} | Allbikes`}
-                description={bike.description || `Check out the ${pageTitle} at Allbikes Vespa Warehouse, Perth's most experienced motorcycle and scooter dealership.`}
+                description={bike.description || `Check out the ${pageTitle} at Allbikes & Scooters, Perth's most experienced motorcycle and scooter dealership.`}
                 canonicalPath={`/inventory/motorcycles/${bike.slug}`}
                 ogImage={ogImage}
                 structuredData={structuredData}

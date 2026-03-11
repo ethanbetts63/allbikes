@@ -73,7 +73,7 @@ const TyreFittingPage: React.FC = () => {
                     "@type": "ListItem",
                     "position": index + 1,
                     "name": item.name,
-                    "item": `https://www.allbikesvespawarehouse.com.au${item.href}`
+                    "item": `https://www.scootershop.com.au${item.href}`
                 }))
             },
             {
@@ -81,7 +81,7 @@ const TyreFittingPage: React.FC = () => {
                 "serviceType": "Motorcycle and scooter tyre fitting",
                 "provider": {
                     "@type": "Organization",
-                    "name": "Allbikes Vespa Warehouse"
+                    "name": "Allbikes & Scooters"
                 },
                 "description": "Expert motorcycle and scooter tyre fitting, replacement, and balancing in Perth. We service all major brands and models.",
                 "hasOfferCatalog": {
@@ -103,7 +103,7 @@ const TyreFittingPage: React.FC = () => {
     return (
         <div className="container mx-auto py-0">
             <Seo
-                title="Motorcycle/Scooter Tyre Fitting | Allbikes Vespa Warehouse"
+                title="Motorcycle/Scooter Tyre Fitting | Allbikes & Scooters"
                 description="Expert motorcycle and scooter tyre fitting, replacement, and balancing in Perth. We service all major brands and models."
                 canonicalPath="/tyre-fitting"
                 structuredData={structuredData}

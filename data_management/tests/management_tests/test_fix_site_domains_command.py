@@ -9,7 +9,7 @@ class FixSiteDomainsCommandTest(TestCase):
         """
         Ensure the site is in the expected state before each test.
         """
-        self.new_domain = 'www.allbikesvespawarehouse.com.au'
+        self.new_domain = 'www.scootershop.com.au'
         # Get or create the default 'example.com' site
         self.site, _ = Site.objects.get_or_create(
             pk=1, 

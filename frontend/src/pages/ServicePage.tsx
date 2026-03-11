@@ -74,7 +74,7 @@ const ServicePage: React.FC = () => {
                     "@type": "ListItem",
                     "position": index + 1,
                     "name": item.name,
-                    "item": `https://www.allbikesvespawarehouse.com.au${item.href}`
+                    "item": `https://www.scootershop.com.au${item.href}`
                 }))
             },
             {
@@ -82,7 +82,7 @@ const ServicePage: React.FC = () => {
                 "serviceType": "Motorcycle and scooter servicing and repairs",
                 "provider": {
                     "@type": "Organization",
-                    "name": "Allbikes Vespa Warehouse"
+                    "name": "Allbikes & Scooters"
                 },
                 "description": "Expert motorcycle and scooter servicing, repairs, and tyre changes in Perth. We service all major brands, including Vespa, Piaggio, and more.",
                 "hasOfferCatalog": {
@@ -104,7 +104,7 @@ const ServicePage: React.FC = () => {
     return (
         <div className="container mx-auto py-0">
             <Seo
-                title="Motorcycle/Scooter Servicing and Tyre Fitting | Allbikes Vespa Warehouse"
+                title="Motorcycle/Scooter Servicing and Tyre Fitting | Allbikes & Scooters"
                 description="Expert motorcycle and scooter servicing, repairs, and tyre changes in Perth. We service all major brands, including Vespa, Piaggio, and more."
                 canonicalPath="/service"
                 structuredData={structuredData}

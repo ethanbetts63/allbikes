@@ -7,4 +7,4 @@ Disallow: /login
 Disallow: /booking/success
 Disallow: /service/booking-terms/
 
-Sitemap: https://www.allbikesvespawarehouse.com.au/sitemap.xml
+Sitemap: https://www.scootershop.com.au/sitemap.xml

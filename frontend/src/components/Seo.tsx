@@ -12,13 +12,13 @@ interface SeoProps {
 }
 
 const Seo: React.FC<SeoProps> = ({ title, description, canonicalPath, ogType = 'website', ogImage, noindex, structuredData }) => {
-  const siteUrl = 'https://www.allbikesvespawarehouse.com.au';
+  const siteUrl = 'https://www.scootershop.com.au';
   const canonicalUrl = canonicalPath ? `${siteUrl}${canonicalPath}` : undefined;
   const imageUrl = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/logo-192x192.png`;
 
   const defaultOrganizationSchema = {
     "@type": "Organization",
-    "name": "Allbikes Vespa Warehouse",
+    "name": "Allbikes & Scooters",
     "url": siteUrl,
     "logo": `${siteUrl}/logo-512x512.png`,
     "owner": {
