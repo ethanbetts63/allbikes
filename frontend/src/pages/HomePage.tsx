@@ -130,8 +130,8 @@ const HomePage = () => {
             "opens": siteSettings.opening_hours_sunday.split('-')[0],
             "closes": siteSettings.opening_hours_sunday.split('-')[1]
         },
-    ].filter(Boolean), // Filter out any null/undefined entries if a day's hours are not set
-    "priceRange": "AUD" // Placeholder, if no specific range is available.
+    ].filter(Boolean),
+    "priceRange": "AUD"
 } : null;
 
   const webSiteSchema = {
