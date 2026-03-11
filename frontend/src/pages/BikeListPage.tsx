@@ -27,10 +27,6 @@ const newBikeFaqs = [
     answer: "We sell brand‑new SYM scooters and Segway electric scooters or electric motorcycles. These are the only brands we offer new, so we can confidently stand behind their quality and reliability."
   },
   {
-    question: "Can I buy a Vespa or Piaggio new from you?",
-    answer: "No. We do not sell new Vespa or new Piaggio models. When available, we offer them only as used or pre‑owned stock."
-  },
-  {
     question: "Is your dealership in Perth?",
     answer: "Yes. Our motorcycle and scooter dealership and showroom are in Perth, where you can view and buy new SYM or Segway models in person."
   },
