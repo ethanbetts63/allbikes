@@ -208,7 +208,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             <div className="absolute inset-0 bg-stone-900/20 group-hover:bg-transparent transition-colors duration-300" />
             {/* Content */}
             <div className="absolute bottom-0 left-0 p-7">
-              <p className="text-stone-400 text-[9px] font-bold uppercase tracking-[0.25em] mb-2">
+              <p className="text-amber-400 text-[9px] font-bold uppercase tracking-[0.25em] mb-2">
                 Browse Inventory
               </p>
               <h2 className="text-white text-2xl md:text-3xl lg:text-2xl xl:text-3xl font-black uppercase italic leading-none mb-4">
