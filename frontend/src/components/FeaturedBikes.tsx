@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import SmallBikeCard from "@/components/SmallBikeCard";
 import type { FeaturedBikesProps } from "@/types/FeaturedBikesProps";
 import { Link } from "react-router-dom";
@@ -6,24 +7,47 @@ import { ArrowRight } from "lucide-react";
 
 const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description, linkTo, linkText }) => {
   if (bikes.length === 0) {
-    return null; // Don't render anything if there are no bikes
+    return null;
   }
 
-  const duration = 100;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const positionRef = useRef(0);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const scroll = () => {
+      if (scrollRef.current) {
+        const halfwayPoint = scrollRef.current.scrollWidth / 2;
+
+        positionRef.current += 0.3;
+
+        if (positionRef.current >= halfwayPoint) {
+          positionRef.current = 0;
+        }
+
+        scrollRef.current.scrollLeft = positionRef.current;
+      }
+      animationFrameRef.current = requestAnimationFrame(scroll);
+    };
+
+    if (!isHovering) {
+      positionRef.current = scrollRef.current?.scrollLeft || 0;
+      animationFrameRef.current = requestAnimationFrame(scroll);
+    }
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [isHovering]);
 
   return (
     <>
       <style>{`
-        @keyframes featured-scroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .featured-scroll-track {
-          animation: featured-scroll ${duration}s linear infinite;
-        }
-        .featured-scroll-track:hover {
-          animation-play-state: paused;
-        }
+        .featured-no-scrollbar::-webkit-scrollbar { display: none; }
+        .featured-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
       <div className="w-full py-4">
         <div className="container mx-auto">
@@ -40,9 +64,13 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
             </div>
 
             {/* Right Column: Auto-scrolling Bike Cards */}
-            <div className="w-full md:w-4/5 overflow-hidden py-3">
-              <div className="featured-scroll-track flex gap-4 w-max">
-                {/* Duplicated for seamless loop */}
+            <div
+              ref={scrollRef}
+              className="w-full md:w-4/5 overflow-x-auto py-3 featured-no-scrollbar"
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
+              <div className="flex gap-4 w-max">
                 {[...bikes, ...bikes].map((bike, i) => (
                   <div key={`${bike.id}-${i}`} className="flex-shrink-0 w-64">
                     <SmallBikeCard bike={bike} />
