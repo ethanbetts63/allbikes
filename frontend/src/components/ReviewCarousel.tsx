@@ -84,15 +84,6 @@ const ReviewCarousel = () => {
               <GoogleG size={28} />
               <div>
                 <h2 className="text-xl font-semibold text-white leading-tight">Google Reviews</h2>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-sm font-bold text-white">5.0</span>
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-3.5 w-3.5 fill-[#FBBC05] text-[#FBBC05]" />
-                    ))}
-                  </div>
-                  <span className="text-sm text-gray-400">· Based on Google Reviews</span>
-                </div>
               </div>
             </div>
             <a

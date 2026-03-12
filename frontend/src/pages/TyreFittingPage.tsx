@@ -1,127 +1,146 @@
-import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Seo from '@/components/Seo';
-import { getJobTypes } from '@/services/bookingService';
-import type { EnrichedJobType } from '@/types/EnrichedJobType';
-import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
-import WorkshopJobTypes from '@/components/WorkshopJobTypes';
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-import Breadcrumb from '@/components/Breadcrumb';
+import { Button } from '@/components/ui/button';
+import { CircleDot, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
+import ServiceCTAV2 from '@/components/ServiceCTAV2';
 
 const TyreFittingFaqs = [
   {
-    question: "Do you offer tyre changes for motorcycles and scooters?",
-    answer: "Yes. We provide motorcycle and scooter tyre changes, including tyre replacement, fitting, and balancing. We work on both motorcycles and scooters and can supply and fit tyres or fit tyres you provide, depending on the job."
+    question: "Do you offer motorcycle and scooter tyre fitting?",
+    answer: "Yes. We specialise in motorcycle and scooter tyre fitting, including motorcycle tyre change, scooter tyre change, tyre supply and fit, and fit-only jobs where you supply the tyres. We handle everything from 50cc scooter tyres through to large-capacity motorcycle tyres."
   },
   {
-    question: "Can you fit tyres I supply myself?",
-    answer: "Yes, we can fit tyres that you provide. Please ensure they are the correct size and type for your motorcycle or scooter. We also offer a wide range of tyres for purchase if you prefer."
+    question: "Do you fit tyres on Vespa and Piaggio scooters?",
+    answer: "Yes. We have extensive experience with scooter tyre replacement and tyre fitting on Vespa and Piaggio models, including puncture repair and flat tyre repair. Owner Frank previously operated Perth's primary Vespa dealership, so these bikes are well known to us."
   },
   {
-    question: "What is the cost of tyre fitting?",
-    answer: "The cost of tyre fitting can vary depending on the type of bike and the complexity of the job. For a precise quote, please get in touch with us with your bike's details and tyre specifications."
+    question: "Do you do tyre changes on 50cc scooters?",
+    answer: "Yes. We perform scooter tyre replacement and tyre install on 50cc scooters as well as larger-capacity scooters. Puncture repair and flat tyre repair are also available for smaller-capacity bikes."
   },
   {
-    question: "Do you offer wheel balancing?",
-    answer: "Yes, wheel balancing is a standard part of our tyre fitting service to ensure a smooth and safe ride."
+    question: "Do you fit tyres on dirt bikes?",
+    answer: "Yes. We offer motorcycle tyre replacement and tyre fitting for dirt bikes, including flat tyre repair and puncture repair. If you're unsure whether your specific bike is suitable, feel free to get in touch."
   },
   {
-    question: "How long does a tyre fitting take?",
-    answer: "Tyre fitting times can vary, but we strive to complete the service as efficiently as possible. It typically takes about an hour, but complex jobs may take longer. We recommend booking in advance."
+    question: "Do you work on electric scooter tyres?",
+    answer: "Yes. We provide tyre fitting and tyre repair for electric scooters and electric motorcycle-style scooters. We do not work on electric kick scooter tyres — these are a different vehicle entirely."
   },
   {
-    question: "Do you offer mobile tyre fitting services?",
-    answer: "We work closely with Perth Motorcycle and Scooter Movers. If you’re unable to transport your bike for a tyre fitting, pickup and delivery can be arranged easily and affordably to and from our workshop."
+    question: "Can you supply tyres, or do I need to bring my own?",
+    answer: "Both. We offer tyre supply and fit, where we source and install motorcycle tyres or scooter tyres for you. Alternatively, if you have already sourced your own tyres, we can carry out a fit-only tyre install. Wheel balancing is included as standard either way."
+  },
+  {
+    question: "Can you help if I have a flat tyre and can't transport my bike?",
+    answer: "Yes. If you're dealing with a flat tyre or puncture and can't ride your bike in, we work closely with Perth Motorcycle and Scooter Movers to arrange affordable pickup and delivery to and from our workshop."
   }
 ];
 
-const TyreFittingPage = () => {
-    const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+const tyreServices = [
+  {
+    Icon: CircleDot,
+    title: 'Motorcycle & Scooter Tyre Change',
+    description: 'We carry out motorcycle tyre replacement and scooter tyre replacement for all makes and models — from 50cc scooters through to large-capacity motorcycles. Supply and fit, or fit-only.',
+  },
+  {
+    Icon: Wrench,
+    title: 'Puncture Repair & Flat Tyre Repair',
+    description: 'Flat tyre repair and puncture repair carried out in our Dianella workshop. If you can\'t ride the bike in, we can arrange pickup through our movers contact.',
+  },
+  {
+    Icon: CheckCircle2,
+    title: 'Tyre Supply, Install & Balancing',
+    description: 'We supply motorcycle tyres and scooter tyres across a range of brands, or you can bring your own for a tyre install. Wheel balancing is included as standard with every fitting.',
+  },
+];
 
-    useEffect(() => {
-        const fetchJobTypes = async () => {
-            setIsLoading(true);
-            setError(null);
-            try {
-                const data = await getJobTypes();
-                setJobTypes(data);
-            } catch (error) {
-                console.error("Failed to fetch job types:", error);
-                setError("Could not load our services. Please try again later.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
+const breadcrumbItems = [
+    { name: 'Home', href: '/' },
+    { name: 'Tyre Fitting', href: '/tyre-fitting' },
+];
 
-        fetchJobTypes();
-    }, []);
-
-    const breadcrumbItems: BreadcrumbItem[] = [
-        { name: 'Home', href: '/' },
-        { name: 'Tyre Fitting', href: '/tyre-fitting' },
-    ];
-
-    const structuredData = {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "BreadcrumbList",
-                "itemListElement": breadcrumbItems.map((item, index) => ({
-                    "@type": "ListItem",
-                    "position": index + 1,
-                    "name": item.name,
-                    "item": `https://www.scootershop.com.au${item.href}`
-                }))
+const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "BreadcrumbList",
+            "itemListElement": breadcrumbItems.map((item, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "name": item.name,
+                "item": `https://www.scootershop.com.au${item.href}`
+            }))
+        },
+        {
+            "@type": "Service",
+            "serviceType": "Motorcycle and scooter tyre fitting",
+            "provider": {
+                "@type": "Organization",
+                "name": "Allbikes & Scooters"
             },
-            {
-                "@type": "Service",
-                "serviceType": "Motorcycle and scooter tyre fitting",
-                "provider": {
-                    "@type": "Organization",
-                    "name": "Allbikes & Scooters"
-                },
-                "description": "Expert motorcycle and scooter tyre fitting, replacement, and balancing in Perth. We service all major brands and models.",
-                "hasOfferCatalog": {
-                    "@type": "OfferCatalog",
-                    "name": "Tyre Fitting Services",
-                    "itemListElement": jobTypes.map(job => ({
-                        "@type": "Offer",
-                        "itemOffered": {
-                            "@type": "Service",
-                            "name": job.name,
-                            "description": job.description
-                        }
-                    }))
-                }
+            "description": "Motorcycle tyre change, scooter tyre replacement, puncture repair, flat tyre repair, and tyre supply and fit in Perth.",
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Tyre Fitting Services",
+                "itemListElement": tyreServices.map(s => ({
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": s.title,
+                        "description": s.description
+                    }
+                }))
             }
-        ]
-    };
+        }
+    ]
+};
 
+const TyreFittingPage = () => {
     return (
-        <div className="container mx-auto py-0">
+        <div>
             <Seo
-                title="Motorcycle/Scooter Tyre Fitting | Allbikes & Scooters"
-                description="Expert motorcycle and scooter tyre fitting, replacement, and balancing in Perth. We service all major brands and models."
+                title="Motorcycle & Scooter Tyre Fitting Perth | Allbikes & Scooters"
+                description="Motorcycle tyre change, scooter tyre replacement, puncture repair, and flat tyre repair in Perth. Supply and fit or fit-only. Book online."
                 canonicalPath="/tyre-fitting"
                 structuredData={structuredData}
             />
-            <Breadcrumb items={breadcrumbItems} />
-            <WorkshopJobTypes
-                jobTypes={jobTypes}
-                isLoading={isLoading}
-                error={error}
-                title="Book Your Tyre Fitting"
-                paragraph="Ready for new tyres? Our expert mechanics are here to help. From tyre fitting to wheel balancing, we've got you covered. Use our online booking system to find a time that works for you."
-                buttonText="Book Tyre Fitting Online"
-            />
 
-            <div className="mt-8 mb-4">
+            <ServiceCTAV2 />
+
+            {/* Tyre Services */}
+            <div className="bg-background pt-8 pb-16">
+                <div className="container mx-auto px-4">
+                    <h2 className="text-4xl font-bold text-center text-[var(--text-primary)] mb-12">Tyre Services</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {tyreServices.map(({ Icon, title, description }) => (
+                            <div key={title} className="bg-foreground rounded-lg p-8 flex flex-col gap-4">
+                                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-primary/20">
+                                    <Icon className="h-7 w-7 text-primary" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-[var(--text-primary)]">{title}</h3>
+                                <p className="text-[var(--text-secondary)] text-lg leading-relaxed">{description}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="text-center mt-10">
+                        <Link to="/booking">
+                            <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-lg hover:bg-primary/90 inline-flex items-center gap-2">
+                                Book Online <ArrowRight className="h-5 w-5" />
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
+            {/* Motorcycle Movers */}
+            <div className="container mx-auto px-4 mb-4">
                 <MotorcycleMovers />
             </div>
+
             <FaqSection title="Tyre Fitting FAQ" faqData={TyreFittingFaqs} />
+
             <FloatingActionButton />
         </div>
     );
