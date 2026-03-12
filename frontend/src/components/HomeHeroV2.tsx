@@ -264,13 +264,13 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         )}
 
         {/* Service strip */}
-        <div className="bg-stone-800 flex flex-col sm:flex-row items-center justify-between gap-6 px-8 py-8 md:px-10">
+        <div className="bg-stone-900 flex flex-col sm:flex-row items-center justify-between gap-6 px-8 py-8 md:px-10">
           <div>
             <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
               Allbikes Workshop &nbsp;·&nbsp; Perth
             </p>
             <h2 className="text-white text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">
-              Get Your Bike Sorted.
+              Get Your Bike Serviced.
             </h2>
             <p className="text-stone-400 text-sm leading-relaxed max-w-sm">
               Servicing, tyres, puncture repairs, and general maintenance — petrol and electric.
