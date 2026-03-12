@@ -35,7 +35,7 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
             </div>
 
             {/* Right Column: Scrollable Bike Cards */}
-            <div className="w-full md:w-4/5 flex overflow-x-auto space-x-4 pb-2 hide-scrollbar">
+            <div className="w-full md:w-4/5 flex overflow-x-auto space-x-4 py-3 hide-scrollbar">
               {bikes.map((bike) => (
                 <div key={bike.id} className="flex-shrink-0 w-64">
                   <SmallBikeCard bike={bike} />

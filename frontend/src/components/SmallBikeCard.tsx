@@ -18,7 +18,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
 
   return (
     <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
-      <div className="relative w-full overflow-hidden flex flex-col h-full bg-white rounded-lg border border-stone-200 hover:-translate-y-1 transition-transform duration-200">
+      <div className="relative w-full overflow-hidden flex flex-col h-full bg-white rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200">
         {bike.status === 'sold' && (
           <span className="absolute top-2.5 left-2.5 z-10 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
             Sold
@@ -40,17 +40,17 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           />
         </div>
         <div className="px-3 py-2.5 flex flex-col flex-1 gap-1.5">
-          <h3 className="text-sm font-bold text-stone-900 leading-snug">{cardTitle}</h3>
-          <div className="flex items-center gap-3 text-xs text-stone-500">
+          <h3 className="text-base font-bold text-stone-900 leading-snug">{cardTitle}</h3>
+          <div className="flex items-center gap-3 text-sm text-stone-500">
             {bike.engine_size && (
               <span className="flex items-center gap-1">
-                <Wrench className="h-3 w-3" />
+                <Wrench className="h-3.5 w-3.5" />
                 {bike.engine_size}cc
               </span>
             )}
             {bike.transmission && (
               <span className="flex items-center gap-1">
-                <Cog className="h-3 w-3" />
+                <Cog className="h-3.5 w-3.5" />
                 {bike.transmission}
               </span>
             )}
@@ -58,15 +58,15 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           <div className="mt-auto pt-1">
             {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
               <div className="flex items-baseline gap-2">
-                <span className="text-stone-400 line-through text-xs">
+                <span className="text-stone-500 line-through text-sm">
                   ${parseFloat(bike.price).toLocaleString()}
                 </span>
-                <span className="text-amber-400 font-black text-base">
+                <span className="text-amber-400 font-black text-xl">
                   ${parseFloat(bike.discount_price).toLocaleString()}
                 </span>
               </div>
             ) : (
-              <span className="text-amber-400 font-black text-base">
+              <span className="text-amber-400 font-black text-xl">
                 ${parseFloat(bike.price).toLocaleString()}
               </span>
             )}
