@@ -88,49 +88,21 @@ const HomePage = () => {
         "addressCountry": "AU" 
     },
     "openingHoursSpecification": [
-        siteSettings.opening_hours_monday && {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Monday",
-            "opens": siteSettings.opening_hours_monday.split('-')[0],
-            "closes": siteSettings.opening_hours_monday.split('-')[1]
-        },
-        siteSettings.opening_hours_tuesday && {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Tuesday",
-            "opens": siteSettings.opening_hours_tuesday.split('-')[0],
-            "closes": siteSettings.opening_hours_tuesday.split('-')[1]
-        },
-        siteSettings.opening_hours_wednesday && {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Wednesday",
-            "opens": siteSettings.opening_hours_wednesday.split('-')[0],
-            "closes": siteSettings.opening_hours_wednesday.split('-')[1]
-        },
-        siteSettings.opening_hours_thursday && {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Thursday",
-            "opens": siteSettings.opening_hours_thursday.split('-')[0],
-            "closes": siteSettings.opening_hours_thursday.split('-')[1]
-        },
-        siteSettings.opening_hours_friday && {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Friday",
-            "opens": siteSettings.opening_hours_friday.split('-')[0],
-            "closes": siteSettings.opening_hours_friday.split('-')[1]
-        },
-        siteSettings.opening_hours_saturday && {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Saturday",
-            "opens": siteSettings.opening_hours_saturday.split('-')[0],
-            "closes": siteSettings.opening_hours_saturday.split('-')[1]
-        },
-        siteSettings.opening_hours_sunday && {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": "Sunday",
-            "opens": siteSettings.opening_hours_sunday.split('-')[0],
-            "closes": siteSettings.opening_hours_sunday.split('-')[1]
-        },
-    ].filter(Boolean),
+        { day: "Monday",    hours: siteSettings.opening_hours_monday },
+        { day: "Tuesday",   hours: siteSettings.opening_hours_tuesday },
+        { day: "Wednesday", hours: siteSettings.opening_hours_wednesday },
+        { day: "Thursday",  hours: siteSettings.opening_hours_thursday },
+        { day: "Friday",    hours: siteSettings.opening_hours_friday },
+        { day: "Saturday",  hours: siteSettings.opening_hours_saturday },
+        { day: "Sunday",    hours: siteSettings.opening_hours_sunday },
+    ]
+    .filter(({ hours }) => hours && !hours.toLowerCase().includes('closed'))
+    .map(({ day, hours }) => ({
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": day,
+        "opens": hours.split('-')[0].trim(),
+        "closes": hours.split('-')[1].trim(),
+    })),
     "priceRange": "AUD"
 } : null;
 
