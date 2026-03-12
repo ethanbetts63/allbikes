@@ -8,7 +8,6 @@ import { Spinner } from '@/components/ui/spinner';
 import FeaturedBikes from "@/components/FeaturedBikes";
 import YouTube from 'react-youtube';
 import {
-    DollarSign,
     Hash,
     Gauge,
     Cog,
