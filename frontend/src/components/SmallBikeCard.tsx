@@ -40,8 +40,8 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           />
         </div>
         <div className="px-3 py-2.5 flex flex-col flex-1 gap-1.5">
-          <h3 className="text-sm font-bold text-white leading-snug">{cardTitle}</h3>
-          <div className="flex items-center gap-3 text-xs text-stone-400">
+          <h3 className="text-sm font-bold text-stone-900 leading-snug">{cardTitle}</h3>
+          <div className="flex items-center gap-3 text-xs text-stone-500">
             {bike.engine_size && (
               <span className="flex items-center gap-1">
                 <Wrench className="h-3 w-3" />
@@ -58,7 +58,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           <div className="mt-auto pt-1">
             {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
               <div className="flex items-baseline gap-2">
-                <span className="text-stone-500 line-through text-xs">
+                <span className="text-stone-400 line-through text-xs">
                   ${parseFloat(bike.price).toLocaleString()}
                 </span>
                 <span className="text-amber-400 font-black text-base">
