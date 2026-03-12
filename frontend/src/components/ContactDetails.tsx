@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
@@ -31,7 +30,7 @@ const backupContactDetails = {
     last_updated: new Date().toISOString(), // Placeholder for last updated
 };
 
-const ContactDetails: React.FC = () => {
+const ContactDetails = () => {
     const currentSettings = backupContactDetails;
 
     const fullAddress = `${currentSettings.street_address}\n${currentSettings.address_locality}, ${currentSettings.address_region} ${currentSettings.postal_code}`;

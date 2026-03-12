@@ -1,10 +1,9 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
 import type { BreadcrumbProps } from '@/types/BreadcrumbProps';
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
+const Breadcrumb = ({ items }: BreadcrumbProps) => {
   return (
     <nav className="flex justify-end pt-2 px-4 sm:px-6 lg:px-8" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">

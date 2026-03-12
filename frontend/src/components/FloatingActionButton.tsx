@@ -1,8 +1,7 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
-export const FloatingActionButton: React.FC = () => {
+export const FloatingActionButton = () => {
   return (
     <Link
       to="/booking"

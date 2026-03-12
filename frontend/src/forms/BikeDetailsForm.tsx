@@ -1,13 +1,13 @@
 {/* User Form */}
-import React from 'react';
+import { type ChangeEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import type { BikeDetailsFormProps } from '@/types/BikeDetailsFormProps';
 
-const BikeDetailsForm: React.FC<BikeDetailsFormProps> = ({ formData, setFormData, nextStep, prevStep }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const BikeDetailsForm = ({ formData, setFormData, nextStep, prevStep }: BikeDetailsFormProps) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [id]: value }));
   };

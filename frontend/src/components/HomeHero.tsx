@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import type { HomeHeroProps } from "@/types/HomeHeroProps";
 import ContactButtons from './ContactButtons';
@@ -21,7 +21,7 @@ import defaultUsedImage768 from '@/assets/IMG_20250730_102056-768w.webp';
 import defaultUsedImage1024 from '@/assets/IMG_20250730_102056-1024w.webp';
 import defaultUsedImage1280 from '@/assets/IMG_20250730_102056-1280w.webp';
 
-const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, emailAddress }) => {  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImage]);
+const HomeHero = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, emailAddress }: HomeHeroProps) => {  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImage]);
   const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([defaultUsedImage]);
   const [currentNewBikeImageIndex, setCurrentNewBikeImageIndex] = useState(0);
   const [currentUsedBikeImageIndex, setCurrentUsedBikeImageIndex] = useState(0);

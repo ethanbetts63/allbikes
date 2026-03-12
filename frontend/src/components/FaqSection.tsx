@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from "./ui/card";
 import { ChevronDown } from 'lucide-react';
 
 import type { FaqSectionProps } from '@/types/FaqSectionProps';
 
-export const FaqSection: React.FC<FaqSectionProps> = ({ title, faqData }) => {
+export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { type ChangeEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 import type { PersonalDetailsFormProps } from '@/types/PersonalDetailsFormProps';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
-const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, setFormData, prevStep, handleSubmit, error }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, error }: PersonalDetailsFormProps) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [id]: value }));
   };

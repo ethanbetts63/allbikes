@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import {
   Select,
   SelectContent,
@@ -13,14 +13,14 @@ import { Label } from '@/components/ui/label';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 import type { FilterSortProps } from '@/types/FilterSortProps';
 
-const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
+const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
   const [localOptions, setLocalOptions] = useState<FilterSortOptions>(options);
 
   useEffect(() => {
     setLocalOptions(options);
   }, [options]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLocalOptions({ ...localOptions, [name]: value ? Number(value) : undefined });
   };

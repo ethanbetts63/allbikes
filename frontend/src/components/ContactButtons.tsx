@@ -1,10 +1,9 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail } from 'lucide-react';
 
 import type { ContactButtonsProps } from '@/types/ContactButtonsProps';
 
-const ContactButtons: React.FC<ContactButtonsProps> = ({ phoneNumber, mobileNumber, emailAddress }) => {
+const ContactButtons = ({ phoneNumber, mobileNumber, emailAddress }: ContactButtonsProps) => {
   if (!phoneNumber && !mobileNumber && !emailAddress) {
     return null;
   }

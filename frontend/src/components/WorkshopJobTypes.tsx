@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import type { WorkshopJobTypesProps } from '@/types/WorkshopJobTypesProps';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,7 @@ const SkeletonLoader = () => (
     </div>
 );
 
-const WorkshopJobTypes: React.FC<WorkshopJobTypesProps> = ({ jobTypes, isLoading, error, title, paragraph, buttonText }) => {
+const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, buttonText }: WorkshopJobTypesProps) => {
   return (
     <div className="w-full flex flex-col md:flex-row bg-background text-[var(--text-primary)] rounded-lg overflow-hidden">
       {/* Left Column */}

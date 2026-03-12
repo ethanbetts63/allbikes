@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -23,7 +22,7 @@ import segwayImage1280 from '../assets/segway_1-1280w.webp';
 
 import type { BrandProps } from '@/types/BrandProps';
 
-const BrandCard: React.FC<BrandProps> = ({ image, imageSrcSet, alt, title, subtitle, description, imageLeft }) => {
+const BrandCard = ({ image, imageSrcSet, alt, title, subtitle, description, imageLeft }: BrandProps) => {
   return (
     <div className={`flex flex-col md:flex-row ${imageLeft ? '' : 'md:flex-row-reverse'} items-center bg-background rounded-none lg:rounded-lg overflow-hidden`}>
       <div className="w-full md:w-1/2">
@@ -52,7 +51,7 @@ const BrandCard: React.FC<BrandProps> = ({ image, imageSrcSet, alt, title, subti
   );
 };
 
-const BrandsSection: React.FC = () => {
+const BrandsSection = () => {
   const symText = `
 Founded in 1954, SYM is a trusted Taiwanese manufacturer known for exceptional build quality and reliability. They strike the perfect balance—offering better quality than many low-end brands, without the high price tag of premium models. 
 We've proudly partnered with them for years—mainly because it just makes sense. Their scooters come back with fewer issues, and our mechanics enjoy working on them.`;

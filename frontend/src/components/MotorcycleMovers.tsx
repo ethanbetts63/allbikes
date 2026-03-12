@@ -1,9 +1,8 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import moverImage from '@/assets/movers.webp';
 
-const MotorcycleMovers: React.FC = () => {
+const MotorcycleMovers = () => {
     return (
         <div className="bg-foreground text-[var(--text-primary)] rounded-lg overflow-hidden md:flex mt-2 mb-4">
             {/* Left Column: Image */}

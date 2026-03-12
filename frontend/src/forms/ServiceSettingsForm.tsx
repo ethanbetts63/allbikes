@@ -1,11 +1,10 @@
-import React from 'react';
 import type { ServiceSettingsFormProps } from '@/types/ServiceSettingsFormProps';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-const ServiceSettingsForm: React.FC<ServiceSettingsFormProps> = ({
+const ServiceSettingsForm = ({
     settings,
     loading,
     successMessage,

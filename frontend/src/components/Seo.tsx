@@ -1,9 +1,8 @@
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import type { SeoProps } from '@/types/SeoProps';
 
-const Seo: React.FC<SeoProps> = ({ title, description, canonicalPath, ogType = 'website', ogImage, noindex, structuredData }) => {
+const Seo = ({ title, description, canonicalPath, ogType = 'website', ogImage, noindex, structuredData }: SeoProps) => {
   const siteUrl = 'https://www.scootershop.com.au';
   const canonicalUrl = canonicalPath ? `${siteUrl}${canonicalPath}` : undefined;
   const imageUrl = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/logo-192x192.png`;

@@ -1,8 +1,7 @@
-import React from 'react';
 
 import type { HeroProps } from '@/types/HeroProps';
 
-const Hero: React.FC<HeroProps> = ({ title, description, imageUrl }) => {
+const Hero = ({ title, description, imageUrl }: HeroProps) => {
   return (
     <div
       className="relative w-full h-80 bg-cover bg-center"

@@ -1,7 +1,6 @@
-import React from 'react';
 import { siteSettings } from '@/config/siteSettings';
 
-const Banner: React.FC = () => {
+const Banner = () => {
   const isVisible = siteSettings.enable_banner;
   const bannerText = siteSettings.banner_text;
 
