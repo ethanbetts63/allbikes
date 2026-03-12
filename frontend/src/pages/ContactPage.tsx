@@ -73,9 +73,10 @@ const ContactPage = () => {
             <Breadcrumb items={breadcrumbItems} />
             
             {siteSettings && (
-                <ContactButtons 
-                    phoneNumber={siteSettings.phone_number} 
-                    emailAddress={siteSettings.email_address} 
+                <ContactButtons
+                    phoneNumber={siteSettings.phone_number}
+                    mobileNumber={siteSettings.mobile_number}
+                    emailAddress={siteSettings.email_address}
                 />
             )}
 
