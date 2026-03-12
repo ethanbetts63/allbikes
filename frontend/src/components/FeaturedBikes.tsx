@@ -49,9 +49,8 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
         .featured-no-scrollbar::-webkit-scrollbar { display: none; }
         .featured-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
-      <div className="w-full py-4">
-        <div className="container mx-auto">
-          <div className="bg-foreground rounded-xl p-8 flex flex-col md:flex-row items-center gap-8">
+      <div className="w-full">
+        <div className="bg-foreground p-8 flex flex-col md:flex-row items-center gap-8">
             {/* Left Column: Title, Description, Button */}
             <div className="md:w-1/5 shrink-0 text-center md:text-left">
               <h2 className="text-2xl font-black tracking-tight mb-2 text-white leading-tight">{title}</h2>
@@ -78,7 +77,6 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
                 ))}
               </div>
             </div>
-          </div>
         </div>
       </div>
     </>
