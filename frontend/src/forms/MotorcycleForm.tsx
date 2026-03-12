@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from 'react';
+import { useEffect, type ChangeEvent } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,7 +27,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
-const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, isLoading }) => {
+const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProps) => {
     
     const { register, handleSubmit, control, formState: { errors } } = useForm<MotorcycleFormData>({
         defaultValues: {
@@ -49,7 +49,7 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
         name: "managedImages"
     });
 
-    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
             Array.from(files).forEach((file, index) => {
@@ -67,7 +67,7 @@ const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, 
     };
     
     // Cleanup blob URLs on unmount
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             fields.forEach(field => {
                 if (field.file) {

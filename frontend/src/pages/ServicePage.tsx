@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '@/components/Seo';
 import MotorcycleMovers from "@/components/MotorcycleMovers";
@@ -94,7 +93,7 @@ const structuredData = {
     ]
 };
 
-const ServicePage: React.FC = () => {
+const ServicePage = () => {
     return (
         <div>
             <Seo

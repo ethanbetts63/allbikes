@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { authedFetch } from '@/apiClient';
 import type { ServiceSettings } from '@/types/ServiceSettings';
 import ServiceSettingsForm from '@/forms/ServiceSettingsForm';
@@ -25,13 +25,13 @@ const ServiceSettingsPage = () => {
         fetchSettings();
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (!settings) return;
         const { name, value, type } = e.target;
         setSettings({ ...settings, [name]: type === 'number' ? parseInt(value, 10) : value });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (!settings) return;
 

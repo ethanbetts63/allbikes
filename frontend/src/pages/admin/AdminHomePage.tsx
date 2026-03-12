@@ -1,7 +1,6 @@
-import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 
-const AdminHomePage: React.FC = () => {
+const AdminHomePage = () => {
   const { user } = useAuth();
 
   return (

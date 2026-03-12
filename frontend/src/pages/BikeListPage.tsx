@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Seo from '@/components/Seo';
 import BikeCard from '@/components/BikeCard';
 import type { Bike } from '@/types/Bike';
@@ -63,7 +63,7 @@ const usedBikeFaqs = [
   }
 ];
 
-const BikeListPage: React.FC<BikeListPageProps> = ({ bikeCondition }) => {
+const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
   const [bikes, setBikes] = useState<Bike[] | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);

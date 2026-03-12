@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
 import { getJobTypes } from '@/services/bookingService';
 import type { EnrichedJobType } from '@/types/EnrichedJobType';
@@ -37,7 +37,7 @@ const TyreFittingFaqs = [
   }
 ];
 
-const TyreFittingPage: React.FC = () => {
+const TyreFittingPage = () => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

@@ -10,7 +10,7 @@ const ServiceSettingsForm = ({
     successMessage,
     handleSubmit,
     handleChange,
-}) => {
+}: ServiceSettingsFormProps) => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex justify-between items-center mb-4">

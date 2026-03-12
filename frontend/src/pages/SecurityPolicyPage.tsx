@@ -1,7 +1,6 @@
-import React from 'react';
 import Seo from '@/components/Seo';
 
-const SecurityPolicyPage: React.FC = () => {
+const SecurityPolicyPage = () => {
   return (
     <>
       <Seo

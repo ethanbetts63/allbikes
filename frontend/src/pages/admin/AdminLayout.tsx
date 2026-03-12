@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink, Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui/spinner';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Seo from '@/components/Seo';
 import { Wrench, PlusSquare } from 'lucide-react';
 
-const AdminLayout: React.FC = () => {
+const AdminLayout = () => {
   const { user, isLoading: isAuthLoading } = useAuth();
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>

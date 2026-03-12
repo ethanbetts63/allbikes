@@ -1,11 +1,10 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import MotorcycleMovers from '@/components/MotorcycleMovers';
 import { CheckCircle } from 'lucide-react';
 import Seo from '@/components/Seo';
 
-const BookingSuccessPage: React.FC = () => {
+const BookingSuccessPage = () => {
     return (
         <div className="container mx-auto py-10 max-w-4xl text-center">
             <Seo

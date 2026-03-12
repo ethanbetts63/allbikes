@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import MotorcycleForm from "@/forms/MotorcycleForm";
 import type { MotorcycleFormData } from "@/types/MotorcycleFormData";
@@ -15,11 +15,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 const AddMotorcyclePage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    const [initialData, setInitialData] = React.useState<Bike | undefined>(undefined);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [notification, setNotification] = React.useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
+    const [initialData, setInitialData] = useState<Bike | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(false);
+    const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (id) {
             const fetchBike = async () => {
                 setIsLoading(true);

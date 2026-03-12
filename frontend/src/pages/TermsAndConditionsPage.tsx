@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getLatestTermsAndConditions } from '@/api';
 import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 
-const TermsAndConditionsPage: React.FC = () => {
+const TermsAndConditionsPage = () => {
     const [terms, setTerms] = useState<TermsAndConditions | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

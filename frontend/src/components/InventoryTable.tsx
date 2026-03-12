@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState, useEffect, useMemo } from "react"
 import {
   flexRender,
   getCoreRowModel,
@@ -36,16 +36,16 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 // Main InventoryTable Component
 const InventoryTable = () => {
   const navigate = useNavigate();
-  const [data, setData] = React.useState<Bike[]>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
+  const [data, setData] = useState<Bike[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 12,
   });
-  const [pageCount, setPageCount] = React.useState(0);
-  const [conditionFilter, setConditionFilter] = React.useState<'new' | 'used' | null>(null);
+  const [pageCount, setPageCount] = useState(0);
+  const [conditionFilter, setConditionFilter] = useState<'new' | 'used' | null>(null);
 
-  const pagination = React.useMemo(
+  const pagination = useMemo(
     () => ({
       pageIndex,
       pageSize,
@@ -53,9 +53,9 @@ const InventoryTable = () => {
     [pageIndex, pageSize]
   );
 
-  const [notification, setNotification] = React.useState<{ message: string, type: 'success' | 'error' } | null>(null);
+  const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchBikes = async () => {
       try {
         // Tanstack table is 0-indexed, API is 1-indexed
@@ -96,7 +96,7 @@ const InventoryTable = () => {
     setConditionFilter(filter);
   };
 
-  const columns: ColumnDef<Bike>[] = React.useMemo(() => [
+  const columns: ColumnDef<Bike>[] = useMemo(() => [
     {
       accessorKey: "condition",
       header: ({ column }) => (

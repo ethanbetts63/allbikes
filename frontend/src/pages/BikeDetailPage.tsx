@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { getBikeById, getBikes } from '@/api';
 import type { Bike } from '@/types/Bike';
@@ -42,7 +42,7 @@ const getYouTubeVideoId = (url: string): string | null => {
     return null;
 };
 
-const BikeDetailPage: React.FC = () => {
+const BikeDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
     const [bike, setBike] = useState<Bike | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -112,7 +112,7 @@ const BikeDetailPage: React.FC = () => {
         fetchFeaturedBikes();
     }, [slug]);
 
-    const sortedImages = React.useMemo(() => {
+    const sortedImages = useMemo(() => {
         if (!bike?.images) return [];
         return [...bike.images].sort((a, b) => a.order - b.order);
     }, [bike]);

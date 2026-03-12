@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getJobTypes, getUnavailableDays, getServiceSettings } from '@/services/bookingService';
 import type { ServiceSettings } from '@/types/ServiceSettings';
 import type { EnrichedJobType } from '@/types/EnrichedJobType';
@@ -16,7 +16,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner"; // Import Spinner
 
-const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFormData, nextStep }) => {
+const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsFormProps) => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
     const [unavailableDays, setUnavailableDays] = useState<string[]>([]);
     const [serviceSettings, setServiceSettings] = useState<ServiceSettings | null>(null);

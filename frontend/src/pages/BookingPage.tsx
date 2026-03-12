@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createBooking } from '@/services/bookingService';
 import Seo from '@/components/Seo';
@@ -26,7 +26,7 @@ const initialFormData = {
     terms_accepted: false
 };
 
-const BookingPage: React.FC = () => {
+const BookingPage = () => {
     const [step, setStep] = useState(1);
     const navigate = useNavigate();
     const [formData, setFormData] = useState(() => {
