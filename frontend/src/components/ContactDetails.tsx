@@ -1,33 +1,5 @@
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-
-const backupContactDetails = {
-    id: 0,
-    enable_motorcycle_mover: false,
-    enable_banner: false,
-    banner_text: "",
-    phone_number: "94334613",
-    mobile_number: "0477700005",
-    email_address: "admin@scootershop.com.au",
-    street_address: "Unit 5 / 6 Cleveland Street",
-    address_locality: "Dianella",
-    address_region: "WA",
-    postal_code: "6059",
-    google_places_place_id: "",
-    mrb_number: "",
-    abn_number: "",
-    md_number: "",
-    youtube_link: "",
-    instagram_link: "",
-    facebook_link: "",
-    opening_hours_monday: "9:00 AM - 5:00 PM",
-    opening_hours_tuesday: "9:00 AM - 5:00 PM",
-    opening_hours_wednesday: "9:00 AM - 5:00 PM",
-    opening_hours_thursday: "9:00 AM - 5:00 PM",
-    opening_hours_friday: "9:00 AM - 5:00 PM",
-    opening_hours_saturday: "Closed",
-    opening_hours_sunday: "Closed",
-    last_updated: new Date().toISOString(),
-};
+import { siteSettings } from '@/config/siteSettings';
 
 const days = [
     { label: 'Monday',    key: 'opening_hours_monday' },
@@ -40,7 +12,7 @@ const days = [
 ] as const;
 
 const ContactDetails = () => {
-    const s = backupContactDetails;
+    const s = siteSettings;
     const fullAddress = `${s.street_address}, ${s.address_locality} ${s.address_region} ${s.postal_code}`;
     const primaryPhone = s.phone_number || s.mobile_number;
     const displayPhone = s.phone_number && s.mobile_number
