@@ -9,15 +9,20 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
     return null; // Don't render anything if there are no bikes
   }
 
+  const duration = 100;
+
   return (
     <>
       <style>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
+        @keyframes featured-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+        .featured-scroll-track {
+          animation: featured-scroll ${duration}s linear infinite;
+        }
+        .featured-scroll-track:hover {
+          animation-play-state: paused;
         }
       `}</style>
       <div className="w-full py-4">
@@ -34,13 +39,16 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
               </Link>
             </div>
 
-            {/* Right Column: Scrollable Bike Cards */}
-            <div className="w-full md:w-4/5 flex overflow-x-auto space-x-4 py-3 hide-scrollbar">
-              {bikes.map((bike) => (
-                <div key={bike.id} className="flex-shrink-0 w-64">
-                  <SmallBikeCard bike={bike} />
-                </div>
-              ))}
+            {/* Right Column: Auto-scrolling Bike Cards */}
+            <div className="w-full md:w-4/5 overflow-hidden py-3">
+              <div className="featured-scroll-track flex gap-4 w-max">
+                {/* Duplicated for seamless loop */}
+                {[...bikes, ...bikes].map((bike, i) => (
+                  <div key={`${bike.id}-${i}`} className="flex-shrink-0 w-64">
+                    <SmallBikeCard bike={bike} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
