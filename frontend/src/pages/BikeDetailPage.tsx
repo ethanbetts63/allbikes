@@ -1,11 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getBikeById, getBikes } from '@/api';
 import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
-import { Badge } from "@/components/ui/badge";
 import FeaturedBikes from "@/components/FeaturedBikes";
 import YouTube from 'react-youtube';
 import {
@@ -74,10 +73,10 @@ const BikeDetailPage = () => {
                 setIsLoading(true);
                 setError(null);
                 const data = await getBikeById(id);
-                
+
                 const sortedImages = [...data.images].sort((a, b) => a.order - b.order);
                 data.images = sortedImages;
-                
+
                 setBike(data);
 
                 if (data.youtube_link && getYouTubeVideoId(data.youtube_link)) {
@@ -99,7 +98,7 @@ const BikeDetailPage = () => {
             try {
                 const newBikesData = await getBikes({ condition: 'new', page: 1, is_featured: true });
                 setNewBikes(newBikesData.results);
-                
+
                 const usedBikesData = await getBikes({ condition: 'used', page: 1, is_featured: true });
                 const demoBikesData = await getBikes({ condition: 'demo', page: 1, is_featured: true });
                 setUsedBikes([...usedBikesData.results, ...demoBikesData.results]);
@@ -116,7 +115,7 @@ const BikeDetailPage = () => {
         if (!bike?.images) return [];
         return [...bike.images].sort((a, b) => a.order - b.order);
     }, [bike]);
-    
+
     const specifications: Specification[] = bike ? [
         { label: "Stock Number", value: bike.stock_number, icon: Hash },
         { label: "Odometer", value: bike.odometer, icon: Gauge, formatter: (val: number) => `${val.toLocaleString()} km` },
@@ -129,9 +128,9 @@ const BikeDetailPage = () => {
     ] : [];
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
-    
-    const ogImage = selectedMedia === 'YOUTUBE' && videoId 
-        ? `https://img.youtube.com/vi/${videoId}/0.jpg` 
+
+    const ogImage = selectedMedia === 'YOUTUBE' && videoId
+        ? `https://img.youtube.com/vi/${videoId}/0.jpg`
         : (selectedMedia !== 'YOUTUBE' ? selectedMedia : '/src/assets/motorcycle_images/placeholder.png');
 
     const breadcrumbItems: BreadcrumbItem[] = bike ? [
@@ -177,7 +176,7 @@ const BikeDetailPage = () => {
                         "description": bike.description,
                         "thumbnailUrl": `https://img.youtube.com/vi/${videoId}/0.jpg`,
                         "embedUrl": `https://www.youtube.com/embed/${videoId}`,
-                        "uploadDate": bike.date_posted 
+                        "uploadDate": bike.date_posted
                     }
                 }),
                 "vehicle": {
@@ -202,24 +201,24 @@ const BikeDetailPage = () => {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-[var(--text-primary)]">
+            <div className="flex justify-center items-center h-screen bg-white">
                 <Spinner className="h-12 w-12" />
             </div>
         );
     }
 
     if (error) {
-        return <p className="text-red-500 text-center mt-8 bg-[var(--text-primary)] text-black">{error}</p>;
+        return <p className="text-red-500 text-center mt-8">{error}</p>;
     }
 
     if (!bike) {
-        return <p className="text-center mt-8 bg-[var(--text-primary)] text-black">Bike not found.</p>;
+        return <p className="text-center mt-8 text-stone-600">Bike not found.</p>;
     }
-    
+
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
     return (
-        <div className="bg-background text-black">
+        <div className="bg-white text-stone-900">
             <Seo
                 title={`${pageTitle} | Allbikes`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes & Scooters, Perth's most experienced motorcycle and scooter dealership.`}
@@ -227,51 +226,79 @@ const BikeDetailPage = () => {
                 ogImage={ogImage}
                 structuredData={structuredData}
             />
-            <div className="container mx-auto">
+
+            <div className="container mx-auto px-4">
                 <Breadcrumb items={breadcrumbItems} />
             </div>
-            <div className="container mx-auto p-4 lg:p-8 bg-[var(--text-primary)] rounded-lg mt-2">
-                <h1 className="text-3xl md:text-4xl font-bold text-center my-4 text-black">{cardTitle}</h1>
-                <div className="text-center mb-8">
-                    <div className="flex justify-center gap-2 mb-3">
-                        <Badge className="text-lg capitalize">{bike.condition}</Badge>
+
+            <div className="container mx-auto px-4 pb-12 lg:px-8">
+
+                {/* Title + badges */}
+                <div className="mb-6">
+                    <p className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-1">{bike.make}</p>
+                    <h1 className="text-3xl md:text-4xl font-black text-stone-900 leading-tight mb-3">{cardTitle}</h1>
+                    <div className="flex flex-wrap items-center gap-2">
+                        {/* Condition */}
+                        <span className="bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            {bike.condition}
+                        </span>
+                        {/* Status */}
                         {bike.status === 'sold' && (
-                            <Badge variant="destructive" className="text-xl text-white">Sold</Badge>
+                            <span className="bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                                Sold
+                            </span>
+                        )}
+                        {bike.status === 'reserved' && (
+                            <span className="bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                                Reserved
+                            </span>
                         )}
                         {bike.status === 'available_soon' && (
-                            <Badge className="text-xl text-white bg-blue-500 hover:bg-blue-500">Coming Soon</Badge>
+                            <span className="bg-stone-900/80 text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                                Coming Soon
+                            </span>
                         )}
                     </div>
                     {bike.status === 'available_soon' && (
-                        <p className="text-sm text-gray-600 max-w-md mx-auto">
-                            This bike is currently being inspected by our mechanic. It's not quite ready for sale yet, but if you're interested feel free to <a href="/contact" className="text-blue-500 underline hover:text-blue-700">get in touch</a> and we'll keep you in the loop.
+                        <p className="mt-3 text-sm text-stone-600 max-w-lg">
+                            This bike is currently being inspected by our mechanic. It's not quite ready for sale yet — if you're interested feel free to{' '}
+                            <Link to="/contact" className="text-amber-500 underline hover:text-amber-600">get in touch</Link> and we'll keep you in the loop.
                         </p>
                     )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
                     {/* Left Column: Image Gallery */}
                     <div>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-4 border bg-black">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-stone-100">
                             {selectedMedia === 'YOUTUBE' && videoId ? (
                                 <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
                             ) : (
                                 <img src={selectedMedia} alt={cardTitle} className="w-full h-full object-cover" />
                             )}
+                            {/* Status overlay pill on main image */}
                             {bike.status === 'sold' && (
-                                <div className="absolute top-8 right-[-45px] w-44 transform rotate-45 bg-destructive text-white text-center font-bold z-10 text-2xl py-1">
+                                <span className="absolute top-4 left-4 bg-stone-900/80 text-white text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
                                     Sold
-                                </div>
+                                </span>
+                            )}
+                            {bike.status === 'reserved' && (
+                                <span className="absolute top-4 left-4 bg-stone-900/80 text-amber-400 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
+                                    Reserved
+                                </span>
                             )}
                         </div>
-                        <div className="flex space-x-2">
+
+                        {/* Thumbnail strip */}
+                        <div className="flex gap-2 flex-wrap">
                             {videoId && (
                                 <button
                                     onClick={() => setSelectedMedia('YOUTUBE')}
-                                    className={`relative w-20 h-20 overflow-hidden rounded-md border-2 ${selectedMedia === 'YOUTUBE' ? 'border-blue-500' : 'border-transparent'}`}
+                                    className={`relative w-20 h-20 overflow-hidden rounded-md ${selectedMedia === 'YOUTUBE' ? 'ring-2 ring-amber-400' : 'ring-1 ring-stone-200'}`}
                                 >
                                     <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                                         <PlayCircle className="h-8 w-8 text-white" />
                                     </div>
                                 </button>
@@ -280,7 +307,7 @@ const BikeDetailPage = () => {
                                 <button
                                     key={index}
                                     onClick={() => setSelectedMedia(img.image)}
-                                    className={`w-20 h-20 overflow-hidden rounded-md border-2 ${selectedMedia === img.image ? 'border-blue-500' : 'border-transparent'}`}
+                                    className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === img.image ? 'ring-2 ring-amber-400' : 'ring-1 ring-stone-200'}`}
                                 >
                                     <img src={img.image} alt={`${cardTitle} thumbnail ${index + 1}`} className="w-full h-full object-cover" />
                                 </button>
@@ -290,61 +317,70 @@ const BikeDetailPage = () => {
 
                     {/* Right Column: Specifications & Description */}
                     <div>
+                        {/* Price */}
+                        <div className="mb-6 pb-4 border-b border-stone-200">
+                            {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
+                                <div className="flex items-baseline gap-3">
+                                    <span className="text-4xl font-black text-amber-400">
+                                        ${parseFloat(bike.discount_price).toLocaleString()}
+                                    </span>
+                                    <span className="text-xl text-stone-400 line-through">
+                                        ${parseFloat(bike.price).toLocaleString()}
+                                    </span>
+                                </div>
+                            ) : (
+                                <span className="text-4xl font-black text-amber-400">
+                                    ${parseFloat(bike.price).toLocaleString()}
+                                </span>
+                            )}
+                            {bike.condition === 'new' && (
+                                <p className="text-sm text-stone-600 mt-1">
+                                    {bike.warranty_months && bike.warranty_months > 0
+                                        ? `Includes 3 months rego & ${bike.warranty_months} months warranty`
+                                        : 'Includes 3 months rego'}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Specifications */}
                         <div className="mb-8">
-                            <h2 className="text-2xl font-bold border-b pb-2 mb-4 text-black">Specifications</h2>
-                            <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                                <div className="flex items-center space-x-2">
-                                    <DollarSign className="h-6 w-6 text-black" />
-                                    <span className="text-black">Price</span>
-                                </div>
-                                <div className="text-lg font-semibold">
-                                    {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
-                                        <div className="flex items-center space-x-2">
-                                            <p className="text-destructive line-through">
-                                                ${parseFloat(bike.price).toLocaleString()}
-                                            </p>
-                                            <p className="text-primary">
-                                                ${parseFloat(bike.discount_price).toLocaleString()}
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <p className="text-primary">
-                                            ${parseFloat(bike.price).toLocaleString()}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                            <ul className="space-y-2">
+                            <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Specifications</h2>
+                            <ul className="divide-y divide-stone-100">
                                 {specifications.map((spec) => {
                                     if (spec.value === null || spec.value === undefined || spec.value === '') return null;
                                     const displayValue = spec.formatter ? spec.formatter(spec.value) : spec.value;
                                     return (
-                                        <li key={spec.label} className="flex justify-between items-center py-2 border-b border-gray-200">
+                                        <li key={spec.label} className="flex justify-between items-center py-2.5">
                                             <TooltipProvider>
                                                 <Tooltip>
-                                                                                                <TooltipTrigger className="flex items-center space-x-2">
-                                                                                                    <spec.icon className="h-6 w-6 text-black" />
-                                                                                                    <span className="text-black">{spec.label}</span>
-                                                                                                </TooltipTrigger>                                                    <TooltipContent>
+                                                    <TooltipTrigger className="flex items-center gap-2 text-stone-500">
+                                                        <spec.icon className="h-4 w-4" />
+                                                        <span className="text-sm">{spec.label}</span>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
                                                         <p>{spec.label}</p>
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </TooltipProvider>
-                                            <span className="text-black text-lg">{displayValue}</span>
+                                            <span className="text-stone-900 font-semibold text-sm">{displayValue}</span>
                                         </li>
                                     );
                                 })}
                             </ul>
                         </div>
 
-                        <h2 className="text-2xl font-bold border-b pb-2 mb-4 text-black">Description</h2>
-                        <div className="prose max-w-none text-black">
-                            <p className="text-black">{bike.description || 'No description available.'}</p>
+                        {/* Description */}
+                        <div>
+                            <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Description</h2>
+                            <p className="text-stone-600 leading-relaxed text-sm">
+                                {bike.description || 'No description available.'}
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
+            {/* Featured bikes carousels */}
             <div className="mt-4 mb-4">
                 {bike.condition.toLowerCase() === 'new' && newBikes.length > 0 && (
                     <FeaturedBikes

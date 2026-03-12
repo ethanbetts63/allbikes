@@ -26,17 +26,17 @@ const BikeCard = ({ bike }: BikeCardProps) => {
           </span>
           {/* Status pills */}
           {bike.status === 'sold' && (
-            <span className="absolute top-2.5 left-2.5 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+            <span className="absolute top-3 left-3 bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Sold
             </span>
           )}
           {bike.status === 'reserved' && (
-            <span className="absolute top-2.5 left-2.5 bg-amber-500 text-stone-900 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+            <span className="absolute top-3 left-3 bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Reserved
             </span>
           )}
           {bike.status === 'available_soon' && (
-            <span className="absolute top-2.5 left-2.5 bg-blue-500 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+            <span className="absolute top-3 left-3 bg-stone-900/80 text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Coming Soon
             </span>
           )}
@@ -45,9 +45,9 @@ const BikeCard = ({ bike }: BikeCardProps) => {
         {/* Body */}
         <div className="px-3.5 py-3 flex flex-col gap-2 flex-1">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-0.5">{bike.make}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-stone-600 mb-0.5">{bike.make}</p>
             <h3 className="text-base font-bold text-stone-900 leading-snug">
-              {bike.year && <span className="text-stone-400 font-normal">{bike.year} </span>}
+              {bike.year && <span className="text-stone-600 font-normal">{bike.year} </span>}
               {bike.model}
             </h3>
           </div>
@@ -76,7 +76,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
 
           {/* Warranty */}
           {bike.condition === 'new' && (
-            <p className="text-xs text-stone-400">
+            <p className="text-xs text-stone-600">
               {bike.warranty_months && bike.warranty_months > 0
                 ? `3 months rego · ${bike.warranty_months} months warranty`
                 : '3 months rego included'}
