@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
+import HomeHeroV2 from '@/components/HomeHeroV2';
 import HomeHero from '@/components/HomeHero';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
@@ -25,12 +26,12 @@ const HomePage = () => {
         ]);
 
         const availableNewBikes = newBikesResponse.results.filter(
-          bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable'
+          bike => bike.status !== 'unavailable'
         );
         setNewBikes(availableNewBikes);
 
         const availableUsedBikes = usedBikesResponse.results.filter(
-          bike => bike.status !== 'unavailable' && bike.status !== 'Unavailable'
+          bike => bike.status !== 'unavailable'
         );
         setUsedBikes(availableUsedBikes);
 
@@ -128,15 +129,24 @@ const HomePage = () => {
         canonicalPath="/"
         structuredData={structuredData}
       />
-        <HomeHero 
-            newBikes={newBikes} 
-            usedBikes={usedBikes} 
-            error={error} 
+        <HomeHeroV2
+            newBikes={newBikes}
+            usedBikes={usedBikes}
+            error={error}
             phoneNumber={siteSettings.phone_number}
-            mobileNumber={siteSettings.mobile_number} 
+            mobileNumber={siteSettings.mobile_number}
             emailAddress={siteSettings.email_address}
         />
         <ReviewCarousel />
+
+        <HomeHero
+            newBikes={newBikes}
+            usedBikes={usedBikes}
+            error={error}
+            phoneNumber={siteSettings.phone_number}
+            mobileNumber={siteSettings.mobile_number}
+            emailAddress={siteSettings.email_address}
+        />
         <ServiceCTAV2 />
                 <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
