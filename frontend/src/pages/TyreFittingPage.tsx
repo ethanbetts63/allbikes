@@ -4,7 +4,6 @@ import { getJobTypes } from '@/services/bookingService';
 import type { EnrichedJobType } from '@/types/EnrichedJobType';
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import WorkshopJobTypes from '@/components/WorkshopJobTypes';
-import ServiceBrands from "@/components/ServiceBrands";
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
@@ -118,10 +117,6 @@ const TyreFittingPage = () => {
                 paragraph="Ready for new tyres? Our expert mechanics are here to help. From tyre fitting to wheel balancing, we've got you covered. Use our online booking system to find a time that works for you."
                 buttonText="Book Tyre Fitting Online"
             />
-
-            <div className="mt-0">
-                <ServiceBrands />
-            </div>
 
             <div className="mt-8 mb-4">
                 <MotorcycleMovers />

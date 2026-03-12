@@ -3,7 +3,6 @@ import { authedFetch } from './apiClient';
 import type { AuthResponse } from '@/types/AuthResponse';
 import type { UserProfile } from '@/types/UserProfile';
 import type { Bike } from '@/types/Bike';
-import type { Brand } from '@/types/Brand';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 import type { MotorcycleFormData } from '@/types/MotorcycleFormData';
 import type { ManagedImage } from '@/types/ManagedImage';
@@ -57,11 +56,6 @@ export async function getUserProfile(): Promise<UserProfile> {
         method: 'GET',
     });
     return handleResponse(response);
-}
-
-export async function getBrands(): Promise<Brand[]> {
-  const response = await fetch(`${API_BASE_URL}/brands/`);
-  return handleResponse(response);
 }
 
 // --- Inventory Endpoints ---

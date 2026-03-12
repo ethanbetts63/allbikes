@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
 import HomeHeroV2 from '@/components/HomeHeroV2';
-import HomeHero from '@/components/HomeHero';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
 import FeaturedBikes from '@/components/FeaturedBikes';
