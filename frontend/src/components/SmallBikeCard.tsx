@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { Wrench, Cog } from "lucide-react"; 
+import { Wrench, Cog } from "lucide-react";
 import type { SmallBikeCardProps } from "@/types/SmallBikeCardProps";
 
 const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
   const primaryImage = sortedImages[0];
-  
-  // Fallback image if no images are available
+
   const placeholderImage = '/src/assets/motorcycle_images/placeholder.png';
 
   const thumbnailUrl = primaryImage?.thumbnail || primaryImage?.image || placeholderImage;
@@ -16,63 +14,65 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
   const slug = bike.slug;
 
-  // Construct srcset only if there are actual images
   const srcSet = primaryImage ? `${thumbnailUrl} 400w, ${fullImageUrl} 1200w` : '';
 
   return (
     <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
-      <Card className="relative w-full overflow-hidden flex flex-col h-full transform transition-transform hover:-translate-y-1 pt-0 border-foreground">
+      <div className="relative w-full overflow-hidden flex flex-col h-full bg-white rounded-lg border border-stone-200 hover:-translate-y-1 transition-transform duration-200">
         {bike.status === 'sold' && (
-            <div className="absolute top-4 right-[-25px] w-24 transform rotate-45 bg-destructive text-white text-center font-bold z-10 text-lg">
-                Sold
-            </div>
+          <span className="absolute top-2.5 left-2.5 z-10 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+            Sold
+          </span>
         )}
-        <div className="relative h-32">
-          <img 
-            src={thumbnailUrl} 
+        {bike.status === 'reserved' && (
+          <span className="absolute top-2.5 left-2.5 z-10 bg-amber-500 text-stone-900 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+            Reserved
+          </span>
+        )}
+        <div className="relative h-32 shrink-0">
+          <img
+            src={thumbnailUrl}
             srcSet={srcSet}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            alt={cardTitle} 
-            className="w-full h-full object-cover" 
-            loading="lazy" 
+            alt={cardTitle}
+            className="w-full h-full object-cover"
+            loading="lazy"
           />
         </div>
-        <CardContent className="pt-0 px-2 pb-2 flex-grow flex flex-col justify-between">
-          <div className="flex flex-col items-center">
-            <h3 className="text-lg font-bold mb-1">{cardTitle}</h3>
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              {bike.engine_size && (
-                <div className="flex items-center">
-                  <Wrench className="h-4 w-4 mr-1" />
-                  <span>{bike.engine_size}cc</span>
-                </div>
-              )}
-              {bike.transmission && (
-                <div className="flex items-center">
-                  <Cog className="h-4 w-4 mr-1" />
-                  <span>{bike.transmission}</span>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="text-2xl font-bold text-center">
-            {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
-              <div className="flex justify-center items-center space-x-2">
-                <p className="text-destructive line-through">
-                  ${parseFloat(bike.price).toLocaleString()}
-                </p>
-                <p className="text-primary">
-                  ${parseFloat(bike.discount_price).toLocaleString()}
-                </p>
-              </div>
-            ) : (
-              <p className="text-primary">
-                ${parseFloat(bike.price).toLocaleString()}
-              </p>
+        <div className="px-3 py-2.5 flex flex-col flex-1 gap-1.5">
+          <h3 className="text-sm font-bold text-white leading-snug">{cardTitle}</h3>
+          <div className="flex items-center gap-3 text-xs text-stone-400">
+            {bike.engine_size && (
+              <span className="flex items-center gap-1">
+                <Wrench className="h-3 w-3" />
+                {bike.engine_size}cc
+              </span>
+            )}
+            {bike.transmission && (
+              <span className="flex items-center gap-1">
+                <Cog className="h-3 w-3" />
+                {bike.transmission}
+              </span>
             )}
           </div>
-        </CardContent>
-      </Card>
+          <div className="mt-auto pt-1">
+            {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
+              <div className="flex items-baseline gap-2">
+                <span className="text-stone-500 line-through text-xs">
+                  ${parseFloat(bike.price).toLocaleString()}
+                </span>
+                <span className="text-amber-400 font-black text-base">
+                  ${parseFloat(bike.discount_price).toLocaleString()}
+                </span>
+              </div>
+            ) : (
+              <span className="text-amber-400 font-black text-base">
+                ${parseFloat(bike.price).toLocaleString()}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
     </Link>
   );
 };

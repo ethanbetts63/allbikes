@@ -20,22 +20,22 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
           scrollbar-width: none;
         }
       `}</style>
-      <div className="w-full pt-4 pb-4">
+      <div className="w-full py-4">
         <div className="container mx-auto">
-          <div className="bg-foreground rounded-lg p-8 flex flex-col md:flex-row items-center">
+          <div className="bg-foreground rounded-xl p-8 flex flex-col md:flex-row items-center gap-8">
             {/* Left Column: Title, Description, Button */}
-            <div className="md:w-1/5 text-center md:text-left mb-8 md:mb-0">
-              <h2 className="text-3xl font-bold tracking-tight mb-4 text-[var(--text-primary)]">{title}</h2>
-              <p className="text-lg text-secondary mb-6">{description}</p>
+            <div className="md:w-1/5 shrink-0 text-center md:text-left">
+              <h2 className="text-2xl font-black tracking-tight mb-2 text-white leading-tight">{title}</h2>
+              <p className="text-sm text-stone-200 mb-6 leading-relaxed">{description}</p>
               <Link to={linkTo}>
-                <Button className="bg-primary text-white font-bold px-6 py-3 text-lg hover:bg-primary/90 flex items-center gap-2 mx-auto md:mx-0">
-                  {linkText} <ArrowRight className="h-5" />
+                <Button className="bg-amber-400 text-stone-900 font-bold px-5 py-2.5 text-sm hover:bg-amber-300 flex items-center gap-1.5 mx-auto md:mx-0">
+                  {linkText} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
             </div>
 
             {/* Right Column: Scrollable Bike Cards */}
-            <div className="w-full md:w-4/5 md:pl-8 flex overflow-x-auto space-x-6 pb-4 hide-scrollbar">
+            <div className="w-full md:w-4/5 flex overflow-x-auto space-x-4 pb-2 hide-scrollbar">
               {bikes.map((bike) => (
                 <div key={bike.id} className="flex-shrink-0 w-64">
                   <SmallBikeCard bike={bike} />
