@@ -229,8 +229,7 @@ const BikeDetailPage = () => {
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 
                 {/* Title + badges */}
-                <div className="mb-6">
-                    <p className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-1">{bike.make}</p>
+                <div className="mb-6 pt-4">
                     <h1 className="text-3xl md:text-4xl font-black text-stone-900 leading-tight mb-3">{cardTitle}</h1>
                     <div className="flex flex-wrap items-center gap-2">
                         {/* Condition */}
@@ -316,7 +315,7 @@ const BikeDetailPage = () => {
                         <div className="mb-6 pb-4 border-b border-stone-200">
                             {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
                                 <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-black text-amber-400">
+                                    <span className="text-4xl font-semibold text-amber-400">
                                         ${parseFloat(bike.discount_price).toLocaleString()}
                                     </span>
                                     <span className="text-xl text-stone-400 line-through">
@@ -324,7 +323,7 @@ const BikeDetailPage = () => {
                                     </span>
                                 </div>
                             ) : (
-                                <span className="text-4xl font-black text-amber-400">
+                                <span className="text-4xl font-semibold text-stone-900">
                                     ${parseFloat(bike.price).toLocaleString()}
                                 </span>
                             )}

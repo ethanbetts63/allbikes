@@ -95,7 +95,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
                 </span>
               </div>
             ) : (
-              <span className="text-amber-400 font-black text-xl">
+              <span className="text-stone-900 font-black text-xl">
                 ${parseFloat(bike.price).toLocaleString()}
               </span>
             )}
