@@ -138,15 +138,7 @@ const HomePage = () => {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Allbikes & Scooters",
-    "url": "https://www.scootershop.com.au",
-    "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://www.scootershop.com.au/search?q={search_term_string}" 
-        },
-        "query-input": "required name=search_term_string"
-    }
+    "url": "https://www.scootershop.com.au"
   };
 
   const structuredData = [];

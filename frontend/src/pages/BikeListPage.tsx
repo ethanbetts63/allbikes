@@ -157,7 +157,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
                 "@type": "Offer",
                 "price": bike.price,
                 "priceCurrency": "AUD",
-                "availability": bike.status.toLowerCase() === 'available' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                "availability": bike.status === 'for_sale' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
                 "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition'
               }
             }

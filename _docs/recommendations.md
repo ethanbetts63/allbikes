@@ -37,3 +37,12 @@ A living to-do list of approved improvements.
 
   any absorbs object, so object | any is just any. Should be Record<string, unknown> or just object.
 
+  ---
+  Bug 3: Rego used as vehicleIdentificationNumber
+
+  "vehicleIdentificationNumber": bike.rego
+
+  rego is the registration plate number, not the chassis VIN. These are different fields. Either use bike.rego under a more appropriate property
+  like "vehicleRegistration", or remove the vehicleIdentificationNumber field entirely since the Bike model doesn't have a true VIN.
+
+  ---
