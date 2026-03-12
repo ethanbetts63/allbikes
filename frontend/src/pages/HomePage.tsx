@@ -138,15 +138,7 @@ const HomePage = () => {
             emailAddress={siteSettings.email_address}
         />
         <ReviewCarousel />
-
-        <HomeHero
-            newBikes={newBikes}
-            usedBikes={usedBikes}
-            error={error}
-            phoneNumber={siteSettings.phone_number}
-            mobileNumber={siteSettings.mobile_number}
-            emailAddress={siteSettings.email_address}
-        />
+        
         <ServiceCTAV2 />
                 <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
