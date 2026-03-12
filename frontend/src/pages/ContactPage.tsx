@@ -39,7 +39,7 @@ const faqData = [
     },
     {
       "question": "What types of motorcycles and scooters do you service?",
-      "answer": "We service all motorcycles and most scooters. For scooters, we specialise in Italian brands and mid to upper-end Asian brands. Some brands are excluded due to parts availability and build quality concerns, allowing us to maintain reliable, long-lasting repairs. Full details are listed on our service page."
+      "answer": "We service almost all motorcycles and scooters."
     },
     {
       "question": "What areas of Perth do you service?",
@@ -48,10 +48,6 @@ const faqData = [
     {
       "question": "Do you service electric motorcycles and scooters?",
       "answer": "Yes, we service electric motorcycles and electric mopeds."
-    },
-    {
-      "question": "Do you sell or service electric kick scooters?",
-      "answer": "No. We sell and service electric mopeds and electric motorcycles, but we do not work on electric kick scooters. The term “electric scooter” is often used for both, despite being very different vehicles."
     }
   ];
 const ContactPage = () => {
