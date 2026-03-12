@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 import type { FilterSortProps } from '@/types/FilterSortProps';
@@ -34,13 +33,14 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
   };
 
   return (
-    <div className="bg-gray-100 p-4 rounded-lg mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {/* Ordering */}
-        <div className="flex flex-col">
-          <Label htmlFor="ordering" className="mb-2 font-semibold">Sort By</Label>
+    <div className="bg-white border border-stone-200 rounded-lg shadow-sm p-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+
+        {/* Sort */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Sort By</span>
           <Select onValueChange={handleOrderingChange} value={localOptions.ordering}>
-            <SelectTrigger id="ordering">
+            <SelectTrigger className="border-stone-200 text-stone-900 text-sm">
               <SelectValue placeholder="Default" />
             </SelectTrigger>
             <SelectContent>
@@ -54,9 +54,9 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
           </Select>
         </div>
 
-        {/* Price Range */}
-        <div className="flex flex-col">
-          <Label className="mb-2 font-semibold">Price Range</Label>
+        {/* Price */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Price ($)</span>
           <div className="flex gap-2">
             <Input
               type="number"
@@ -64,6 +64,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Min"
               value={localOptions.min_price || ''}
               onChange={handleInputChange}
+              className="border-stone-200 text-stone-900 text-sm"
             />
             <Input
               type="number"
@@ -71,13 +72,14 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Max"
               value={localOptions.max_price || ''}
               onChange={handleInputChange}
+              className="border-stone-200 text-stone-900 text-sm"
             />
           </div>
         </div>
 
-        {/* Year Range */}
-        <div className="flex flex-col">
-          <Label className="mb-2 font-semibold">Year Range</Label>
+        {/* Year */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Year</span>
           <div className="flex gap-2">
             <Input
               type="number"
@@ -85,6 +87,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Min"
               value={localOptions.min_year || ''}
               onChange={handleInputChange}
+              className="border-stone-200 text-stone-900 text-sm"
             />
             <Input
               type="number"
@@ -92,13 +95,14 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Max"
               value={localOptions.max_year || ''}
               onChange={handleInputChange}
+              className="border-stone-200 text-stone-900 text-sm"
             />
           </div>
         </div>
 
-        {/* Engine Size Range */}
-        <div className="flex flex-col">
-          <Label className="mb-2 font-semibold">Engine (cc)</Label>
+        {/* Engine */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Engine (cc)</span>
           <div className="flex gap-2">
             <Input
               type="number"
@@ -106,6 +110,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Min"
               value={localOptions.min_engine_size || ''}
               onChange={handleInputChange}
+              className="border-stone-200 text-stone-900 text-sm"
             />
             <Input
               type="number"
@@ -113,19 +118,22 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Max"
               value={localOptions.max_engine_size || ''}
               onChange={handleInputChange}
+              className="border-stone-200 text-stone-900 text-sm"
             />
           </div>
         </div>
 
-        <div className="flex items-end">
-            <Button onClick={handleApplyFilters} className="w-full">
-                Apply Filters
-            </Button>
-        </div>
+        {/* Apply */}
+        <Button
+          onClick={handleApplyFilters}
+          className="w-full bg-amber-400 text-stone-900 font-bold hover:bg-amber-300 text-sm"
+        >
+          Apply Filters
+        </Button>
+
       </div>
     </div>
   );
 };
 
 export default FilterSort;
-

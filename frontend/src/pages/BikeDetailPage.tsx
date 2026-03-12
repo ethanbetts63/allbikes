@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
-import Breadcrumb from '@/components/Breadcrumb';
 
 const getYouTubeVideoId = (url: string): string | null => {
     if (!url) return null;
@@ -227,9 +226,6 @@ const BikeDetailPage = () => {
                 structuredData={structuredData}
             />
 
-            <div className="container mx-auto px-4">
-                <Breadcrumb items={breadcrumbItems} />
-            </div>
 
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 

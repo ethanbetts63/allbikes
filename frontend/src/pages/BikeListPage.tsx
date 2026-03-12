@@ -19,7 +19,6 @@ import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
 import FilterSort from '@/components/FilterSort';
 import { FaqSection } from '@/components/FaqSection';
-import Breadcrumb from '@/components/Breadcrumb';
 
 const newBikeFaqs = [
   {
@@ -179,8 +178,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
         description={description}
         imageUrl={SymImage}
       />
-      <Breadcrumb items={breadcrumbItems} />
-      <div className="container mx-auto p-4">
+<div className="container mx-auto p-4">
         <FilterSort options={filterOptions} onFilterChange={handleFilterChange} />
         
         {isLoading && (

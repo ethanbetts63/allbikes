@@ -3,7 +3,6 @@ import ContactDetails from '../components/ContactDetails';
 import SymImage from '@/assets/sym_22.webp';
 import { siteSettings } from '@/config/siteSettings';
 import OtherSites from '../components/OtherSites';
-import Breadcrumb from '../components/Breadcrumb';
 import Seo from '@/components/Seo';
 import ContactButtons from '@/components/ContactButtons';
 import splitcartLogo from "/src/assets/splitcart_logo.png";
@@ -53,11 +52,6 @@ const faqData = [
 const ContactPage = () => {
     const description = "Our Perth workshop is your one-stop shop for motorcycle and scooter servicing and tyre fitting. Our experienced mechanics are here to help you with anything you need. We are located in Dianella, just a short ride from the city.";
 
-    const breadcrumbItems = [
-        { name: 'Home', href: '/' },
-        { name: 'Contact Us', href: '/contact' }
-    ];
-
     return (
         <div>
             <Seo
@@ -70,8 +64,6 @@ const ContactPage = () => {
                 description={description}
                 imageUrl={SymImage}
             />
-            <Breadcrumb items={breadcrumbItems} />
-            
             {siteSettings && (
                 <ContactButtons
                     phoneNumber={siteSettings.phone_number}

@@ -1,6 +1,4 @@
-import { Button } from '@/components/ui/button';
 import { Phone, Mail } from 'lucide-react';
-
 import type { ContactButtonsProps } from '@/types/ContactButtonsProps';
 
 const ContactButtons = ({ phoneNumber, mobileNumber, emailAddress }: ContactButtonsProps) => {
@@ -20,36 +18,36 @@ const ContactButtons = ({ phoneNumber, mobileNumber, emailAddress }: ContactButt
   }
 
   return (
-    <div className="bg-background py-0">
-      <div className="container mx-auto flex flex-col items-center justify-center text-center">
-        <div className="mt-0 flex flex-col sm:flex-row items-center justify-center gap-6">
-          {primaryPhoneNumber && (
-            <>
-              {/* This link is only active on small screens */}
-              <a href={`tel:${primaryPhoneNumber}`} className="md:hidden">
-                <Button size="lg" className="text-lg">
-                  <Phone className="mr-2 h-6 w-6" />
-                  {displayedPhoneNumbers}
-                </Button>
-              </a>
-              {/* This is a visual, non-clickable button on medium and larger screens */}
-              <div className="hidden md:inline-flex">
-                <Button size="lg" className="text-lg cursor-default hover:bg-primary">
-                  <Phone className="mr-2 h-6 w-6" />
-                  {displayedPhoneNumbers}
-                </Button>
-              </div>
-            </>
-          )}
-          {emailAddress && (
-            <a href={`mailto:${emailAddress}?`} target="_blank" rel="noopener noreferrer">
-              <Button size="lg" className="text-lg bg-blue-600 text-white hover:bg-blue-700">
-                <Mail className="mr-2 h-6 w-6" />
-                {emailAddress}
-              </Button>
+    <div className="bg-foreground py-8">
+      <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+        {primaryPhoneNumber && (
+          <>
+            {/* Clickable on mobile */}
+            <a
+              href={`tel:${primaryPhoneNumber}`}
+              className="md:hidden w-full sm:w-auto flex items-center justify-center gap-2.5 bg-amber-400 text-stone-900 font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full hover:bg-amber-300 transition-colors"
+            >
+              <Phone className="h-4 w-4" />
+              {displayedPhoneNumbers}
             </a>
-          )}
-        </div>
+            {/* Static on desktop */}
+            <div className="hidden md:flex items-center justify-center gap-2.5 bg-amber-400 text-stone-900 font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full cursor-default">
+              <Phone className="h-4 w-4" />
+              {displayedPhoneNumbers}
+            </div>
+          </>
+        )}
+        {emailAddress && (
+          <a
+            href={`mailto:${emailAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-stone-700 text-white font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full hover:bg-stone-600 transition-colors"
+          >
+            <Mail className="h-4 w-4" />
+            {emailAddress}
+          </a>
+        )}
       </div>
     </div>
   );
