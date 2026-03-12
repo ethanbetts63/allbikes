@@ -229,39 +229,63 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         )}
       </div>
 
-      {/* ── NEW BIKES PANEL (mobile: order 2, desktop: order 1 / left-large) ── */}
-      {!error ? (
-        <Link
-          to="/inventory/motorcycles/new"
-          className="order-2 lg:order-1 relative lg:flex-1 group overflow-hidden min-h-[380px] lg:min-h-0"
-        >
-          {renderCrossfadeImages(newSlots, newIsDefaultA, newIsDefaultB, true)}
-          {/* Multi-directional gradients for depth */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
-          {/* Hover dim lift */}
-          <div className="absolute inset-0 bg-stone-900/30 group-hover:bg-transparent transition-colors duration-400" />
-          {/* Content */}
-          <div className="absolute bottom-0 left-0 p-8 md:p-10">
-            <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-              Browse Inventory
-            </p>
-            <h2 className="text-white text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black uppercase italic leading-none mb-5">
-              New<br />
-              <span className="hidden md:inline">Motorcycles<br />&amp; Scooters</span>
-              <span className="md:hidden">Bikes</span>
-            </h2>
-            <span className="inline-flex items-center text-white font-bold text-sm uppercase tracking-widest border-b border-white/40 pb-0.5 group-hover:text-amber-400 group-hover:border-amber-400 transition-colors duration-200">
-              Shop Now
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
-            </span>
+      {/* ── LEFT COLUMN: new bikes image + service strip ── */}
+      <div className="order-2 lg:order-1 lg:flex-1 flex flex-col">
+
+        {/* New bikes image */}
+        {!error ? (
+          <Link
+            to="/inventory/motorcycles/new"
+            className="relative flex-1 group overflow-hidden min-h-[300px] lg:min-h-0"
+          >
+            {renderCrossfadeImages(newSlots, newIsDefaultA, newIsDefaultB, true)}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-stone-900/30 group-hover:bg-transparent transition-colors duration-300" />
+            <div className="absolute bottom-0 left-0 p-7 md:p-9">
+              <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+                Browse Inventory
+              </p>
+              <h2 className="text-white text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-none mb-4">
+                New<br />
+                <span className="hidden md:inline">Motorcycles<br />&amp; Scooters</span>
+                <span className="md:hidden">Bikes</span>
+              </h2>
+              <span className="inline-flex items-center text-white font-bold text-sm uppercase tracking-widest border-b border-white/40 pb-0.5 group-hover:text-amber-400 group-hover:border-amber-400 transition-colors duration-200">
+                Shop Now
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </span>
+            </div>
+          </Link>
+        ) : (
+          <div className="flex-1 min-h-[300px] flex items-center justify-center bg-stone-800 text-stone-500 text-sm p-4 text-center">
+            Could not load images.
           </div>
-        </Link>
-      ) : (
-        <div className="order-2 lg:order-1 lg:flex-1 min-h-[380px] flex items-center justify-center bg-stone-800 text-stone-500 text-sm p-4 text-center">
-          Could not load images.
+        )}
+
+        {/* Service strip */}
+        <div className="bg-stone-800 flex flex-col sm:flex-row items-center justify-between gap-6 px-8 py-8 md:px-10">
+          <div>
+            <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+              Allbikes Workshop &nbsp;·&nbsp; Perth
+            </p>
+            <h2 className="text-white text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">
+              Get Your Bike Sorted.
+            </h2>
+            <p className="text-stone-400 text-sm leading-relaxed max-w-sm">
+              Servicing, tyres, puncture repairs, and general maintenance — petrol and electric.
+            </p>
+          </div>
+          <Link
+            to="/booking"
+            className="shrink-0 inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
+          >
+            Book Online
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
-      )}
+
+      </div>
 
     </div>
   );
