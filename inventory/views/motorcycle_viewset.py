@@ -29,10 +29,13 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
         """
         queryset = Motorcycle.objects.all()
         
-        # Filtering by condition
+        # Filtering by condition (supports comma-separated values e.g. "new,demo")
         condition = self.request.query_params.get('condition')
-        if condition in ['new', 'used', 'demo']:
-            queryset = queryset.filter(condition=condition)
+        if condition:
+            valid = {'new', 'used', 'demo'}
+            conditions = [c for c in condition.split(',') if c in valid]
+            if conditions:
+                queryset = queryset.filter(condition__in=conditions)
             
         # Filtering by featured status
         is_featured = self.request.query_params.get('is_featured')

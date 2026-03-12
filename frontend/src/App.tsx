@@ -47,7 +47,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/service" element={<ServicePage />} />
                 <Route path="/tyre-fitting" element={<TyreFittingPage />} />
-                <Route path="/inventory/motorcycles/new" element={<BikeListPage bikeCondition="new" />} />
+                <Route path="/inventory/motorcycles/new" element={<BikeListPage bikeCondition="new,demo" />} />
                 <Route path="/inventory/motorcycles/used" element={<BikeListPage bikeCondition="used" />} />
                 <Route path="/inventory/motorcycles/:slug" element={<BikeDetailPage />} />
                 <Route path="/booking" element={<BookingPage />} />

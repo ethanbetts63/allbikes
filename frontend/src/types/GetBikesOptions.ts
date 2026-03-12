@@ -1,5 +1,5 @@
 export interface GetBikesOptions {
-  condition?: 'new' | 'used' | 'demo';
+  condition?: 'new' | 'used' | 'demo' | 'new,demo';
   page?: number;
   is_featured?: boolean;
   ordering?: string;

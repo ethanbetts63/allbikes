@@ -102,7 +102,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
     setFilterOptions(newOptions);
   };
 
-  const isNew = bikeCondition === 'new';
+  const isNew = bikeCondition === 'new,demo';
   const pageTitle = isNew ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
   const responsivePageTitle = isNew ? (
     <>
