@@ -1,6 +1,14 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse, UserProfile, Bike, Brand, PaginatedResponse, MotorcycleFormData, ManagedImage, TermsAndConditions } from "@/types";
+import type { AuthResponse } from '@/types/AuthResponse';
+import type { UserProfile } from '@/types/UserProfile';
+import type { Bike } from '@/types/Bike';
+import type { Brand } from '@/types/Brand';
+import type { PaginatedResponse } from '@/types/PaginatedResponse';
+import type { MotorcycleFormData } from '@/types/MotorcycleFormData';
+import type { ManagedImage } from '@/types/ManagedImage';
+import type { TermsAndConditions } from '@/types/TermsAndConditions';
+import type { GetBikesOptions } from '@/types/GetBikesOptions';
 
 /**
  * A centralized module for all API interactions.
@@ -57,19 +65,6 @@ export async function getBrands(): Promise<Brand[]> {
 }
 
 // --- Inventory Endpoints ---
-
-export interface GetBikesOptions {
-    condition?: 'new' | 'used' | 'demo';
-    page?: number;
-    is_featured?: boolean;
-    ordering?: string;
-    min_price?: number;
-    max_price?: number;
-    min_year?: number;
-    max_year?: number;
-    min_engine_size?: number;
-    max_engine_size?: number;
-}
 
 export async function getBikes(options: GetBikesOptions = {}): Promise<PaginatedResponse<Bike>> {
     const {

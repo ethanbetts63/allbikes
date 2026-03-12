@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Seo from '@/components/Seo';
 import BikeCard from '@/components/BikeCard';
-import type { Bike } from '@/types';
-import { getBikes, type GetBikesOptions } from '@/api';
+import type { Bike } from '@/types/Bike';
+import type { GetBikesOptions } from '@/types/GetBikesOptions';
+import type { FilterSortOptions } from '@/types/FilterSortOptions';
+import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
+import type { BikeListPageProps } from '@/types/BikeListPageProps';
+import { getBikes } from '@/api';
 import { Spinner } from '@/components/ui/spinner';
 import {
   Pagination,
@@ -13,13 +17,9 @@ import {
 } from "@/components/ui/pagination";
 import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
-import FilterSort, { type FilterSortOptions } from '@/components/FilterSort';
+import FilterSort from '@/components/FilterSort';
 import { FaqSection } from '@/components/FaqSection';
-import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
-
-interface BikeListPageProps {
-  bikeCondition: 'new' | 'used';
-}
+import Breadcrumb from '@/components/Breadcrumb';
 
 const newBikeFaqs = [
   {

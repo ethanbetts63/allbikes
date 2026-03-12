@@ -1,4 +1,4 @@
-import type { SiteSettings } from '@/types';
+import type { SiteSettings } from '@/types/SiteSettings';
 
 // This file serves as the single source of truth for all static site settings.
 // The values are hardcoded from the last known database backup.

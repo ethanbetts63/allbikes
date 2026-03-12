@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getBrands } from '@/api';
-import type { Brand } from '@/types';
+import type { Brand } from '@/types/Brand';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
 import { cn } from "@/lib/utils";

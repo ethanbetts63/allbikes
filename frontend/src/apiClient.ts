@@ -1,9 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
-
-// Type for the decoded token to check expiration
-interface DecodedToken {
-    exp: number;
-}
+import type { DecodedToken } from '@/types/DecodedToken';
 
 /**
  * A wrapper for the /api/token/refresh/ endpoint.

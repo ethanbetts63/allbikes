@@ -1,36 +1,8 @@
 import { authedFetch } from '../apiClient';
-import type { ServiceSettings, EnrichedJobType } from '../types';
-
-// Type for the form data, should match the backend serializer
-// It's good practice to define this in a types file, but placing here for now.
-export interface BookingFormData {
-    [key: string]: any; // Allows flexible indexing
-    first_name: string;
-    last_name: string;
-    phone: string;
-    email: string;
-    street_line?: string;
-    suburb?: string;
-    state?: string;
-    postcode?: string;
-    registration_number: string;
-    make: string;
-    model: string;
-    year?: number | null;
-    color?: string;
-    transmission?: string;
-    vin?: string;
-    fuel_type?: string;
-    drive_type?: string;
-    engine_size?: string;
-    body?: string;
-    odometer?: number | null;
-    drop_off_time: string;
-    pickup_time?: string;
-    job_type_names: string[];
-    courtesy_vehicle_requested: boolean;
-    note?: string;
-}
+import type { ServiceSettings } from '@/types/ServiceSettings';
+import type { EnrichedJobType } from '@/types/EnrichedJobType';
+import type { BookingFormData } from '@/types/BookingFormData';
+export type { BookingFormData } from '@/types/BookingFormData';
 
 
 /**
