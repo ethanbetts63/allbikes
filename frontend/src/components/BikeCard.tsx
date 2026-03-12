@@ -2,11 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Bike } from "@/types";
-
-interface BikeCardProps {
-  bike: Bike;
-}
+import type { BikeCardProps } from "@/types/BikeCardProps";
 
 const BikeCard = ({ bike }: BikeCardProps) => {
   const navigate = useNavigate();

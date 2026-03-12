@@ -18,3 +18,22 @@ A living to-do list of approved improvements.
   - Frontend: Remove `localStorage.getItem/setItem('token')` from `AuthContext`. Send no `Authorization` header — the cookie is sent automatically. Add CSRF token handling for write requests.
   - The admin panel (bike management) is protected by this token, making the stakes higher than a typical public-facing site.
   - **Reference**: See `futureflower` project for a complete working implementation.
+
+
+
+  2. The multi-step booking form uses any throughout
+
+  formData: any, setFormData: React.Dispatch<React.SetStateAction<any>> — the BookingFormData type exists but isn't used
+   to type the form state. The three form step components (BookingDetailsForm, BikeDetailsForm, PersonalDetailsForm)
+  could all accept typed props using it.
+
+  3. siteSettings.ts hardcodes data from a DB backup
+
+  // The values are hardcoded from the last known database backup.
+  This will silently drift from the actual DB. If the settings API is available, the frontend should fetch it. If
+  offline fallback is needed, at least version/timestamp it and throw a warning.
+
+  4. structuredData?: object | any in SeoProps is a no-op
+
+  any absorbs object, so object | any is just any. Should be Record<string, unknown> or just object.
+

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from 'react';
-import { useForm, Controller, type SubmitHandler, useFieldArray } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +15,9 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import type { Bike, ManagedImage, MotorcycleFormData } from '@/types/index';
+import type { ManagedImage } from '@/types/ManagedImage';
+import type { MotorcycleFormData } from '@/types/MotorcycleFormData';
+import type { MotorcycleFormProps } from '@/types/MotorcycleFormProps';
 import {
     Table,
     TableBody,
@@ -24,12 +26,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-
-interface MotorcycleFormProps {
-    initialData?: Bike;
-    onSubmit: SubmitHandler<MotorcycleFormData>;
-    isLoading?: boolean;
-}
 
 const MotorcycleForm: React.FC<MotorcycleFormProps> = ({ initialData, onSubmit, isLoading }) => {
     

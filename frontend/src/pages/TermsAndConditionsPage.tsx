@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getLatestTermsAndConditions } from '@/api';
-import type { TermsAndConditions } from '@/types';
+import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 

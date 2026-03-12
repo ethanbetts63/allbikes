@@ -2,14 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
-export interface BreadcrumbItem {
-  name: string;
-  href: string;
-}
-
-interface BreadcrumbProps {
-  items: BreadcrumbItem[];
-}
+import type { BreadcrumbProps } from '@/types/BreadcrumbProps';
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getBikeById, getBikes } from '@/api';
-import type { Bike } from '@/types';
+import type { Bike } from '@/types/Bike';
+import type { Specification } from '@/types/Specification';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from "@/components/ui/badge";
@@ -20,14 +21,8 @@ import {
     PlayCircle
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
-
-interface Specification {
-    label: string;
-    value: string | number | null | undefined;
-    icon: React.ElementType;
-    formatter?: (val: any) => string;
-}
+import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
+import Breadcrumb from '@/components/Breadcrumb';
 
 const getYouTubeVideoId = (url: string): string | null => {
     if (!url) return null;

@@ -1,16 +1,8 @@
 import SmallBikeCard from "@/components/SmallBikeCard";
-import type { Bike } from "@/types";
+import type { FeaturedBikesProps } from "@/types/FeaturedBikesProps";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-
-interface FeaturedBikesProps {
-  title: React.ReactNode;
-  bikes: Bike[];
-  description: string;
-  linkTo: string;
-  linkText: string;
-}
 
 const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description, linkTo, linkText }) => {
   if (bikes.length === 0) {

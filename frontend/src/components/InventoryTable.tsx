@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/pagination"
 import { useNavigate } from "react-router-dom"
 import { deleteMotorcycle, getBikes } from "@/api"
-import type { Bike } from "@/types"
+import type { Bike } from "@/types/Bike"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 // Main InventoryTable Component

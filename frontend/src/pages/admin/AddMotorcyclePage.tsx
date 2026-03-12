@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import MotorcycleForm from "@/forms/MotorcycleForm";
-import type { MotorcycleFormData } from "@/types";
+import type { MotorcycleFormData } from "@/types/MotorcycleFormData";
 import { 
     createMotorcycle, 
     uploadMotorcycleImage, 
@@ -9,7 +9,7 @@ import {
     updateMotorcycle,
     manageMotorcycleImages
 } from "@/api";
-import type { Bike } from '@/types';
+import type { Bike } from '@/types/Bike';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AddMotorcyclePage = () => {

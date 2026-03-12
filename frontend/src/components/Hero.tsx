@@ -1,10 +1,6 @@
 import React from 'react';
 
-interface HeroProps {
-  title: React.ReactNode;
-  description: string;
-  imageUrl: string;
-}
+import type { HeroProps } from '@/types/HeroProps';
 
 const Hero: React.FC<HeroProps> = ({ title, description, imageUrl }) => {
   return (

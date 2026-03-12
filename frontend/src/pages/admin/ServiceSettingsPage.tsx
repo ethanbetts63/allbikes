@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { authedFetch } from '@/apiClient';
-import type { ServiceSettings } from '@/types';
+import type { ServiceSettings } from '@/types/ServiceSettings';
 import ServiceSettingsForm from '@/forms/ServiceSettingsForm';
 
 const ServiceSettingsPage = () => {

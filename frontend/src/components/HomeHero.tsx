@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import type { Bike } from "@/types";
+import type { HomeHeroProps } from "@/types/HomeHeroProps";
 import ContactButtons from './ContactButtons';
 
 // Import default images
@@ -20,15 +20,6 @@ import defaultUsedImage640 from '@/assets/IMG_20250730_102056-640w.webp';
 import defaultUsedImage768 from '@/assets/IMG_20250730_102056-768w.webp';
 import defaultUsedImage1024 from '@/assets/IMG_20250730_102056-1024w.webp';
 import defaultUsedImage1280 from '@/assets/IMG_20250730_102056-1280w.webp';
-
-interface HomeHeroProps {
-  newBikes: Bike[];
-  usedBikes: Bike[];
-  error: string | null;
-  phoneNumber?: string;
-  mobileNumber?: string;
-  emailAddress?: string;
-}
 
 const HomeHero: React.FC<HomeHeroProps> = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, emailAddress }) => {  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImage]);
   const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([defaultUsedImage]);

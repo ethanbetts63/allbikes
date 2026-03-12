@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import type { FormEvent } from 'react';
 
 import { getJobTypesAdmin, createJobType, updateJobType, deleteJobType } from '@/services/jobTypeService';
-import type { JobType } from '@/types';
+import type { JobType } from '@/types/JobType';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

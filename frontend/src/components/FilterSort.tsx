@@ -10,20 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 
-export interface FilterSortOptions {
-  ordering?: string;
-  min_price?: number;
-  max_price?: number;
-  min_year?: number;
-  max_year?: number;
-  min_engine_size?: number;
-  max_engine_size?: number;
-}
-
-interface FilterSortProps {
-  options: FilterSortOptions;
-  onFilterChange: (newOptions: FilterSortOptions) => void;
-}
+import type { FilterSortOptions } from '@/types/FilterSortOptions';
+import type { FilterSortProps } from '@/types/FilterSortProps';
 
 const FilterSort: React.FC<FilterSortProps> = ({ options, onFilterChange }) => {
   const [localOptions, setLocalOptions] = useState<FilterSortOptions>(options);

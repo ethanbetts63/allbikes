@@ -4,12 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface BikeDetailsFormProps {
-  formData: any;
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
-  nextStep: () => void;
-  prevStep: () => void;
-}
+import type { BikeDetailsFormProps } from '@/types/BikeDetailsFormProps';
 
 const BikeDetailsForm: React.FC<BikeDetailsFormProps> = ({ formData, setFormData, nextStep, prevStep }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,12 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Wrench, Cog } from "lucide-react"; 
-import type { Bike } from "@/types";
-
-
-interface SmallBikeCardProps {
-  bike: Bike;
-}
+import type { SmallBikeCardProps } from "@/types/SmallBikeCardProps";
 
 const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);

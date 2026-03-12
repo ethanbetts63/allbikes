@@ -5,14 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from 'react-router-dom';
 
-interface PersonalDetailsFormProps {
-  formData: any;
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
-  prevStep: () => void;
-  handleSubmit: () => void;
-  error: string | null;
-}
-
+import type { PersonalDetailsFormProps } from '@/types/PersonalDetailsFormProps';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const PersonalDetailsForm: React.FC<PersonalDetailsFormProps> = ({ formData, setFormData, prevStep, handleSubmit, error }) => {

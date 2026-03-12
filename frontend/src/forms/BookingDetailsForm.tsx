@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getJobTypes, getUnavailableDays, getServiceSettings } from '@/services/bookingService';
-import type { ServiceSettings, EnrichedJobType } from '@/types';
+import type { ServiceSettings } from '@/types/ServiceSettings';
+import type { EnrichedJobType } from '@/types/EnrichedJobType';
+import type { BookingDetailsFormProps } from '@/types/BookingDetailsFormProps';
 import { format, add, parse } from 'date-fns';
 
 import { Button } from "@/components/ui/button";
@@ -13,12 +15,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner"; // Import Spinner
-
-interface BookingDetailsFormProps {
-    formData: any;
-    setFormData: React.Dispatch<React.SetStateAction<any>>;
-    nextStep: () => void;
-}
 
 const BookingDetailsForm: React.FC<BookingDetailsFormProps> = ({ formData, setFormData, nextStep }) => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);

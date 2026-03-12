@@ -2,16 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from "./ui/card";
 import { ChevronDown } from 'lucide-react';
 
-// Define the FAQ item type locally
-interface FaqItem {
-  question: string;
-  answer: string;
-}
-
-interface FaqSectionProps {
-  title: string;
-  faqData: FaqItem[];
-}
+import type { FaqSectionProps } from '@/types/FaqSectionProps';
 
 export const FaqSection: React.FC<FaqSectionProps> = ({ title, faqData }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

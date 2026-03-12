@@ -1,17 +1,9 @@
 import React from 'react';
-import type { ServiceSettings } from '@/types';
+import type { ServiceSettingsFormProps } from '@/types/ServiceSettingsFormProps';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
-interface ServiceSettingsFormProps {
-    settings: ServiceSettings;
-    loading: boolean;
-    successMessage: string | null;
-    handleSubmit: (e: React.FormEvent) => void;
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
 
 const ServiceSettingsForm: React.FC<ServiceSettingsFormProps> = ({
     settings,

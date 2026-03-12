@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
 import { getJobTypes } from '@/services/bookingService';
-import type { EnrichedJobType, } from '@/types';
+import type { EnrichedJobType } from '@/types/EnrichedJobType';
+import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import WorkshopJobTypes from '@/components/WorkshopJobTypes';
 import ServiceBrands from "@/components/ServiceBrands";
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
-import Breadcrumb, { type BreadcrumbItem } from '@/components/Breadcrumb';
+import Breadcrumb from '@/components/Breadcrumb';
 
 const TyreFittingFaqs = [
   {

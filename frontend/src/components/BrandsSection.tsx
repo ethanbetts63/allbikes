@@ -21,15 +21,7 @@ import segwayImage768 from '../assets/segway_1-768w.webp';
 import segwayImage1024 from '../assets/segway_1-1024w.webp';
 import segwayImage1280 from '../assets/segway_1-1280w.webp';
 
-interface BrandProps {
-  image: string;
-  imageSrcSet?: string;
-  alt: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  imageLeft?: boolean; 
-}
+import type { BrandProps } from '@/types/BrandProps';
 
 const BrandCard: React.FC<BrandProps> = ({ image, imageSrcSet, alt, title, subtitle, description, imageLeft }) => {
   return (
