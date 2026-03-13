@@ -25,6 +25,13 @@ const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   refunded:        { label: 'Refunded',        className: 'border-orange-500 text-orange-600' },
 };
 
+const Row = ({ label, value }: { label: string; value: string }) => (
+  <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
+    <span className="text-black font-semibold text-sm w-36 shrink-0">{label}</span>
+    <span className="text-gray-600 text-sm text-right">{value}</span>
+  </div>
+);
+
 const AdminOrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
@@ -80,84 +87,35 @@ const AdminOrderDetailPage = () => {
     ? order.product_discount_price
     : order.product_price;
 
+  const address = [
+    order.address_line1,
+    order.address_line2,
+    `${order.suburb} ${order.state} ${order.postcode}`,
+  ].filter(Boolean).join(', ');
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <Link to="/dashboard/orders" className="text-sm text-gray-500 hover:text-stone-900 underline underline-offset-2 mb-1 block">
-            ← Back to Orders
-          </Link>
-          <h1 className="text-2xl font-bold text-[var(--text-primary)] font-mono">{order.order_reference}</h1>
-        </div>
-        {badge && (
-          <Badge variant="outline" className={`text-sm px-3 py-1 ${badge.className}`}>{badge.label}</Badge>
-        )}
-      </div>
-
       {notification && (
         <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
           <AlertDescription>{notification.message}</AlertDescription>
         </Alert>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="w-full bg-white text-black p-4 rounded-lg">
 
-        {/* Left: order details */}
-        <div className="lg:col-span-2 space-y-4">
-
-          <div className="bg-white text-black p-4 rounded-lg border border-gray-300">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Product</h2>
-            <p className="font-bold text-stone-900">{order.product_name}</p>
-            <p className="text-stone-600 text-sm">${parseFloat(displayPrice).toLocaleString()} incl. GST</p>
+        {/* Header: reference, badge, status update */}
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+          <div>
+            <h1 className="text-2xl font-bold text-black font-mono mb-1">{order.order_reference}</h1>
+            {badge && (
+              <Badge variant="outline" className={`text-sm px-3 py-1 ${badge.className}`}>{badge.label}</Badge>
+            )}
           </div>
-
-          <div className="bg-white text-black p-4 rounded-lg border border-gray-300">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Customer</h2>
-            <div className="space-y-1 text-sm">
-              <p className="font-semibold text-stone-900">{order.customer_name}</p>
-              <p className="text-stone-600">{order.customer_email}</p>
-              {order.customer_phone && <p className="text-stone-600">{order.customer_phone}</p>}
-            </div>
-          </div>
-
-          <div className="bg-white text-black p-4 rounded-lg border border-gray-300">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Delivery Address</h2>
-            <div className="space-y-0.5 text-sm text-stone-700">
-              <p>{order.address_line1}</p>
-              {order.address_line2 && <p>{order.address_line2}</p>}
-              <p>{order.suburb} {order.state} {order.postcode}</p>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Right: meta + status update */}
-        <div className="space-y-4">
-
-          <div className="bg-white text-black p-4 rounded-lg border border-gray-300">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Details</h2>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Placed</span>
-                <span className="text-stone-900 font-medium">
-                  {new Date(order.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Updated</span>
-                <span className="text-stone-900 font-medium">
-                  {new Date(order.updated_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white text-black p-4 rounded-lg border border-gray-300">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Update Status</h2>
+          <div className="flex items-center gap-3">
             <select
               value={selectedStatus}
               onChange={e => setSelectedStatus(e.target.value)}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm mb-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               {STATUS_OPTIONS.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -166,13 +124,36 @@ const AdminOrderDetailPage = () => {
             <Button
               onClick={handleStatusUpdate}
               disabled={isSaving || selectedStatus === order.status}
-              className="w-full"
             >
-              {isSaving ? 'Saving...' : 'Save Status'}
+              {isSaving ? 'Saving...' : 'Update Status'}
             </Button>
           </div>
-
         </div>
+
+        <div className="mb-6">
+          <h2 className="text-black font-bold mb-2">Order Details</h2>
+          <Row label="Product" value={order.product_name} />
+          <Row label="Price" value={`$${parseFloat(displayPrice).toLocaleString()} incl. GST`} />
+          <Row label="Placed" value={new Date(order.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })} />
+          <Row label="Last Updated" value={new Date(order.updated_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })} />
+        </div>
+
+        <div className="mb-6">
+          <h2 className="text-black font-bold mb-2">Customer</h2>
+          <Row label="Name" value={order.customer_name} />
+          <Row label="Email" value={order.customer_email} />
+          {order.customer_phone && <Row label="Phone" value={order.customer_phone} />}
+        </div>
+
+        <div className="mb-6">
+          <h2 className="text-black font-bold mb-2">Delivery Address</h2>
+          <Row label="Address" value={address} />
+        </div>
+
+        <Link to="/dashboard/orders" className="text-sm text-gray-500 hover:text-black underline underline-offset-2">
+          ← Back to Orders
+        </Link>
+
       </div>
     </div>
   );
