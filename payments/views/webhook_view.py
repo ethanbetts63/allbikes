@@ -3,13 +3,11 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework.authentication import BasicAuthentication
-
 from ..utils.webhook_handlers import handle_payment_intent_succeeded, handle_payment_intent_failed
 
 
 class StripeWebhookView(APIView):
-    authentication_classes = [BasicAuthentication]
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def post(self, request):

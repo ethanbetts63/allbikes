@@ -40,20 +40,35 @@ const OrderTable = () => {
   const [data, setData] = useState<Order[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filter, setFilter] = useState<FilterType>('todo');
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrev, setHasPrev] = useState(false);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const PAGE_SIZE = 50;
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const statusParam = filter === 'todo' ? 'paid,dispatched' : undefined;
-        const result = await adminGetOrders(statusParam);
-        setData(result);
+        const result = await adminGetOrders(statusParam, page);
+        setData(result.results);
+        setCount(result.count);
+        setHasNext(result.next !== null);
+        setHasPrev(result.previous !== null);
       } catch {
         setNotification({ message: 'Failed to fetch orders.', type: 'error' });
       }
     };
     fetchOrders();
-  }, [filter]);
+  }, [filter, page]);
+
+  // Reset to page 1 when filter changes
+  const handleFilterChange = (newFilter: FilterType) => {
+    setFilter(newFilter);
+    setPage(1);
+  };
 
   const columns: ColumnDef<Order>[] = useMemo(() => [
     {
@@ -118,6 +133,8 @@ const OrderTable = () => {
     state: { sorting },
   });
 
+  const totalPages = Math.ceil(count / PAGE_SIZE);
+
   return (
     <div className="w-full bg-white text-black p-4 rounded-lg">
       {notification && (
@@ -129,14 +146,14 @@ const OrderTable = () => {
       <div className="flex items-center space-x-2 py-4">
         <Button
           variant="outline"
-          onClick={() => setFilter('todo')}
+          onClick={() => handleFilterChange('todo')}
           className={filter === 'todo' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
         >
           To Do
         </Button>
         <Button
           variant="outline"
-          onClick={() => setFilter('all')}
+          onClick={() => handleFilterChange('all')}
           className={filter === 'all' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
         >
           All Orders
@@ -182,8 +199,32 @@ const OrderTable = () => {
         </Table>
       </div>
 
-      <div className="text-sm text-gray-500 mt-3">
-        {data.length} order{data.length !== 1 ? 's' : ''}
+      <div className="flex items-center justify-between mt-3">
+        <span className="text-sm text-gray-500">
+          {count} order{count !== 1 ? 's' : ''}{totalPages > 1 && ` · page ${page} of ${totalPages}`}
+        </span>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => p - 1)}
+              disabled={!hasPrev}
+              className="text-black border-gray-300"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => p + 1)}
+              disabled={!hasNext}
+              className="text-black border-gray-300"
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -56,7 +56,7 @@ class TestAdminOrderListView:
         url = reverse('payments:admin-order-list')
         response = admin_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 3
+        assert response.data['count'] == 3
 
     def test_status_filter_returns_matching_orders(self, admin_client):
         """
@@ -69,8 +69,8 @@ class TestAdminOrderListView:
         url = reverse('payments:admin-order-list')
         response = admin_client.get(url, {'status': 'paid'})
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
-        assert all(o['status'] == 'paid' for o in response.data)
+        assert response.data['count'] == 2
+        assert all(o['status'] == 'paid' for o in response.data['results'])
 
     def test_status_filter_accepts_comma_separated_values(self, admin_client):
         """
@@ -84,7 +84,7 @@ class TestAdminOrderListView:
         url = reverse('payments:admin-order-list')
         response = admin_client.get(url, {'status': 'paid,dispatched'})
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
+        assert response.data['count'] == 2
 
 
 @pytest.mark.django_db

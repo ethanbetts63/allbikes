@@ -263,9 +263,10 @@ export async function getOrderByReference(reference: string): Promise<Order> {
     return handleResponse(response);
 }
 
-export async function adminGetOrders(status?: string): Promise<Order[]> {
-    const params = status ? `?status=${encodeURIComponent(status)}` : '';
-    const response = await authedFetch(`/api/payments/admin/orders/${params}`);
+export async function adminGetOrders(status?: string, page = 1): Promise<PaginatedResponse<Order>> {
+    const params = new URLSearchParams({ page: String(page) });
+    if (status) params.append('status', status);
+    const response = await authedFetch(`/api/payments/admin/orders/?${params.toString()}`);
     return handleResponse(response);
 }
 

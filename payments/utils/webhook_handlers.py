@@ -13,7 +13,7 @@ def handle_payment_intent_succeeded(payment_intent):
 
     with transaction.atomic():
         try:
-            payment = Payment.objects.select_related('order__product').get(
+            payment = Payment.objects.select_related('order__product').select_for_update().get(
                 stripe_payment_intent_id=intent_id
             )
         except Payment.DoesNotExist:
