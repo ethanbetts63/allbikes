@@ -35,76 +35,62 @@ const NavBar = () => {
     };
   }, [isMenuOpen]);
 
-  return (
-    <header className={cn(
-      "sticky top-0 z-50 w-full border-b border-foreground bg-background transition-all duration-300"
-    )}>
-      <div className="container flex h-20 items-center justify-between">
-        {/* Left Section: Logo - Remains constant */}
-        <div className="flex items-center p-8">
-          <Link to="/" className="flex items-center">
-            <img
-              src={logo1280}
-              srcSet={`${logo320} 320w, ${logo640} 640w, ${logo768} 768w, ${logo1024} 1024w, ${logo1280} 1280w`}
-              sizes="175px"
-              width="1756"
-              height="810"
-              alt="Allbikes Logo"
-              className="h-20 w-auto object-contain"
-            />
-          </Link>
-        </div>
+  const NAV_LINK = 'text-white text-xs font-bold uppercase tracking-widest hover:text-amber-400 transition-colors duration-200';
 
-        {/* Center Section: Desktop & Tablet Navigation */}
-        <nav className="hidden md:flex flex-1 justify-center items-center gap-4 px-4 text-[var(--text-primary)] text-bold text-lg">
-          <ul className="flex items-center space-x-8 lg:space-x-24">
-            <li>
-              <Link to="/inventory/motorcycles/new" className="hover:text-secondary">
-                <span className="hidden lg:inline">New Motorcycles & Scooters</span>
-                <span className="lg:hidden">New Bikes</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/inventory/motorcycles/used" className="hover:text-secondary">
-                <span className="hidden lg:inline">Used Motorcycles & Scooters</span>
-                <span className="lg:hidden">Used Bikes</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/escooters" className="hover:text-secondary">
-                E-Scooters
-              </Link>
-            </li>
-            <li>
-              <Link to="/service" className="hover:text-secondary">
-                 Servicing
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="hover:text-secondary">
-                 Contact Us
-              </Link>
-            </li>
-          </ul>
+  return (
+    <header className="sticky top-0 z-50 w-full bg-background border-b border-white/10">
+      <div className="container flex h-20 items-stretch justify-between px-6">
+
+        {/* Logo */}
+        <Link to="/" className="shrink-0 flex items-stretch">
+          <img
+            src={logo1280}
+            srcSet={`${logo320} 320w, ${logo640} 640w, ${logo768} 768w, ${logo1024} 1024w, ${logo1280} 1280w`}
+            sizes="175px"
+            width="1756"
+            height="810"
+            alt="Allbikes Logo"
+            className="h-full w-auto object-contain"
+          />
+        </Link>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-8 self-center">
+          <Link to="/inventory/motorcycles/new" className={NAV_LINK}>
+            <span className="hidden lg:inline">New Motorcycles &amp; Scooters</span>
+            <span className="lg:hidden">New Bikes</span>
+          </Link>
+          <Link to="/inventory/motorcycles/used" className={NAV_LINK}>
+            <span className="hidden lg:inline">Used Motorcycles &amp; Scooters</span>
+            <span className="lg:hidden">Used Bikes</span>
+          </Link>
+          <Link to="/escooters" className={NAV_LINK}>E-Scooters</Link>
+          <Link to="/service" className={NAV_LINK}>Servicing</Link>
+          <Link to="/contact" className={cn(NAV_LINK, 'border border-white/30 px-4 py-2 hover:border-amber-400')}>
+            Contact Us
+          </Link>
         </nav>
 
-        {/* Right Section: Hamburger Menu for Mobile */}
-        <div className="flex items-center md:hidden">
-          <button ref={buttonRef} onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2" aria-label="Toggle navigation menu" title="Toggle navigation menu">
-            {isMenuOpen ? <X size={28} className="text-destructive" /> : <Menu size={28} className="text-primary" />}
-          </button>
-        </div>
+        {/* Mobile hamburger */}
+        <button
+          ref={buttonRef}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="md:hidden self-center p-1.5 text-white hover:text-amber-400 transition-colors duration-200"
+          aria-label="Toggle navigation menu"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile menu */}
       {isMenuOpen && (
-        <div ref={menuRef} className="md:hidden bg-background border-t border-foreground">
-          <nav className="flex flex-col items-center gap-4 py-4 text-[var(--text-primary)] text-bold text-lg">
-            <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">New Motorcycles & Scooters</Link>
-            <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Used Motorcycles & Scooters</Link>
-            <Link to="/escooters" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">E-Scooters</Link>
-            <Link to="/service" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Workshop</Link>
-            <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Contact Us</Link>
+        <div ref={menuRef} className="md:hidden bg-background border-t border-white/10">
+          <nav className="flex flex-col px-6 py-4 gap-5">
+            <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>New Motorcycles &amp; Scooters</Link>
+            <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Used Motorcycles &amp; Scooters</Link>
+            <Link to="/escooters" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>E-Scooters</Link>
+            <Link to="/service" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Servicing</Link>
+            <Link to="/contact" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Contact Us</Link>
           </nav>
         </div>
       )}
