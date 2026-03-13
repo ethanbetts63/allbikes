@@ -5,6 +5,7 @@ Disallow: /dashboard/
 Disallow: /api/
 Disallow: /login
 Disallow: /booking/success
+Disallow: /refunds
 Disallow: /service/booking-terms/
 
 Sitemap: https://www.scootershop.com.au/sitemap.xml
