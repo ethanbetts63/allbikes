@@ -1,101 +1,93 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from './ui/button'; 
 import { siteSettings } from '@/config/siteSettings';
 
+const LINK_CLASS = 'text-stone-400 hover:text-amber-400 transition-colors duration-200 text-sm';
+
 const Footer = () => {
-  const { user, logout } = useAuth(); // Destructure logout from useAuth
+  const { user, logout } = useAuth();
+
+  const phoneNumber = siteSettings.phone_number;
+  const mobileNumber = siteSettings.mobile_number;
+  const displayedPhone = phoneNumber && mobileNumber
+    ? `${phoneNumber} / ${mobileNumber}`
+    : phoneNumber || mobileNumber || null;
+
+  const hours = [
+    ['Mon', siteSettings.opening_hours_monday],
+    ['Tue', siteSettings.opening_hours_tuesday],
+    ['Wed', siteSettings.opening_hours_wednesday],
+    ['Thu', siteSettings.opening_hours_thursday],
+    ['Fri', siteSettings.opening_hours_friday],
+    ['Sat', siteSettings.opening_hours_saturday],
+    ['Sun', siteSettings.opening_hours_sunday],
+  ];
 
   return (
-    <footer className="bg-foreground text-[var(--text-primary)] p-8 mt-auto">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-300">
-        {/* Contact Info */}
+    <footer className="bg-stone-900 mt-auto">
+      <div className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+
+        {/* Contact */}
         <div>
-          <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Contact Us</h4>
-            <>
-              <p>{siteSettings.street_address}</p>
-              <p>{siteSettings.address_locality}, {siteSettings.address_region} {siteSettings.postal_code}</p>
-              {/* Phone Numbers Display */}
-              {(() => {
-                const phoneNumber = siteSettings.phone_number;
-                const mobileNumber = siteSettings.mobile_number;
-                let displayedPhoneNumbers = '';
-
-                if (phoneNumber && mobileNumber) {
-                  displayedPhoneNumbers = `${phoneNumber} / ${mobileNumber}`;
-                } else if (phoneNumber) {
-                  displayedPhoneNumbers = phoneNumber;
-                } else if (mobileNumber) {
-                  displayedPhoneNumbers = mobileNumber;
-                }
-
-                return displayedPhoneNumbers ? <p>Phone: {displayedPhoneNumbers}</p> : null;
-              })()}
-              <p>Email: {siteSettings.email_address}</p>
-            </>
+          <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Contact Us</p>
+          <div className="space-y-1.5 text-sm text-stone-400">
+            <p>{siteSettings.street_address}</p>
+            <p>{siteSettings.address_locality}, {siteSettings.address_region} {siteSettings.postal_code}</p>
+            {displayedPhone && <p className="pt-1">{displayedPhone}</p>}
+            <p>{siteSettings.email_address}</p>
+          </div>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Quick Links</h4>
-          <ul>
-            <li className="mb-2">
-              <Link to="/inventory/motorcycles/new" className="hover:underline text-gray-300">
-                <span className="hidden md:inline">New Motorcycles & Scooters</span>
-                <span className="md:hidden">New Bikes</span>
-              </Link>
-            </li>
-            <li className="mb-2">
-              <Link to="/inventory/motorcycles/used" className="hover:underline text-gray-300">
-                <span className="hidden md:inline">Used Motorcycles & Scooters</span>
-                <span className="md:hidden">Used Bikes</span>
-              </Link>
-            </li>
-            <li className="mb-2"><Link to="/service" className="hover:underline text-gray-300">Servicing</Link></li>
-            <li className="mb-2"><Link to="/tyre-fitting" className="hover:underline text-gray-300">Tyre Fitting</Link></li>
-            <li className="mb-2"><Link to="/contact" className="hover:underline text-gray-300">Contact Us</Link></li>
-            <li className="mb-2"><Link to="/refunds" className="hover:underline text-gray-300">Returns &amp; Refunds</Link></li>
-            <li className="mb-2"><Link to="/terms" className="hover:underline text-gray-300">Terms and Conditions</Link></li>
-            <li className="mb-2"><Link to="/privacy" className="hover:underline text-gray-300">Privacy Policy</Link></li>
-            <li className="mb-2"><Link to="/security" className="hover:underline text-gray-300">Security Policy</Link></li>
+          <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Quick Links</p>
+          <ul className="space-y-2">
+            <li><Link to="/inventory/motorcycles/new" className={LINK_CLASS}>New Motorcycles &amp; Scooters</Link></li>
+            <li><Link to="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles &amp; Scooters</Link></li>
+            <li><Link to="/service" className={LINK_CLASS}>Servicing</Link></li>
+            <li><Link to="/tyre-fitting" className={LINK_CLASS}>Tyre Fitting</Link></li>
+            <li><Link to="/contact" className={LINK_CLASS}>Contact Us</Link></li>
+            <li><Link to="/refunds" className={LINK_CLASS}>Returns &amp; Refunds</Link></li>
+            <li><Link to="/terms" className={LINK_CLASS}>Terms and Conditions</Link></li>
+            <li><Link to="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
+            <li><Link to="/security" className={LINK_CLASS}>Security Policy</Link></li>
             {user ? (
               <>
                 {user.is_staff && (
-                  <li className="mb-2">
-                    <Link to="/dashboard/inventory" className="hover:underline text-gray-300">Inventory Management</Link>
-                  </li>
+                  <li><Link to="/dashboard/inventory" className={LINK_CLASS}>Inventory Management</Link></li>
                 )}
-                <li className="mb-2">
-                  <Button variant="link" onClick={logout} className="p-0 h-auto text-gray-300 hover:underline">Logout</Button>
+                <li>
+                  <button onClick={logout} className={LINK_CLASS}>Logout</button>
                 </li>
               </>
             ) : (
-              <li className="mb-2">
-                <Link to="/login" className="hover:underline text-gray-300">Login</Link>
-              </li>
+              <li><Link to="/login" className={LINK_CLASS}>Login</Link></li>
             )}
           </ul>
         </div>
 
-        {/* Opening Hours & Business Info */}
+        {/* Opening Hours */}
         <div>
-          <h4 className="font-bold text-lg mb-4 text-[var(--text-primary)]">Opening Hours</h4>
-            <>
-              <p>Monday: {siteSettings.opening_hours_monday}</p>
-              <p>Tuesday: {siteSettings.opening_hours_tuesday}</p>
-              <p>Wednesday: {siteSettings.opening_hours_wednesday}</p>
-              <p>Thursday: {siteSettings.opening_hours_thursday}</p>
-              <p>Friday: {siteSettings.opening_hours_friday}</p>
-              <p>Saturday: {siteSettings.opening_hours_saturday}</p>
-              <p>Sunday: {siteSettings.opening_hours_sunday}</p>
-            </>
+          <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Opening Hours</p>
+          <div className="space-y-1.5">
+            {hours.map(([day, time]) => (
+              <div key={day} className="flex gap-3 text-sm">
+                <span className="text-stone-500 w-8 shrink-0">{day}</span>
+                <span className="text-stone-400">{time}</span>
+              </div>
+            ))}
+          </div>
         </div>
+
       </div>
-      <div className="container mx-auto text-center mt-8 pt-4 border-t border-gray-700">
-        <p className="text-gray-400">&copy; {new Date().getFullYear()} Allbikes. All rights reserved.</p>
-          <p className="text-sm mt-2 text-gray-400">
-            ABN: {siteSettings.abn_number} | MD: {siteSettings.md_number} | MRB: {siteSettings.mrb_number}
+
+      <div className="border-t border-stone-800">
+        <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-stone-500 text-xs">&copy; {new Date().getFullYear()} Allbikes. All rights reserved.</p>
+          <p className="text-stone-600 text-xs">
+            ABN: {siteSettings.abn_number}&nbsp;&nbsp;MD: {siteSettings.md_number}&nbsp;&nbsp;MRB: {siteSettings.mrb_number}
           </p>
+        </div>
       </div>
     </footer>
   );
