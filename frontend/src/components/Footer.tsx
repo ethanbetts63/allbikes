@@ -91,7 +91,7 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-1.5 border-l border-stone-800 pl-4">
               <span className="text-stone-600 text-xs">Payments by</span>
-              <img src={stripeLogo} alt="Stripe" className="h-5 w-auto brightness-0 invert opacity-40" />
+              <img src={stripeLogo} alt="Stripe" className="h-5 w-auto" />
             </div>
           </div>
         </div>

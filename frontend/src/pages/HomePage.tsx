@@ -166,18 +166,24 @@ const HomePage = () => {
 
             {/* Header */}
             <div className="mb-8">
-              <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-                Buy Online
-              </p>
+              <div className="flex items-center gap-3 mb-3">
+                <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em]">
+                  Buy Online
+                </p>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-stone-500 text-[10px] uppercase tracking-widest">Powered by</span>
+                  <img src={stripeLogo} alt="Stripe" className="h-4 w-auto" />
+                </div>
+              </div>
               <div className="flex items-end justify-between gap-4">
                 <h2 className="text-white text-3xl md:text-4xl font-black uppercase italic leading-none">
-                  Now Selling<br />E-Scooters
+                  Best Selling<br />E-Scooters
                 </h2>
                 <Link
                   to="/escooters"
-                  className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-white/20 text-white hover:border-amber-400 hover:text-amber-400 font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
+                  className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-amber-400 hover:border-stone-500 hover:text-stone-500 font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
                 >
-                  View All <ArrowRight className="h-3.5 w-3.5" />
+                  View All E-Scooters <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </div>
@@ -254,19 +260,13 @@ const HomePage = () => {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-              <Link
-                to="/escooters"
-                className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
-              >
-                View All E-Scooters
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <div className="flex items-center gap-2">
-                <span className="text-stone-500 text-xs">Powered by</span>
-                <img src={stripeLogo} alt="Stripe" className="h-6 w-auto brightness-0 invert opacity-60" />
-              </div>
-            </div>
+            <Link
+              to="/escooters"
+              className="sm:hidden inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
+            >
+              View All E-Scooters
+              <ArrowRight className="h-4 w-4" />
+            </Link>
 
           </div>
         </section>
