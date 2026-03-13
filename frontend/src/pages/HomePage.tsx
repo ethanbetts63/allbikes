@@ -69,8 +69,8 @@ const HomePage = () => {
       "answer": "Yes, we service electric motorcycles and electric mopeds."
     },
     {
-      “question”: “Do you sell electric scooters?”,
-      “answer”: “Yes! We sell electric scooters (e-scooters) online with free delivery Australia-wide. Visit our E-Scooters page to browse our current range. All prices include GST.”
+      question: 'Do you sell electric scooters?',
+      answer: 'Yes! We sell electric scooters (e-scooters) online with free delivery Australia-wide. Visit our E-Scooters page to browse our current range. All prices include GST.'
     }
   ];
 

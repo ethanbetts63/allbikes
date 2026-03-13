@@ -1,26 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminGetProducts, deleteProduct } from '@/api';
-import type { Product } from '@/types/Product';
+import {
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import type { ColumnDef, SortingState } from '@tanstack/react-table';
+import { ArrowUpDown, Pencil, Trash2, PlusSquare } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { PlusSquare, Pencil, Trash2 } from 'lucide-react';
+import { adminGetProducts, deleteProduct } from '@/api';
+import type { Product } from '@/types/Product';
 
 const AdminProductDashboardPage = () => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [data, setData] = useState<Product[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [notification, setNotification] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const fetchProducts = async () => {
     try {
-      setIsLoading(true);
-      const data = await adminGetProducts();
-      setProducts(data.results);
+      const response = await adminGetProducts();
+      setData(response.results);
     } catch {
-      setError('Failed to load products.');
+      setNotification({ message: 'Failed to load products.', type: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -34,23 +48,106 @@ const AdminProductDashboardPage = () => {
     if (!window.confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
     try {
       await deleteProduct(product.id);
-      setNotification(`"${product.name}" deleted.`);
+      setNotification({ message: `"${product.name}" deleted successfully.`, type: 'success' });
       fetchProducts();
     } catch {
-      setError('Failed to delete product.');
+      setNotification({ message: 'Failed to delete product.', type: 'error' });
     }
   };
 
-  const stockBadge = (product: Product) => {
-    if (!product.in_stock) return <Badge variant="destructive">Out of Stock</Badge>;
-    if (product.low_stock) return <Badge variant="outline" className="border-orange-500 text-orange-600">Low Stock ({product.stock_quantity})</Badge>;
-    return <Badge variant="outline" className="border-green-500 text-green-600">{product.stock_quantity} in stock</Badge>;
-  };
+  const columns: ColumnDef<Product>[] = useMemo(() => [
+    {
+      accessorKey: 'name',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-black"
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => <div className="font-medium text-black">{row.getValue('name')}</div>,
+    },
+    {
+      accessorKey: 'brand',
+      header: () => <div className="text-black">Brand</div>,
+      cell: ({ row }) => <div className="text-black">{row.getValue('brand') || '—'}</div>,
+    },
+    {
+      accessorKey: 'price',
+      header: () => <div className="text-right text-black">Price</div>,
+      cell: ({ row }) => {
+        const formatted = new Intl.NumberFormat('en-AU', {
+          style: 'currency',
+          currency: 'AUD',
+        }).format(parseFloat(row.getValue('price')));
+        return <div className="text-right text-black">{formatted} <span className="text-xs text-gray-500">incl. GST</span></div>;
+      },
+    },
+    {
+      accessorKey: 'stock_quantity',
+      header: () => <div className="text-black">Stock</div>,
+      cell: ({ row }) => {
+        const product = row.original;
+        if (!product.in_stock) {
+          return <Badge variant="destructive">Out of Stock</Badge>;
+        }
+        if (product.low_stock) {
+          return <Badge variant="outline" className="border-orange-500 text-orange-600">{product.stock_quantity} — Low</Badge>;
+        }
+        return <Badge variant="outline" className="border-green-600 text-green-700">{product.stock_quantity} in stock</Badge>;
+      },
+    },
+    {
+      accessorKey: 'is_active',
+      header: () => <div className="text-black">Status</div>,
+      cell: ({ row }) =>
+        row.getValue('is_active') ? (
+          <Badge variant="outline" className="border-green-600 text-green-700">Active</Badge>
+        ) : (
+          <Badge variant="outline" className="text-gray-500 border-gray-400">Inactive</Badge>
+        ),
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(`/dashboard/products/${row.original.id}/edit`)}
+            className="text-black"
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => handleDelete(row.original)}
+            className="text-red-500"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ], []);
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: { sorting },
+  });
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">Product Management</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold text-[var(--text-primary)]">E-Scooter Products</h1>
         <Button onClick={() => navigate('/dashboard/products/new')}>
           <PlusSquare className="h-4 w-4 mr-2" />
           Add Product
@@ -58,72 +155,59 @@ const AdminProductDashboardPage = () => {
       </div>
 
       {notification && (
-        <Alert className="mb-4">
-          <AlertDescription>{notification}</AlertDescription>
+        <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
+          <AlertDescription>{notification.message}</AlertDescription>
         </Alert>
       )}
 
-      {error && (
-        <Alert variant="destructive" className="mb-4">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+      <div className="w-full bg-white text-black p-4 rounded-lg">
+        {isLoading ? (
+          <p className="text-center text-gray-500 py-8">Loading products...</p>
+        ) : (
+          <>
+            <div className="rounded-md border border-gray-300">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id} className="border-gray-300">
+                      {headerGroup.headers.map((header) => (
+                        <TableHead key={header.id} className="text-black">
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow key={row.id} className="border-gray-300">
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id} className="text-black">
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} className="h-24 text-center text-black">
+                        No products found. Add your first product.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
-      {isLoading ? (
-        <p className="text-muted-foreground">Loading products...</p>
-      ) : products.length === 0 ? (
-        <p className="text-muted-foreground">No products found. Add your first product.</p>
-      ) : (
-        <div className="border rounded overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-muted text-left">
-              <tr>
-                <th className="p-3">Name</th>
-                <th className="p-3">Brand</th>
-                <th className="p-3">Price</th>
-                <th className="p-3">Stock</th>
-                <th className="p-3">Status</th>
-                <th className="p-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product.id} className="border-t hover:bg-muted/50">
-                  <td className="p-3 font-medium">{product.name}</td>
-                  <td className="p-3 text-muted-foreground">{product.brand || '—'}</td>
-                  <td className="p-3">${parseFloat(product.price).toFixed(2)}</td>
-                  <td className="p-3">{stockBadge(product)}</td>
-                  <td className="p-3">
-                    {product.is_active ? (
-                      <Badge variant="outline" className="border-green-500 text-green-600">Active</Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-muted-foreground">Inactive</Badge>
-                    )}
-                  </td>
-                  <td className="p-3 flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/dashboard/products/${product.id}/edit`)}
-                    >
-                      <Pencil className="h-3 w-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDelete(product)}
-                    >
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            <div className="text-sm text-gray-500 mt-3">
+              {data.length} product{data.length !== 1 ? 's' : ''} total
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
