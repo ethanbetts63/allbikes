@@ -7,9 +7,8 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const primaryImage = [...product.images]
-    .sort((a, b) => a.order - b.order)
-    .find((img) => img.order === 0);
+  const sortedImages = [...product.images].sort((a, b) => a.order - b.order);
+  const primaryImage = sortedImages[0];
   const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
 
   return (
