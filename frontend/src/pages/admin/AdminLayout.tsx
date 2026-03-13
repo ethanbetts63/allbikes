@@ -58,12 +58,16 @@ const AdminLayout = () => {
               </NavLink>
             </Button>
 
-            <div className="border-t border-muted my-2" />
-
             <Button asChild variant="ghost">
               <NavLink to="/dashboard/products" className={getNavLinkClass}>
                 <ShoppingBag className="h-4 w-4" />
-                E-Scooter Products
+                Products
+              </NavLink>
+            </Button>
+            <Button asChild variant="ghost">
+              <NavLink to="/dashboard/products/new" className={getNavLinkClass}>
+                <PlusSquare className="h-4 w-4" />
+                Add Product
               </NavLink>
             </Button>
           </nav>
