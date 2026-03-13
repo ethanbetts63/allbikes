@@ -21,8 +21,14 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user and user.is_authenticated and user.is_staff:
-            return Product.objects.all().order_by("-created_at")
-        return Product.objects.filter(is_active=True).order_by("-created_at")
+            qs = Product.objects.all()
+        else:
+            qs = Product.objects.filter(is_active=True)
+
+        if self.request.query_params.get('is_featured') == 'true':
+            qs = qs.filter(is_featured=True)
+
+        return qs.order_by("-created_at")
 
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:

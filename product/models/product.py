@@ -22,6 +22,7 @@ class Product(models.Model):
     )
     stock_quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False, help_text="Show this product in the featured section on the home page.")
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

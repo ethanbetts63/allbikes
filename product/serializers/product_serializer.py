@@ -20,6 +20,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "discount_price",
             "stock_quantity",
             "is_active",
+            "is_featured",
             "images",
             "in_stock",
             "low_stock",

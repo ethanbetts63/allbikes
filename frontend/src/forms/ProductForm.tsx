@@ -37,6 +37,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
             discount_price: '',
             stock_quantity: 0,
             is_active: true,
+            is_featured: false,
             managedImages: [],
         },
     });
@@ -56,6 +57,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                 discount_price: initialData.discount_price || '',
                 stock_quantity: initialData.stock_quantity,
                 is_active: initialData.is_active,
+                is_featured: initialData.is_featured,
                 managedImages: (initialData.images || [])
                     .sort((a, b) => a.order - b.order)
                     .map(img => ({
@@ -130,16 +132,28 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                         </div>
                     </div>
 
-                    {/* Active Switch */}
-                    <div className="flex items-center space-x-2">
-                        <Controller
-                            name="is_active"
-                            control={control}
-                            render={({ field }) => (
-                                <Switch id="is_active" checked={field.value} onCheckedChange={field.onChange} />
-                            )}
-                        />
-                        <Label htmlFor="is_active">Active (visible to public)</Label>
+                    {/* Toggles */}
+                    <div className="flex flex-wrap gap-6">
+                        <div className="flex items-center space-x-2">
+                            <Controller
+                                name="is_active"
+                                control={control}
+                                render={({ field }) => (
+                                    <Switch id="is_active" checked={field.value} onCheckedChange={field.onChange} />
+                                )}
+                            />
+                            <Label htmlFor="is_active">Active (visible to public)</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Controller
+                                name="is_featured"
+                                control={control}
+                                render={({ field }) => (
+                                    <Switch id="is_featured" checked={field.value} onCheckedChange={field.onChange} />
+                                )}
+                            />
+                            <Label htmlFor="is_featured">Featured (show on home page)</Label>
+                        </div>
                     </div>
 
                     {/* Description */}

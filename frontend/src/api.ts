@@ -165,8 +165,11 @@ export async function getLatestTermsAndConditions(): Promise<TermsAndConditions>
 
 // --- Product Endpoints ---
 
-export async function getProducts(): Promise<PaginatedResponse<Product>> {
-    const response = await fetch('/api/product/products/');
+export async function getProducts(options: { is_featured?: boolean } = {}): Promise<PaginatedResponse<Product>> {
+    const params = new URLSearchParams();
+    if (options.is_featured) params.append('is_featured', 'true');
+    const query = params.toString();
+    const response = await fetch(`/api/product/products/${query ? `?${query}` : ''}`);
     return handleResponse(response);
 }
 

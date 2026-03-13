@@ -6,6 +6,7 @@ import type { ProductImage } from '@/types/ProductImage';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Truck } from 'lucide-react';
+import stripeLogo from '@/assets/stripe-ar21.svg';
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -182,9 +183,12 @@ const EScooterDetailPage = () => {
                             </button>
 
                             <div className="text-sm text-stone-500 space-y-1 pt-1">
-                                <p>✓ Secure payment via Stripe</p>
                                 <p>✓ Order confirmation sent to your email</p>
                                 <p>✓ Free delivery Australia-wide</p>
+                            </div>
+                            <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
+                                <span className="text-xs text-stone-400">Powered by</span>
+                                <img src={stripeLogo} alt="Stripe" className="h-6 w-auto opacity-70" />
                             </div>
                         </div>
                     </div>

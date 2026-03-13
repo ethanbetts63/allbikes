@@ -12,8 +12,8 @@ import type { Product } from "@/types/Product";
 import { siteSettings } from '@/config/siteSettings';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
-import { Zap, Truck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Zap, Truck, ArrowRight } from 'lucide-react';
+import stripeLogo from '@/assets/stripe-ar21.svg';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
@@ -27,7 +27,7 @@ const HomePage = () => {
         const [newBikesResponse, usedBikesResponse, productsResponse] = await Promise.all([
           getBikes({ condition: 'new', page: 1, is_featured: true }),
           getBikes({ condition: 'used', page: 1, is_featured: true }),
-          getProducts(),
+          getProducts({ is_featured: true }),
         ]);
 
         const availableNewBikes = newBikesResponse.results.filter(
@@ -40,7 +40,7 @@ const HomePage = () => {
         );
         setUsedBikes(availableUsedBikes);
 
-        setFeaturedProducts(productsResponse.results.slice(0, 3));
+        setFeaturedProducts(productsResponse.results.slice(0, 2));
 
       } catch (err) {
         console.error("Failed to fetch page data:", err);
@@ -161,49 +161,91 @@ const HomePage = () => {
           linkText="All Used Bikes"
         />
         {/* E-Scooter Promo Section */}
-        <section className="py-14 px-4 bg-foreground">
+        <section className="bg-stone-900 py-14 px-6">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <div className="flex justify-center mb-3">
-                <Zap className="h-8 w-8 text-primary" />
+
+            {/* Header */}
+            <div className="mb-8">
+              <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+                Buy Online
+              </p>
+              <div className="flex items-end justify-between gap-4">
+                <h2 className="text-white text-3xl md:text-4xl font-black uppercase italic leading-none">
+                  Now Selling<br />E-Scooters
+                </h2>
+                <Link
+                  to="/escooters"
+                  className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-white/20 text-white hover:border-amber-400 hover:text-amber-400 font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
+                >
+                  View All <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
               </div>
-              <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Now Selling E-Scooters</h2>
-              <p className="text-muted-foreground">Buy online — all prices include GST with free delivery Australia-wide.</p>
             </div>
 
+            {/* Free delivery banner */}
+            <div className="flex items-center gap-3 bg-stone-800 px-5 py-3 mb-6 w-fit">
+              <Truck className="h-5 w-5 text-amber-400 shrink-0" />
+              <span className="text-white text-sm font-bold uppercase tracking-widest">Free Delivery Australia-Wide</span>
+            </div>
+
+            {/* Product tiles */}
             {featuredProducts.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                 {featuredProducts.map((product) => {
-                  const primaryImage = product.images
-                    .slice()
-                    .sort((a, b) => a.order - b.order)
-                    .find((img) => img.order === 0);
+                  const primaryImage = [...product.images].sort((a, b) => a.order - b.order)[0];
+                  const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
+                  const displayPrice = product.discount_price && parseFloat(product.discount_price) > 0
+                    ? product.discount_price
+                    : product.price;
                   return (
                     <Link
                       key={product.id}
                       to={`/escooters/${product.slug}`}
-                      className="border rounded-lg overflow-hidden bg-background hover:shadow-md transition-shadow flex flex-col"
+                      className="group bg-white rounded-lg overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-200"
                     >
-                      <div className="aspect-square bg-muted overflow-hidden">
-                        {primaryImage?.thumbnail ? (
+                      <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
+                        {imageUrl ? (
                           <img
-                            src={primaryImage.thumbnail}
+                            src={imageUrl}
                             alt={product.name}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Zap className="h-10 w-10 opacity-20" />
+                            <Zap className="h-10 w-10 text-stone-300" />
                           </div>
                         )}
+                        {!product.in_stock && (
+                          <span className="absolute top-3 left-3 bg-stone-900/80 text-red-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            Out of Stock
+                          </span>
+                        )}
+                        {product.low_stock && product.in_stock && (
+                          <span className="absolute top-3 left-3 bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            Low Stock
+                          </span>
+                        )}
                       </div>
-                      <div className="p-4 flex flex-col gap-1 flex-grow">
-                        <p className="font-semibold text-[var(--text-primary)]">{product.name}</p>
-                        <p className="text-lg font-bold">${parseFloat(product.price).toLocaleString('en-AU', { minimumFractionDigits: 2 })}</p>
-                        <p className="text-xs text-muted-foreground">incl. GST</p>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                          <Truck className="h-3 w-3" />
-                          Free Delivery
+                      <div className="px-4 py-4 flex flex-col gap-1 flex-1">
+                        {product.brand && (
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-stone-500">{product.brand}</p>
+                        )}
+                        <p className="font-bold text-stone-900 text-lg leading-snug">{product.name}</p>
+                        <div className="mt-auto pt-2 flex items-end justify-between">
+                          <div>
+                            {product.discount_price && parseFloat(product.discount_price) > 0 ? (
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-stone-400 line-through text-sm">${parseFloat(product.price).toLocaleString()}</span>
+                                <span className="text-amber-500 font-black text-xl">${parseFloat(product.discount_price).toLocaleString()}</span>
+                              </div>
+                            ) : (
+                              <span className="text-stone-900 font-black text-xl">${parseFloat(displayPrice).toLocaleString()}</span>
+                            )}
+                            <p className="text-xs text-stone-500 mt-0.5">incl. GST</p>
+                          </div>
+                          <span className="text-xs font-bold uppercase tracking-widest text-amber-500 group-hover:underline">
+                            View →
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -212,11 +254,20 @@ const HomePage = () => {
               </div>
             )}
 
-            <div className="text-center">
-              <Button asChild size="lg">
-                <Link to="/escooters">View All E-Scooters</Link>
-              </Button>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <Link
+                to="/escooters"
+                className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
+              >
+                View All E-Scooters
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <div className="flex items-center gap-2">
+                <span className="text-stone-500 text-xs">Powered by</span>
+                <img src={stripeLogo} alt="Stripe" className="h-6 w-auto brightness-0 invert opacity-60" />
+              </div>
             </div>
+
           </div>
         </section>
 

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { siteSettings } from '@/config/siteSettings';
+import stripeLogo from '@/assets/stripe-ar21.svg';
 
 const LINK_CLASS = 'text-stone-400 hover:text-amber-400 transition-colors duration-200 text-sm';
 
@@ -84,9 +85,15 @@ const Footer = () => {
       <div className="border-t border-stone-800">
         <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-stone-500 text-xs">&copy; {new Date().getFullYear()} Allbikes. All rights reserved.</p>
-          <p className="text-stone-600 text-xs">
-            ABN: {siteSettings.abn_number}&nbsp;&nbsp;MD: {siteSettings.md_number}&nbsp;&nbsp;MRB: {siteSettings.mrb_number}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-stone-600 text-xs">
+              ABN: {siteSettings.abn_number}&nbsp;&nbsp;MD: {siteSettings.md_number}&nbsp;&nbsp;MRB: {siteSettings.mrb_number}
+            </p>
+            <div className="flex items-center gap-1.5 border-l border-stone-800 pl-4">
+              <span className="text-stone-600 text-xs">Payments by</span>
+              <img src={stripeLogo} alt="Stripe" className="h-5 w-auto brightness-0 invert opacity-40" />
+            </div>
+          </div>
         </div>
       </div>
     </footer>

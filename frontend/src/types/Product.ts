@@ -10,6 +10,7 @@ export interface Product {
   discount_price: string | null;
   stock_quantity: number;
   is_active: boolean;
+  is_featured: boolean;
   images: ProductImage[];
   in_stock: boolean;
   low_stock: boolean;
