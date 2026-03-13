@@ -241,7 +241,7 @@ interface CreateOrderData {
 }
 
 export async function createOrder(data: CreateOrderData): Promise<{ order_id: number; order_reference: string }> {
-    const response = await fetch('/api/shop/orders/', {
+    const response = await fetch('/api/payments/orders/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -250,7 +250,7 @@ export async function createOrder(data: CreateOrderData): Promise<{ order_id: nu
 }
 
 export async function createPaymentIntent(orderId: number): Promise<{ clientSecret: string }> {
-    const response = await fetch('/api/shop/create-payment-intent/', {
+    const response = await fetch('/api/payments/create-payment-intent/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: orderId }),
@@ -259,23 +259,23 @@ export async function createPaymentIntent(orderId: number): Promise<{ clientSecr
 }
 
 export async function getOrderByReference(reference: string): Promise<Order> {
-    const response = await fetch(`/api/shop/orders/${reference}/`);
+    const response = await fetch(`/api/payments/orders/${reference}/`);
     return handleResponse(response);
 }
 
 export async function adminGetOrders(status?: string): Promise<Order[]> {
     const params = status ? `?status=${encodeURIComponent(status)}` : '';
-    const response = await authedFetch(`/api/shop/admin/orders/${params}`);
+    const response = await authedFetch(`/api/payments/admin/orders/${params}`);
     return handleResponse(response);
 }
 
 export async function adminGetOrder(id: number): Promise<Order> {
-    const response = await authedFetch(`/api/shop/admin/orders/${id}/`);
+    const response = await authedFetch(`/api/payments/admin/orders/${id}/`);
     return handleResponse(response);
 }
 
 export async function adminUpdateOrderStatus(id: number, status: string): Promise<{ status: string }> {
-    const response = await authedFetch(`/api/shop/admin/orders/${id}/status/`, {
+    const response = await authedFetch(`/api/payments/admin/orders/${id}/status/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),

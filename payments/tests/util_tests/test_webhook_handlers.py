@@ -1,9 +1,9 @@
 import pytest
 
-from shop.models import Order, Payment
-from shop.utils.webhook_handlers import handle_payment_intent_succeeded, handle_payment_intent_failed
-from shop.tests.factories.order_factory import OrderFactory
-from shop.tests.factories.payment_factory import PaymentFactory
+from payments.models import Order, Payment
+from payments.utils.webhook_handlers import handle_payment_intent_succeeded, handle_payment_intent_failed
+from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.payment_factory import PaymentFactory
 from product.tests.factories.product_factory import ProductFactory
 
 

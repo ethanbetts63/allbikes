@@ -4,7 +4,7 @@ from .views.admin_order_views import AdminOrderListView, AdminOrderDetailView, A
 from .views.create_payment_intent_view import CreatePaymentIntentView
 from .views.webhook_view import StripeWebhookView
 
-app_name = 'shop'
+app_name = 'payments'
 
 urlpatterns = [
     path('orders/', OrderCreateView.as_view(), name='order-create'),

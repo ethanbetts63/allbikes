@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from shop.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import OrderFactory
 from data_management.tests.factories.user_factory import UserFactory
 
 
@@ -30,7 +30,7 @@ class TestAdminOrderListView:
         THEN 401 Unauthorized is returned.
         """
         OrderFactory.create_batch(2)
-        url = reverse('shop:admin-order-list')
+        url = reverse('payments:admin-order-list')
         response = api_client.get(url)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -42,7 +42,7 @@ class TestAdminOrderListView:
         """
         user = UserFactory(is_staff=False)
         api_client.force_authenticate(user=user)
-        url = reverse('shop:admin-order-list')
+        url = reverse('payments:admin-order-list')
         response = api_client.get(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
@@ -53,7 +53,7 @@ class TestAdminOrderListView:
         THEN all 3 are returned.
         """
         OrderFactory.create_batch(3)
-        url = reverse('shop:admin-order-list')
+        url = reverse('payments:admin-order-list')
         response = admin_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 3
@@ -66,7 +66,7 @@ class TestAdminOrderListView:
         """
         OrderFactory.create_batch(2, status='paid')
         OrderFactory(status='pending_payment')
-        url = reverse('shop:admin-order-list')
+        url = reverse('payments:admin-order-list')
         response = admin_client.get(url, {'status': 'paid'})
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 2
@@ -81,7 +81,7 @@ class TestAdminOrderListView:
         OrderFactory(status='paid')
         OrderFactory(status='dispatched')
         OrderFactory(status='pending_payment')
-        url = reverse('shop:admin-order-list')
+        url = reverse('payments:admin-order-list')
         response = admin_client.get(url, {'status': 'paid,dispatched'})
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 2
@@ -98,7 +98,7 @@ class TestAdminOrderDetailView:
         THEN 200 OK and the order data are returned.
         """
         order = OrderFactory()
-        url = reverse('shop:admin-order-detail', kwargs={'pk': order.pk})
+        url = reverse('payments:admin-order-detail', kwargs={'pk': order.pk})
         response = admin_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['order_reference'] == order.order_reference
@@ -109,7 +109,7 @@ class TestAdminOrderDetailView:
         WHEN retrieved
         THEN 404 Not Found is returned.
         """
-        url = reverse('shop:admin-order-detail', kwargs={'pk': 99999})
+        url = reverse('payments:admin-order-detail', kwargs={'pk': 99999})
         response = admin_client.get(url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -125,7 +125,7 @@ class TestAdminOrderStatusView:
         THEN 200 OK is returned and the order status is updated.
         """
         order = OrderFactory(status='pending_payment')
-        url = reverse('shop:admin-order-status', kwargs={'pk': order.pk})
+        url = reverse('payments:admin-order-status', kwargs={'pk': order.pk})
         response = admin_client.patch(url, {'status': 'dispatched'}, format='json')
         assert response.status_code == status.HTTP_200_OK
         order.refresh_from_db()
@@ -138,7 +138,7 @@ class TestAdminOrderStatusView:
         THEN 400 Bad Request is returned.
         """
         order = OrderFactory()
-        url = reverse('shop:admin-order-status', kwargs={'pk': order.pk})
+        url = reverse('payments:admin-order-status', kwargs={'pk': order.pk})
         response = admin_client.patch(url, {'status': 'not_a_real_status'}, format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -149,6 +149,6 @@ class TestAdminOrderStatusView:
         THEN 401 Unauthorized is returned.
         """
         order = OrderFactory()
-        url = reverse('shop:admin-order-status', kwargs={'pk': order.pk})
+        url = reverse('payments:admin-order-status', kwargs={'pk': order.pk})
         response = api_client.patch(url, {'status': 'paid'}, format='json')
         assert response.status_code == status.HTTP_401_UNAUTHORIZED

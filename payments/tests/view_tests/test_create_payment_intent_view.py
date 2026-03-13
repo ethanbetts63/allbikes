@@ -4,9 +4,9 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from shop.models import Payment
-from shop.tests.factories.order_factory import OrderFactory
-from shop.tests.factories.payment_factory import PaymentFactory
+from payments.models import Payment
+from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.payment_factory import PaymentFactory
 from product.tests.factories.product_factory import ProductFactory
 from data_management.tests.factories.user_factory import UserFactory
 
@@ -31,7 +31,7 @@ class TestCreatePaymentIntentView:
 
     @pytest.fixture(autouse=True)
     def set_url(self):
-        self.URL = reverse('shop:create-payment-intent')
+        self.URL = reverse('payments:create-payment-intent')
 
     # --- Auth / access ---
 
@@ -42,7 +42,7 @@ class TestCreatePaymentIntentView:
         THEN the request is not rejected due to authentication (AllowAny).
         """
         order = OrderFactory(status='pending_payment')
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_create.return_value = _mock_intent()
             response = api_client.post(self.URL, {'order_id': order.id}, format='json')
         assert response.status_code != status.HTTP_401_UNAUTHORIZED
@@ -98,7 +98,7 @@ class TestCreatePaymentIntentView:
         THEN a Payment record is created and clientSecret is returned.
         """
         order = OrderFactory(status='pending_payment')
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_create.return_value = _mock_intent(client_secret='cs_test_xyz', intent_id='pi_test_xyz')
             response = api_client.post(self.URL, {'order_id': order.id}, format='json')
 
@@ -113,7 +113,7 @@ class TestCreatePaymentIntentView:
         THEN the Payment record has status 'pending'.
         """
         order = OrderFactory(status='pending_payment')
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_create.return_value = _mock_intent()
             api_client.post(self.URL, {'order_id': order.id}, format='json')
 
@@ -128,7 +128,7 @@ class TestCreatePaymentIntentView:
         """
         product = ProductFactory(price='1500.00', discount_price='800.00', stock_quantity=5)
         order = OrderFactory(status='pending_payment', product=product)
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_create.return_value = _mock_intent()
             api_client.post(self.URL, {'order_id': order.id}, format='json')
 
@@ -143,7 +143,7 @@ class TestCreatePaymentIntentView:
         """
         product = ProductFactory(price='1200.00', discount_price=None, stock_quantity=5)
         order = OrderFactory(status='pending_payment', product=product)
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_create.return_value = _mock_intent()
             api_client.post(self.URL, {'order_id': order.id}, format='json')
 
@@ -160,7 +160,7 @@ class TestCreatePaymentIntentView:
         api_client.force_authenticate(user=staff)
         product = ProductFactory(price='1500.00', stock_quantity=5)
         order = OrderFactory(status='pending_payment', product=product)
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_create.return_value = _mock_intent()
             api_client.post(self.URL, {'order_id': order.id}, format='json')
 
@@ -186,8 +186,8 @@ class TestCreatePaymentIntentView:
 
         existing_intent = _mock_intent(client_secret='cs_existing', intent_id='pi_existing')
 
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.retrieve') as mock_retrieve, \
-             patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.retrieve') as mock_retrieve, \
+             patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_retrieve.return_value = existing_intent
             response = api_client.post(self.URL, {'order_id': order.id}, format='json')
 
@@ -214,8 +214,8 @@ class TestCreatePaymentIntentView:
 
         new_intent = _mock_intent(client_secret='cs_new', intent_id='pi_new')
 
-        with patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.cancel') as mock_cancel, \
-             patch('shop.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
+        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.cancel') as mock_cancel, \
+             patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
             mock_create.return_value = new_intent
             response = api_client.post(self.URL, {'order_id': order.id}, format='json')
 

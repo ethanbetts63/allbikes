@@ -2,7 +2,7 @@ import factory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from shop.models import Order
+from payments.models import Order
 from product.tests.factories.product_factory import ProductFactory
 
 fake = Faker('en_AU')

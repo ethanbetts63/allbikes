@@ -1,8 +1,8 @@
 import re
 import pytest
 
-from shop.models import Order
-from shop.tests.factories.order_factory import OrderFactory
+from payments.models import Order
+from payments.tests.factories.order_factory import OrderFactory
 from product.tests.factories.product_factory import ProductFactory
 
 

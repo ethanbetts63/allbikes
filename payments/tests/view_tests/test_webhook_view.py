@@ -30,7 +30,7 @@ class TestStripeWebhookView:
 
     @pytest.fixture(autouse=True)
     def set_url(self):
-        self.URL = reverse('shop:stripe-webhook')
+        self.URL = reverse('payments:stripe-webhook')
 
     def test_invalid_signature_returns_400(self, api_client):
         """
@@ -39,7 +39,7 @@ class TestStripeWebhookView:
         THEN 400 Bad Request is returned.
         """
         import stripe
-        with patch('shop.views.webhook_view.stripe.Webhook.construct_event') as mock_construct:
+        with patch('payments.views.webhook_view.stripe.Webhook.construct_event') as mock_construct:
             mock_construct.side_effect = stripe.error.SignatureVerificationError('bad sig', 'sig_header')
             response = api_client.post(
                 self.URL,
@@ -56,8 +56,8 @@ class TestStripeWebhookView:
         THEN the succeeded handler is called and 200 is returned.
         """
         event = _build_event('payment_intent.succeeded')
-        with patch('shop.views.webhook_view.stripe.Webhook.construct_event', return_value=event), \
-             patch('shop.views.webhook_view.handle_payment_intent_succeeded') as mock_handler:
+        with patch('payments.views.webhook_view.stripe.Webhook.construct_event', return_value=event), \
+             patch('payments.views.webhook_view.handle_payment_intent_succeeded') as mock_handler:
             response = api_client.post(
                 self.URL,
                 data=json.dumps(event),
@@ -74,8 +74,8 @@ class TestStripeWebhookView:
         THEN the failed handler is called and 200 is returned.
         """
         event = _build_event('payment_intent.payment_failed')
-        with patch('shop.views.webhook_view.stripe.Webhook.construct_event', return_value=event), \
-             patch('shop.views.webhook_view.handle_payment_intent_failed') as mock_handler:
+        with patch('payments.views.webhook_view.stripe.Webhook.construct_event', return_value=event), \
+             patch('payments.views.webhook_view.handle_payment_intent_failed') as mock_handler:
             response = api_client.post(
                 self.URL,
                 data=json.dumps(event),
@@ -92,7 +92,7 @@ class TestStripeWebhookView:
         THEN 200 is returned without error.
         """
         event = _build_event('customer.created')
-        with patch('shop.views.webhook_view.stripe.Webhook.construct_event', return_value=event):
+        with patch('payments.views.webhook_view.stripe.Webhook.construct_event', return_value=event):
             response = api_client.post(
                 self.URL,
                 data=json.dumps(event),

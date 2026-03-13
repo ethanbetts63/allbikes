@@ -1,8 +1,8 @@
 import factory
 from factory.django import DjangoModelFactory
 
-from shop.models import Payment
-from shop.tests.factories.order_factory import OrderFactory
+from payments.models import Payment
+from payments.tests.factories.order_factory import OrderFactory
 
 
 class PaymentFactory(DjangoModelFactory):

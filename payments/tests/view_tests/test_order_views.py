@@ -3,8 +3,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from shop.models import Order
-from shop.tests.factories.order_factory import OrderFactory
+from payments.models import Order
+from payments.tests.factories.order_factory import OrderFactory
 from product.tests.factories.product_factory import ProductFactory
 
 
@@ -38,7 +38,7 @@ class TestOrderCreateView:
         THEN 201 is returned with order_id and order_reference.
         """
         product = ProductFactory(stock_quantity=5)
-        url = reverse('shop:order-create')
+        url = reverse('payments:order-create')
         response = api_client.post(url, _order_payload(product.id), format='json')
         assert response.status_code == status.HTTP_201_CREATED
         assert 'order_id' in response.data
@@ -51,7 +51,7 @@ class TestOrderCreateView:
         THEN the order is saved with status 'pending_payment'.
         """
         product = ProductFactory(stock_quantity=5)
-        url = reverse('shop:order-create')
+        url = reverse('payments:order-create')
         api_client.post(url, _order_payload(product.id), format='json')
         order = Order.objects.first()
         assert order.status == 'pending_payment'
@@ -63,7 +63,7 @@ class TestOrderCreateView:
         THEN stock_quantity is unchanged (decrement moves to webhook).
         """
         product = ProductFactory(stock_quantity=3)
-        url = reverse('shop:order-create')
+        url = reverse('payments:order-create')
         api_client.post(url, _order_payload(product.id), format='json')
         product.refresh_from_db()
         assert product.stock_quantity == 3
@@ -75,7 +75,7 @@ class TestOrderCreateView:
         THEN 409 Conflict is returned.
         """
         product = ProductFactory(stock_quantity=0)
-        url = reverse('shop:order-create')
+        url = reverse('payments:order-create')
         response = api_client.post(url, _order_payload(product.id), format='json')
         assert response.status_code == status.HTTP_409_CONFLICT
 
@@ -85,7 +85,7 @@ class TestOrderCreateView:
         WHEN posted
         THEN 400 Bad Request is returned.
         """
-        url = reverse('shop:order-create')
+        url = reverse('payments:order-create')
         response = api_client.post(url, {'product': 999}, format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -101,7 +101,7 @@ class TestOrderRetrieveView:
         THEN 200 OK and the order data are returned.
         """
         order = OrderFactory()
-        url = reverse('shop:order-detail', kwargs={'order_reference': order.order_reference})
+        url = reverse('payments:order-detail', kwargs={'order_reference': order.order_reference})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['order_reference'] == order.order_reference
@@ -112,7 +112,7 @@ class TestOrderRetrieveView:
         WHEN retrieved
         THEN 404 Not Found is returned.
         """
-        url = reverse('shop:order-detail', kwargs={'order_reference': 'SS-00000000'})
+        url = reverse('payments:order-detail', kwargs={'order_reference': 'SS-00000000'})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -123,7 +123,7 @@ class TestOrderRetrieveView:
         THEN the response includes product_name and product_price.
         """
         order = OrderFactory()
-        url = reverse('shop:order-detail', kwargs={'order_reference': order.order_reference})
+        url = reverse('payments:order-detail', kwargs={'order_reference': order.order_reference})
         response = api_client.get(url)
         assert 'product_name' in response.data
         assert 'product_price' in response.data

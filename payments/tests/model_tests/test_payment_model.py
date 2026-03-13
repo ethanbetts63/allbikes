@@ -1,8 +1,8 @@
 import pytest
 
-from shop.models import Payment
-from shop.tests.factories.payment_factory import PaymentFactory
-from shop.tests.factories.order_factory import OrderFactory
+from payments.models import Payment
+from payments.tests.factories.payment_factory import PaymentFactory
+from payments.tests.factories.order_factory import OrderFactory
 
 
 @pytest.mark.django_db
