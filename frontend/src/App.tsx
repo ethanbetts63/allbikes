@@ -29,6 +29,10 @@ const EScooterDetailPage = lazy(() => import('./pages/EScooterDetailPage'));
 const RefundsPage = lazy(() => import('./pages/RefundsPage'));
 const AdminProductDashboardPage = lazy(() => import('./pages/admin/AdminProductDashboardPage'));
 const AdminProductDetailPage = lazy(() => import('./pages/admin/AdminProductDetailPage'));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+const CheckoutSuccessPage = lazy(() => import('./pages/CheckoutSuccessPage'));
+const AdminOrderDashboardPage = lazy(() => import('./pages/admin/AdminOrderDashboardPage'));
+const AdminOrderDetailPage = lazy(() => import('./pages/admin/AdminOrderDetailPage'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -64,6 +68,8 @@ function App() {
                 <Route path="/escooters" element={<EScooterListPage />} />
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
                 <Route path="/refunds" element={<RefundsPage />} />
+                <Route path="/checkout/:productSlug" element={<CheckoutPage />} />
+                <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
 
                 {/* Dashboard Section */}
                 <Route path="/dashboard" element={<AdminLayout />}>
@@ -76,6 +82,8 @@ function App() {
                   <Route path="products" element={<AdminProductDashboardPage />} />
                   <Route path="products/new" element={<AdminProductDetailPage />} />
                   <Route path="products/:id/edit" element={<AdminProductDetailPage />} />
+                  <Route path="orders" element={<AdminOrderDashboardPage />} />
+                  <Route path="orders/:id" element={<AdminOrderDetailPage />} />
                 </Route>
 
               </Routes>

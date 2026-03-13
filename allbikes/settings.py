@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "inventory",
     "service",
     "product",
+    "shop",
     "imagekit",
 ]
 

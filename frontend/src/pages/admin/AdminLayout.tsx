@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import Seo from '@/components/Seo';
-import { Wrench, PlusSquare, ShoppingBag } from 'lucide-react';
+import { Wrench, PlusSquare, ShoppingBag, ClipboardList } from 'lucide-react';
 
 const AdminLayout = () => {
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -58,6 +58,12 @@ const AdminLayout = () => {
               </NavLink>
             </Button>
 
+            <Button asChild variant="ghost">
+              <NavLink to="/dashboard/orders" className={getNavLinkClass}>
+                <ClipboardList className="h-4 w-4" />
+                Orders
+              </NavLink>
+            </Button>
             <Button asChild variant="ghost">
               <NavLink to="/dashboard/products" className={getNavLinkClass}>
                 <ShoppingBag className="h-4 w-4" />

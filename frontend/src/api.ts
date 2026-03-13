@@ -9,6 +9,7 @@ import type { ManagedImage } from '@/types/ManagedImage';
 import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import type { GetBikesOptions } from '@/types/GetBikesOptions';
 import type { Product } from '@/types/Product';
+import type { Order } from '@/types/Order';
 
 /**
  * A centralized module for all API interactions.
@@ -31,8 +32,9 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
   const data = await response.json();
   if (!response.ok) {
-    const error = new Error(data.detail || data.message || 'An unknown API error occurred.'); // Added data.message for generic errors
-    (error as any).data = data; // Attach the full error data for more specific handling
+    const error = new Error(data.detail || data.message || 'An unknown API error occurred.');
+    (error as any).data = data;
+    (error as any).status = response.status;
     throw error;
   }
   return data as T;
@@ -220,6 +222,54 @@ export async function manageProductImages(productId: number, images: Pick<Manage
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+    });
+    return handleResponse(response);
+}
+
+// --- Shop / Order Endpoints ---
+
+interface CreateOrderData {
+    product: number;
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+    address_line1: string;
+    address_line2: string;
+    suburb: string;
+    state: string;
+    postcode: string;
+}
+
+export async function createOrder(data: CreateOrderData): Promise<{ order_reference: string }> {
+    const response = await fetch('/api/shop/orders/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function getOrderByReference(reference: string): Promise<Order> {
+    const response = await fetch(`/api/shop/orders/${reference}/`);
+    return handleResponse(response);
+}
+
+export async function adminGetOrders(status?: string): Promise<Order[]> {
+    const params = status ? `?status=${encodeURIComponent(status)}` : '';
+    const response = await authedFetch(`/api/shop/admin/orders/${params}`);
+    return handleResponse(response);
+}
+
+export async function adminGetOrder(id: number): Promise<Order> {
+    const response = await authedFetch(`/api/shop/admin/orders/${id}/`);
+    return handleResponse(response);
+}
+
+export async function adminUpdateOrderStatus(id: number, status: string): Promise<{ status: string }> {
+    const response = await authedFetch(`/api/shop/admin/orders/${id}/status/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
     });
     return handleResponse(response);
 }
