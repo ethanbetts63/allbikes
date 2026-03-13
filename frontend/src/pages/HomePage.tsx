@@ -131,7 +131,7 @@ const HomePage = () => {
     <div>
       <Seo
         title="Allbikes & Scooters - Perth's Motorcycle and Scooter Dealership"
-        description="Discover a wide range of new and used motorcycles and scooters at Allbikes. We offer sales, servicing, and expert advice for riders in Perth."
+        description="Discover a wide range of new and Used Motorcycles & Scooters at Allbikes. We offer sales, servicing, and expert advice for riders in Perth."
         canonicalPath="/"
         structuredData={structuredData}
       />
@@ -147,14 +147,14 @@ const HomePage = () => {
         
         <ServiceCTAV2 />
                 <FeaturedBikes
-          title={<>Featured <span className="hidden md:inline">New Motorcycles and Scooters</span><span className="md:hidden">New Bikes</span></>}
+          title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
           bikes={newBikes}
           description="Check out some of our latest new models available now."
           linkTo="/inventory/motorcycles/new"
           linkText="All New Bikes"
         />
         <FeaturedBikes
-          title={<>Featured <span className="hidden md:inline">Used Motorcycles and Scooters</span><span className="md:hidden">Used Bikes</span></>}
+          title={<>Featured <span className="hidden md:inline">Used Motorcycles & Scooters</span><span className="md:hidden">Used Bikes</span></>}
           bikes={usedBikes}
           description="Explore our range of quality pre-owned motorcycles and scooters."
           linkTo="/inventory/motorcycles/used"

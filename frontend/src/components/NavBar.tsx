@@ -60,13 +60,13 @@ const NavBar = () => {
           <ul className="flex items-center space-x-8 lg:space-x-24">
             <li>
               <Link to="/inventory/motorcycles/new" className="hover:text-secondary">
-                <span className="hidden lg:inline">New Motorcycles and Scooters</span>
+                <span className="hidden lg:inline">New Motorcycles & Scooters</span>
                 <span className="lg:hidden">New Bikes</span>
               </Link>
             </li>
             <li>
               <Link to="/inventory/motorcycles/used" className="hover:text-secondary">
-                <span className="hidden lg:inline">Used Motorcycles and Scooters</span>
+                <span className="hidden lg:inline">Used Motorcycles & Scooters</span>
                 <span className="lg:hidden">Used Bikes</span>
               </Link>
             </li>
@@ -100,8 +100,8 @@ const NavBar = () => {
       {isMenuOpen && (
         <div ref={menuRef} className="md:hidden bg-background border-t border-foreground">
           <nav className="flex flex-col items-center gap-4 py-4 text-[var(--text-primary)] text-bold text-lg">
-            <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">New Motorcycles and Scooters</Link>
-            <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Used Motorcycles and Scooters</Link>
+            <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">New Motorcycles & Scooters</Link>
+            <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Used Motorcycles & Scooters</Link>
             <Link to="/escooters" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">E-Scooters</Link>
             <Link to="/service" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Workshop</Link>
             <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="font-bold hover:text-secondary">Contact Us</Link>

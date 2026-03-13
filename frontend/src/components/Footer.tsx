@@ -41,13 +41,13 @@ const Footer = () => {
           <ul>
             <li className="mb-2">
               <Link to="/inventory/motorcycles/new" className="hover:underline text-gray-300">
-                <span className="hidden md:inline">New Motorcycles and Scooters</span>
+                <span className="hidden md:inline">New Motorcycles & Scooters</span>
                 <span className="md:hidden">New Bikes</span>
               </Link>
             </li>
             <li className="mb-2">
               <Link to="/inventory/motorcycles/used" className="hover:underline text-gray-300">
-                <span className="hidden md:inline">Used Motorcycles and Scooters</span>
+                <span className="hidden md:inline">Used Motorcycles & Scooters</span>
                 <span className="md:hidden">Used Bikes</span>
               </Link>
             </li>

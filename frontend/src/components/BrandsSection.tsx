@@ -41,7 +41,7 @@ const BrandCard = ({ image, imageSrcSet, alt, title, subtitle, description, imag
         <p className="text-stone-300 text-base leading-relaxed">{description}</p>
         <Link to="/inventory/motorcycles/new" className="self-start mt-2">
           <Button className="bg-amber-400 text-stone-900 font-bold px-6 py-3 text-sm hover:bg-amber-300 flex items-center gap-2">
-            <span className="hidden md:inline">See New Motorcycles and Scooters</span>
+            <span className="hidden md:inline">See New Motorcycles & Scooters</span>
             <span className="md:hidden">See New Bikes</span>
             <ArrowRight className="h-4 w-4" />
           </Button>

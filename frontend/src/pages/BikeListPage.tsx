@@ -22,7 +22,7 @@ import { FaqSection } from '@/components/FaqSection';
 
 const newBikeFaqs = [
   {
-    question: "What new motorcycles and scooters do you sell?",
+    question: "What New Motorcycles & Scooters do you sell?",
     answer: "We sell brand‑new SYM scooters and Segway electric scooters or electric motorcycles. These are the only brands we offer new, so we can confidently stand behind their quality and reliability."
   },
   {
@@ -50,11 +50,11 @@ const usedBikeFaqs = [
   },
   {
     question: "Are used bikes inspected before sale?",
-    answer: "Yes. All used motorcycles and scooters are inspected and prepared by our workshop before being listed for sale, ensuring a reliable purchase."
+    answer: "Yes. All Used Motorcycles & Scooters are inspected and prepared by our workshop before being listed for sale, ensuring a reliable purchase."
   },
   {
     question: "Can I view used bikes at your Perth dealership?",
-    answer: "Yes. You can view used motorcycles and scooters at our Perth location unless a listing specifically states otherwise."
+    answer: "Yes. You can view Used Motorcycles & Scooters at our Perth location unless a listing specifically states otherwise."
   },
   {
     question: "Do you sell second‑hand motorcycles as well as scooters?",
@@ -103,22 +103,22 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
   };
 
   const isNew = bikeCondition === 'new,demo';
-  const pageTitle = isNew ? 'New Motorcycles and Scooters' : 'Used Motorcycles and Scooters';
+  const pageTitle = isNew ? 'New Motorcycles & Scooters' : 'Used Motorcycles & Scooters';
   const responsivePageTitle = isNew ? (
     <>
-      <span className="hidden md:inline">New Motorcycles and Scooters</span>
+      <span className="hidden md:inline">New Motorcycles & Scooters</span>
       <span className="md:hidden">New Bikes</span>
     </>
   ) : (
     <>
-      <span className="hidden md:inline">Used Motorcycles and Scooters</span>
+      <span className="hidden md:inline">Used Motorcycles & Scooters</span>
       <span className="md:hidden">Used Bikes</span>
     </>
   );
 
   const description = isNew 
-    ? "Browse our range of new motorcycles and scooters available in Perth, including petrol and electric models. All New Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership. All New Motorcycles and Scooters come with a warranty."
-    : "Browse our range of used motorcycles and scooters available in Perth, including petrol and electric models. All Used Motorcycles and Scooters are workshop-prepared and available for local purchase through our Perth dealership.";
+    ? "Browse our range of New Motorcycles & Scooters available in Perth, including petrol and electric models. All New Motorcycles & Scooters are workshop-prepared and available for local purchase through our Perth dealership. All New Motorcycles & Scooters come with a warranty."
+    : "Browse our range of Used Motorcycles & Scooters available in Perth, including petrol and electric models. All Used Motorcycles & Scooters are workshop-prepared and available for local purchase through our Perth dealership.";
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { name: 'Home', href: '/' },
