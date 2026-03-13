@@ -3,209 +3,194 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProductById } from '@/api';
 import type { Product } from '@/types/Product';
 import type { ProductImage } from '@/types/ProductImage';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import Seo from '@/components/Seo';
-import { Zap, Truck, ChevronRight } from 'lucide-react';
-
-const StockBadge = ({ product }: { product: Product }) => {
-  if (!product.in_stock) {
-    return <Badge variant="destructive" className="text-sm px-3 py-1">Out of Stock</Badge>;
-  }
-  if (product.low_stock) {
-    return (
-      <Badge variant="outline" className="border-orange-500 text-orange-600 text-sm px-3 py-1">
-        Low Stock — only {product.stock_quantity} left
-      </Badge>
-    );
-  }
-  return <Badge variant="outline" className="border-green-500 text-green-600 text-sm px-3 py-1">In Stock</Badge>;
-};
+import { Spinner } from '@/components/ui/spinner';
+import { Truck } from 'lucide-react';
 
 const EScooterDetailPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
+    const { slug } = useParams<{ slug: string }>();
+    const navigate = useNavigate();
+    const [product, setProduct] = useState<Product | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
 
-  // Extract product id from the trailing segment of the slug (name-{id})
-  const productId = slug ? Number(slug.split('-').pop()) : null;
+    const productId = slug ? Number(slug.split('-').pop()) : null;
 
-  useEffect(() => {
-    if (!productId || isNaN(productId)) {
-      setError('Product not found.');
-      setIsLoading(false);
-      return;
+    useEffect(() => {
+        if (!productId || isNaN(productId)) {
+            setError('Product not found.');
+            setIsLoading(false);
+            return;
+        }
+
+        const fetchProduct = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                const data = await getProductById(productId);
+                setProduct(data);
+                const sorted = [...data.images].sort((a, b) => a.order - b.order);
+                if (sorted.length > 0) {
+                    setSelectedImage(sorted[0]);
+                }
+            } catch {
+                setError('Product not found.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProduct();
+    }, [productId]);
+
+    const sortedImages = useMemo(() => {
+        if (!product?.images) return [];
+        return [...product.images].sort((a, b) => a.order - b.order);
+    }, [product]);
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-white">
+                <Spinner className="h-12 w-12" />
+            </div>
+        );
     }
 
-    const fetchProduct = async () => {
-      try {
-        const data = await getProductById(productId);
-        setProduct(data);
-      } catch {
-        setError('Product not found.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchProduct();
-  }, [productId]);
-
-  const sortedImages = useMemo(
-    () => (product?.images || []).slice().sort((a, b) => a.order - b.order),
-    [product]
-  );
-
-  useEffect(() => {
-    if (sortedImages.length > 0 && !selectedImage) {
-      setSelectedImage(sortedImages[0]);
+    if (error || !product) {
+        return <p className="text-red-500 text-center mt-8">{error || 'Product not found.'}</p>;
     }
-  }, [sortedImages]);
 
-  if (isLoading) {
+    const mainImageUrl = selectedImage?.medium || selectedImage?.image;
+
     return (
-      <div className="max-w-5xl mx-auto px-4 py-16 animate-pulse">
-        <div className="h-8 bg-muted rounded w-1/3 mb-8" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="aspect-square bg-muted rounded-lg" />
-          <div className="space-y-4">
-            <div className="h-8 bg-muted rounded w-2/3" />
-            <div className="h-4 bg-muted rounded w-1/4" />
-            <div className="h-12 bg-muted rounded w-1/3" />
-            <div className="h-24 bg-muted rounded" />
-          </div>
-        </div>
-      </div>
-    );
-  }
+        <div className="bg-white text-stone-900">
+            <Seo
+                title={`${product.name} | Scooter Shop`}
+                description={product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`}
+                canonicalPath={`/escooters/${product.slug}`}
+                ogImage={sortedImages[0]?.medium}
+            />
 
-  if (error || !product) {
-    return (
-      <div className="max-w-5xl mx-auto px-4 py-16 text-center">
-        <p className="text-muted-foreground mb-4">{error || 'Product not found.'}</p>
-        <Button variant="outline" onClick={() => navigate('/escooters')}>
-          Back to E-Scooters
-        </Button>
-      </div>
-    );
-  }
+            <div className="container mx-auto px-4 pb-12 lg:px-8">
 
-  const primaryImageUrl = selectedImage?.medium || selectedImage?.image;
-
-  return (
-    <>
-      <Seo
-        title={`${product.name} | Scooter Shop`}
-        description={product.description || `Buy ${product.name} online. Price includes GST and free delivery.`}
-        ogImage={sortedImages[0]?.medium}
-      />
-
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-          <Link to="/" className="hover:underline">Home</Link>
-          <ChevronRight className="h-3 w-3" />
-          <Link to="/escooters" className="hover:underline">E-Scooters</Link>
-          <ChevronRight className="h-3 w-3" />
-          <span className="text-[var(--text-primary)]">{product.name}</span>
-        </nav>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Image Gallery */}
-          <div className="space-y-3">
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted border">
-              {primaryImageUrl ? (
-                <img
-                  src={primaryImageUrl}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                  <Zap className="h-16 w-16 opacity-20" />
+                {/* Title + badges */}
+                <div className="mb-6 pt-4">
+                    <h1 className="text-3xl md:text-4xl font-black text-stone-900 leading-tight mb-3">
+                        {product.name}
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-2">
+                        {product.brand && (
+                            <span className="bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                                {product.brand}
+                            </span>
+                        )}
+                        {!product.in_stock && (
+                            <span className="bg-stone-900/80 text-red-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                                Out of Stock
+                            </span>
+                        )}
+                        {product.low_stock && product.in_stock && (
+                            <span className="bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                                Low Stock
+                            </span>
+                        )}
+                        <span className="bg-stone-900/80 text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1">
+                            <Truck className="h-3 w-3" />
+                            Free Delivery
+                        </span>
+                    </div>
                 </div>
-              )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    {/* Left Column: Image Gallery */}
+                    <div>
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-stone-100">
+                            {mainImageUrl ? (
+                                <img
+                                    src={mainImageUrl}
+                                    alt={product.name}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-stone-300">
+                                    <span className="text-sm">No image available</span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Thumbnail strip */}
+                        {sortedImages.length > 1 && (
+                            <div className="flex gap-2 flex-wrap">
+                                {sortedImages.map((img, index) => (
+                                    <button
+                                        key={img.id}
+                                        onClick={() => setSelectedImage(img)}
+                                        className={`w-20 h-20 overflow-hidden rounded-md ${selectedImage?.id === img.id ? 'ring-2 ring-amber-400' : 'ring-1 ring-stone-200'}`}
+                                    >
+                                        <img
+                                            src={img.medium || img.image}
+                                            alt={`${product.name} thumbnail ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Right Column: Price, Description, CTA */}
+                    <div>
+                        {/* Price */}
+                        <div className="mb-6 pb-4 border-b border-stone-200">
+                            <span className="text-4xl font-semibold text-stone-900">
+                                ${parseFloat(product.price).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
+                            </span>
+                            <p className="text-sm text-stone-600 mt-1">Price includes GST · Free delivery Australia-wide</p>
+                        </div>
+
+                        {/* Description */}
+                        {product.description && (
+                            <div className="mb-8">
+                                <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Description</h2>
+                                <p className="text-stone-600 leading-relaxed text-sm whitespace-pre-line">
+                                    {product.description}
+                                </p>
+                            </div>
+                        )}
+
+                        {/* CTA */}
+                        <div className="space-y-3">
+                            <button
+                                disabled={!product.in_stock}
+                                onClick={() => navigate(`/checkout/${product.slug}`)}
+                                className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-stone-900"
+                            >
+                                {product.in_stock ? 'Buy Now' : 'Out of Stock'}
+                            </button>
+
+                            <div className="text-sm text-stone-500 space-y-1 pt-1">
+                                <p>✓ Secure payment via Stripe</p>
+                                <p>✓ Order confirmation sent to your email</p>
+                                <p>✓ Free delivery Australia-wide</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {sortedImages.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {sortedImages.map((img) => (
-                  <button
-                    key={img.id}
-                    onClick={() => setSelectedImage(img)}
-                    className={`flex-shrink-0 h-16 w-16 rounded overflow-hidden border-2 transition-colors ${
-                      selectedImage?.id === img.id
-                        ? 'border-primary'
-                        : 'border-transparent hover:border-muted-foreground'
-                    }`}
-                  >
-                    <img
-                      src={img.medium || img.image}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Product Info */}
-          <div className="space-y-5">
-            {product.brand && (
-              <p className="text-sm text-muted-foreground uppercase tracking-wide">{product.brand}</p>
-            )}
-            <h1 className="text-3xl font-bold text-[var(--text-primary)]">{product.name}</h1>
-
-            <div className="flex flex-wrap gap-2 items-center">
-              <StockBadge product={product} />
-              <Badge variant="outline" className="flex items-center gap-1">
-                <Truck className="h-3 w-3" />
-                Free Delivery
-              </Badge>
+            {/* Back to E-Scooters */}
+            <div className="container mx-auto px-4 lg:px-8 pb-12">
+                <Link
+                    to="/escooters"
+                    className="text-sm text-stone-500 hover:text-stone-900 underline underline-offset-2"
+                >
+                    ← Back to E-Scooters
+                </Link>
             </div>
-
-            <div>
-              <p className="text-4xl font-bold text-[var(--text-primary)]">
-                ${parseFloat(product.price).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
-              </p>
-              <p className="text-sm text-muted-foreground">Price includes GST</p>
-            </div>
-
-            {product.description && (
-              <div className="prose prose-sm max-w-none text-[var(--text-primary)]">
-                <p className="whitespace-pre-line">{product.description}</p>
-              </div>
-            )}
-
-            <div className="space-y-3 pt-2">
-              <Button
-                className="w-full text-base py-6"
-                disabled={!product.in_stock}
-                onClick={() => navigate(`/checkout/${product.slug}`)}
-              >
-                {product.in_stock ? 'Buy Now' : 'Out of Stock'}
-              </Button>
-
-              {!product.in_stock && (
-                <p className="text-sm text-muted-foreground text-center">
-                  This product is currently out of stock.
-                </p>
-              )}
-            </div>
-
-            <div className="border-t pt-4 text-sm text-muted-foreground space-y-1">
-              <p>✓ Secure payment via Stripe</p>
-              <p>✓ Free delivery Australia-wide</p>
-              <p>✓ Order confirmation sent to your email</p>
-            </div>
-          </div>
         </div>
-      </div>
-    </>
-  );
+    );
 };
 
 export default EScooterDetailPage;
