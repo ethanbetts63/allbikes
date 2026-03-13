@@ -30,6 +30,8 @@ const RefundsPage = lazy(() => import('./pages/RefundsPage'));
 const AdminProductDashboardPage = lazy(() => import('./pages/admin/AdminProductDashboardPage'));
 const AdminProductDetailPage = lazy(() => import('./pages/admin/AdminProductDetailPage'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+const CheckoutPaymentPage = lazy(() => import('./pages/CheckoutPaymentPage'));
+const CheckoutProcessingPage = lazy(() => import('./pages/CheckoutProcessingPage'));
 const CheckoutSuccessPage = lazy(() => import('./pages/CheckoutSuccessPage'));
 const AdminOrderDashboardPage = lazy(() => import('./pages/admin/AdminOrderDashboardPage'));
 const AdminOrderDetailPage = lazy(() => import('./pages/admin/AdminOrderDetailPage'));
@@ -68,8 +70,10 @@ function App() {
                 <Route path="/escooters" element={<EScooterListPage />} />
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
                 <Route path="/refunds" element={<RefundsPage />} />
-                <Route path="/checkout/:productSlug" element={<CheckoutPage />} />
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+                <Route path="/checkout/processing" element={<CheckoutProcessingPage />} />
+                <Route path="/checkout/:productSlug" element={<CheckoutPage />} />
+                <Route path="/checkout/:productSlug/payment" element={<CheckoutPaymentPage />} />
 
                 {/* Dashboard Section */}
                 <Route path="/dashboard" element={<AdminLayout />}>

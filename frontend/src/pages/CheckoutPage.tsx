@@ -237,4 +237,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutP
+export default CheckoutPage;
