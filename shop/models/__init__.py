@@ -1,3 +1,4 @@
 from .order import Order
+from .payment import Payment
 
-__all__ = ['Order']
+__all__ = ['Order', 'Payment']

@@ -8,6 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 MECHANICDESK_BOOKING_TOKEN = os.environ.get("MECHANICDESK_BOOKING_TOKEN")
 
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
+
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.getenv('DEBUG') == 'True'

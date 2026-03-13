@@ -240,11 +240,20 @@ interface CreateOrderData {
     postcode: string;
 }
 
-export async function createOrder(data: CreateOrderData): Promise<{ order_reference: string }> {
+export async function createOrder(data: CreateOrderData): Promise<{ order_id: number; order_reference: string }> {
     const response = await fetch('/api/shop/orders/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function createPaymentIntent(orderId: number): Promise<{ clientSecret: string }> {
+    const response = await fetch('/api/shop/create-payment-intent/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId }),
     });
     return handleResponse(response);
 }

@@ -5,7 +5,7 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { getProductById, createOrder } from '@/api';
+import { getProductById, createOrder, createPaymentIntent } from '@/api';
 import type { Product } from '@/types/Product';
 
 interface CheckoutFormData {
@@ -61,8 +61,11 @@ const CheckoutPage = () => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const result = await createOrder({ product: product.id, ...formData });
-      navigate(`/checkout/success?ref=${result.order_reference}`);
+      const order = await createOrder({ product: product.id, ...formData });
+      const { clientSecret } = await createPaymentIntent(order.order_id);
+      navigate(`/checkout/${productSlug}/payment`, {
+        state: { clientSecret, orderReference: order.order_reference },
+      });
     } catch (err: any) {
       if (err?.status === 409) {
         setSubmitError('Sorry, this product just sold out. Please go back and choose another.');
@@ -219,7 +222,7 @@ const CheckoutPage = () => {
                 disabled={isSubmitting}
                 className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-stone-900"
               >
-                {isSubmitting ? 'Placing Order...' : 'Place Order'}
+                {isSubmitting ? 'Please wait...' : 'Continue to Payment'}
               </button>
               <div className="text-sm text-stone-500 space-y-1">
                 <p>✓ Free delivery Australia-wide</p>
@@ -234,4 +237,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default CheckoutP
