@@ -1,4 +1,5 @@
 import stripe
+from decimal import Decimal
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -47,7 +48,7 @@ class CreatePaymentIntentView(APIView):
         # Idempotency: reuse existing pending Payment if amount matches
         existing = Payment.objects.filter(order=order, status='pending').first()
         if existing:
-            if existing.amount == round(amount_decimal, 2):
+            if existing.amount == Decimal(str(round(amount_decimal, 2))):
                 intent = stripe.PaymentIntent.retrieve(existing.stripe_payment_intent_id)
                 return Response({'clientSecret': intent.client_secret})
             else:
