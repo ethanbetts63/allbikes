@@ -13,6 +13,13 @@ class Product(models.Model):
         decimal_places=2,
         help_text="GST-inclusive price in AUD.",
     )
+    discount_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Optional discounted GST-inclusive price in AUD.",
+    )
     stock_quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)

@@ -144,9 +144,20 @@ const EScooterDetailPage = () => {
                     <div>
                         {/* Price */}
                         <div className="mb-6 pb-4 border-b border-stone-200">
-                            <span className="text-4xl font-semibold text-stone-900">
-                                ${parseFloat(product.price).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
-                            </span>
+                            {product.discount_price && parseFloat(product.discount_price) > 0 ? (
+                                <div className="flex items-baseline gap-3">
+                                    <span className="text-4xl font-semibold text-amber-400">
+                                        ${parseFloat(product.discount_price).toLocaleString()}
+                                    </span>
+                                    <span className="text-xl text-stone-400 line-through">
+                                        ${parseFloat(product.price).toLocaleString()}
+                                    </span>
+                                </div>
+                            ) : (
+                                <span className="text-4xl font-semibold text-stone-900">
+                                    ${parseFloat(product.price).toLocaleString()}
+                                </span>
+                            )}
                             <p className="text-sm text-stone-600 mt-1">Price includes GST · Free delivery Australia-wide</p>
                         </div>
 

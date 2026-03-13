@@ -7,6 +7,7 @@ export interface Product {
   brand: string;
   description: string;
   price: string;
+  discount_price: string | null;
   stock_quantity: number;
   is_active: boolean;
   images: ProductImage[];

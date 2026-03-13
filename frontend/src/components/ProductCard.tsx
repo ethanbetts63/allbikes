@@ -60,10 +60,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           {/* Price */}
           <div className="mt-auto pt-1">
-            <span className="text-stone-900 font-black text-xl">
-              ${parseFloat(product.price).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
-            </span>
-            <span className="text-xs text-stone-500 ml-1">incl. GST</span>
+            {product.discount_price && parseFloat(product.discount_price) > 0 ? (
+              <div className="flex items-baseline gap-2">
+                <span className="text-stone-500 line-through text-sm">
+                  ${parseFloat(product.price).toLocaleString()}
+                </span>
+                <span className="text-amber-400 font-black text-xl">
+                  ${parseFloat(product.discount_price).toLocaleString()}
+                </span>
+              </div>
+            ) : (
+              <span className="text-stone-900 font-black text-xl">
+                ${parseFloat(product.price).toLocaleString()}
+              </span>
+            )}
+            <span className="text-xs text-stone-500">incl. GST</span>
           </div>
         </div>
 

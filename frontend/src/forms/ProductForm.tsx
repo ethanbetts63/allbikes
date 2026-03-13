@@ -34,6 +34,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
             brand: '',
             description: '',
             price: '',
+            discount_price: '',
             stock_quantity: 0,
             is_active: true,
             managedImages: [],
@@ -52,6 +53,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                 brand: initialData.brand || '',
                 description: initialData.description || '',
                 price: initialData.price,
+                discount_price: initialData.discount_price || '',
                 stock_quantity: initialData.stock_quantity,
                 is_active: initialData.is_active,
                 managedImages: (initialData.images || [])
@@ -116,6 +118,10 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                             <Label htmlFor="price">Price (AUD incl. GST) *</Label>
                             <Input id="price" type="number" step="0.01" min="0" {...register('price', { required: 'Price is required.' })} placeholder="999.00" />
                             {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="discount_price">Discount Price (AUD incl. GST)</Label>
+                            <Input id="discount_price" type="number" step="0.01" min="0" {...register('discount_price')} placeholder="Optional" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="stock_quantity">Stock Quantity *</Label>
