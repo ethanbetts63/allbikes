@@ -32,6 +32,7 @@ urlpatterns += [
     path("api/data/", include("data_management.urls")),
     path("api/service/", include("service.urls")),
     path("api/inventory/", include("inventory.urls")),
+    path("api/product/", include("product.urls")),
 
     # Sitemap
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),

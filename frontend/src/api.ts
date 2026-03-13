@@ -8,6 +8,7 @@ import type { MotorcycleFormData } from '@/types/MotorcycleFormData';
 import type { ManagedImage } from '@/types/ManagedImage';
 import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import type { GetBikesOptions } from '@/types/GetBikesOptions';
+import type { Product } from '@/types/Product';
 
 /**
  * A centralized module for all API interactions.
@@ -157,5 +158,68 @@ export async function manageMotorcycleImages(motorcycleId: number, images: Pick<
 
 export async function getLatestTermsAndConditions(): Promise<TermsAndConditions> {
     const response = await fetch(`${API_BASE_URL}/terms/latest/`);
+    return handleResponse(response);
+}
+
+// --- Product Endpoints ---
+
+export async function getProducts(): Promise<PaginatedResponse<Product>> {
+    const response = await fetch('/api/product/products/');
+    return handleResponse(response);
+}
+
+export async function getProductById(id: number): Promise<Product> {
+    const response = await fetch(`/api/product/products/${id}/`);
+    return handleResponse(response);
+}
+
+export async function adminGetProducts(): Promise<PaginatedResponse<Product>> {
+    const response = await authedFetch('/api/product/products/');
+    return handleResponse(response);
+}
+
+export async function createProduct(data: Omit<Product, 'id' | 'slug' | 'images' | 'in_stock' | 'low_stock' | 'created_at' | 'updated_at'>): Promise<Product> {
+    const response = await authedFetch('/api/product/products/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function updateProduct(id: number, data: Partial<Omit<Product, 'id' | 'slug' | 'images' | 'in_stock' | 'low_stock' | 'created_at' | 'updated_at'>>): Promise<Product> {
+    const response = await authedFetch(`/api/product/products/${id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function deleteProduct(id: number): Promise<void> {
+    const response = await authedFetch(`/api/product/products/${id}/`, { method: 'DELETE' });
+    return handleResponse(response);
+}
+
+export async function uploadProductImage(productId: number, imageFile: File, order: number): Promise<any> {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+    formData.append('order', String(order));
+    const response = await authedFetch(`/api/product/products/${productId}/images/`, {
+        method: 'POST',
+        body: formData,
+    });
+    return handleResponse(response);
+}
+
+export async function manageProductImages(productId: number, images: Pick<ManagedImage, 'source_id' | 'order'>[]): Promise<any> {
+    const payload = images
+        .filter(img => img.source_id !== null)
+        .map(img => ({ id: img.source_id, order: img.order }));
+    const response = await authedFetch(`/api/product/products/${productId}/manage_images/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
     return handleResponse(response);
 }

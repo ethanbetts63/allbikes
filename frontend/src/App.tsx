@@ -24,6 +24,11 @@ const TermsAndConditionsPage = lazy(() => import('./pages/TermsAndConditionsPage
 const SecurityPolicyPage = lazy(() => import('./pages/SecurityPolicyPage')); 
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage')); 
 const ContactPage = lazy(() => import('./pages/ContactPage'));
+const EScooterListPage = lazy(() => import('./pages/EScooterListPage'));
+const EScooterDetailPage = lazy(() => import('./pages/EScooterDetailPage'));
+const RefundsPage = lazy(() => import('./pages/RefundsPage'));
+const AdminProductDashboardPage = lazy(() => import('./pages/admin/AdminProductDashboardPage'));
+const AdminProductDetailPage = lazy(() => import('./pages/admin/AdminProductDetailPage'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -55,7 +60,10 @@ function App() {
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/terms" element={<TermsAndConditionsPage />} />
                 <Route path="/security" element={<SecurityPolicyPage />} /> 
-                <Route path="/privacy" element={<PrivacyPolicyPage />} /> 
+                <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                <Route path="/escooters" element={<EScooterListPage />} />
+                <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
+                <Route path="/refunds" element={<RefundsPage />} />
 
                 {/* Dashboard Section */}
                 <Route path="/dashboard" element={<AdminLayout />}>
@@ -65,6 +73,9 @@ function App() {
                   <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />
                   <Route path="service-settings" element={<ServiceSettingsPage />} />
                   <Route path="job-types" element={<JobTypesPage />} />
+                  <Route path="products" element={<AdminProductDashboardPage />} />
+                  <Route path="products/new" element={<AdminProductDetailPage />} />
+                  <Route path="products/:id/edit" element={<AdminProductDetailPage />} />
                 </Route>
 
               </Routes>

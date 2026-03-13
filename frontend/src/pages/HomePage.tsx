@@ -1,27 +1,33 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Seo from '@/components/Seo';
 import HomeHeroV2 from '@/components/HomeHeroV2';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
 import FeaturedBikes from '@/components/FeaturedBikes';
 import { FaqSection } from '@/components/FaqSection';
-import { getBikes } from '@/api';
+import { getBikes, getProducts } from '@/api';
 import type { Bike } from "@/types/Bike";
+import type { Product } from "@/types/Product";
 import { siteSettings } from '@/config/siteSettings';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
+import { Zap, Truck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
   const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchBikes = async () => {
+    const fetchPageData = async () => {
       try {
-        const [newBikesResponse, usedBikesResponse] = await Promise.all([
+        const [newBikesResponse, usedBikesResponse, productsResponse] = await Promise.all([
           getBikes({ condition: 'new', page: 1, is_featured: true }),
-          getBikes({ condition: 'used', page: 1, is_featured: true })
+          getBikes({ condition: 'used', page: 1, is_featured: true }),
+          getProducts(),
         ]);
 
         const availableNewBikes = newBikesResponse.results.filter(
@@ -34,14 +40,15 @@ const HomePage = () => {
         );
         setUsedBikes(availableUsedBikes);
 
+        setFeaturedProducts(productsResponse.results.slice(0, 3));
+
       } catch (err) {
         console.error("Failed to fetch page data:", err);
         setError("Failed to load page data.");
-      } finally {
       }
     };
 
-    fetchBikes();
+    fetchPageData();
   }, []);
 
   const faqData = [
@@ -62,8 +69,8 @@ const HomePage = () => {
       "answer": "Yes, we service electric motorcycles and electric mopeds."
     },
     {
-      "question": "Do you sell or service electric kick scooters?",
-      "answer": "No. We sell and service electric mopeds and electric motorcycles, but we do not work on electric kick scooters. The term “electric scooter” is often used for both, despite being very different vehicles."
+      “question”: “Do you sell electric scooters?”,
+      “answer”: “Yes! We sell electric scooters (e-scooters) online with free delivery Australia-wide. Visit our E-Scooters page to browse our current range. All prices include GST.”
     }
   ];
 
@@ -153,6 +160,66 @@ const HomePage = () => {
           linkTo="/inventory/motorcycles/used"
           linkText="All Used Bikes"
         />
+        {/* E-Scooter Promo Section */}
+        <section className="py-14 px-4 bg-foreground">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-3">
+                <Zap className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Now Selling E-Scooters</h2>
+              <p className="text-muted-foreground">Buy online — all prices include GST with free delivery Australia-wide.</p>
+            </div>
+
+            {featuredProducts.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {featuredProducts.map((product) => {
+                  const primaryImage = product.images
+                    .slice()
+                    .sort((a, b) => a.order - b.order)
+                    .find((img) => img.order === 0);
+                  return (
+                    <Link
+                      key={product.id}
+                      to={`/escooters/${product.slug}`}
+                      className="border rounded-lg overflow-hidden bg-background hover:shadow-md transition-shadow flex flex-col"
+                    >
+                      <div className="aspect-square bg-muted overflow-hidden">
+                        {primaryImage?.thumbnail ? (
+                          <img
+                            src={primaryImage.thumbnail}
+                            alt={product.name}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Zap className="h-10 w-10 opacity-20" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-4 flex flex-col gap-1 flex-grow">
+                        <p className="font-semibold text-[var(--text-primary)]">{product.name}</p>
+                        <p className="text-lg font-bold">${parseFloat(product.price).toLocaleString('en-AU', { minimumFractionDigits: 2 })}</p>
+                        <p className="text-xs text-muted-foreground">incl. GST</p>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                          <Truck className="h-3 w-3" />
+                          Free Delivery
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className="text-center">
+              <Button asChild size="lg">
+                <Link to="/escooters">View All E-Scooters</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
         <BrandsSection />
 
         <FaqSection title="Frequently Asked Questions" faqData={faqData} />
