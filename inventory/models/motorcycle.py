@@ -64,7 +64,6 @@ class Motorcycle(models.Model):
         help_text="The sales status of the motorcycle.",
     )
     is_featured = models.BooleanField(
-        null=True,
         default=True,
         help_text="Featured bikes are shown on the homepage.",
     )

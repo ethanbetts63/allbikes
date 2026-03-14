@@ -1,6 +1,6 @@
 from django.db import models
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFill, ResizeToFit
 
 
 class ProductImage(models.Model):
@@ -18,7 +18,7 @@ class ProductImage(models.Model):
 
     medium = ImageSpecField(
         source="image",
-        processors=[ResizeToFill(800, 600)],
+        processors=[ResizeToFit(800, 600)],
         format="WEBP",
         options={"quality": 80},
     )
