@@ -18,6 +18,7 @@ class SentMessage(models.Model):
         ('customer_confirmation', 'Customer Confirmation'),
         ('admin_new_order', 'Admin New Order'),
         ('admin_reminder', 'Admin Reminder'),
+        ('test_email', 'Test Email'),
     ]
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)

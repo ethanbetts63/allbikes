@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from notifications.utils.email import _send_mailgun
+from notifications.utils.email import _send_mailgun, _record
 
 TEMPLATE_CHOICES = ['test', 'customer_confirmation', 'admin_new_order']
 
@@ -86,7 +86,9 @@ class Command(BaseCommand):
                 )
                 text_body = f"[TEST] Rendered template: {template}\nOrder: {order.order_reference}"
 
+            message_type = 'test_email' if template == 'test' else template
             _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            _record(None, message_type, to, subject, text_body, html_body, 'sent')
             self.stdout.write(self.style.SUCCESS(f"Sent successfully to {to}."))
 
         except Exception as e:
