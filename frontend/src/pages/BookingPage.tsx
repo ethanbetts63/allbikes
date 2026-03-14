@@ -90,7 +90,7 @@ const BookingPage = () => {
                 description="Schedule your motorcycle or scooter service online with Allbikes. Our expert technicians are ready to help you with maintenance, repairs, and more."
                 canonicalPath="/booking"
             />
-            <h1 className="text-4xl font-bold text-center mb-8 text-[var(--text-light-primary)] ">Book a Service</h1>
+            <h1 className="text-4xl font-bold text-center mb-8 text-[var(--text-light-primary)] ">Request a Service</h1>
             
             <div className="p-8 border rounded-lg shadow-lg bg-[var(--bg-light-primary)]">
                 {renderStep()}

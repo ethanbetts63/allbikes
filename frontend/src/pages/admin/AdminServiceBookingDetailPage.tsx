@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { adminGetBookingLog } from '@/api';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { adminGetBookingLog, adminDeleteBookingLog } from '@/api';
+import { Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Spinner } from '@/components/ui/spinner';
@@ -21,9 +23,20 @@ const Row = ({ label, value }: { label: string; value: string }) => (
 
 const AdminServiceBookingDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [log, setLog] = useState<BookingRequestLog | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    if (!id || !confirm('Delete this booking log?')) return;
+    try {
+      await adminDeleteBookingLog(Number(id));
+      navigate('/dashboard/service-bookings');
+    } catch {
+      setError('Failed to delete booking log.');
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -76,9 +89,19 @@ const AdminServiceBookingDetailPage = () => {
               {log.status}
             </Badge>
           </div>
-          <span className="text-sm text-[var(--text-dark-secondary)]">
-            {formatDateTime(log.created_at)}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-[var(--text-dark-secondary)]">
+              {formatDateTime(log.created_at)}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDelete}
+              className="text-destructive hover:text-destructive hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4 mr-1" /> Delete
+            </Button>
+          </div>
         </div>
 
         {/* Customer */}

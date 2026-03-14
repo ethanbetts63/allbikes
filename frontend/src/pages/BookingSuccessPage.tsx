@@ -14,12 +14,12 @@ const BookingSuccessPage = () => {
             />
             <div className="p-8 border rounded-lg shadow-lg bg-[var(--bg-light-primary)]">
                 <CheckCircle className="mx-auto h-16 w-16 text-highlight1 mb-4" />
-                <h1 className="text-3xl font-bold mb-4">Booking Submitted Successfully!</h1>
+                <h1 className="text-3xl font-bold mb-4">Booking Request Submitted Successfully!</h1>
                 <p className="text-lg text-[var(--text-dark-primary)] mb-8">
                     Thank you! We have received your booking request and will be in touch shortly to confirm the details.
                 </p>
                 <Link to="/">
-                    <Button>Back to Home</Button>
+                    <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-light-primary)]">Back to Home</Button>
                 </Link>
             </div>
             

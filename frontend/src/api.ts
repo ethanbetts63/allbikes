@@ -318,3 +318,8 @@ export async function adminGetBookingLog(id: number): Promise<BookingRequestLog>
     const response = await authedFetch(`/api/service/admin/booking-logs/${id}/`);
     return handleResponse(response);
 }
+
+export async function adminDeleteBookingLog(id: number): Promise<void> {
+    const response = await authedFetch(`/api/service/admin/booking-logs/${id}/`, { method: 'DELETE' });
+    if (!response.ok) throw new Error('Failed to delete booking log.');
+}

@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveDestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 
@@ -23,7 +23,7 @@ class BookingRequestLogListView(ListAPIView):
         return qs
 
 
-class BookingRequestLogDetailView(RetrieveAPIView):
+class BookingRequestLogDetailView(RetrieveDestroyAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = BookingRequestLogDetailSerializer
     queryset = BookingRequestLog.objects.all()

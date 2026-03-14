@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import React from 'react';
+import { Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { adminGetBookingLogs } from '@/api';
+import { adminGetBookingLogs, adminDeleteBookingLog } from '@/api';
 import { formatDate } from '@/utils/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Badge } from '@/components/ui/badge';
@@ -59,6 +61,18 @@ const AdminServiceBookingsDashboardPage = () => {
     setPage(1);
   };
 
+  const handleDelete = async (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    if (!confirm('Delete this booking log?')) return;
+    try {
+      await adminDeleteBookingLog(id);
+      setData(prev => prev.filter(log => log.id !== id));
+      setTotalCount(prev => prev - 1);
+    } catch {
+      setError('Failed to delete booking log.');
+    }
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4 text-[var(--text-light-primary)]">Service Bookings</h1>
@@ -99,6 +113,7 @@ const AdminServiceBookingsDashboardPage = () => {
                     <TableHead className="text-[var(--text-dark-primary)]">Vehicle Reg</TableHead>
                     <TableHead className="text-[var(--text-dark-primary)]">Status</TableHead>
                     <TableHead className="text-[var(--text-dark-primary)]">Date</TableHead>
+                    <TableHead />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -123,6 +138,16 @@ const AdminServiceBookingsDashboardPage = () => {
                         </TableCell>
                         <TableCell className="text-[var(--text-dark-primary)] text-sm">
                           {formatDate(log.created_at)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => handleDelete(e, log.id)}
+                            className="text-destructive hover:text-destructive hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))
