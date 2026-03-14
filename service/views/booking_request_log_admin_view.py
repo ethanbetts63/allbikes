@@ -1,11 +1,17 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 
 from ..models import BookingRequestLog
 from ..serializers import BookingRequestLogListSerializer, BookingRequestLogDetailSerializer
 
 
+class BookingRequestLogPagination(PageNumberPagination):
+    page_size = 50
+
+
 class BookingRequestLogListView(ListAPIView):
+    pagination_class = BookingRequestLogPagination
     permission_classes = [IsAdminUser]
     serializer_class = BookingRequestLogListSerializer
 
