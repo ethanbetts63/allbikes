@@ -8,5 +8,7 @@ Disallow: /booking/success
 Disallow: /refunds
 Disallow: /service/booking-terms/
 Disallow: /checkout/
+Disallow: /security
+Disallow: /privacy
 
 Sitemap: https://www.scootershop.com.au/sitemap.xml

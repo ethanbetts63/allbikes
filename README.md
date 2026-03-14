@@ -1,6 +1,6 @@
 # Allbikes & Scooters
 
-Allbikes & Scooters is a comprehensive web platform for a Perth based motorcycle and scooter dealership, providing sales, service, and parts. This full-stack application features a detailed inventory management system, a customer-facing booking system integrated with the MechanicDesk API, and a dynamic frontend for a seamless user experience.
+Allbikes & Scooters is a full-stack web platform for a Perth-based motorcycle and scooter dealership. It handles inventory browsing, online e-scooter sales with Stripe payment processing, service bookings via MechanicDesk, and transactional email via Mailgun.
 
 **Live Site:** [https://www.scootershop.com.au/]
 
@@ -9,14 +9,19 @@ Allbikes & Scooters is a comprehensive web platform for a Perth based motorcycle
 *   **Backend:** Django, Django REST Framework
 *   **Frontend:** React, Vite, TypeScript, Tailwind CSS, Shadcn UI
 *   **Database:** MySQL
-*   **External APIs:** MechanicDesk (for service bookings)
+*   **Payments:** Stripe
+*   **Email:** Mailgun
+*   **Service Bookings:** MechanicDesk API
 *   **Testing:** Pytest, pytest-django, Factory Boy
 
 ## Core Project Concepts
 
-The project is organized into several key applications, each with a dedicated `README.md` for more detailed information.
+The project is organised into several Django applications, each with a dedicated `README.md` for more detailed information.
 
 *   `inventory`: Manages the motorcycle and scooter inventory, including vehicle details and images.
+*   `product`: Manages the e-scooter product catalogue for online sale, including stock levels, pricing, images, and discount pricing.
+*   `payments`: Handles the Stripe checkout flow, order creation, payment intent management, and order status tracking.
+*   `notifications`: Sends and records transactional emails via Mailgun. Stores a full audit log of every sent message (HTML + text body, status, recipient) in the `SentMessage` model.
 *   `service`: Handles service bookings, with a deep integration into the external MechanicDesk API for managing job types and availability.
 *   `data_management`: A central app for managing brand information, terms and conditions, user profiles, and various data import/export/cleanup utilities.
 *   `frontend`: A modern, responsive single-page application built with React and Vite, providing the user interface for the entire platform.
@@ -57,7 +62,7 @@ Follow these instructions to set up a local development environment.
     # Django Settings
     SECRET_KEY=your_django_secret_key
     DEBUG=True
-    
+
     # Database Settings (MySQL)
     DB_NAME=allbikes
     DB_USER=your_db_user
@@ -65,7 +70,17 @@ Follow these instructions to set up a local development environment.
     DB_HOST=localhost
     DB_PORT=3306
 
-    # API Keys
+    # Stripe
+    STRIPE_SECRET_KEY=your_stripe_secret_key
+    STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+
+    # Mailgun
+    MAILGUN_API_KEY=your_mailgun_api_key
+    MAILGUN_DOMAIN=your_mailgun_domain
+    DEFAULT_FROM_EMAIL=noreply@yourdomain.com.au
+    ADMIN_EMAIL=admin@yourdomain.com.au
+
+    # MechanicDesk
     MECHANICDESK_BOOKING_TOKEN=your_mechanicdesk_api_token
     ```
 
@@ -136,14 +151,25 @@ The script performs the following actions:
 
 ### Custom Management Commands
 
-The `data_management` application includes several custom Django management commands to help with development and data migration:
-
+**`data_management`**
 *   `python manage.py generate --brands`: Populates the database with brand data from `data_management/data/brands.jsonl`.
 *   `python manage.py generate --terms`: Populates the database with the latest terms and conditions from HTML files.
 *   `python manage.py generate --archive`: Archives the current state of the database to date-stamped JSON files.
 *   `python manage.py update --archive`: Loads the database from the most recent archive (a destructive operation).
 
+**`notifications`**
+*   `python manage.py send_test_email`: Sends a test email via Mailgun to `ADMIN_EMAIL`. Use `--template customer_confirmation` or `--template admin_new_order` to preview real notification templates with dummy order data. Use `--to` to override the recipient.
+*   `python manage.py send_admin_reminders`: Sends a reminder email to `ADMIN_EMAIL` for every order in `paid` status that has not yet been dispatched. Intended to be run on a schedule (e.g. weekly cron).
+
 ## External Integrations
+
+### Stripe
+
+The `payments` application uses Stripe for processing e-scooter purchases. The flow creates an order record, generates a payment intent, and confirms payment via a Stripe webhook which also triggers transactional emails.
+
+### Mailgun
+
+The `notifications` application sends transactional email via the Mailgun API. Every send attempt (success or failure) is recorded as a `SentMessage` in the database, including the full HTML and text body, for auditing. The admin dashboard at `/dashboard/messages` provides a list and detail view of all sent messages.
 
 ### MechanicDesk API
 
