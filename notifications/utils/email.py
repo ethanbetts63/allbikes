@@ -104,29 +104,3 @@ def send_admin_new_order(order):
         _record(order, 'admin_new_order', to, subject, text_body, html_body, 'failed', str(e))
 
 
-def send_admin_reminder(order):
-    admin_email = getattr(settings, 'ADMIN_EMAIL', None)
-    if not admin_email:
-        logger.warning(
-            "ADMIN_EMAIL not configured — skipping admin reminder for %s",
-            order.order_reference,
-        )
-        return
-
-    to = admin_email
-    subject = f"Reminder: Unfulfilled order — {order.order_reference}"
-    context = {'order': order}
-    html_body = render_to_string('notifications/emails/admin_reminder.html', context)
-    text_body = (
-        f"Reminder: Order {order.order_reference} has not been dispatched.\n\n"
-        f"Product: {order.product.name}\n"
-        f"Customer: {order.customer_name}\n"
-        f"Address: {order.address_line1}, {order.suburb} {order.state} {order.postcode}\n"
-        f"Order date: {order.created_at.strftime('%d %b %Y')}\n"
-    )
-    try:
-        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
-        _record(order, 'admin_reminder', to, subject, text_body, html_body, 'sent')
-    except Exception as e:
-        logger.error("Failed to send admin reminder for order %s: %s", order.order_reference, e)
-        _record(order, 'admin_reminder', to, subject, text_body, html_body, 'failed', str(e))

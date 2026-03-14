@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from django.contrib.contenttypes.models import ContentType
 
 from notifications.models import Message
-from notifications.utils.email import send_customer_confirmation, send_admin_new_order, send_admin_reminder
+from notifications.utils.email import send_customer_confirmation, send_admin_new_order
 from payments.tests.factories.order_factory import OrderFactory
 
 
@@ -104,25 +104,3 @@ class TestSendAdminNewOrder:
         assert 'timeout' in msg.error_message
 
 
-@pytest.mark.django_db
-class TestSendAdminReminder:
-
-    def test_sends_to_admin_email(self, mock_post, settings):
-        settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
-        order = OrderFactory(status='paid')
-        send_admin_reminder(order)
-        assert 'admin@scootershop.com.au' in mock_post.call_args[1]['data']['to']
-
-    def test_creates_sent_message_on_success(self, mock_post, settings):
-        settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
-        order = OrderFactory(status='paid')
-        send_admin_reminder(order)
-        msg = _messages_for(order, message_type='admin_reminder').get()
-        assert msg.status == 'sent'
-        assert msg.body_html
-
-    def test_skips_if_no_admin_email(self, mock_post, settings):
-        settings.ADMIN_EMAIL = None
-        order = OrderFactory(status='paid')
-        send_admin_reminder(order)
-        mock_post.assert_not_called()
