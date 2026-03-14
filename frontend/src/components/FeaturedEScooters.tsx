@@ -67,7 +67,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Zap className="h-10 w-10 text-stone-300" />
+                      <Zap className="h-10 w-10 text-[var(--text-light-secondary)]" />
                     </div>
                   )}
                   {!product.in_stock && (

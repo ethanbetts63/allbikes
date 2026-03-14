@@ -66,7 +66,7 @@ const PaymentForm = ({ orderReference, productSlug }: PaymentFormProps) => {
 
       {paymentError && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-600 text-sm">{paymentError}</p>
+          <p className="text-destructive text-sm">{paymentError}</p>
         </div>
       )}
 

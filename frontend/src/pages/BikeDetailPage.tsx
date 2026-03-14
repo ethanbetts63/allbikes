@@ -206,7 +206,7 @@ const BikeDetailPage = () => {
     }
 
     if (error) {
-        return <p className="text-red-500 text-center mt-8">{error}</p>;
+        return <p className="text-destructive text-center mt-8">{error}</p>;
     }
 
     if (!bike) {

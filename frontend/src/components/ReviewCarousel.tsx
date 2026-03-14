@@ -90,7 +90,7 @@ const ReviewCarousel = () => {
               href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="nofollow noopener noreferrer"
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors whitespace-nowrap"
+              className="text-sm font-medium text-[var(--text-light-secondary)]  hover:text-white transition-colors whitespace-nowrap"
             >
               See all reviews →
             </a>

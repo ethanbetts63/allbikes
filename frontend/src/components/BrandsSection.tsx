@@ -38,7 +38,7 @@ const BrandCard = ({ image, imageSrcSet, alt, title, subtitle, description, imag
       <div className="w-full md:w-1/2 bg-stone-900 p-10 flex flex-col justify-center gap-3">
         <p className="text-amber-400 text-sm font-bold uppercase tracking-widest">{subtitle}</p>
         <h3 className="text-3xl font-black text-white leading-tight">{title}</h3>
-        <p className="text-stone-300 text-base leading-relaxed">{description}</p>
+        <p className="text-[var(--text-light-secondary)] text-base leading-relaxed">{description}</p>
         <Link to="/inventory/motorcycles/new" className="self-start mt-2">
           <Button className="bg-amber-400 text-[var(--text-dark-primary)] font-bold px-6 py-3 text-sm hover:bg-amber-300 flex items-center gap-2">
             <span className="hidden md:inline">See New Motorcycles & Scooters</span>

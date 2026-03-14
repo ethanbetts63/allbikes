@@ -86,8 +86,8 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                 <CardContent className="space-y-6">
                     {/* Basic Info */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div className="space-y-2"><Label htmlFor="make">Make</Label><Input id="make" {...register('make', { required: 'Make is required' })} />{errors.make && <p className="text-red-500 text-sm">{errors.make.message}</p>}</div>
-                        <div className="space-y-2"><Label htmlFor="model">Model</Label><Input id="model" {...register('model', { required: 'Model is required' })} />{errors.model && <p className="text-red-500 text-sm">{errors.model.message}</p>}</div>
+                        <div className="space-y-2"><Label htmlFor="make">Make</Label><Input id="make" {...register('make', { required: 'Make is required' })} />{errors.make && <p className="text-destructive text-sm">{errors.make.message}</p>}</div>
+                        <div className="space-y-2"><Label htmlFor="model">Model</Label><Input id="model" {...register('model', { required: 'Model is required' })} />{errors.model && <p className="text-destructive text-sm">{errors.model.message}</p>}</div>
                         <div className="space-y-2"><Label htmlFor="year">Year</Label><Input id="year" type="number" {...register('year', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="price">Price (AUD)</Label><Input id="price" type="number" step="0.01" {...register('price', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="discount_price">Discount Price (AUD)</Label><Input id="discount_price" type="number" step="0.01" {...register('discount_price', { valueAsNumber: true })} /></div>

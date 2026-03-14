@@ -188,7 +188,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
               href={`mailto:${emailAddress}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-stone-700 hover:bg-stone-600 text-stone-200 font-bold text-sm uppercase tracking-wide px-5 py-3 transition-colors duration-200 w-full sm:w-auto justify-center lg:justify-start"
+              className="inline-flex items-center gap-2.5 bg-stone-700 hover:bg-stone-600 text-[var(--text-light-secondary)] font-bold text-sm uppercase tracking-wide px-5 py-3 transition-colors duration-200 w-full sm:w-auto justify-center lg:justify-start"
             >
               <Mail className="h-4 w-4 shrink-0" />
               {emailAddress}

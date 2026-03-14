@@ -48,7 +48,7 @@ const ServiceCTAV2 = () => {
                             {checkItems.map((item) => (
                                 <li key={item} className="flex items-start gap-4">
                                     <CheckCircle2 className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" />
-                                    <span className="text-stone-200 text-lg leading-snug">{item}</span>
+                                    <span className="text-[var(--text-light-secondary)] text-lg leading-snug">{item}</span>
                                 </li>
                             ))}
                         </ul>

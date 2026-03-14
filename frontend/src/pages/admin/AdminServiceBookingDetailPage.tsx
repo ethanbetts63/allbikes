@@ -8,13 +8,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const STATUS_BADGE: Record<string, string> = {
   Success: 'border-green-600 text-green-700',
-  Failed:  'border-red-500 text-red-600',
+  Failed:  'border-red-500 text-destructive',
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => (
   <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
     <span className="text-black font-semibold text-sm w-40 shrink-0">{label}</span>
-    <span className="text-gray-600 text-sm text-right">{value}</span>
+    <span className="text-[var(--text-dark-secondary)] text-sm text-right">{value}</span>
   </div>
 );
 
@@ -48,7 +48,7 @@ const AdminServiceBookingDetailPage = () => {
   }
 
   if (error || !log) {
-    return <p className="text-red-500">{error ?? 'Booking log not found.'}</p>;
+    return <p className="text-destructive">{error ?? 'Booking log not found.'}</p>;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,7 +109,7 @@ const AdminServiceBookingDetailPage = () => {
           {payload.note && (
             <div className="py-2 border-b border-gray-100">
               <span className="text-black font-semibold text-sm">Note</span>
-              <p className="text-gray-600 text-sm mt-1 whitespace-pre-wrap">{String(payload.note)}</p>
+              <p className="text-[var(--text-dark-secondary)] text-sm mt-1 whitespace-pre-wrap">{String(payload.note)}</p>
             </div>
           )}
         </div>
@@ -120,7 +120,7 @@ const AdminServiceBookingDetailPage = () => {
           <Row label="Status Code" value={String(log.response_status_code)} />
           <div className="py-2">
             <span className="text-black font-semibold text-sm">Response Body</span>
-            <pre className="mt-1 text-xs text-gray-600 bg-gray-50 rounded p-3 overflow-auto">
+            <pre className="mt-1 text-xs text-[var(--text-dark-secondary)] bg-gray-50 rounded p-3 overflow-auto">
               {JSON.stringify(log.response_body, null, 2)}
             </pre>
           </div>

@@ -110,7 +110,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                         <div className="space-y-2">
                             <Label htmlFor="name">Product Name *</Label>
                             <Input id="name" {...register('name', { required: 'Product name is required.' })} placeholder="e.g. Ninebot E25 E-Scooter" />
-                            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                            {errors.name && <p className="text-destructive text-sm">{errors.name.message}</p>}
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="brand">Brand</Label>
@@ -119,7 +119,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                         <div className="space-y-2">
                             <Label htmlFor="price">Price (AUD incl. GST) *</Label>
                             <Input id="price" type="number" step="0.01" min="0" {...register('price', { required: 'Price is required.' })} placeholder="999.00" />
-                            {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
+                            {errors.price && <p className="text-destructive text-sm">{errors.price.message}</p>}
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="discount_price">Discount Price (AUD incl. GST)</Label>
@@ -128,7 +128,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                         <div className="space-y-2">
                             <Label htmlFor="stock_quantity">Stock Quantity *</Label>
                             <Input id="stock_quantity" type="number" min="0" {...register('stock_quantity', { required: 'Stock quantity is required.', valueAsNumber: true })} />
-                            {errors.stock_quantity && <p className="text-red-500 text-sm">{errors.stock_quantity.message}</p>}
+                            {errors.stock_quantity && <p className="text-destructive text-sm">{errors.stock_quantity.message}</p>}
                         </div>
                     </div>
 

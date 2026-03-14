@@ -137,7 +137,7 @@ const InventoryTable = () => {
           <Button variant="ghost" size="icon" onClick={() => handleEdit(row.original.id)} className="text-black">
             <Pencil className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => handleDelete(row.original.id)} className="text-red-500">
+          <Button variant="ghost" size="icon" onClick={() => handleDelete(row.original.id)} className="text-destructive">
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>

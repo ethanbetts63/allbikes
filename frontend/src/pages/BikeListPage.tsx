@@ -187,7 +187,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
             </div>
         )}
         
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className="text-destructive text-center">{error}</p>}
 
         {!isLoading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

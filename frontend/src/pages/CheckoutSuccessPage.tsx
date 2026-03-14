@@ -42,7 +42,7 @@ const CheckoutSuccessPage = () => {
   }
 
   if (error || !order) {
-    return <p className="text-red-500 text-center mt-8">{error || 'Order not found.'}</p>;
+    return <p className="text-destructive text-center mt-8">{error || 'Order not found.'}</p>;
   }
 
   const displayPrice = order.amount_paid ?? '0';

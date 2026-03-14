@@ -126,7 +126,7 @@ const AdminProductDashboardPage = () => {
             variant="ghost"
             size="icon"
             onClick={() => handleDelete(row.original)}
-            className="text-red-500"
+            className="text-destructive"
           >
             <Trash2 className="h-4 w-4" />
           </Button>

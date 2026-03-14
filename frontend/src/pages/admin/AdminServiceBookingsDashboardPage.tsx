@@ -16,7 +16,7 @@ import {
 
 const STATUS_BADGE: Record<string, string> = {
   Success: 'border-green-600 text-green-700',
-  Failed:  'border-red-500 text-red-600',
+  Failed:  'border-red-500 text-destructive',
 };
 
 type FilterType = 'all' | 'failed';

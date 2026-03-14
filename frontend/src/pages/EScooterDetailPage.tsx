@@ -59,7 +59,7 @@ const EScooterDetailPage = () => {
     }
 
     if (error || !product) {
-        return <p className="text-red-500 text-center mt-8">{error || 'Product not found.'}</p>;
+        return <p className="text-destructive text-center mt-8">{error || 'Product not found.'}</p>;
     }
 
     const mainImageUrl = selectedImage?.medium || selectedImage?.image;
@@ -115,7 +115,7 @@ const EScooterDetailPage = () => {
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center text-stone-300">
+                                <div className="w-full h-full flex items-center justify-center text-[var(--text-light-secondary)]">
                                     <span className="text-sm">No image available</span>
                                 </div>
                             )}

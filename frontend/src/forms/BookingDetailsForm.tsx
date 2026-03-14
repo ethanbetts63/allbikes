@@ -97,7 +97,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <Label htmlFor="date" className="mb-2 block">Drop-off Date <span className="text-red-500">*</span></Label>
+                        <Label htmlFor="date" className="mb-2 block">Drop-off Date <span className="text-destructive">*</span></Label>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
@@ -129,7 +129,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                         </Popover>
                     </div>
                     <div>
-                        <Label htmlFor="time" className="mb-2 block">Preferred Drop-off Time <span className="text-red-500">*</span></Label>
+                        <Label htmlFor="time" className="mb-2 block">Preferred Drop-off Time <span className="text-destructive">*</span></Label>
                         <Select onValueChange={setSelectedTime} value={selectedTime} disabled={!selectedDate}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select a time" />
@@ -142,7 +142,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                 </div>
 
                 <div>
-                    <Label className="mb-2 block">Job Type <span className="text-red-500">*</span></Label>
+                    <Label className="mb-2 block">Job Type <span className="text-destructive">*</span></Label>
                     <p className="text-sm text-muted-foreground mb-2">Please select one or more job types that best describe the service you require.</p>
                     <div className="space-y-4 mt-2 p-4 border rounded-md max-h-64 overflow-y-auto">
                         {jobTypes.length > 0 ? jobTypes.map((job) => (

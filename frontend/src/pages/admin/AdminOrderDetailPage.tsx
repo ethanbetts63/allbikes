@@ -21,14 +21,14 @@ const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   paid:            { label: 'Paid',            className: 'border-green-600 text-green-700' },
   dispatched:      { label: 'Dispatched',      className: 'border-blue-500 text-blue-600' },
   delivered:       { label: 'Delivered',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },
-  cancelled:       { label: 'Cancelled',       className: 'border-red-500 text-red-600' },
+  cancelled:       { label: 'Cancelled',       className: 'border-red-500 text-destructive' },
   refunded:        { label: 'Refunded',        className: 'border-orange-500 text-orange-600' },
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => (
   <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
     <span className="text-black font-semibold text-sm w-36 shrink-0">{label}</span>
-    <span className="text-gray-600 text-sm text-right">{value}</span>
+    <span className="text-[var(--text-dark-secondary)] text-sm text-right">{value}</span>
   </div>
 );
 
@@ -79,7 +79,7 @@ const AdminOrderDetailPage = () => {
   }
 
   if (!order) {
-    return <p className="text-red-500">Order not found.</p>;
+    return <p className="text-destructive">Order not found.</p>;
   }
 
   const badge = STATUS_BADGE[order.status];

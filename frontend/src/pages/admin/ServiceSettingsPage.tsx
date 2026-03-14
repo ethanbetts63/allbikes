@@ -61,7 +61,7 @@ const ServiceSettingsPage = () => {
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>;
+        return <p className="text-destructive">{error}</p>;
     }
 
     if (!settings) {

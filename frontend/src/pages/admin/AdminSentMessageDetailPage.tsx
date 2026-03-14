@@ -8,7 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
 
 const STATUS_BADGE: Record<string, string> = {
   sent:      'border-green-600 text-green-700',
-  failed:    'border-red-500 text-red-600',
+  failed:    'border-red-500 text-destructive',
   delivered: 'border-blue-500 text-blue-600',
   bounced:   'border-orange-500 text-orange-600',
 };
@@ -22,7 +22,7 @@ const TYPE_LABELS: Record<string, string> = {
 const Row = ({ label, value }: { label: string; value: string }) => (
   <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
     <span className="text-black font-semibold text-sm w-36 shrink-0">{label}</span>
-    <span className="text-gray-600 text-sm text-right">{value}</span>
+    <span className="text-[var(--text-dark-secondary)] text-sm text-right">{value}</span>
   </div>
 );
 
@@ -108,7 +108,7 @@ const AdminSentMessageDetailPage = () => {
               {message.body_html && (
                 <button
                   onClick={() => setTab('html')}
-                  className={`text-sm px-3 py-1 rounded border ${tab === 'html' ? 'bg-black text-white border-black' : 'border-gray-300 text-gray-600 hover:border-gray-400'}`}
+                  className={`text-sm px-3 py-1 rounded border ${tab === 'html' ? 'bg-black text-white border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
                 >
                   HTML Preview
                 </button>
@@ -116,7 +116,7 @@ const AdminSentMessageDetailPage = () => {
               {message.body_text && (
                 <button
                   onClick={() => setTab('text')}
-                  className={`text-sm px-3 py-1 rounded border ${tab === 'text' ? 'bg-black text-white border-black' : 'border-gray-300 text-gray-600 hover:border-gray-400'}`}
+                  className={`text-sm px-3 py-1 rounded border ${tab === 'text' ? 'bg-black text-white border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
                 >
                   Plain Text
                 </button>

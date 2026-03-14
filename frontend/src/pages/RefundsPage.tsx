@@ -44,7 +44,7 @@ const RefundsPage = () => {
             <div className="border-t border-stone-100 pt-6">
               <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">How to Request a Return or Refund</h2>
               <ol className="list-decimal list-inside space-y-2 text-[var(--text-dark-secondary)] text-sm">
-                <li>Locate your order reference number — it starts with <span className="font-mono font-semibold text-stone-800">SS-</span> and was included in your confirmation email.</li>
+                <li>Locate your order reference number — it starts with <span className="font-mono font-semibold text-[var(--text-light-primary)]">SS-</span> and was included in your confirmation email.</li>
                 <li>Email or call us using the contact details below.</li>
                 <li>Include your order reference, a description of the issue, and photos if the item is damaged or faulty.</li>
                 <li>Our team will respond within as soon as possible with next steps.</li>
@@ -64,7 +64,7 @@ const RefundsPage = () => {
                   <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Email</p>
                   <a
                     href={`mailto:${siteSettings.email_address}`}
-                    className="text-sm font-semibold text-stone-700 hover:text-amber-500 transition-colors"
+                    className="text-sm font-semiboldtext-[var(--text-dark-secondary)] hover:text-amber-500 transition-colors"
                   >
                     {siteSettings.email_address}
                   </a>
@@ -78,7 +78,7 @@ const RefundsPage = () => {
                   <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Phone</p>
                   <a
                     href={`tel:${primaryPhone}`}
-                    className="text-sm font-semibold text-stone-700 hover:text-amber-500 transition-colors"
+                    className="text-sm font-semiboldtext-[var(--text-dark-secondary)] hover:text-amber-500 transition-colors"
                   >
                     {displayPhone}
                   </a>

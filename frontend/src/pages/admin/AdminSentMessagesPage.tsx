@@ -16,7 +16,7 @@ import {
 
 const STATUS_BADGE: Record<string, string> = {
   sent:      'border-green-600 text-green-700',
-  failed:    'border-red-500 text-red-600',
+  failed:    'border-red-500 text-destructive',
   delivered: 'border-blue-500 text-blue-600',
   bounced:   'border-orange-500 text-orange-600',
 };

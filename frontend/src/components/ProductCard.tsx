@@ -25,7 +25,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full bg-stone-100 flex items-center justify-center text-stone-300 text-sm">
+            <div className="w-full h-full bg-stone-100 flex items-center justify-center text-[var(--text-light-secondary)] text-sm">
               No image
             </div>
           )}

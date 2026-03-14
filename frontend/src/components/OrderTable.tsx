@@ -29,7 +29,7 @@ const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   paid:            { label: 'Paid',            className: 'border-green-600 text-green-700' },
   dispatched:      { label: 'Dispatched',      className: 'border-blue-500 text-blue-600' },
   delivered:       { label: 'Delivered',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },
-  cancelled:       { label: 'Cancelled',       className: 'border-red-500 text-red-600' },
+  cancelled:       { label: 'Cancelled',       className: 'border-red-500 text-destructive' },
   refunded:        { label: 'Refunded',        className: 'border-orange-500 text-orange-600' },
 };
 

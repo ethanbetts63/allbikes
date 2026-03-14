@@ -127,7 +127,7 @@ const CheckoutPage = () => {
                   {...register('customer_name', { required: 'Full name is required.' })}
                   placeholder="Jane Smith"
                 />
-                {errors.customer_name && <p className="text-red-500 text-sm">{errors.customer_name.message}</p>}
+                {errors.customer_name && <p className="text-destructive text-sm">{errors.customer_name.message}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="customer_email">Email Address *</Label>
@@ -140,7 +140,7 @@ const CheckoutPage = () => {
                   })}
                   placeholder="jane@example.com"
                 />
-                {errors.customer_email && <p className="text-red-500 text-sm">{errors.customer_email.message}</p>}
+                {errors.customer_email && <p className="text-destructive text-sm">{errors.customer_email.message}</p>}
               </div>
             </div>
 
@@ -161,7 +161,7 @@ const CheckoutPage = () => {
                 {...register('address_line1', { required: 'Address is required.' })}
                 placeholder="123 Example Street"
               />
-              {errors.address_line1 && <p className="text-red-500 text-sm">{errors.address_line1.message}</p>}
+              {errors.address_line1 && <p className="text-destructive text-sm">{errors.address_line1.message}</p>}
             </div>
 
             <div className="space-y-1.5">
@@ -181,7 +181,7 @@ const CheckoutPage = () => {
                   {...register('suburb', { required: 'Suburb is required.' })}
                   placeholder="Dianella"
                 />
-                {errors.suburb && <p className="text-red-500 text-sm">{errors.suburb.message}</p>}
+                {errors.suburb && <p className="text-destructive text-sm">{errors.suburb.message}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="state">State *</Label>
@@ -193,7 +193,7 @@ const CheckoutPage = () => {
                   <option value="">Select</option>
                   {AU_STATES.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
-                {errors.state && <p className="text-red-500 text-sm">{errors.state.message}</p>}
+                {errors.state && <p className="text-destructive text-sm">{errors.state.message}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="postcode">Postcode *</Label>
@@ -206,13 +206,13 @@ const CheckoutPage = () => {
                   placeholder="6059"
                   maxLength={4}
                 />
-                {errors.postcode && <p className="text-red-500 text-sm">{errors.postcode.message}</p>}
+                {errors.postcode && <p className="text-destructive text-sm">{errors.postcode.message}</p>}
               </div>
             </div>
 
             {submitError && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-red-600 text-sm">{submitError}</p>
+                <p className="text-destructive text-sm">{submitError}</p>
               </div>
             )}
 
