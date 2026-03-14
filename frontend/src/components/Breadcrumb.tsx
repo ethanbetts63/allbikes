@@ -10,7 +10,7 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => {
         {items.map((item, index) => (
           <li key={item.name} className="inline-flex items-center">
             {index > 0 && (
-              <ChevronRight className="h-5 w-5 text-gray-400 mx-1" />
+              <ChevronRight className="h-5 w-5 text-[var(--text-dark-secondary)] mx-1" />
             )}
             {index < items.length - 1 ? (
               <Link

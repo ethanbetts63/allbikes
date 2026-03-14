@@ -80,7 +80,7 @@ const AdminSentMessageDetailPage = () => {
               <Badge variant="outline" className={`text-sm px-3 py-1 ${badge}`}>{message.status}</Badge>
             )}
           </div>
-          <span className="text-sm text-gray-400 font-mono">#{message.id}</span>
+          <span className="text-sm text-[var(--text-dark-secondary)] font-mono">#{message.id}</span>
         </div>
 
         {/* Meta */}

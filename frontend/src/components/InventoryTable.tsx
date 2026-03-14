@@ -248,7 +248,7 @@ const InventoryTable = () => {
                   e.preventDefault();
                   table.previousPage();
                 }}
-                className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50 text-gray-400" : "text-[var(--text-dark-primary)]"}
+                className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50 text-[var(--text-dark-secondary)]" : "text-[var(--text-dark-primary)]"}
               />
             </PaginationItem>
             <PaginationItem>
@@ -258,7 +258,7 @@ const InventoryTable = () => {
                   e.preventDefault();
                   table.nextPage();
                 }}
-                className={!table.getCanNextPage() ? "pointer-events-none opacity-50 text-gray-400" : "text-[var(--text-dark-primary)]"}
+                className={!table.getCanNextPage() ? "pointer-events-none opacity-50 text-[var(--text-dark-secondary)]" : "text-[var(--text-dark-primary)]"}
               />
             </PaginationItem>
           </PaginationContent>
