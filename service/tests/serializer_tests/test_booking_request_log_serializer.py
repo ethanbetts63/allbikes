@@ -11,6 +11,8 @@ class TestBookingRequestLogSerializers:
             customer_email="john@example.com",
             vehicle_registration="ABC 123",
             request_payload="{}",
+            response_status_code=200,
+            response_body="{}",
             status="pending"
         )
         serializer = BookingRequestLogListSerializer(log)

@@ -1,6 +1,5 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
-import type { AuthResponse } from '@/types/AuthResponse';
 import type { UserProfile } from '@/types/UserProfile';
 import type { Bike } from '@/types/Bike';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
@@ -45,13 +44,22 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 // --- Auth Endpoints ---
 
-export async function loginUser(email: string, password: string): Promise<AuthResponse> {
+export async function loginUser(email: string, password: string): Promise<void> {
   const response = await fetch('/api/token/', {
     method: 'POST',
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: email, password }),
   });
   return handleResponse(response);
+}
+
+export async function logoutUser(): Promise<void> {
+  await fetch('/api/token/logout/', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
 
 // --- User Profile Endpoint ---

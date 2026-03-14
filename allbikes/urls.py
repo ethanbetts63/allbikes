@@ -4,9 +4,10 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.http import HttpResponsePermanentRedirect
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
+from data_management.views.token_views import (
+    CookieTokenObtainPairView,
+    CookieTokenRefreshView,
+    CookieLogoutView,
 )
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import MotorcycleSitemap, StaticViewSitemap
@@ -40,8 +41,9 @@ urlpatterns += [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     # JWT Token Authentication Endpoints
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', CookieTokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/logout/', CookieLogoutView.as_view(), name='token_logout'),
     
     # Redirect trailing slashes to canonical non-slash URLs (301)
     re_path(r'^(?!api/|admin/|sitemap\.xml)(.+)/$', strip_trailing_slash),
