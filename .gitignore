@@ -36,3 +36,6 @@ static/
 *.backup
 mediafiles/
 mediafiles/CACHE/
+
+# Claude Code
+.claude/
