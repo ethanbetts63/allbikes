@@ -83,7 +83,7 @@ const AdminProductDashboardPage = () => {
           style: 'currency',
           currency: 'AUD',
         }).format(parseFloat(row.getValue('price')));
-        return <div className="text-right text-black">{formatted} <span className="text-xs text-gray-500">incl. GST</span></div>;
+        return <div className="text-right text-black">{formatted} <span className="text-xs text-[var(--text-dark-secondary)]">incl. GST</span></div>;
       },
     },
     {
@@ -107,7 +107,7 @@ const AdminProductDashboardPage = () => {
         row.getValue('is_active') ? (
           <Badge variant="outline" className="border-green-600 text-green-700">Active</Badge>
         ) : (
-          <Badge variant="outline" className="text-gray-500 border-gray-400">Inactive</Badge>
+          <Badge variant="outline" className="text-[var(--text-dark-secondary)] border-gray-400">Inactive</Badge>
         ),
     },
     {
@@ -147,7 +147,7 @@ const AdminProductDashboardPage = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-[var(--text-primary)]">E-Scooter Products</h1>
+        <h1 className="text-2xl font-bold text-[var(--text-light-primary)]">E-Scooter Products</h1>
         <Button onClick={() => navigate('/dashboard/products/new')}>
           <PlusSquare className="h-4 w-4 mr-2" />
           Add Product
@@ -162,7 +162,7 @@ const AdminProductDashboardPage = () => {
 
       <div className="w-full bg-white text-black p-4 rounded-lg">
         {isLoading ? (
-          <p className="text-center text-gray-500 py-8">Loading products...</p>
+          <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading products...</p>
         ) : (
           <>
             <div className="rounded-md border border-gray-300">
@@ -202,7 +202,7 @@ const AdminProductDashboardPage = () => {
               </Table>
             </div>
 
-            <div className="text-sm text-gray-500 mt-3">
+            <div className="text-sm text-[var(--text-dark-secondary)] mt-3">
               {data.length} product{data.length !== 1 ? 's' : ''} total
             </div>
           </>

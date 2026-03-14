@@ -29,7 +29,7 @@ const AdminLayout = () => {
       <Seo title="Admin | Allbikes" noindex={true} />
       <div className="flex min-h-screen">
         {/* Vertical Nav */}
-        <aside className="w-64 flex-shrink-0 border-r p-4 bg-foreground text-[var(--text-primary)]">
+        <aside className="w-64 flex-shrink-0 border-r p-4 bg-foreground text-[var(--text-light-primary)]">
           <nav className="flex flex-col space-y-2">
             <h2 className="text-lg font-semibold tracking-tight mb-2 px-2">Admin Menu</h2>
 

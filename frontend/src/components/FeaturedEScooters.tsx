@@ -21,7 +21,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
               Buy Online
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="text-stone-500 text-[10px] uppercase tracking-widest">Powered by</span>
+              <span className="text-[var(--text-dark-secondary)] text-[10px] uppercase tracking-widest">Powered by</span>
               <img src={stripeLogo} alt="Stripe" className="h-4 w-auto" />
             </div>
           </div>
@@ -31,7 +31,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
             </h2>
             <Link
               to="/escooters"
-              className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-amber-400 hover:border-stone-500 hover:text-stone-500 font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
+              className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-amber-400 hover:border-stone-500 hover:text-[var(--text-dark-secondary)] font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
             >
               View All E-Scooters <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -83,9 +83,9 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                 </div>
                 <div className="px-4 py-4 flex flex-col gap-1 flex-1">
                   {product.brand && (
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-stone-500">{product.brand}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">{product.brand}</p>
                   )}
-                  <p className="font-bold text-stone-900 text-lg leading-snug">{product.name}</p>
+                  <p className="font-bold text-[var(--text-dark-primary)] text-lg leading-snug">{product.name}</p>
                   <div className="mt-auto pt-2 flex items-end justify-between">
                     <div>
                       {product.discount_price && parseFloat(product.discount_price) > 0 ? (
@@ -94,9 +94,9 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                           <span className="text-amber-500 font-black text-xl">${parseFloat(product.discount_price).toLocaleString()}</span>
                         </div>
                       ) : (
-                        <span className="text-stone-900 font-black text-xl">${parseFloat(displayPrice).toLocaleString()}</span>
+                        <span className="text-[var(--text-dark-primary)] font-black text-xl">${parseFloat(displayPrice).toLocaleString()}</span>
                       )}
-                      <p className="text-xs text-stone-500 mt-0.5">incl. GST</p>
+                      <p className="text-xs text-[var(--text-dark-secondary)] mt-0.5">incl. GST</p>
                     </div>
                     <span className="text-xs font-bold uppercase tracking-widest text-amber-500 group-hover:underline">
                       View →
@@ -111,7 +111,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
         {/* Mobile CTA */}
         <Link
           to="/escooters"
-          className="sm:hidden inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
+          className="sm:hidden inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
         >
           View All E-Scooters
           <ArrowRight className="h-4 w-4" />

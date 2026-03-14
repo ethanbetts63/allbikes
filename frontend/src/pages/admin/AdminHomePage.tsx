@@ -5,12 +5,12 @@ const AdminHomePage = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-[var(--text-primary)]">Admin Dashboard</h1>
-      <p className="text-[var(--text-primary)] mt-2">
+      <h1 className="text-3xl font-bold text-[var(--text-light-primary)]">Admin Dashboard</h1>
+      <p className="text-[var(--text-light-primary)] mt-2">
         Welcome, {user?.first_name || user?.email}.
       </p>
       
-      <div className="mt-8 text-[var(--text-secondary)]">
+      <div className="mt-8 text-[var(--text-light-secondary)]">
         <p>This is the main admin dashboard page.</p>
       </div>
     </>

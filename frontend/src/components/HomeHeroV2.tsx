@@ -177,7 +177,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
           {(phoneNumber || mobileNumber) && (
             <a
               href={`tel:${phoneNumber || mobileNumber}`}
-              className="inline-flex items-center gap-2.5 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold text-sm uppercase tracking-wide px-5 py-3 mb-3 transition-colors duration-200 w-full sm:w-auto justify-center lg:justify-start"
+              className="inline-flex items-center gap-2.5 bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-5 py-3 mb-3 transition-colors duration-200 w-full sm:w-auto justify-center lg:justify-start"
             >
               <Phone className="h-4 w-4 shrink-0" />
               {phoneNumber && mobileNumber ? `${phoneNumber} / ${mobileNumber}` : (phoneNumber || mobileNumber)}
@@ -223,7 +223,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             </div>
           </Link>
         ) : (
-          <div className="flex-1 min-h-[200px] flex items-center justify-center bg-stone-800 text-stone-500 text-sm p-4 text-center">
+          <div className="flex-1 min-h-[200px] flex items-center justify-center bg-stone-800 text-[var(--text-dark-secondary)] text-sm p-4 text-center">
             Could not load images.
           </div>
         )}
@@ -258,7 +258,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             </div>
           </Link>
         ) : (
-          <div className="flex-1 min-h-[300px] flex items-center justify-center bg-stone-800 text-stone-500 text-sm p-4 text-center">
+          <div className="flex-1 min-h-[300px] flex items-center justify-center bg-stone-800 text-[var(--text-dark-secondary)] text-sm p-4 text-center">
             Could not load images.
           </div>
         )}
@@ -278,7 +278,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
           </div>
           <Link
             to="/booking"
-            className="shrink-0 inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
+            className="shrink-0 inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
           >
             Book Online
             <ArrowRight className="h-4 w-4" />

@@ -124,7 +124,7 @@ const ReviewCarousel = () => {
                         {initial}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-900 leading-tight">{review.author_name}</p>
+                        <p className="text-sm font-semibold text-[var(--text-dark-primary)] leading-tight">{review.author_name}</p>
                       </div>
                     </div>
                     <GoogleG size={18} />
@@ -138,7 +138,7 @@ const ReviewCarousel = () => {
                   </div>
 
                   {/* Review text */}
-                  <p className="text-sm text-gray-700 leading-relaxed">{truncatedText}</p>
+                  <p className="text-sm text-[var(--text-dark-secondary)] leading-relaxed">{truncatedText}</p>
                 </a>
               );
             })}

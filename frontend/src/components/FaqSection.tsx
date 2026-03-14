@@ -44,7 +44,7 @@ export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
       {generateJsonLd()}
       <div className="py-8 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-[var(--text-primary)] mb-8">{title}</h2>
+          <h2 className="text-4xl font-bold text-center text-[var(--text-light-primary)] mb-8">{title}</h2>
           <div className="flex flex-col items-center gap-4">
             {faqData.map((faq, index) => (
               <div key={index} className="w-full md:w-2/3 lg:w-2/3">
@@ -56,7 +56,7 @@ export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
                     >
                       <h3 className="text-xl font-semibold text-black">{faq.question}</h3>
                       <ChevronDown
-                        className={`h-6 w-6 text-gray-500 transition-transform duration-300 ${openIndex === index ? 'transform rotate-180' : ''
+                        className={`h-6 w-6 text-[var(--text-dark-secondary)] transition-transform duration-300 ${openIndex === index ? 'transform rotate-180' : ''
                           }`}
                       />
                     </div>
@@ -66,7 +66,7 @@ export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
                       }`}
                     >
                       <div className="px-6 pb-6 pt-2">
-                        <p className="text-gray-700 text-lg">{faq.answer}</p>
+                        <p className="text-[var(--text-dark-secondary)] text-lg">{faq.answer}</p>
                       </div>
                     </div>
                   </CardContent>

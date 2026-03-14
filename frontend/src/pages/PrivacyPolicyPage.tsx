@@ -9,8 +9,8 @@ const PrivacyPolicyPage = () => {
         canonicalPath="/privacy"
       />
       <div className="container mx-auto p-4 py-8">
-        <h1 className="text-4xl font-bold mb-6 text-[var(--text-primary)]">Privacy Policy</h1>
-        <div className="prose max-w-none text-[var(--text-primary)]">
+        <h1 className="text-4xl font-bold mb-6 text-[var(--text-light-primary)]">Privacy Policy</h1>
+        <div className="prose max-w-none text-[var(--text-light-primary)]">
           <p>
             This privacy policy sets out how we uses and protects any information that you give us when you use this website.
           </p>

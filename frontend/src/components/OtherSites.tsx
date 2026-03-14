@@ -7,7 +7,7 @@ import type { OtherSitesProps } from '@/types/OtherSitesProps';
 const OtherSites = ({ sites }: OtherSitesProps) => {
     return (
         <div className="container mx-auto py-6">
-            <h2 className="text-3xl font-bold text-center text-[var(--text-primary)] mb-8">
+            <h2 className="text-3xl font-bold text-center text-[var(--text-light-primary)] mb-8">
                 Liked this site? Check out some of our others!
             </h2>
             <div className="flex justify-center">
@@ -26,7 +26,7 @@ const OtherSites = ({ sites }: OtherSitesProps) => {
                                 <CardDescription className="flex-grow mb-6">{site.description}</CardDescription>
                                 <div className="mt-auto flex justify-end">
                                     <a href={site.url} target="_blank" rel="noopener noreferrer">
-                                        <Button className="bg-primary text-[var(--text-primary)] font-bold px-4 py-2 text-sm hover:bg-primary/90 flex items-center gap-2">
+                                        <Button className="bg-primary text-[var(--text-light-primary)] font-bold px-4 py-2 text-sm hover:bg-primary/90 flex items-center gap-2">
                                             Visit Site <ArrowRight className="h-4 w-4" />
                                         </Button>
                                     </a>

@@ -50,47 +50,47 @@ const CheckoutSuccessPage = () => {
   return (
     <>
       <Seo title="Order Confirmed | Scooter Shop" noindex={true} />
-      <div className="bg-white text-stone-900 min-h-screen">
+      <div className="bg-white text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-12 max-w-2xl">
 
           {/* Header */}
           <div className="text-center mb-10">
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h1 className="text-3xl font-black text-stone-900 uppercase tracking-wide mb-2">Order Confirmed</h1>
-            <p className="text-stone-500 text-sm">A confirmation email will be sent to {order.customer_email}.</p>
+            <h1 className="text-3xl font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-2">Order Confirmed</h1>
+            <p className="text-[var(--text-dark-secondary)] text-sm">A confirmation email will be sent to {order.customer_email}.</p>
           </div>
 
           {/* Order reference */}
           <div className="bg-stone-50 border border-stone-200 rounded-lg p-5 mb-6 text-center">
-            <p className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-1">Order Reference</p>
-            <p className="text-2xl font-black text-stone-900 font-mono tracking-wider">{order.order_reference}</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-1">Order Reference</p>
+            <p className="text-2xl font-black text-[var(--text-dark-primary)] font-mono tracking-wider">{order.order_reference}</p>
             <p className="text-xs text-stone-400 mt-1">Keep this for your records</p>
           </div>
 
           {/* Order details */}
           <div className="bg-white border border-stone-200 rounded-lg divide-y divide-stone-100 mb-8">
             <div className="p-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-2">Product</p>
-              <p className="font-bold text-stone-900">{order.product_name}</p>
-              <p className="text-stone-600 text-sm">
+              <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-2">Product</p>
+              <p className="font-bold text-[var(--text-dark-primary)]">{order.product_name}</p>
+              <p className="text-[var(--text-dark-secondary)] text-sm">
                 ${parseFloat(displayPrice).toLocaleString()} incl. GST &middot; Free delivery Australia-wide
               </p>
             </div>
             <div className="p-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-2">Delivery Address</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-2">Delivery Address</p>
               <p className="text-stone-700 text-sm">{order.customer_name}</p>
               <p className="text-stone-700 text-sm">{order.address_line1}</p>
               {order.address_line2 && <p className="text-stone-700 text-sm">{order.address_line2}</p>}
               <p className="text-stone-700 text-sm">{order.suburb} {order.state} {order.postcode}</p>
             </div>
             <div className="p-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-2">Contact</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-2">Contact</p>
               <p className="text-stone-700 text-sm">{order.customer_email}</p>
               {order.customer_phone && <p className="text-stone-700 text-sm">{order.customer_phone}</p>}
             </div>
           </div>
 
-          <Link to="/escooters" className="text-sm text-stone-500 hover:text-stone-900 underline underline-offset-2">
+          <Link to="/escooters" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
             ← Back to E-Scooters
           </Link>
 

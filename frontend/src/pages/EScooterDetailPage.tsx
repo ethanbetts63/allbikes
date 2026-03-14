@@ -65,7 +65,7 @@ const EScooterDetailPage = () => {
     const mainImageUrl = selectedImage?.medium || selectedImage?.image;
 
     return (
-        <div className="bg-white text-stone-900">
+        <div className="bg-white text-[var(--text-dark-primary)]">
             <Seo
                 title={`${product.name} | Scooter Shop`}
                 description={product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`}
@@ -77,7 +77,7 @@ const EScooterDetailPage = () => {
 
                 {/* Title + badges */}
                 <div className="mb-6 pt-4">
-                    <h1 className="text-3xl md:text-4xl font-black text-stone-900 leading-tight mb-3">
+                    <h1 className="text-3xl md:text-4xl font-black text-[var(--text-dark-primary)] leading-tight mb-3">
                         {product.name}
                     </h1>
                     <div className="flex flex-wrap items-center gap-2">
@@ -155,18 +155,18 @@ const EScooterDetailPage = () => {
                                     </span>
                                 </div>
                             ) : (
-                                <span className="text-4xl font-semibold text-stone-900">
+                                <span className="text-4xl font-semibold text-[var(--text-dark-primary)]">
                                     ${parseFloat(product.price).toLocaleString()}
                                 </span>
                             )}
-                            <p className="text-sm text-stone-600 mt-1">Price includes GST · Free delivery Australia-wide</p>
+                            <p className="text-sm text-[var(--text-dark-secondary)] mt-1">Price includes GST · Free delivery Australia-wide</p>
                         </div>
 
                         {/* Description */}
                         {product.description && (
                             <div className="mb-8">
-                                <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Description</h2>
-                                <p className="text-stone-600 leading-relaxed text-sm whitespace-pre-line">
+                                <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Description</h2>
+                                <p className="text-[var(--text-dark-secondary)] leading-relaxed text-sm whitespace-pre-line">
                                     {product.description}
                                 </p>
                             </div>
@@ -177,12 +177,12 @@ const EScooterDetailPage = () => {
                             <button
                                 disabled={!product.in_stock}
                                 onClick={() => navigate(`/checkout/${product.slug}`)}
-                                className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-stone-900"
+                                className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-[var(--text-dark-primary)]"
                             >
                                 {product.in_stock ? 'Buy Now' : 'Out of Stock'}
                             </button>
 
-                            <div className="text-sm text-stone-500 space-y-1 pt-1">
+                            <div className="text-sm text-[var(--text-dark-secondary)] space-y-1 pt-1">
                                 <p>✓ Order confirmation sent to your email</p>
                                 <p>✓ Free delivery Australia-wide</p>
                             </div>
@@ -199,7 +199,7 @@ const EScooterDetailPage = () => {
             <div className="container mx-auto px-4 lg:px-8 pb-12">
                 <Link
                     to="/escooters"
-                    className="text-sm text-stone-500 hover:text-stone-900 underline underline-offset-2"
+                    className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"
                 >
                     ← Back to E-Scooters
                 </Link>

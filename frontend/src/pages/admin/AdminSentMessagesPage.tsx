@@ -57,7 +57,7 @@ const AdminSentMessagesPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4 text-[var(--text-primary)]">Sent Messages</h1>
+      <h1 className="text-2xl font-bold mb-4 text-[var(--text-light-primary)]">Sent Messages</h1>
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -67,7 +67,7 @@ const AdminSentMessagesPage = () => {
 
       <div className="w-full bg-white text-black p-4 rounded-lg">
         {isLoading ? (
-          <p className="text-center text-gray-500 py-8">Loading messages...</p>
+          <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading messages...</p>
         ) : (
           <>
             <div className="rounded-md border border-gray-300">
@@ -95,7 +95,7 @@ const AdminSentMessagesPage = () => {
                         <TableCell className="text-black text-sm font-mono">{msg.to}</TableCell>
                         <TableCell className="text-black text-sm max-w-xs truncate">{msg.subject || '—'}</TableCell>
                         <TableCell>
-                          <Badge variant="outline" className={STATUS_BADGE[msg.status] ?? 'text-gray-500 border-gray-400'}>
+                          <Badge variant="outline" className={STATUS_BADGE[msg.status] ?? 'text-[var(--text-dark-secondary)] border-gray-400'}>
                             {msg.status}
                           </Badge>
                         </TableCell>
@@ -118,7 +118,7 @@ const AdminSentMessagesPage = () => {
             </div>
 
             <div className="flex items-center justify-between mt-3">
-              <span className="text-sm text-gray-500">{totalCount} message{totalCount !== 1 ? 's' : ''} total</span>
+              <span className="text-sm text-[var(--text-dark-secondary)]">{totalCount} message{totalCount !== 1 ? 's' : ''} total</span>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={!hasPrev}>
                   Previous

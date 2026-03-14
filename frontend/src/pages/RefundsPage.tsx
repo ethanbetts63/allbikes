@@ -31,8 +31,8 @@ const RefundsPage = () => {
         <section className="mb-8">
           <div className="bg-white border border-stone-200 rounded-lg shadow-sm p-6 space-y-6">
             <div>
-              <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Our Policy</h2>
-              <p className="text-stone-600 text-sm leading-relaxed mb-3">
+              <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Our Policy</h2>
+              <p className="text-[var(--text-dark-secondary)] text-sm leading-relaxed mb-3">
                 All e-scooter purchases are covered by our returns and refunds policy, which is set out in full in our{' '}
                 <Link to="/terms" className="text-amber-500 hover:underline font-semibold">
                   Terms and Conditions
@@ -42,8 +42,8 @@ const RefundsPage = () => {
             </div>
 
             <div className="border-t border-stone-100 pt-6">
-              <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">How to Request a Return or Refund</h2>
-              <ol className="list-decimal list-inside space-y-2 text-stone-600 text-sm">
+              <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">How to Request a Return or Refund</h2>
+              <ol className="list-decimal list-inside space-y-2 text-[var(--text-dark-secondary)] text-sm">
                 <li>Locate your order reference number — it starts with <span className="font-mono font-semibold text-stone-800">SS-</span> and was included in your confirmation email.</li>
                 <li>Email or call us using the contact details below.</li>
                 <li>Include your order reference, a description of the issue, and photos if the item is damaged or faulty.</li>
@@ -56,12 +56,12 @@ const RefundsPage = () => {
         {/* Contact */}
         <section className="mb-8">
           <div className="bg-white border border-stone-200 rounded-lg shadow-sm p-6 space-y-4">
-            <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Contact Us</h2>
+            <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Contact Us</h2>
             {siteSettings.email_address && (
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-amber-400 shrink-0" />
                 <div>
-                  <p className="text-xs text-stone-500 uppercase tracking-widest font-bold mb-0.5">Email</p>
+                  <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Email</p>
                   <a
                     href={`mailto:${siteSettings.email_address}`}
                     className="text-sm font-semibold text-stone-700 hover:text-amber-500 transition-colors"
@@ -75,7 +75,7 @@ const RefundsPage = () => {
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-amber-400 shrink-0" />
                 <div>
-                  <p className="text-xs text-stone-500 uppercase tracking-widest font-bold mb-0.5">Phone</p>
+                  <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Phone</p>
                   <a
                     href={`tel:${primaryPhone}`}
                     className="text-sm font-semibold text-stone-700 hover:text-amber-500 transition-colors"
@@ -85,7 +85,7 @@ const RefundsPage = () => {
                 </div>
               </div>
             )}
-            <p className="text-xs text-stone-500 pt-2 border-t border-stone-100">
+            <p className="text-xs text-[var(--text-dark-secondary)] pt-2 border-t border-stone-100">
               Prefer to visit in person?{' '}
               <Link to="/contact" className="text-amber-500 hover:underline font-semibold">
                 See our location and opening hours

@@ -25,7 +25,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           </span>
         )}
         {bike.status === 'reserved' && (
-          <span className="absolute top-2.5 left-2.5 z-10 bg-amber-500 text-stone-900 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+          <span className="absolute top-2.5 left-2.5 z-10 bg-amber-500 text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
             Reserved
           </span>
         )}
@@ -40,8 +40,8 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           />
         </div>
         <div className="px-3 py-2.5 flex flex-col flex-1 gap-1.5">
-          <h3 className="text-base font-bold text-stone-900 leading-snug">{cardTitle}</h3>
-          <div className="flex items-center gap-3 text-sm text-stone-500">
+          <h3 className="text-base font-bold text-[var(--text-dark-primary)] leading-snug">{cardTitle}</h3>
+          <div className="flex items-center gap-3 text-sm text-[var(--text-dark-secondary)]">
             {bike.engine_size && (
               <span className="flex items-center gap-1">
                 <Wrench className="h-3.5 w-3.5" />
@@ -58,7 +58,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           <div className="mt-auto pt-1">
             {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
               <div className="flex items-baseline gap-2">
-                <span className="text-stone-500 line-through text-sm">
+                <span className="text-[var(--text-dark-secondary)] line-through text-sm">
                   ${parseFloat(bike.price).toLocaleString()}
                 </span>
                 <span className="text-amber-400 font-black text-xl">
@@ -66,7 +66,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
                 </span>
               </div>
             ) : (
-              <span className="text-stone-900 font-black text-xl">
+              <span className="text-[var(--text-dark-primary)] font-black text-xl">
                 ${parseFloat(bike.price).toLocaleString()}
               </span>
             )}

@@ -132,14 +132,14 @@ const AdminSentMessageDetailPage = () => {
                 title="Email HTML preview"
               />
             ) : (
-              <pre className="whitespace-pre-wrap text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded p-4 font-mono">
+              <pre className="whitespace-pre-wrap text-sm text-[var(--text-dark-secondary)] bg-gray-50 border border-gray-200 rounded p-4 font-mono">
                 {message.body_text}
               </pre>
             )}
           </div>
         )}
 
-        <Link to="/dashboard/messages" className="text-sm text-gray-500 hover:text-black underline underline-offset-2">
+        <Link to="/dashboard/messages" className="text-sm text-[var(--text-dark-secondary)] hover:text-black underline underline-offset-2">
           ← Back to Messages
         </Link>
 

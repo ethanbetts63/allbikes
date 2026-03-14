@@ -71,11 +71,11 @@ const AdminServiceBookingDetailPage = () => {
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
           <div>
             <h1 className="text-2xl font-bold text-black mb-1">{log.customer_name}</h1>
-            <Badge variant="outline" className={STATUS_BADGE[log.status] ?? 'text-gray-500 border-gray-400'}>
+            <Badge variant="outline" className={STATUS_BADGE[log.status] ?? 'text-[var(--text-dark-secondary)] border-gray-400'}>
               {log.status}
             </Badge>
           </div>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-[var(--text-dark-secondary)]">
             {new Date(log.created_at).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
           </span>
         </div>
@@ -126,7 +126,7 @@ const AdminServiceBookingDetailPage = () => {
           </div>
         </div>
 
-        <Link to="/dashboard/service-bookings" className="text-sm text-gray-500 hover:text-black underline underline-offset-2">
+        <Link to="/dashboard/service-bookings" className="text-sm text-[var(--text-dark-secondary)] hover:text-black underline underline-offset-2">
           ← Back to Service Bookings
         </Link>
 

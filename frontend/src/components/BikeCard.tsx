@@ -45,15 +45,15 @@ const BikeCard = ({ bike }: BikeCardProps) => {
         {/* Body */}
         <div className="px-3.5 py-3 flex flex-col gap-2 flex-1">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-stone-600 mb-0.5">{bike.make}</p>
-            <h3 className="text-base font-bold text-stone-900 leading-snug">
-              {bike.year && <span className="text-stone-600 font-normal">{bike.year} </span>}
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{bike.make}</p>
+            <h3 className="text-base font-bold text-[var(--text-dark-primary)] leading-snug">
+              {bike.year && <span className="text-[var(--text-dark-secondary)] font-normal">{bike.year} </span>}
               {bike.model}
             </h3>
           </div>
 
           {/* Specs */}
-          <div className="flex items-center gap-3 text-sm text-stone-500">
+          <div className="flex items-center gap-3 text-sm text-[var(--text-dark-secondary)]">
             {bike.odometer > 0 && (
               <span className="flex items-center gap-1">
                 <Gauge className="h-3.5 w-3.5" />
@@ -76,7 +76,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
 
           {/* Warranty */}
           {bike.condition === 'new' && (
-            <p className="text-xs text-stone-600">
+            <p className="text-xs text-[var(--text-dark-secondary)]">
               {bike.warranty_months && bike.warranty_months > 0
                 ? `3 months rego · ${bike.warranty_months} months warranty`
                 : '3 months rego included'}
@@ -87,7 +87,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
           <div className="mt-auto pt-1">
             {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
               <div className="flex items-baseline gap-2">
-                <span className="text-stone-500 line-through text-sm">
+                <span className="text-[var(--text-dark-secondary)] line-through text-sm">
                   ${parseFloat(bike.price).toLocaleString()}
                 </span>
                 <span className="text-amber-400 font-black text-xl">
@@ -95,7 +95,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
                 </span>
               </div>
             ) : (
-              <span className="text-stone-900 font-black text-xl">
+              <span className="text-[var(--text-dark-primary)] font-black text-xl">
                 ${parseFloat(bike.price).toLocaleString()}
               </span>
             )}

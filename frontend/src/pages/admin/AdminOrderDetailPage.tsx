@@ -20,7 +20,7 @@ const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   pending_payment: { label: 'Pending Payment', className: 'border-amber-500 text-amber-600' },
   paid:            { label: 'Paid',            className: 'border-green-600 text-green-700' },
   dispatched:      { label: 'Dispatched',      className: 'border-blue-500 text-blue-600' },
-  delivered:       { label: 'Delivered',       className: 'text-gray-500 border-gray-400' },
+  delivered:       { label: 'Delivered',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },
   cancelled:       { label: 'Cancelled',       className: 'border-red-500 text-red-600' },
   refunded:        { label: 'Refunded',        className: 'border-orange-500 text-orange-600' },
 };
@@ -148,7 +148,7 @@ const AdminOrderDetailPage = () => {
           <Row label="Address" value={address} />
         </div>
 
-        <Link to="/dashboard/orders" className="text-sm text-gray-500 hover:text-black underline underline-offset-2">
+        <Link to="/dashboard/orders" className="text-sm text-[var(--text-dark-secondary)] hover:text-black underline underline-offset-2">
           ← Back to Orders
         </Link>
 

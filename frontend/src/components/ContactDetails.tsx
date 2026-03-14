@@ -27,9 +27,9 @@ const ContactDetails = () => {
                 <div className="bg-white border border-stone-200 rounded-lg shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <MapPin className="h-5 w-5 text-amber-400 shrink-0" />
-                        <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide">Our Location</h2>
+                        <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide">Our Location</h2>
                     </div>
-                    <p className="text-stone-600 text-sm mb-4">{fullAddress}</p>
+                    <p className="text-[var(--text-dark-secondary)] text-sm mb-4">{fullAddress}</p>
                     <div className="space-y-3">
                         {primaryPhone && (
                             <div className="flex items-center gap-2.5">
@@ -54,7 +54,7 @@ const ContactDetails = () => {
                 <div className="bg-white border border-stone-200 rounded-lg shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <Clock className="h-5 w-5 text-amber-400 shrink-0" />
-                        <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide">Opening Hours</h2>
+                        <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide">Opening Hours</h2>
                     </div>
                     <ul className="divide-y divide-stone-100">
                         {days.map(({ label, key }) => {
@@ -62,8 +62,8 @@ const ContactDetails = () => {
                             const closed = hours.toLowerCase() === 'closed';
                             return (
                                 <li key={label} className="flex justify-between items-center py-2 text-sm">
-                                    <span className="text-stone-500 font-medium">{label}</span>
-                                    <span className={closed ? 'text-stone-400' : 'text-stone-900 font-semibold'}>
+                                    <span className="text-[var(--text-dark-secondary)] font-medium">{label}</span>
+                                    <span className={closed ? 'text-stone-400' : 'text-[var(--text-dark-primary)] font-semibold'}>
                                         {hours}
                                     </span>
                                 </li>

@@ -63,7 +63,7 @@ const ProcessingInner = () => {
   return (
     <div className="flex flex-col justify-center items-center h-screen gap-4 bg-white">
       <Spinner className="h-12 w-12" />
-      <p className="text-stone-600 text-sm">Confirming your payment&hellip;</p>
+      <p className="text-[var(--text-dark-secondary)] text-sm">Confirming your payment&hellip;</p>
     </div>
   );
 };

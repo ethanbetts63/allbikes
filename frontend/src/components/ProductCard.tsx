@@ -47,13 +47,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="px-3.5 py-3 flex flex-col gap-2 flex-1">
           <div>
             {product.brand && (
-              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-600 mb-0.5">{product.brand}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{product.brand}</p>
             )}
-            <h3 className="text-base font-bold text-stone-900 leading-snug">{product.name}</h3>
+            <h3 className="text-base font-bold text-[var(--text-dark-primary)] leading-snug">{product.name}</h3>
           </div>
 
           {/* Free delivery */}
-          <p className="flex items-center gap-1 text-xs text-stone-500">
+          <p className="flex items-center gap-1 text-xs text-[var(--text-dark-secondary)]">
             <Truck className="h-3.5 w-3.5" />
             Free delivery Australia-wide
           </p>
@@ -62,7 +62,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <div className="mt-auto pt-1">
             {product.discount_price && parseFloat(product.discount_price) > 0 ? (
               <div className="flex items-baseline gap-2">
-                <span className="text-stone-500 line-through text-sm">
+                <span className="text-[var(--text-dark-secondary)] line-through text-sm">
                   ${parseFloat(product.price).toLocaleString()}
                 </span>
                 <span className="text-amber-400 font-black text-xl">
@@ -70,11 +70,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </span>
               </div>
             ) : (
-              <span className="text-stone-900 font-black text-xl">
+              <span className="text-[var(--text-dark-primary)] font-black text-xl">
                 ${parseFloat(product.price).toLocaleString()}
               </span>
             )}
-            <span className="text-xs text-stone-500">incl. GST</span>
+            <span className="text-xs text-[var(--text-dark-secondary)]">incl. GST</span>
           </div>
         </div>
 

@@ -31,7 +31,7 @@ const ServiceCTAV2 = () => {
                         <Link to="/booking">
                             <Button
                                 size="lg"
-                                className="bg-amber-400 hover:bg-amber-300 text-stone-900 font-bold px-8 text-base group"
+                                className="bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold px-8 text-base group"
                             >
                                 Book Online
                                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -41,7 +41,7 @@ const ServiceCTAV2 = () => {
 
                     {/* Right — service checklist */}
                     <div className="lg:border-l lg:border-stone-700 lg:pl-16">
-                        <p className="text-stone-500 text-xs font-bold uppercase tracking-widest mb-8">
+                        <p className="text-[var(--text-dark-secondary)] text-xs font-bold uppercase tracking-widest mb-8">
                             What we do
                         </p>
                         <ul className="space-y-5">

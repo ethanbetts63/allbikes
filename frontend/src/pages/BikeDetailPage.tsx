@@ -210,13 +210,13 @@ const BikeDetailPage = () => {
     }
 
     if (!bike) {
-        return <p className="text-center mt-8 text-stone-600">Bike not found.</p>;
+        return <p className="text-center mt-8 text-[var(--text-dark-secondary)]">Bike not found.</p>;
     }
 
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
     return (
-        <div className="bg-white text-stone-900">
+        <div className="bg-white text-[var(--text-dark-primary)]">
             <Seo
                 title={`${pageTitle} | Allbikes`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes & Scooters, Perth's most experienced motorcycle and scooter dealership.`}
@@ -230,7 +230,7 @@ const BikeDetailPage = () => {
 
                 {/* Title + badges */}
                 <div className="mb-6 pt-4">
-                    <h1 className="text-3xl md:text-4xl font-black text-stone-900 leading-tight mb-3">{cardTitle}</h1>
+                    <h1 className="text-3xl md:text-4xl font-black text-[var(--text-dark-primary)] leading-tight mb-3">{cardTitle}</h1>
                     <div className="flex flex-wrap items-center gap-2">
                         {/* Condition */}
                         <span className="bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
@@ -254,7 +254,7 @@ const BikeDetailPage = () => {
                         )}
                     </div>
                     {bike.status === 'available_soon' && (
-                        <p className="mt-3 text-sm text-stone-600 max-w-lg">
+                        <p className="mt-3 text-sm text-[var(--text-dark-secondary)] max-w-lg">
                             This bike is currently being inspected by our mechanic. It's not quite ready for sale yet — if you're interested feel free to{' '}
                             <Link to="/contact" className="text-amber-500 underline hover:text-amber-600">get in touch</Link> and we'll keep you in the loop.
                         </p>
@@ -323,12 +323,12 @@ const BikeDetailPage = () => {
                                     </span>
                                 </div>
                             ) : (
-                                <span className="text-4xl font-semibold text-stone-900">
+                                <span className="text-4xl font-semibold text-[var(--text-dark-primary)]">
                                     ${parseFloat(bike.price).toLocaleString()}
                                 </span>
                             )}
                             {bike.condition === 'new' && (
-                                <p className="text-sm text-stone-600 mt-1">
+                                <p className="text-sm text-[var(--text-dark-secondary)] mt-1">
                                     {bike.warranty_months && bike.warranty_months > 0
                                         ? `Includes 3 months rego & ${bike.warranty_months} months warranty`
                                         : 'Includes 3 months rego'}
@@ -338,7 +338,7 @@ const BikeDetailPage = () => {
 
                         {/* Specifications */}
                         <div className="mb-8">
-                            <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Specifications</h2>
+                            <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Specifications</h2>
                             <ul className="divide-y divide-stone-100">
                                 {specifications.map((spec) => {
                                     if (spec.value === null || spec.value === undefined || spec.value === '') return null;
@@ -347,7 +347,7 @@ const BikeDetailPage = () => {
                                         <li key={spec.label} className="flex justify-between items-center py-2.5">
                                             <TooltipProvider>
                                                 <Tooltip>
-                                                    <TooltipTrigger className="flex items-center gap-2 text-stone-500">
+                                                    <TooltipTrigger className="flex items-center gap-2 text-[var(--text-dark-secondary)]">
                                                         <spec.icon className="h-4 w-4" />
                                                         <span className="text-sm">{spec.label}</span>
                                                     </TooltipTrigger>
@@ -356,7 +356,7 @@ const BikeDetailPage = () => {
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </TooltipProvider>
-                                            <span className="text-stone-900 font-semibold text-sm">{displayValue}</span>
+                                            <span className="text-[var(--text-dark-primary)] font-semibold text-sm">{displayValue}</span>
                                         </li>
                                     );
                                 })}
@@ -365,8 +365,8 @@ const BikeDetailPage = () => {
 
                         {/* Description */}
                         <div>
-                            <h2 className="text-lg font-black text-stone-900 uppercase tracking-wide mb-3">Description</h2>
-                            <p className="text-stone-600 leading-relaxed text-sm">
+                            <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Description</h2>
+                            <p className="text-[var(--text-dark-secondary)] leading-relaxed text-sm">
                                 {bike.description || 'No description available.'}
                             </p>
                         </div>

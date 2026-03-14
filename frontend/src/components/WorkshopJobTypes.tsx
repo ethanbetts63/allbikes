@@ -14,17 +14,17 @@ const SkeletonLoader = () => (
 
 const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, buttonText }: WorkshopJobTypesProps) => {
   return (
-    <div className="w-full flex flex-col md:flex-row bg-background text-[var(--text-primary)] rounded-lg overflow-hidden">
+    <div className="w-full flex flex-col md:flex-row bg-background text-[var(--text-light-primary)] rounded-lg overflow-hidden">
       {/* Left Column */}
       <div className="md:w-1/2 flex flex-col items-start justify-center p-8 md:p-12">
         <h2 className="text-4xl font-extrabold mb-6 leading-tight">
           {title}
         </h2>
-        <p className="text-lg text-[var(--text-secondary)] leading-relaxed max-w-prose mb-10">
+        <p className="text-lg text-[var(--text-light-secondary)] leading-relaxed max-w-prose mb-10">
           {paragraph}
         </p>
         <Link to="/booking">
-          <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
+          <Button className="bg-primary text-[var(--text-light-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
             {buttonText} <ArrowRight className="h-5" />
           </Button>
         </Link>
@@ -48,7 +48,7 @@ const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, button
                 <Cog className="h-8 w-8 text-primary flex-shrink-0" />
                 <div>
                     <h3 className="text-xl font-bold mb-2">No Services Currently Listed</h3>
-                    <p className="text-[var(--text-secondary)]">
+                    <p className="text-[var(--text-light-secondary)]">
                         Please check back again later or contact us directly for booking inquiries.
                     </p>
                 </div>
@@ -58,8 +58,8 @@ const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, button
               <div key={job.name} className="bg-foreground p-6 rounded-lg shadow-md flex items-center gap-4">
                 <Cog className="h-8 w-8 text-primary flex-shrink-0" />
                 <div>
-                    <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">{job.name}</h3>
-                    <p className="text-[var(--text-secondary)]">
+                    <h3 className="text-xl font-bold mb-2 text-[var(--text-light-primary)]">{job.name}</h3>
+                    <p className="text-[var(--text-light-secondary)]">
                       {job.description}
                     </p>
                 </div>

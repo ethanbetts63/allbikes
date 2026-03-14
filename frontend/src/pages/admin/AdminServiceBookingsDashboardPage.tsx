@@ -60,7 +60,7 @@ const AdminServiceBookingsDashboardPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4 text-[var(--text-primary)]">Service Bookings</h1>
+      <h1 className="text-2xl font-bold mb-4 text-[var(--text-light-primary)]">Service Bookings</h1>
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -87,7 +87,7 @@ const AdminServiceBookingsDashboardPage = () => {
         </div>
 
         {isLoading ? (
-          <p className="text-center text-gray-500 py-8">Loading...</p>
+          <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading...</p>
         ) : (
           <>
             <div className="rounded-md border border-gray-300">
@@ -110,13 +110,13 @@ const AdminServiceBookingsDashboardPage = () => {
                       >
                         <TableCell className="text-black">
                           <div className="font-medium">{log.customer_name}</div>
-                          <div className="text-gray-500 text-xs">{log.customer_email}</div>
+                          <div className="text-[var(--text-dark-secondary)] text-xs">{log.customer_email}</div>
                         </TableCell>
                         <TableCell className="text-black text-sm font-mono">
                           {log.vehicle_registration ?? '—'}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className={STATUS_BADGE[log.status] ?? 'text-gray-500 border-gray-400'}>
+                          <Badge variant="outline" className={STATUS_BADGE[log.status] ?? 'text-[var(--text-dark-secondary)] border-gray-400'}>
                             {log.status}
                           </Badge>
                         </TableCell>
@@ -137,7 +137,7 @@ const AdminServiceBookingsDashboardPage = () => {
             </div>
 
             <div className="flex items-center justify-between mt-3">
-              <span className="text-sm text-gray-500">{totalCount} booking{totalCount !== 1 ? 's' : ''} total</span>
+              <span className="text-sm text-[var(--text-dark-secondary)]">{totalCount} booking{totalCount !== 1 ? 's' : ''} total</span>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={!hasPrev} className="text-black border-gray-300">
                   Previous

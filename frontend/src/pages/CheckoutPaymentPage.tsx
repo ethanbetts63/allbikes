@@ -73,7 +73,7 @@ const PaymentForm = ({ orderReference, productSlug }: PaymentFormProps) => {
       <button
         type="submit"
         disabled={isSubmitting || !stripe || !elements}
-        className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-stone-900"
+        className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-[var(--text-dark-primary)]"
       >
         {isSubmitting ? 'Processing...' : 'Pay Now'}
       </button>
@@ -135,7 +135,7 @@ const CheckoutPaymentPage = () => {
   return (
     <>
       <Seo title="Payment | Scooter Shop" noindex={true} />
-      <div className="bg-white text-stone-900 min-h-screen">
+      <div className="bg-white text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
 
           {/* Product summary */}
@@ -146,18 +146,18 @@ const CheckoutPaymentPage = () => {
               )}
               <div className="flex-1 min-w-0">
                 {product.brand && (
-                  <p className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-0.5">{product.brand}</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{product.brand}</p>
                 )}
-                <p className="font-bold text-stone-900 truncate">{product.name}</p>
-                <p className="text-sm text-stone-600">
+                <p className="font-bold text-[var(--text-dark-primary)] truncate">{product.name}</p>
+                <p className="text-sm text-[var(--text-dark-secondary)]">
                   ${parseFloat(displayPrice).toLocaleString()} incl. GST &middot; Free delivery Australia-wide
                 </p>
               </div>
             </div>
           )}
 
-          <h1 className="text-2xl font-black text-stone-900 uppercase tracking-wide mb-6">Payment</h1>
-          <p className="text-sm text-stone-500 mb-6">Order reference: <span className="font-mono font-semibold text-stone-900">{state.orderReference}</span></p>
+          <h1 className="text-2xl font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-6">Payment</h1>
+          <p className="text-sm text-[var(--text-dark-secondary)] mb-6">Order reference: <span className="font-mono font-semibold text-[var(--text-dark-primary)]">{state.orderReference}</span></p>
 
           <Elements stripe={stripePromise} options={elementsOptions}>
             <PaymentForm orderReference={state.orderReference} productSlug={productSlug!} />

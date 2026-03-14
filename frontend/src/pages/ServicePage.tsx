@@ -108,21 +108,21 @@ const ServicePage = () => {
             {/* Services */}
             <div className="bg-background pt-8 pb-16">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-4xl font-bold text-center text-[var(--text-primary)] mb-12">What We Do</h2>
+                    <h2 className="text-4xl font-bold text-center text-[var(--text-light-primary)] mb-12">What We Do</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {services.map(({ Icon, title, description }) => (
                             <div key={title} className="bg-foreground rounded-lg p-8 flex flex-col gap-4">
                                 <div className="flex items-center justify-center w-14 h-14 rounded-full bg-primary/20">
                                     <Icon className="h-7 w-7 text-primary" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-[var(--text-primary)]">{title}</h3>
-                                <p className="text-[var(--text-secondary)] text-lg leading-relaxed">{description}</p>
+                                <h3 className="text-2xl font-bold text-[var(--text-light-primary)]">{title}</h3>
+                                <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed">{description}</p>
                             </div>
                         ))}
                     </div>
                     <div className="text-center mt-10">
                         <Link to="/booking">
-                            <Button className="bg-primary text-[var(--text-primary)] font-bold px-8 py-5 text-lg hover:bg-primary/90 inline-flex items-center gap-2">
+                            <Button className="bg-primary text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg hover:bg-primary/90 inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>
                         </Link>
