@@ -30,6 +30,7 @@ class StaticViewSitemap(Sitemap):
             '/inventory/motorcycles/used',
             '/contact',
             '/service', 
+            '/escooters',
             '/tyre-fitting',
         ]
 

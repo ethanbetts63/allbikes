@@ -5,7 +5,7 @@ import type { Product } from '@/types/Product';
 import { getProducts } from '@/api';
 import { Spinner } from '@/components/ui/spinner';
 import Hero from '@/components/Hero';
-import SegwayImage from '@/assets/segway_1.webp';
+import SymImage from '@/assets/sym_22.webp';
 import { FaqSection } from '@/components/FaqSection';
 
 const faqData = [
@@ -60,7 +60,7 @@ const EScooterListPage = () => {
       <Hero
         title="Electric Scooters"
         description="Buy online with free delivery Australia-wide. All prices include GST and are processed securely via Stripe."
-        imageUrl={SegwayImage}
+        imageUrl={SymImage}
       />
 
       <div className="container mx-auto p-4">
