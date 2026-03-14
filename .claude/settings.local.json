@@ -9,7 +9,8 @@
       "Bash(cd C:\\\\Users\\\\ethan\\\\coding\\\\allbikes && python manage.py resize_images \"frontend/src/assets/logo.png\")",
       "Bash(grep:*)",
       "Bash(find:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(rm:*)"
     ]
   }
 }
