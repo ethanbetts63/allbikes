@@ -62,33 +62,33 @@ const AdminProductDashboardPage = () => {
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-black"
+          className="text-[var(--text-dark-primary)]"
         >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="font-medium text-black">{row.getValue('name')}</div>,
+      cell: ({ row }) => <div className="font-medium text-[var(--text-dark-primary)]">{row.getValue('name')}</div>,
     },
     {
       accessorKey: 'brand',
-      header: () => <div className="text-black">Brand</div>,
-      cell: ({ row }) => <div className="text-black">{row.getValue('brand') || '—'}</div>,
+      header: () => <div className="text-[var(--text-dark-primary)]">Brand</div>,
+      cell: ({ row }) => <div className="text-[var(--text-dark-primary)]">{row.getValue('brand') || '—'}</div>,
     },
     {
       accessorKey: 'price',
-      header: () => <div className="text-right text-black">Price</div>,
+      header: () => <div className="text-right text-[var(--text-dark-primary)]">Price</div>,
       cell: ({ row }) => {
         const formatted = new Intl.NumberFormat('en-AU', {
           style: 'currency',
           currency: 'AUD',
         }).format(parseFloat(row.getValue('price')));
-        return <div className="text-right text-black">{formatted} <span className="text-xs text-[var(--text-dark-secondary)]">incl. GST</span></div>;
+        return <div className="text-right text-[var(--text-dark-primary)]">{formatted} <span className="text-xs text-[var(--text-dark-secondary)]">incl. GST</span></div>;
       },
     },
     {
       accessorKey: 'stock_quantity',
-      header: () => <div className="text-black">Stock</div>,
+      header: () => <div className="text-[var(--text-dark-primary)]">Stock</div>,
       cell: ({ row }) => {
         const product = row.original;
         if (!product.in_stock) {
@@ -102,7 +102,7 @@ const AdminProductDashboardPage = () => {
     },
     {
       accessorKey: 'is_active',
-      header: () => <div className="text-black">Status</div>,
+      header: () => <div className="text-[var(--text-dark-primary)]">Status</div>,
       cell: ({ row }) =>
         row.getValue('is_active') ? (
           <Badge variant="outline" className="border-green-600 text-green-700">Active</Badge>
@@ -118,7 +118,7 @@ const AdminProductDashboardPage = () => {
             variant="ghost"
             size="icon"
             onClick={() => navigate(`/dashboard/products/${row.original.id}/edit`)}
-            className="text-black"
+            className="text-[var(--text-dark-primary)]"
           >
             <Pencil className="h-4 w-4" />
           </Button>
@@ -160,7 +160,7 @@ const AdminProductDashboardPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-black p-4 rounded-lg">
+      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
         {isLoading ? (
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading products...</p>
         ) : (
@@ -171,7 +171,7 @@ const AdminProductDashboardPage = () => {
                   {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id} className="border-gray-300">
                       {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id} className="text-black">
+                        <TableHead key={header.id} className="text-[var(--text-dark-primary)]">
                           {header.isPlaceholder
                             ? null
                             : flexRender(header.column.columnDef.header, header.getContext())}
@@ -185,7 +185,7 @@ const AdminProductDashboardPage = () => {
                     table.getRowModel().rows.map((row) => (
                       <TableRow key={row.id} className="border-gray-300">
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id} className="text-black">
+                          <TableCell key={cell.id} className="text-[var(--text-dark-primary)]">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </TableCell>
                         ))}
@@ -193,7 +193,7 @@ const AdminProductDashboardPage = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={columns.length} className="h-24 text-center text-black">
+                      <TableCell colSpan={columns.length} className="h-24 text-center text-[var(--text-dark-primary)]">
                         No products found. Add your first product.
                       </TableCell>
                     </TableRow>

@@ -15,12 +15,12 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => {
             {index < items.length - 1 ? (
               <Link
                 to={item.href}
-                className="inline-flex items-center text-sm font-medium text-white hover:text-grey-300"
+                className="inline-flex items-center text-sm font-medium text-[var(--text-light-primary)] hover:text-[var(--text-light-secondary)]"
               >
                 {item.name}
               </Link>
             ) : (
-              <span className="text-sm font-medium text-white">
+              <span className="text-sm font-medium text-[var(--text-light-primary)]">
                 {item.name}
               </span>
             )}

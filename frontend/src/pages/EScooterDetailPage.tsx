@@ -82,7 +82,7 @@ const EScooterDetailPage = () => {
                     </h1>
                     <div className="flex flex-wrap items-center gap-2">
                         {product.brand && (
-                            <span className="bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 {product.brand}
                             </span>
                         )}
@@ -92,7 +92,7 @@ const EScooterDetailPage = () => {
                             </span>
                         )}
                         {product.low_stock && product.in_stock && (
-                            <span className="bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Low Stock
                             </span>
                         )}
@@ -147,7 +147,7 @@ const EScooterDetailPage = () => {
                         <div className="mb-6 pb-4 border-b border-stone-200">
                             {product.discount_price && parseFloat(product.discount_price) > 0 ? (
                                 <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-semibold text-amber-400">
+                                    <span className="text-4xl font-semibold text-[var(--highlight)]">
                                         ${parseFloat(product.discount_price).toLocaleString()}
                                     </span>
                                     <span className="text-xl text-stone-400 line-through">

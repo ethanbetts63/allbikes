@@ -59,7 +59,7 @@ const RefundsPage = () => {
             <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Contact Us</h2>
             {siteSettings.email_address && (
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-amber-400 shrink-0" />
+                <Mail className="h-4 w-4 text-[var(--highlight)] shrink-0" />
                 <div>
                   <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Email</p>
                   <a
@@ -73,7 +73,7 @@ const RefundsPage = () => {
             )}
             {primaryPhone && (
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-amber-400 shrink-0" />
+                <Phone className="h-4 w-4 text-[var(--highlight)] shrink-0" />
                 <div>
                   <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Phone</p>
                   <a

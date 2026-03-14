@@ -68,19 +68,19 @@ const AdminServiceBookingsDashboardPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-black p-4 rounded-lg">
+      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
         <div className="flex items-center space-x-2 py-4">
           <Button
             variant="outline"
             onClick={() => handleFilterChange('all')}
-            className={filter === 'all' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
+            className={filter === 'all' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
           >
             All
           </Button>
           <Button
             variant="outline"
             onClick={() => handleFilterChange('failed')}
-            className={filter === 'failed' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
+            className={filter === 'failed' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
           >
             Failed
           </Button>
@@ -94,10 +94,10 @@ const AdminServiceBookingsDashboardPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="border-gray-300">
-                    <TableHead className="text-black">Customer</TableHead>
-                    <TableHead className="text-black">Vehicle Reg</TableHead>
-                    <TableHead className="text-black">Status</TableHead>
-                    <TableHead className="text-black">Date</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Customer</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Vehicle Reg</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Status</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Date</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -108,11 +108,11 @@ const AdminServiceBookingsDashboardPage = () => {
                         className="border-gray-300 cursor-pointer hover:bg-stone-50"
                         onClick={() => navigate(`/dashboard/service-bookings/${log.id}`)}
                       >
-                        <TableCell className="text-black">
+                        <TableCell className="text-[var(--text-dark-primary)]">
                           <div className="font-medium">{log.customer_name}</div>
                           <div className="text-[var(--text-dark-secondary)] text-xs">{log.customer_email}</div>
                         </TableCell>
-                        <TableCell className="text-black text-sm font-mono">
+                        <TableCell className="text-[var(--text-dark-primary)] text-sm font-mono">
                           {log.vehicle_registration ?? '—'}
                         </TableCell>
                         <TableCell>
@@ -120,14 +120,14 @@ const AdminServiceBookingsDashboardPage = () => {
                             {log.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-black text-sm">
+                        <TableCell className="text-[var(--text-dark-primary)] text-sm">
                           {new Date(log.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={4} className="h-24 text-center text-black">
+                      <TableCell colSpan={4} className="h-24 text-center text-[var(--text-dark-primary)]">
                         No booking logs found.
                       </TableCell>
                     </TableRow>
@@ -139,10 +139,10 @@ const AdminServiceBookingsDashboardPage = () => {
             <div className="flex items-center justify-between mt-3">
               <span className="text-sm text-[var(--text-dark-secondary)]">{totalCount} booking{totalCount !== 1 ? 's' : ''} total</span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={!hasPrev} className="text-black border-gray-300">
+                <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={!hasPrev} className="text-[var(--text-dark-primary)] border-gray-300">
                   Previous
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={!hasNext} className="text-black border-gray-300">
+                <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={!hasNext} className="text-[var(--text-dark-primary)] border-gray-300">
                   Next
                 </Button>
               </div>

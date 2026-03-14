@@ -36,7 +36,7 @@ const NavBar = () => {
     };
   }, [isMenuOpen]);
 
-  const NAV_LINK = 'text-white text-xs font-bold uppercase tracking-widest hover:text-amber-400 transition-colors duration-200';
+  const NAV_LINK = 'text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest hover:text-[var(--highlight)] transition-colors duration-200';
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-white/10">
@@ -76,7 +76,7 @@ const NavBar = () => {
         <button
           ref={buttonRef}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden self-center p-1.5 text-white hover:text-amber-400 transition-colors duration-200"
+          className="md:hidden self-center p-1.5 text-[var(--text-light-primary)] hover:text-[var(--highlight)] transition-colors duration-200"
           aria-label="Toggle navigation menu"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}

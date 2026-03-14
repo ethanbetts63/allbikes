@@ -27,7 +27,7 @@ const STATUS_BADGE: Record<string, { label: string; className: string }> = {
 
 const Row = ({ label, value }: { label: string; value: string }) => (
   <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
-    <span className="text-black font-semibold text-sm w-36 shrink-0">{label}</span>
+    <span className="text-[var(--text-dark-primary)] font-semibold text-sm w-36 shrink-0">{label}</span>
     <span className="text-[var(--text-dark-secondary)] text-sm text-right">{value}</span>
   </div>
 );
@@ -99,12 +99,12 @@ const AdminOrderDetailPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-black p-4 rounded-lg">
+      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
 
         {/* Header: reference, badge, status update */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
           <div>
-            <h1 className="text-2xl font-bold text-black font-mono mb-1">{order.order_reference}</h1>
+            <h1 className="text-2xl font-bold text-[var(--text-dark-primary)] font-mono mb-1">{order.order_reference}</h1>
             {badge && (
               <Badge variant="outline" className={`text-sm px-3 py-1 ${badge.className}`}>{badge.label}</Badge>
             )}
@@ -129,7 +129,7 @@ const AdminOrderDetailPage = () => {
         </div>
 
         <div className="mb-6">
-          <h2 className="text-black font-bold mb-2">Order Details</h2>
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Order Details</h2>
           <Row label="Product" value={order.product_name} />
           <Row label="Price" value={`$${parseFloat(displayPrice).toLocaleString()} incl. GST`} />
           <Row label="Placed" value={new Date(order.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })} />
@@ -137,18 +137,18 @@ const AdminOrderDetailPage = () => {
         </div>
 
         <div className="mb-6">
-          <h2 className="text-black font-bold mb-2">Customer</h2>
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Customer</h2>
           <Row label="Name" value={order.customer_name} />
           <Row label="Email" value={order.customer_email} />
           {order.customer_phone && <Row label="Phone" value={order.customer_phone} />}
         </div>
 
         <div className="mb-6">
-          <h2 className="text-black font-bold mb-2">Delivery Address</h2>
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Delivery Address</h2>
           <Row label="Address" value={address} />
         </div>
 
-        <Link to="/dashboard/orders" className="text-sm text-[var(--text-dark-secondary)] hover:text-black underline underline-offset-2">
+        <Link to="/dashboard/orders" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Orders
         </Link>
 

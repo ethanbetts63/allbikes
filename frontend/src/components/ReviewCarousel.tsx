@@ -83,14 +83,14 @@ const ReviewCarousel = () => {
             <div className="flex items-center gap-3">
               <GoogleG size={28} />
               <div>
-                <h2 className="text-xl font-semibold text-white leading-tight">Google Reviews</h2>
+                <h2 className="text-xl font-semibold text-[var(--text-light-primary)] leading-tight">Google Reviews</h2>
               </div>
             </div>
             <a
               href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="nofollow noopener noreferrer"
-              className="text-sm font-medium text-[var(--text-light-secondary)]  hover:text-white transition-colors whitespace-nowrap"
+              className="text-sm font-medium text-[var(--text-light-secondary)]  hover:text-[var(--text-light-primary)] transition-colors whitespace-nowrap"
             >
               See all reviews →
             </a>
@@ -118,7 +118,7 @@ const ReviewCarousel = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                       <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0"
+                        className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--text-light-primary)] font-semibold text-sm shrink-0"
                         style={{ backgroundColor: avatarColor }}
                       >
                         {initial}

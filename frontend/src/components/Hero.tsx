@@ -13,7 +13,7 @@ const Hero = ({ title, description, imageUrl }: HeroProps) => {
       {/* Text panel — semitransparent, left-anchored on desktop, centered on mobile */}
       <div className="absolute inset-0 flex items-center md:items-end md:justify-start justify-center p-6 md:p-10 md:pb-8">
         <div className="bg-stone-900/70 backdrop-blur-sm rounded-lg px-6 py-4 max-w-xl">
-          <h1 className="text-2xl md:text-3xl font-black text-white leading-tight">{title}</h1>
+          <h1 className="text-2xl md:text-3xl font-black text-[var(--text-light-primary)] leading-tight">{title}</h1>
           <p className="text-[var(--text-light-secondary)] text-sm mt-1 leading-relaxed hidden md:block">{description}</p>
         </div>
       </div>

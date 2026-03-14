@@ -17,7 +17,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em]">
+            <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em]">
               Buy Online
             </p>
             <div className="flex items-center gap-1.5">
@@ -26,12 +26,12 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
             </div>
           </div>
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-white text-3xl md:text-4xl font-black uppercase italic leading-none">
+            <h2 className="text-[var(--text-light-primary)] text-3xl md:text-4xl font-black uppercase italic leading-none">
               Best Selling<br />E-Scooters
             </h2>
             <Link
               to="/escooters"
-              className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-amber-400 hover:border-stone-500 hover:text-[var(--text-dark-secondary)] font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
+              className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-[var(--highlight)] hover:border-stone-500 hover:text-[var(--text-dark-secondary)] font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
             >
               View All E-Scooters <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -40,8 +40,8 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
 
         {/* Free delivery banner */}
         <div className="flex items-center gap-3 bg-stone-800 px-5 py-3 mb-6 w-fit">
-          <Truck className="h-5 w-5 text-amber-400 shrink-0" />
-          <span className="text-white text-sm font-bold uppercase tracking-widest">Free Delivery Australia-Wide</span>
+          <Truck className="h-5 w-5 text-[var(--highlight)] shrink-0" />
+          <span className="text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest">Free Delivery Australia-Wide</span>
         </div>
 
         {/* Product tiles */}
@@ -76,7 +76,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                     </span>
                   )}
                   {product.low_stock && product.in_stock && (
-                    <span className="absolute top-3 left-3 bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                    <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                       Low Stock
                     </span>
                   )}

@@ -61,7 +61,7 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, er
         </div>
 
         <div className="flex justify-between pt-4">
-          <Button variant="destructive" className="text-white" onClick={prevStep}>
+          <Button variant="destructive" className="text-[var(--text-light-primary)]" onClick={prevStep}>
             Back
           </Button>
           <Button onClick={handleSubmit} disabled={!formData.terms_accepted}>

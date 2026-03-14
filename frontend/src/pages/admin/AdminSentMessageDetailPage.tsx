@@ -21,7 +21,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 const Row = ({ label, value }: { label: string; value: string }) => (
   <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
-    <span className="text-black font-semibold text-sm w-36 shrink-0">{label}</span>
+    <span className="text-[var(--text-dark-primary)] font-semibold text-sm w-36 shrink-0">{label}</span>
     <span className="text-[var(--text-dark-secondary)] text-sm text-right">{value}</span>
   </div>
 );
@@ -68,12 +68,12 @@ const AdminSentMessageDetailPage = () => {
 
   return (
     <div>
-      <div className="w-full bg-white text-black p-4 rounded-lg">
+      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
           <div>
-            <h1 className="text-xl font-bold text-black mb-1">
+            <h1 className="text-xl font-bold text-[var(--text-dark-primary)] mb-1">
               {TYPE_LABELS[message.message_type] ?? message.message_type}
             </h1>
             {badge && (
@@ -108,7 +108,7 @@ const AdminSentMessageDetailPage = () => {
               {message.body_html && (
                 <button
                   onClick={() => setTab('html')}
-                  className={`text-sm px-3 py-1 rounded border ${tab === 'html' ? 'bg-black text-white border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
+                  className={`text-sm px-3 py-1 rounded border ${tab === 'html' ? 'bg-black text-[var(--text-light-primary)] border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
                 >
                   HTML Preview
                 </button>
@@ -116,7 +116,7 @@ const AdminSentMessageDetailPage = () => {
               {message.body_text && (
                 <button
                   onClick={() => setTab('text')}
-                  className={`text-sm px-3 py-1 rounded border ${tab === 'text' ? 'bg-black text-white border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
+                  className={`text-sm px-3 py-1 rounded border ${tab === 'text' ? 'bg-black text-[var(--text-light-primary)] border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
                 >
                   Plain Text
                 </button>
@@ -139,7 +139,7 @@ const AdminSentMessageDetailPage = () => {
           </div>
         )}
 
-        <Link to="/dashboard/messages" className="text-sm text-[var(--text-dark-secondary)] hover:text-black underline underline-offset-2">
+        <Link to="/dashboard/messages" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Messages
         </Link>
 

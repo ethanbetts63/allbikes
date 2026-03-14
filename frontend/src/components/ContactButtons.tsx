@@ -42,7 +42,7 @@ const ContactButtons = ({ phoneNumber, mobileNumber, emailAddress }: ContactButt
             href={`mailto:${emailAddress}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-stone-700 text-white font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full hover:bg-stone-600 transition-colors"
+            className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-stone-700 text-[var(--text-light-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full hover:bg-stone-600 transition-colors"
           >
             <Mail className="h-4 w-4" />
             {emailAddress}

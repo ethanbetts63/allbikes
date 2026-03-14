@@ -233,17 +233,17 @@ const BikeDetailPage = () => {
                     <h1 className="text-3xl md:text-4xl font-black text-[var(--text-dark-primary)] leading-tight mb-3">{cardTitle}</h1>
                     <div className="flex flex-wrap items-center gap-2">
                         {/* Condition */}
-                        <span className="bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                        <span className="bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                             {bike.condition}
                         </span>
                         {/* Status */}
                         {bike.status === 'sold' && (
-                            <span className="bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Sold
                             </span>
                         )}
                         {bike.status === 'reserved' && (
-                            <span className="bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Reserved
                             </span>
                         )}
@@ -273,12 +273,12 @@ const BikeDetailPage = () => {
                             )}
                             {/* Status overlay pill on main image */}
                             {bike.status === 'sold' && (
-                                <span className="absolute top-4 left-4 bg-stone-900/80 text-white text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
+                                <span className="absolute top-4 left-4 bg-stone-900/80 text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
                                     Sold
                                 </span>
                             )}
                             {bike.status === 'reserved' && (
-                                <span className="absolute top-4 left-4 bg-stone-900/80 text-amber-400 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
+                                <span className="absolute top-4 left-4 bg-stone-900/80 text-[var(--highlight)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
                                     Reserved
                                 </span>
                             )}
@@ -293,7 +293,7 @@ const BikeDetailPage = () => {
                                 >
                                     <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                        <PlayCircle className="h-8 w-8 text-white" />
+                                        <PlayCircle className="h-8 w-8 text-[var(--text-light-primary)]" />
                                     </div>
                                 </button>
                             )}
@@ -315,7 +315,7 @@ const BikeDetailPage = () => {
                         <div className="mb-6 pb-4 border-b border-stone-200">
                             {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
                                 <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-semibold text-amber-400">
+                                    <span className="text-4xl font-semibold text-[var(--highlight)]">
                                         ${parseFloat(bike.discount_price).toLocaleString()}
                                     </span>
                                     <span className="text-xl text-stone-400 line-through">

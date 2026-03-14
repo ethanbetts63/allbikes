@@ -20,7 +20,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
     <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
       <div className="relative w-full overflow-hidden flex flex-col h-full bg-white rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200">
         {bike.status === 'sold' && (
-          <span className="absolute top-2.5 left-2.5 z-10 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+          <span className="absolute top-2.5 left-2.5 z-10 bg-red-600 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
             Sold
           </span>
         )}
@@ -61,7 +61,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
                 <span className="text-[var(--text-dark-secondary)] line-through text-sm">
                   ${parseFloat(bike.price).toLocaleString()}
                 </span>
-                <span className="text-amber-400 font-black text-xl">
+                <span className="text-[var(--highlight)] font-black text-xl">
                   ${parseFloat(bike.discount_price).toLocaleString()}
                 </span>
               </div>

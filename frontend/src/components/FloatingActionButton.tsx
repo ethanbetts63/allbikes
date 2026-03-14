@@ -6,7 +6,7 @@ export const FloatingActionButton = () => {
     <Link
       to="/booking"
       className="fixed bottom-8 right-8 z-50
-                 bg-emerald-500 text-white
+                 bg-emerald-500 text-[var(--text-light-primary)]
                  rounded-full shadow-md
                  px-5 py-3
                  flex items-center gap-2.5

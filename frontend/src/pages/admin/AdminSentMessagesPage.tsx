@@ -65,7 +65,7 @@ const AdminSentMessagesPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-black p-4 rounded-lg">
+      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
         {isLoading ? (
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading messages...</p>
         ) : (
@@ -74,11 +74,11 @@ const AdminSentMessagesPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="border-gray-300">
-                    <TableHead className="text-black">Type</TableHead>
-                    <TableHead className="text-black">To</TableHead>
-                    <TableHead className="text-black">Subject</TableHead>
-                    <TableHead className="text-black">Status</TableHead>
-                    <TableHead className="text-black">Sent</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Type</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">To</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Subject</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Status</TableHead>
+                    <TableHead className="text-[var(--text-dark-primary)]">Sent</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -89,17 +89,17 @@ const AdminSentMessagesPage = () => {
                         className="border-gray-300 cursor-pointer hover:bg-gray-50"
                         onClick={() => navigate(`/dashboard/messages/${msg.id}`)}
                       >
-                        <TableCell className="text-black text-sm">
+                        <TableCell className="text-[var(--text-dark-primary)] text-sm">
                           {TYPE_LABELS[msg.message_type] ?? msg.message_type}
                         </TableCell>
-                        <TableCell className="text-black text-sm font-mono">{msg.to}</TableCell>
-                        <TableCell className="text-black text-sm max-w-xs truncate">{msg.subject || '—'}</TableCell>
+                        <TableCell className="text-[var(--text-dark-primary)] text-sm font-mono">{msg.to}</TableCell>
+                        <TableCell className="text-[var(--text-dark-primary)] text-sm max-w-xs truncate">{msg.subject || '—'}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className={STATUS_BADGE[msg.status] ?? 'text-[var(--text-dark-secondary)] border-gray-400'}>
                             {msg.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-black text-sm">
+                        <TableCell className="text-[var(--text-dark-primary)] text-sm">
                           {msg.sent_at
                             ? new Date(msg.sent_at).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
                             : '—'}
@@ -108,7 +108,7 @@ const AdminSentMessagesPage = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center text-black">
+                      <TableCell colSpan={5} className="h-24 text-center text-[var(--text-dark-primary)]">
                         No messages yet.
                       </TableCell>
                     </TableRow>

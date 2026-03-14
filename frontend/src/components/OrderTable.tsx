@@ -73,51 +73,51 @@ const OrderTable = () => {
   const columns: ColumnDef<Order>[] = useMemo(() => [
     {
       accessorKey: 'order_reference',
-      header: () => <div className="text-black">Reference</div>,
-      cell: ({ row }) => <div className="font-mono font-semibold text-black">{row.getValue('order_reference')}</div>,
+      header: () => <div className="text-[var(--text-dark-primary)]">Reference</div>,
+      cell: ({ row }) => <div className="font-mono font-semibold text-[var(--text-dark-primary)]">{row.getValue('order_reference')}</div>,
     },
     {
       accessorKey: 'product_name',
       header: ({ column }) => (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-black">
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-[var(--text-dark-primary)]">
           Product <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-black">{row.getValue('product_name')}</div>,
+      cell: ({ row }) => <div className="text-[var(--text-dark-primary)]">{row.getValue('product_name')}</div>,
     },
     {
       accessorKey: 'customer_name',
       header: ({ column }) => (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-black">
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-[var(--text-dark-primary)]">
           Customer <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => (
         <div>
-          <div className="text-black font-medium">{row.getValue('customer_name')}</div>
+          <div className="text-[var(--text-dark-primary)] font-medium">{row.getValue('customer_name')}</div>
           <div className="text-[var(--text-dark-secondary)] text-xs">{row.original.customer_email}</div>
         </div>
       ),
     },
     {
       accessorKey: 'status',
-      header: () => <div className="text-black">Status</div>,
+      header: () => <div className="text-[var(--text-dark-primary)]">Status</div>,
       cell: ({ row }) => {
         const s = STATUS_BADGE[row.getValue('status') as string];
         return s
           ? <Badge variant="outline" className={s.className}>{s.label}</Badge>
-          : <Badge variant="outline" className="text-black border-black">{row.getValue('status')}</Badge>;
+          : <Badge variant="outline" className="text-[var(--text-dark-primary)] border-black">{row.getValue('status')}</Badge>;
       },
     },
     {
       accessorKey: 'created_at',
       header: ({ column }) => (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-black">
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-[var(--text-dark-primary)]">
           Date <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-black text-sm">
+        <div className="text-[var(--text-dark-primary)] text-sm">
           {new Date(row.getValue('created_at')).toLocaleDateString('en-AU')}
         </div>
       ),
@@ -136,7 +136,7 @@ const OrderTable = () => {
   const totalPages = Math.ceil(count / PAGE_SIZE);
 
   return (
-    <div className="w-full bg-white text-black p-4 rounded-lg">
+    <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
       {notification && (
         <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
           <AlertDescription>{notification.message}</AlertDescription>
@@ -147,14 +147,14 @@ const OrderTable = () => {
         <Button
           variant="outline"
           onClick={() => handleFilterChange('todo')}
-          className={filter === 'todo' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
+          className={filter === 'todo' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           To Do
         </Button>
         <Button
           variant="outline"
           onClick={() => handleFilterChange('all')}
-          className={filter === 'all' ? 'bg-white text-black border-black' : 'bg-gray-200 text-black border-black hover:bg-gray-300'}
+          className={filter === 'all' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           All Orders
         </Button>
@@ -166,7 +166,7 @@ const OrderTable = () => {
             {table.getHeaderGroups().map(hg => (
               <TableRow key={hg.id} className="border-gray-300">
                 {hg.headers.map(h => (
-                  <TableHead key={h.id} className="text-black">
+                  <TableHead key={h.id} className="text-[var(--text-dark-primary)]">
                     {h.isPlaceholder ? null : flexRender(h.column.columnDef.header, h.getContext())}
                   </TableHead>
                 ))}
@@ -182,7 +182,7 @@ const OrderTable = () => {
                   onClick={() => navigate(`/dashboard/orders/${row.original.id}`)}
                 >
                   {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id} className="text-black">
+                    <TableCell key={cell.id} className="text-[var(--text-dark-primary)]">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -190,7 +190,7 @@ const OrderTable = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-black">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-[var(--text-dark-primary)]">
                   No orders found.
                 </TableCell>
               </TableRow>
@@ -210,7 +210,7 @@ const OrderTable = () => {
               size="sm"
               onClick={() => setPage(p => p - 1)}
               disabled={!hasPrev}
-              className="text-black border-gray-300"
+              className="text-[var(--text-dark-primary)] border-gray-300"
             >
               Previous
             </Button>
@@ -219,7 +219,7 @@ const OrderTable = () => {
               size="sm"
               onClick={() => setPage(p => p + 1)}
               disabled={!hasNext}
-              className="text-black border-gray-300"
+              className="text-[var(--text-dark-primary)] border-gray-300"
             >
               Next
             </Button>

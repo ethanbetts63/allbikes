@@ -161,19 +161,19 @@ const JobTypesPage = () => {
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent className="bg-white">
                     <DialogHeader>
-                        <DialogTitle className="text-black">{editingJobType ? 'Edit Job Type' : 'Add New Job Type'}</DialogTitle>
-                        <DialogDescription className="text-black">
+                        <DialogTitle className="text-[var(--text-dark-primary)]">{editingJobType ? 'Edit Job Type' : 'Add New Job Type'}</DialogTitle>
+                        <DialogDescription className="text-[var(--text-dark-primary)]">
                             The 'Name' must exactly match the job type name in MechanicDesk.
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="name" className="text-black block mb-2">Name</Label>
+                            <Label htmlFor="name" className="text-[var(--text-dark-primary)] block mb-2">Name</Label>
                             <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                             {formError && <p className="text-sm text-destructive mt-1">{formError}</p>}
                         </div>
                         <div>
-                            <Label htmlFor="description" className="text-black block mb-2">Description</Label>
+                            <Label htmlFor="description" className="text-[var(--text-dark-primary)] block mb-2">Description</Label>
                             <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
                         </div>
                         <DialogFooter>

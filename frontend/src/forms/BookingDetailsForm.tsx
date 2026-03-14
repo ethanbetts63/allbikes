@@ -102,7 +102,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                             <PopoverTrigger asChild>
                                 <Button
                                     variant={"outline"}
-                                    className={cn("w-full justify-start text-left font-normal bg-white dark:bg-gray-950 text-black dark:text-white")}
+                                    className={cn("w-full justify-start text-left font-normal bg-white dark:bg-gray-950 text-[var(--text-dark-primary)] dark:text-[var(--text-light-primary)]")}
                                     disabled={isLoadingUnavailableDays} // Disable when loading
                                 >
                                     {isLoadingUnavailableDays ? ( // Show spinner when loading

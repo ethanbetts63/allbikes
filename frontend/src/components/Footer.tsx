@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { siteSettings } from '@/config/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 
-const LINK_CLASS = 'text-stone-400 hover:text-amber-400 transition-colors duration-200 text-sm';
+const LINK_CLASS = 'text-stone-400 hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
 
 const Footer = () => {
   const { user, logout } = useAuth();
@@ -30,7 +30,7 @@ const Footer = () => {
 
         {/* Contact */}
         <div>
-          <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Contact Us</p>
+          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Contact Us</p>
           <div className="space-y-1.5 text-sm text-stone-400">
             <p>{siteSettings.street_address}</p>
             <p>{siteSettings.address_locality}, {siteSettings.address_region} {siteSettings.postal_code}</p>
@@ -41,7 +41,7 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div>
-          <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Quick Links</p>
+          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Quick Links</p>
           <ul className="space-y-2">
             <li><Link to="/inventory/motorcycles/new" className={LINK_CLASS}>New Motorcycles &amp; Scooters</Link></li>
             <li><Link to="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles &amp; Scooters</Link></li>
@@ -69,7 +69,7 @@ const Footer = () => {
 
         {/* Opening Hours */}
         <div>
-          <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Opening Hours</p>
+          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Opening Hours</p>
           <div className="space-y-1.5">
             {hours.map(([day, time]) => (
               <div key={day} className="flex gap-3 text-sm">

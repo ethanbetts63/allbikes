@@ -13,7 +13,7 @@ const STATUS_BADGE: Record<string, string> = {
 
 const Row = ({ label, value }: { label: string; value: string }) => (
   <div className="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
-    <span className="text-black font-semibold text-sm w-40 shrink-0">{label}</span>
+    <span className="text-[var(--text-dark-primary)] font-semibold text-sm w-40 shrink-0">{label}</span>
     <span className="text-[var(--text-dark-secondary)] text-sm text-right">{value}</span>
   </div>
 );
@@ -65,12 +65,12 @@ const AdminServiceBookingDetailPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-black p-4 rounded-lg">
+      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
           <div>
-            <h1 className="text-2xl font-bold text-black mb-1">{log.customer_name}</h1>
+            <h1 className="text-2xl font-bold text-[var(--text-dark-primary)] mb-1">{log.customer_name}</h1>
             <Badge variant="outline" className={STATUS_BADGE[log.status] ?? 'text-[var(--text-dark-secondary)] border-gray-400'}>
               {log.status}
             </Badge>
@@ -82,7 +82,7 @@ const AdminServiceBookingDetailPage = () => {
 
         {/* Customer */}
         <div className="mb-6">
-          <h2 className="text-black font-bold mb-2">Customer</h2>
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Customer</h2>
           <Row label="Name" value={log.customer_name} />
           <Row label="Email" value={log.customer_email} />
           {payload.phone && <Row label="Phone" value={String(payload.phone)} />}
@@ -90,7 +90,7 @@ const AdminServiceBookingDetailPage = () => {
 
         {/* Vehicle */}
         <div className="mb-6">
-          <h2 className="text-black font-bold mb-2">Vehicle</h2>
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Vehicle</h2>
           {log.vehicle_registration && <Row label="Registration" value={log.vehicle_registration} />}
           {payload.make && <Row label="Make" value={String(payload.make)} />}
           {payload.model && <Row label="Model" value={String(payload.model)} />}
@@ -100,7 +100,7 @@ const AdminServiceBookingDetailPage = () => {
 
         {/* Service Request */}
         <div className="mb-6">
-          <h2 className="text-black font-bold mb-2">Service Request</h2>
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Service Request</h2>
           <Row label="Job Types" value={jobTypes} />
           {payload.drop_off_time && <Row label="Drop-off Time" value={String(payload.drop_off_time)} />}
           {payload.courtesy_vehicle_requested && (
@@ -108,7 +108,7 @@ const AdminServiceBookingDetailPage = () => {
           )}
           {payload.note && (
             <div className="py-2 border-b border-gray-100">
-              <span className="text-black font-semibold text-sm">Note</span>
+              <span className="text-[var(--text-dark-primary)] font-semibold text-sm">Note</span>
               <p className="text-[var(--text-dark-secondary)] text-sm mt-1 whitespace-pre-wrap">{String(payload.note)}</p>
             </div>
           )}
@@ -116,17 +116,17 @@ const AdminServiceBookingDetailPage = () => {
 
         {/* API Response */}
         <div className="mb-6">
-          <h2 className="text-black font-bold mb-2">API Response</h2>
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">API Response</h2>
           <Row label="Status Code" value={String(log.response_status_code)} />
           <div className="py-2">
-            <span className="text-black font-semibold text-sm">Response Body</span>
+            <span className="text-[var(--text-dark-primary)] font-semibold text-sm">Response Body</span>
             <pre className="mt-1 text-xs text-[var(--text-dark-secondary)] bg-gray-50 rounded p-3 overflow-auto">
               {JSON.stringify(log.response_body, null, 2)}
             </pre>
           </div>
         </div>
 
-        <Link to="/dashboard/service-bookings" className="text-sm text-[var(--text-dark-secondary)] hover:text-black underline underline-offset-2">
+        <Link to="/dashboard/service-bookings" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Service Bookings
         </Link>
 

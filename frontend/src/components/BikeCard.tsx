@@ -21,17 +21,17 @@ const BikeCard = ({ bike }: BikeCardProps) => {
             loading="lazy"
           />
           {/* Condition pill */}
-          <span className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
+          <span className="absolute bottom-2 left-2 bg-black/60 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
             {bike.condition}
           </span>
           {/* Status pills */}
           {bike.status === 'sold' && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Sold
             </span>
           )}
           {bike.status === 'reserved' && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Reserved
             </span>
           )}
@@ -90,7 +90,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
                 <span className="text-[var(--text-dark-secondary)] line-through text-sm">
                   ${parseFloat(bike.price).toLocaleString()}
                 </span>
-                <span className="text-amber-400 font-black text-xl">
+                <span className="text-[var(--highlight)] font-black text-xl">
                   ${parseFloat(bike.discount_price).toLocaleString()}
                 </span>
               </div>

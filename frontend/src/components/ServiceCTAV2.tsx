@@ -19,10 +19,10 @@ const ServiceCTAV2 = () => {
 
                     {/* Left — bold typographic block */}
                     <div>
-                        <p className="text-amber-400 text-xs font-bold uppercase tracking-[0.2em] mb-6">
+                        <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em] mb-6">
                             Allbikes Workshop · Perth
                         </p>
-                        <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none mb-6 uppercase italic">
+                        <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
                             Get Your<br />Bike<br />Sorted.
                         </h2>
                         <p className="text-stone-400 text-lg leading-relaxed max-w-sm mb-10">
@@ -47,7 +47,7 @@ const ServiceCTAV2 = () => {
                         <ul className="space-y-5">
                             {checkItems.map((item) => (
                                 <li key={item} className="flex items-start gap-4">
-                                    <CheckCircle2 className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" />
+                                    <CheckCircle2 className="h-5 w-5 text-[var(--highlight)] mt-0.5 shrink-0" />
                                     <span className="text-[var(--text-light-secondary)] text-lg leading-snug">{item}</span>
                                 </li>
                             ))}

@@ -48,13 +48,13 @@ export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
           <div className="flex flex-col items-center gap-4">
             {faqData.map((faq, index) => (
               <div key={index} className="w-full md:w-2/3 lg:w-2/3">
-                <Card className="bg-white text-black rounded-lg shadow-md">
+                <Card className="bg-white text-[var(--text-dark-primary)] rounded-lg shadow-md">
                   <CardContent className="p-0">
                     <div
                       className="flex justify-between items-center p-4 cursor-pointer"
                       onClick={() => toggleFaq(index)}
                     >
-                      <h3 className="text-xl font-semibold text-black">{faq.question}</h3>
+                      <h3 className="text-xl font-semibold text-[var(--text-dark-primary)]">{faq.question}</h3>
                       <ChevronDown
                         className={`h-6 w-6 text-[var(--text-dark-secondary)] transition-transform duration-300 ${openIndex === index ? 'transform rotate-180' : ''
                           }`}

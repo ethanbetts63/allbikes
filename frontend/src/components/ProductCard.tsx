@@ -37,7 +37,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           )}
           {product.low_stock && product.in_stock && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Low Stock
             </span>
           )}
@@ -65,7 +65,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 <span className="text-[var(--text-dark-secondary)] line-through text-sm">
                   ${parseFloat(product.price).toLocaleString()}
                 </span>
-                <span className="text-amber-400 font-black text-xl">
+                <span className="text-[var(--highlight)] font-black text-xl">
                   ${parseFloat(product.discount_price).toLocaleString()}
                 </span>
               </div>

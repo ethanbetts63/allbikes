@@ -39,7 +39,7 @@ const BikeDetailsForm = ({ formData, setFormData, nextStep, prevStep }: BikeDeta
         </div>
         
         <div className="flex justify-between pt-4">
-          <Button variant="destructive" className="text-white" onClick={prevStep}>
+          <Button variant="destructive" className="text-[var(--text-light-primary)]" onClick={prevStep}>
             Back
           </Button>
           <Button onClick={nextStep}>

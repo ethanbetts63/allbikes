@@ -161,10 +161,10 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       {/* ── TEXT PANEL (mobile: order 1, desktop: order 2 / right-top) ── */}
       <div className="order-1 lg:order-2 lg:w-[38%] flex flex-col">
         <div className="bg-stone-900 flex flex-col justify-center items-center lg:items-start px-8 py-10 md:px-10 md:py-12 flex-1 text-center lg:text-left">
-          <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-5">
+          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-5">
             Allbikes &amp; Scooters &nbsp;·&nbsp; Dianella, Perth
           </p>
-          <h1 className="text-white text-4xl sm:text-5xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-[0.92] mb-6">
+          <h1 className="text-[var(--text-light-primary)] text-4xl sm:text-5xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-[0.92] mb-6">
             Perth's<br />
             Motorcycle<br />
             &amp; Scooter<br />
@@ -208,15 +208,15 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             <div className="absolute inset-0 bg-stone-900/20 group-hover:bg-transparent transition-colors duration-300" />
             {/* Content */}
             <div className="absolute bottom-0 left-0 p-7">
-              <p className="text-amber-400 text-[9px] font-bold uppercase tracking-[0.25em] mb-2">
+              <p className="text-[var(--highlight)] text-[9px] font-bold uppercase tracking-[0.25em] mb-2">
                 Browse Inventory
               </p>
-              <h2 className="text-white text-2xl md:text-3xl lg:text-2xl xl:text-3xl font-black uppercase italic leading-none mb-4">
+              <h2 className="text-[var(--text-light-primary)] text-2xl md:text-3xl lg:text-2xl xl:text-3xl font-black uppercase italic leading-none mb-4">
                 Used<br />
                 <span className="hidden md:inline">Motorcycles &amp; Scooters</span>
                 <span className="md:hidden">Bikes</span>
               </h2>
-              <span className="inline-flex items-center text-white/70 font-bold text-xs uppercase tracking-widest border-b border-white/30 pb-0.5 group-hover:text-amber-400 group-hover:border-amber-400 transition-colors duration-200">
+              <span className="inline-flex items-center text-[var(--text-light-primary)]/70 font-bold text-xs uppercase tracking-widest border-b border-white/30 pb-0.5 group-hover:text-[var(--highlight)] group-hover:border-amber-400 transition-colors duration-200">
                 Shop Now
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
               </span>
@@ -243,15 +243,15 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
             <div className="absolute inset-0 bg-stone-900/30 group-hover:bg-transparent transition-colors duration-300" />
             <div className="absolute bottom-0 left-0 p-7 md:p-9">
-              <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+              <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
                 Browse Inventory
               </p>
-              <h2 className="text-white text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-none mb-4">
+              <h2 className="text-[var(--text-light-primary)] text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-none mb-4">
                 New<br />
                 <span className="hidden md:inline">Motorcycles<br />&amp; Scooters</span>
                 <span className="md:hidden">Bikes</span>
               </h2>
-              <span className="inline-flex items-center text-white font-bold text-sm uppercase tracking-widest border-b border-white/40 pb-0.5 group-hover:text-amber-400 group-hover:border-amber-400 transition-colors duration-200">
+              <span className="inline-flex items-center text-[var(--text-light-primary)] font-bold text-sm uppercase tracking-widest border-b border-white/40 pb-0.5 group-hover:text-[var(--highlight)] group-hover:border-amber-400 transition-colors duration-200">
                 Shop Now
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
               </span>
@@ -266,10 +266,10 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         {/* Service strip */}
         <div className="bg-stone-900 flex flex-col sm:flex-row items-center justify-between gap-6 px-8 py-8 md:px-10">
           <div>
-            <p className="text-amber-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+            <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
               Allbikes Workshop &nbsp;·&nbsp; Perth
             </p>
-            <h2 className="text-white text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">
+            <h2 className="text-[var(--text-light-primary)] text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">
               Get Your Bike Serviced.
             </h2>
             <p className="text-stone-400 text-sm leading-relaxed max-w-sm">
