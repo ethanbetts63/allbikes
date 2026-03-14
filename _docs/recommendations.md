@@ -2,14 +2,6 @@
 
 A living to-do list of approved improvements.
 
----
-
-## Done
-
-- **Add Google tag (gtag.js)**: Added to `frontend/index.html`.
-- **Add caching**: Added explicit `CACHES` config to `settings.py` (15 min / LocMemCache). Applied `cache_page(900)` to `list` and `retrieve` actions on `MotorcycleViewSet`.
-
----
 
 ## Security
 
@@ -20,12 +12,6 @@ A living to-do list of approved improvements.
   - **Reference**: See `futureflower` project for a complete working implementation.
 
 
-
-  2. The multi-step booking form uses any throughout
-
-  formData: any, setFormData: React.Dispatch<React.SetStateAction<any>> — the BookingFormData type exists but isn't used
-   to type the form state. The three form step components (BookingDetailsForm, BikeDetailsForm, PersonalDetailsForm)
-  could all accept typed props using it.
 
 
   4. structuredData?: object | any in SeoProps is a no-op
@@ -42,20 +28,32 @@ A living to-do list of approved improvements.
 
   ---
 
+  
+  2. The multi-step booking form uses any throughout
+
+  formData: any, setFormData: React.Dispatch<React.SetStateAction<any>> — the BookingFormData type exists but isn't used
+   to type the form state. The three form step components (BookingDetailsForm, BikeDetailsForm, PersonalDetailsForm)
+  could all accept typed props using it.
+
+● The [key: string]: any line in BookingFormData is an index signature. It means "this object can also have any other key with any value." It's
+  there so this pattern works:
+
+  setFormData(prev => ({ ...prev, [field]: value }))
+
+  Where field is a dynamic string — TypeScript needs the index signature to allow that.
+
+  The problem is that index signature poisons the whole type. When you access formData.first_name, TypeScript sees the index signature and says
+  "that could be any." You lose autocomplete, you lose type errors on typos like formData.frist_name, you lose everything that makes typing useful.
+
+  So even if you changed all the props from formData: any to formData: BookingFormData, you'd have the appearance of types without the actual
+  safety. The suggestion is correct that any is being used where BookingFormData should be — but BookingFormData itself has an any hole in it that
+  needs fixing first before the swap is meaningful.
+
+
 
 
   
 
-### Simplification / Design Issues
 
-**5. No atomic stock decrement on purchase**
-Stock is adjusted by directly PATCHing `stock_quantity`. In a concurrent environment (two simultaneous orders), a direct set is a race condition — both reads could see `stock_quantity = 1`, both proceed, and stock goes to -1. A `F()` expression-based update or a dedicated decrement endpoint would be safer.
-
----
-
-## `payments` app
-
-**4. `product_price` serialized as `CharField` (`order_serializer.py:23`)**
-`serializers.CharField(source='product.price')` coerces a `DecimalField` to a string. It works, but it's semantically wrong — downstream consumers expecting a number will get a string. Should be `DecimalField(source='product.price', max_digits=10, decimal_places=2)`.
 
 
