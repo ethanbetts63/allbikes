@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.template.loader import render_to_string
 from django.utils import timezone
 
 from notifications.utils.email import _send_mailgun, _record
@@ -34,37 +35,28 @@ class Command(BaseCommand):
             self.stdout.write("No paid or dispatched orders — nothing to send.")
             return
 
-        subject = f"Weekly order summary — {today.strftime('%d %b %Y')}"
+        date_str = today.strftime('%d %b %Y')
+        subject = f"Weekly order summary — {date_str}"
 
-        lines = ["Weekly Order Summary\n"]
+        context = {
+            'paid_orders': paid_orders,
+            'dispatched_orders': dispatched_orders,
+            'date_str': date_str,
+        }
+        html_body = render_to_string('notifications/emails/admin_weekly_summary.html', context)
 
-        lines.append(f"PAID — awaiting dispatch ({len(paid_orders)})")
-        lines.append("-" * 40)
-        if paid_orders:
-            for order in paid_orders:
-                lines.append(
-                    f"  {order.order_reference}  |  {order.customer_name}  |  "
-                    f"{order.product.name}  |  "
-                    f"Placed: {timezone.localtime(order.created_at).strftime('%d %b %Y')}"
-                )
-        else:
-            lines.append("  None.")
-
-        lines.append("")
-        lines.append(f"DISPATCHED — awaiting delivery ({len(dispatched_orders)})")
-        lines.append("-" * 40)
-        if dispatched_orders:
-            for order in dispatched_orders:
-                lines.append(
-                    f"  {order.order_reference}  |  {order.customer_name}  |  "
-                    f"{order.product.name}  |  "
-                    f"Placed: {timezone.localtime(order.created_at).strftime('%d %b %Y')}"
-                )
-        else:
-            lines.append("  None.")
-
-        text_body = "\n".join(lines)
-        html_body = "<pre style='font-family:monospace;font-size:14px;'>" + text_body + "</pre>"
+        text_lines = [f"Weekly Order Summary — {date_str}\n"]
+        text_lines.append(f"PAID — awaiting dispatch ({len(paid_orders)})")
+        text_lines += [
+            f"  {o.order_reference}  |  {o.customer_name}  |  {o.product.name}  |  Placed: {timezone.localtime(o.created_at).strftime('%d %b %Y')}"
+            for o in paid_orders
+        ] or ["  None."]
+        text_lines.append(f"\nDISPATCHED — awaiting delivery ({len(dispatched_orders)})")
+        text_lines += [
+            f"  {o.order_reference}  |  {o.customer_name}  |  {o.product.name}  |  Placed: {timezone.localtime(o.created_at).strftime('%d %b %Y')}"
+            for o in dispatched_orders
+        ] or ["  None."]
+        text_body = "\n".join(text_lines)
 
         try:
             _send_mailgun(to=admin_email, subject=subject, html_body=html_body, text_body=text_body)
