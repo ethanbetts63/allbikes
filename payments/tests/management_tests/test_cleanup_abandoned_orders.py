@@ -10,15 +10,15 @@ from payments.tests.factories.order_factory import OrderFactory
 @pytest.mark.django_db
 class TestCleanupAbandonedOrdersCommand:
 
-    def test_cancels_pending_payment_orders_older_than_24h(self):
+    def test_cancels_pending_payment_orders_older_than_7_days(self):
         """
-        GIVEN a pending_payment order created 25 hours ago
+        GIVEN a pending_payment order created 8 days ago
         WHEN cleanup_abandoned_orders is run
         THEN the order status becomes cancelled.
         """
         order = OrderFactory(status='pending_payment')
         Order.objects.filter(pk=order.pk).update(
-            created_at=timezone.now() - timedelta(hours=25)
+            created_at=timezone.now() - timedelta(days=8)
         )
 
         call_command('cleanup_abandoned_orders')
@@ -28,13 +28,13 @@ class TestCleanupAbandonedOrdersCommand:
 
     def test_does_not_cancel_recent_pending_payment_orders(self):
         """
-        GIVEN a pending_payment order created 23 hours ago (within 24h window)
+        GIVEN a pending_payment order created 6 days ago (within 7-day window)
         WHEN cleanup_abandoned_orders is run
         THEN the order status remains pending_payment.
         """
         order = OrderFactory(status='pending_payment')
         Order.objects.filter(pk=order.pk).update(
-            created_at=timezone.now() - timedelta(hours=23)
+            created_at=timezone.now() - timedelta(days=6)
         )
 
         call_command('cleanup_abandoned_orders')
@@ -44,13 +44,13 @@ class TestCleanupAbandonedOrdersCommand:
 
     def test_does_not_cancel_paid_orders(self):
         """
-        GIVEN a paid order older than 24 hours
+        GIVEN a paid order older than 7 days
         WHEN cleanup_abandoned_orders is run
         THEN the order status is not changed.
         """
         order = OrderFactory(status='paid')
         Order.objects.filter(pk=order.pk).update(
-            created_at=timezone.now() - timedelta(hours=48)
+            created_at=timezone.now() - timedelta(days=14)
         )
 
         call_command('cleanup_abandoned_orders')
@@ -67,7 +67,7 @@ class TestCleanupAbandonedOrdersCommand:
         for _ in range(2):
             order = OrderFactory(status='pending_payment')
             Order.objects.filter(pk=order.pk).update(
-                created_at=timezone.now() - timedelta(hours=25)
+                created_at=timezone.now() - timedelta(days=8)
             )
 
         call_command('cleanup_abandoned_orders')
@@ -75,16 +75,15 @@ class TestCleanupAbandonedOrdersCommand:
         out, _ = capsys.readouterr()
         assert '2' in out
 
-    def test_exactly_24h_boundary_is_not_cancelled(self):
+    def test_exactly_7_day_boundary_is_not_cancelled(self):
         """
-        GIVEN a pending_payment order created exactly 24 hours ago (cutoff is strictly less than)
+        GIVEN a pending_payment order created just over 7 days ago
         WHEN cleanup_abandoned_orders is run
-        THEN the order is not cancelled (boundary: created_at must be strictly before cutoff).
+        THEN the order is cancelled (strictly older than 7 days is caught).
         """
         order = OrderFactory(status='pending_payment')
-        # Set to just over 24h to ensure it IS caught, confirming the < boundary
         Order.objects.filter(pk=order.pk).update(
-            created_at=timezone.now() - timedelta(hours=24, seconds=1)
+            created_at=timezone.now() - timedelta(days=7, seconds=1)
         )
 
         call_command('cleanup_abandoned_orders')
