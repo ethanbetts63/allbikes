@@ -25,7 +25,7 @@ const ServiceCTAV2 = () => {
                         <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
                             Get Your<br />Bike<br />Sorted.
                         </h2>
-                        <p className="text-[var(--text-dark-secondary)] text-lg leading-relaxed max-w-sm mb-10">
+                        <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
                             Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes.
                         </p>
                         <Link to="/booking">
@@ -41,7 +41,7 @@ const ServiceCTAV2 = () => {
 
                     {/* Right — service checklist */}
                     <div className="lg:border-l lg:border-stone-700 lg:pl-16">
-                        <p className="text-[var(--text-dark-secondary)] text-xs font-bold uppercase tracking-widest mb-8">
+                        <p className="text-[var(--text-light-secondary)] text-xs font-bold uppercase tracking-widest mb-8">
                             What we do
                         </p>
                         <ul className="space-y-5">

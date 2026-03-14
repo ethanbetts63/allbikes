@@ -21,7 +21,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
               Buy Online
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="text-[var(--text-dark-secondary)] text-[10px] uppercase tracking-widest">Powered by</span>
+              <span className="text-[var(--text-light-secondary)] text-[10px] uppercase tracking-widest">Powered by</span>
               <img src={stripeLogo} alt="Stripe" className="h-4 w-auto" />
             </div>
           </div>
@@ -31,7 +31,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
             </h2>
             <Link
               to="/escooters"
-              className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-[var(--highlight)] hover:border-stone-500 hover:text-[var(--text-dark-secondary)] font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
+              className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-[var(--highlight)] hover:border-stone-500 hover:text-[var(--text-light-secondary)] font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
             >
               View All E-Scooters <ArrowRight className="h-3.5 w-3.5" />
             </Link>

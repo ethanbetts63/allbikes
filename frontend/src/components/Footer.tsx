@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { siteSettings } from '@/config/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 
-const LINK_CLASS = 'text-[var(--text-dark-secondary)] hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
+const LINK_CLASS = 'text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
 
 const Footer = () => {
   const { user, logout } = useAuth();
@@ -31,7 +31,7 @@ const Footer = () => {
         {/* Contact */}
         <div>
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Contact Us</p>
-          <div className="space-y-1.5 text-sm text-[var(--text-dark-secondary)]">
+          <div className="space-y-1.5 text-sm text-[var(--text-light-secondary)]">
             <p>{siteSettings.street_address}</p>
             <p>{siteSettings.address_locality}, {siteSettings.address_region} {siteSettings.postal_code}</p>
             {displayedPhone && <p className="pt-1">{displayedPhone}</p>}
@@ -73,8 +73,8 @@ const Footer = () => {
           <div className="space-y-1.5">
             {hours.map(([day, time]) => (
               <div key={day} className="flex gap-3 text-sm">
-                <span className="text-[var(--text-dark-secondary)] w-8 shrink-0">{day}</span>
-                <span className="text-[var(--text-dark-secondary)]">{time}</span>
+                <span className="text-[var(--text-light-secondary)] w-8 shrink-0">{day}</span>
+                <span className="text-[var(--text-light-secondary)]">{time}</span>
               </div>
             ))}
           </div>
@@ -84,13 +84,13 @@ const Footer = () => {
 
       <div className="border-t border-stone-800">
         <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-[var(--text-dark-secondary)] text-xs">&copy; {new Date().getFullYear()} Allbikes. All rights reserved.</p>
+          <p className="text-[var(--text-light-secondary)] text-xs">&copy; {new Date().getFullYear()} Allbikes. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <p className="text-[var(--text-dark-secondary)] text-xs">
+            <p className="text-[var(--text-light-secondary)] text-xs">
               ABN: {siteSettings.abn_number}&nbsp;&nbsp;MD: {siteSettings.md_number}&nbsp;&nbsp;MRB: {siteSettings.mrb_number}
             </p>
             <div className="flex items-center gap-1.5 border-l border-stone-800 pl-4">
-              <span className="text-[var(--text-dark-secondary)] text-xs">Payments by</span>
+              <span className="text-[var(--text-light-secondary)] text-xs">Payments by</span>
               <img src={stripeLogo} alt="Stripe" className="h-5 w-auto" />
             </div>
           </div>
