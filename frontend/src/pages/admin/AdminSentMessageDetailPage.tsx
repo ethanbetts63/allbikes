@@ -108,7 +108,7 @@ const AdminSentMessageDetailPage = () => {
               {message.body_html && (
                 <button
                   onClick={() => setTab('html')}
-                  className={`text-sm px-3 py-1 rounded border ${tab === 'html' ? 'bg-black text-[var(--text-light-primary)] border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
+                  className={`text-sm px-3 py-1 rounded border ${tab === 'html' ? 'bg-black text-[var(--text-light-primary)] border-black' : 'border-border-light text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
                 >
                   HTML Preview
                 </button>
@@ -116,7 +116,7 @@ const AdminSentMessageDetailPage = () => {
               {message.body_text && (
                 <button
                   onClick={() => setTab('text')}
-                  className={`text-sm px-3 py-1 rounded border ${tab === 'text' ? 'bg-black text-[var(--text-light-primary)] border-black' : 'border-gray-300 text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
+                  className={`text-sm px-3 py-1 rounded border ${tab === 'text' ? 'bg-black text-[var(--text-light-primary)] border-black' : 'border-border-light text-[var(--text-dark-secondary)] hover:border-gray-400'}`}
                 >
                   Plain Text
                 </button>
@@ -126,13 +126,13 @@ const AdminSentMessageDetailPage = () => {
             {tab === 'html' && message.body_html ? (
               <iframe
                 srcDoc={message.body_html}
-                className="w-full border border-gray-200 rounded"
+                className="w-full border border-border-light rounded"
                 style={{ height: '600px' }}
                 sandbox="allow-same-origin"
                 title="Email HTML preview"
               />
             ) : (
-              <pre className="whitespace-pre-wrap text-sm text-[var(--text-dark-secondary)] bg-[var(--bg-light-secondary)] border border-gray-200 rounded p-4 font-mono">
+              <pre className="whitespace-pre-wrap text-sm text-[var(--text-dark-secondary)] bg-[var(--bg-light-secondary)] border border-border-light rounded p-4 font-mono">
                 {message.body_text}
               </pre>
             )}

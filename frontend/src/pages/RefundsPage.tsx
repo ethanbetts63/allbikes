@@ -29,7 +29,7 @@ const RefundsPage = () => {
 
         {/* Overview + How to request */}
         <section className="mb-8">
-          <div className="bg-[var(--bg-light-primary)] border border-stone-200 rounded-lg shadow-sm p-6 space-y-6">
+          <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg shadow-sm p-6 space-y-6">
             <div>
               <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Our Policy</h2>
               <p className="text-[var(--text-dark-secondary)] text-sm leading-relaxed mb-3">
@@ -55,7 +55,7 @@ const RefundsPage = () => {
 
         {/* Contact */}
         <section className="mb-8">
-          <div className="bg-[var(--bg-light-primary)] border border-stone-200 rounded-lg shadow-sm p-6 space-y-4">
+          <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg shadow-sm p-6 space-y-4">
             <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Contact Us</h2>
             {siteSettings.email_address && (
               <div className="flex items-center gap-3">

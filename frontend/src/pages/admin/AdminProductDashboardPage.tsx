@@ -165,11 +165,11 @@ const AdminProductDashboardPage = () => {
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading products...</p>
         ) : (
           <>
-            <div className="rounded-md border border-gray-300">
+            <div className="rounded-md border border-border-light">
               <Table>
                 <TableHeader>
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id} className="border-gray-300">
+                    <TableRow key={headerGroup.id} className="border-border-light">
                       {headerGroup.headers.map((header) => (
                         <TableHead key={header.id} className="text-[var(--text-dark-primary)]">
                           {header.isPlaceholder
@@ -183,7 +183,7 @@ const AdminProductDashboardPage = () => {
                 <TableBody>
                   {table.getRowModel().rows.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <TableRow key={row.id} className="border-gray-300">
+                      <TableRow key={row.id} className="border-border-light">
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id} className="text-[var(--text-dark-primary)]">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -160,11 +160,11 @@ const OrderTable = () => {
         </Button>
       </div>
 
-      <div className="rounded-md border border-gray-300">
+      <div className="rounded-md border border-border-light">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(hg => (
-              <TableRow key={hg.id} className="border-gray-300">
+              <TableRow key={hg.id} className="border-border-light">
                 {hg.headers.map(h => (
                   <TableHead key={h.id} className="text-[var(--text-dark-primary)]">
                     {h.isPlaceholder ? null : flexRender(h.column.columnDef.header, h.getContext())}
@@ -178,7 +178,7 @@ const OrderTable = () => {
               table.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
-                  className="border-gray-300 cursor-pointer hover:bg-[var(--bg-light-secondary)]"
+                  className="border-border-light cursor-pointer hover:bg-[var(--bg-light-secondary)]"
                   onClick={() => navigate(`/dashboard/orders/${row.original.id}`)}
                 >
                   {row.getVisibleCells().map(cell => (
@@ -210,7 +210,7 @@ const OrderTable = () => {
               size="sm"
               onClick={() => setPage(p => p - 1)}
               disabled={!hasPrev}
-              className="text-[var(--text-dark-primary)] border-gray-300"
+              className="text-[var(--text-dark-primary)] border-border-light"
             >
               Previous
             </Button>
@@ -219,7 +219,7 @@ const OrderTable = () => {
               size="sm"
               onClick={() => setPage(p => p + 1)}
               disabled={!hasNext}
-              className="text-[var(--text-dark-primary)] border-gray-300"
+              className="text-[var(--text-dark-primary)] border-border-light"
             >
               Next
             </Button>

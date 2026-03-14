@@ -70,10 +70,10 @@ const AdminSentMessagesPage = () => {
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading messages...</p>
         ) : (
           <>
-            <div className="rounded-md border border-gray-300">
+            <div className="rounded-md border border-border-light">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-gray-300">
+                  <TableRow className="border-border-light">
                     <TableHead className="text-[var(--text-dark-primary)]">Type</TableHead>
                     <TableHead className="text-[var(--text-dark-primary)]">To</TableHead>
                     <TableHead className="text-[var(--text-dark-primary)]">Subject</TableHead>
@@ -86,7 +86,7 @@ const AdminSentMessagesPage = () => {
                     messages.map((msg) => (
                       <TableRow
                         key={msg.id}
-                        className="border-gray-300 cursor-pointer hover:bg-[var(--bg-light-secondary)]"
+                        className="border-border-light cursor-pointer hover:bg-[var(--bg-light-secondary)]"
                         onClick={() => navigate(`/dashboard/messages/${msg.id}`)}
                       >
                         <TableCell className="text-[var(--text-dark-primary)] text-sm">

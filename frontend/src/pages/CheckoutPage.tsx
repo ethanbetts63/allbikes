@@ -100,7 +100,7 @@ const CheckoutPage = () => {
         <div className="container mx-auto px-4 py-8 max-w-2xl">
 
           {/* Product summary */}
-          <div className="bg-[var(--bg-light-secondary)] border border-stone-200 rounded-lg p-4 mb-8 flex items-center gap-4">
+          <div className="bg-[var(--bg-light-secondary)] border border-border-light rounded-lg p-4 mb-8 flex items-center gap-4">
             {imageUrl && (
               <img src={imageUrl} alt={product.name} className="w-20 h-20 object-cover rounded-md shrink-0" />
             )}

@@ -90,10 +90,10 @@ const AdminServiceBookingsDashboardPage = () => {
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading...</p>
         ) : (
           <>
-            <div className="rounded-md border border-gray-300">
+            <div className="rounded-md border border-border-light">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-gray-300">
+                  <TableRow className="border-border-light">
                     <TableHead className="text-[var(--text-dark-primary)]">Customer</TableHead>
                     <TableHead className="text-[var(--text-dark-primary)]">Vehicle Reg</TableHead>
                     <TableHead className="text-[var(--text-dark-primary)]">Status</TableHead>
@@ -105,7 +105,7 @@ const AdminServiceBookingsDashboardPage = () => {
                     data.map(log => (
                       <TableRow
                         key={log.id}
-                        className="border-gray-300 cursor-pointer hover:bg-[var(--bg-light-secondary)]"
+                        className="border-border-light cursor-pointer hover:bg-[var(--bg-light-secondary)]"
                         onClick={() => navigate(`/dashboard/service-bookings/${log.id}`)}
                       >
                         <TableCell className="text-[var(--text-dark-primary)]">
@@ -139,10 +139,10 @@ const AdminServiceBookingsDashboardPage = () => {
             <div className="flex items-center justify-between mt-3">
               <span className="text-sm text-[var(--text-dark-secondary)]">{totalCount} booking{totalCount !== 1 ? 's' : ''} total</span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={!hasPrev} className="text-[var(--text-dark-primary)] border-gray-300">
+                <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={!hasPrev} className="text-[var(--text-dark-primary)] border-border-light">
                   Previous
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={!hasNext} className="text-[var(--text-dark-primary)] border-gray-300">
+                <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={!hasNext} className="text-[var(--text-dark-primary)] border-border-light">
                   Next
                 </Button>
               </div>

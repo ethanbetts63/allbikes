@@ -191,11 +191,11 @@ const InventoryTable = () => {
           Used
         </Button>
       </div>
-      <div className="rounded-md border border-gray-300">
+      <div className="rounded-md border border-border-light">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-gray-300">
+              <TableRow key={headerGroup.id} className="border-border-light">
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id} className="text-[var(--text-dark-primary)]">
                     {header.isPlaceholder
@@ -215,7 +215,7 @@ const InventoryTable = () => {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-gray-300"
+                  className="border-border-light"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-[var(--text-dark-primary)]">

@@ -144,7 +144,7 @@ const EScooterDetailPage = () => {
                     {/* Right Column: Price, Description, CTA */}
                     <div>
                         {/* Price */}
-                        <div className="mb-6 pb-4 border-b border-stone-200">
+                        <div className="mb-6 pb-4 border-b border-border-light">
                             {product.discount_price && parseFloat(product.discount_price) > 0 ? (
                                 <div className="flex items-baseline gap-3">
                                     <span className="text-4xl font-semibold text-[var(--highlight)]">

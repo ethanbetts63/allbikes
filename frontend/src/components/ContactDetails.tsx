@@ -24,7 +24,7 @@ const ContactDetails = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 {/* Location & Contact */}
-                <div className="bg-[var(--bg-light-primary)] border border-stone-200 rounded-lg shadow-sm p-6">
+                <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <MapPin className="h-5 w-5 text-[var(--highlight)] shrink-0" />
                         <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide">Our Location</h2>
@@ -51,7 +51,7 @@ const ContactDetails = () => {
                 </div>
 
                 {/* Opening Hours */}
-                <div className="bg-[var(--bg-light-primary)] border border-stone-200 rounded-lg shadow-sm p-6">
+                <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <Clock className="h-5 w-5 text-[var(--highlight)] shrink-0" />
                         <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide">Opening Hours</h2>

@@ -312,7 +312,7 @@ const BikeDetailPage = () => {
                     {/* Right Column: Specifications & Description */}
                     <div>
                         {/* Price */}
-                        <div className="mb-6 pb-4 border-b border-stone-200">
+                        <div className="mb-6 pb-4 border-b border-border-light">
                             {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
                                 <div className="flex items-baseline gap-3">
                                     <span className="text-4xl font-semibold text-[var(--highlight)]">

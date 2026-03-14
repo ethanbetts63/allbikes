@@ -33,14 +33,14 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
   };
 
   return (
-    <div className="bg-[var(--bg-light-primary)] border border-stone-200 rounded-lg shadow-sm p-4 mb-8">
+    <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg shadow-sm p-4 mb-8">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
 
         {/* Sort */}
         <div className="flex flex-col gap-1">
           <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">Sort By</span>
           <Select onValueChange={handleOrderingChange} value={localOptions.ordering}>
-            <SelectTrigger className="border-stone-200 text-[var(--text-dark-primary)] text-sm">
+            <SelectTrigger className="border-border-light text-[var(--text-dark-primary)] text-sm">
               <SelectValue placeholder="Default" />
             </SelectTrigger>
             <SelectContent>
@@ -64,7 +64,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Min"
               value={localOptions.min_price || ''}
               onChange={handleInputChange}
-              className="border-stone-200 text-[var(--text-dark-primary)] text-sm"
+              className="border-border-light text-[var(--text-dark-primary)] text-sm"
             />
             <Input
               type="number"
@@ -72,7 +72,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Max"
               value={localOptions.max_price || ''}
               onChange={handleInputChange}
-              className="border-stone-200 text-[var(--text-dark-primary)] text-sm"
+              className="border-border-light text-[var(--text-dark-primary)] text-sm"
             />
           </div>
         </div>
@@ -87,7 +87,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Min"
               value={localOptions.min_year || ''}
               onChange={handleInputChange}
-              className="border-stone-200 text-[var(--text-dark-primary)] text-sm"
+              className="border-border-light text-[var(--text-dark-primary)] text-sm"
             />
             <Input
               type="number"
@@ -95,7 +95,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Max"
               value={localOptions.max_year || ''}
               onChange={handleInputChange}
-              className="border-stone-200 text-[var(--text-dark-primary)] text-sm"
+              className="border-border-light text-[var(--text-dark-primary)] text-sm"
             />
           </div>
         </div>
@@ -110,7 +110,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Min"
               value={localOptions.min_engine_size || ''}
               onChange={handleInputChange}
-              className="border-stone-200 text-[var(--text-dark-primary)] text-sm"
+              className="border-border-light text-[var(--text-dark-primary)] text-sm"
             />
             <Input
               type="number"
@@ -118,7 +118,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
               placeholder="Max"
               value={localOptions.max_engine_size || ''}
               onChange={handleInputChange}
-              className="border-stone-200 text-[var(--text-dark-primary)] text-sm"
+              className="border-border-light text-[var(--text-dark-primary)] text-sm"
             />
           </div>
         </div>

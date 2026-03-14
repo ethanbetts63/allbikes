@@ -29,15 +29,18 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  /* custom */
   --color-highlight: var(--highlight);
   --color-highlight1: var(--highlight1);
   --color-bg-light-primary: var(--bg-light-primary);
   --color-bg-light-secondary: var(--bg-light-secondary);
   --color-bg-dark-primary: var(--bg-dark-primary);
   --color-bg-dark-secondary: var(--bg-dark-secondary);
+  --color-border-light: var(--border-light);
 }
 
 :root {
+  /* custom */
   --radius: 0.625rem;
   --background: hsl(217.5, 44.44%, 10.59%);
   --foreground: hsl(217.5, 44.44%, 16.59%);
@@ -51,6 +54,8 @@
   --text-light-secondary: hsl(0 0% 70%);
   --text-dark-primary: hsl(0 0% 11%);
   --text-dark-secondary: hsl(0 0% 40%);
+  --border-light: hsl(30, 6%, 87%);
+  /* shadcn */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
