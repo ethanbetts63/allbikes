@@ -3,6 +3,7 @@ from django.db import transaction
 from django.db.models import F
 
 from ..models import Order, Payment
+from ..utils.email import send_customer_confirmation, send_admin_new_order
 from product.models import Product
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,9 @@ def handle_payment_intent_succeeded(payment_intent):
                 order.product_id,
                 order.order_reference,
             )
+
+    send_customer_confirmation(order)
+    send_admin_new_order(order)
 
 
 def handle_payment_intent_failed(payment_intent):

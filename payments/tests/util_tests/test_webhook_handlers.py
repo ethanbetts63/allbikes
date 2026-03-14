@@ -11,6 +11,12 @@ def _intent(intent_id):
     return {'id': intent_id}
 
 
+@pytest.fixture(autouse=True)
+def mock_emails(mocker):
+    mocker.patch('payments.utils.webhook_handlers.send_customer_confirmation')
+    mocker.patch('payments.utils.webhook_handlers.send_admin_new_order')
+
+
 @pytest.mark.django_db
 class TestHandlePaymentIntentSucceeded:
     """Tests for the payment_intent.succeeded webhook handler."""

@@ -1,0 +1,25 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}Reminder: Unfulfilled order — {{ order.order_reference }}{% endblock %}
+
+{% block preheader %}Order {{ order.order_reference }} ({{ order.product.name }}) is paid but not yet dispatched.{% endblock %}
+
+{% block content %}
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: bold; color: #1a1a1a; margin: 0 0 16px 0;">Unfulfilled Order Reminder</h1>
+
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #333333; margin: 0 0 24px 0; line-height: 26px;">
+    The following order has been paid but not yet dispatched:
+</p>
+
+<div style="background-color: #fff8e1; border-left: 4px solid #f59e0b; border-radius: 0 4px 4px 0; padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #333333; line-height: 26px; margin-bottom: 28px;">
+    <p style="margin: 0 0 8px 0;"><strong>Order reference:</strong> {{ order.order_reference }}</p>
+    <p style="margin: 0 0 8px 0;"><strong>Product:</strong> {{ order.product.name }}</p>
+    <p style="margin: 0 0 8px 0;"><strong>Customer:</strong> {{ order.customer_name }}</p>
+    <p style="margin: 0 0 8px 0;"><strong>Email:</strong> <a href="mailto:{{ order.customer_email }}" style="color: #333333;">{{ order.customer_email }}</a></p>
+    <p style="margin: 0 0 8px 0;"><strong>Delivery address:</strong><br>
+        {{ order.address_line1 }}{% if order.address_line2 %}, {{ order.address_line2 }}{% endif %}<br>
+        {{ order.suburb }} {{ order.state }} {{ order.postcode }}
+    </p>
+    <p style="margin: 0;"><strong>Order date:</strong> {{ order.created_at|date:"d M Y" }}</p>
+</div>
+{% endblock %}
