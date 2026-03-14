@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Notification",
+            name="SentMessage",
             fields=[
                 (
                     "id",
@@ -26,8 +26,12 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("object_id", models.PositiveIntegerField(blank=True, null=True)),
+                ("to", models.CharField(max_length=255)),
+                ("subject", models.CharField(blank=True, max_length=500)),
+                ("body_text", models.TextField(blank=True)),
+                ("body_html", models.TextField(blank=True)),
                 (
-                    "notification_type",
+                    "message_type",
                     models.CharField(
                         choices=[
                             ("customer_confirmation", "Customer Confirmation"),
@@ -45,23 +49,34 @@ class Migration(migrations.Migration):
                         max_length=10,
                     ),
                 ),
-                ("sent_at", models.DateTimeField(blank=True, null=True)),
                 (
                     "status",
                     models.CharField(
-                        choices=[("sent", "Sent"), ("failed", "Failed")],
+                        choices=[
+                            ("sent", "Sent"),
+                            ("failed", "Failed"),
+                            ("delivered", "Delivered"),
+                            ("bounced", "Bounced"),
+                        ],
+                        default="sent",
                         max_length=10,
                     ),
                 ),
+                ("error_message", models.TextField(blank=True)),
+                ("sent_at", models.DateTimeField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
                     "content_type",
                     models.ForeignKey(
                         blank=True,
                         null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
+                        on_delete=django.db.models.deletion.SET_NULL,
                         to="contenttypes.contenttype",
                     ),
                 ),
             ],
+            options={
+                "ordering": ["-created_at"],
+            },
         ),
     ]

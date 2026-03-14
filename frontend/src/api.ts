@@ -10,6 +10,7 @@ import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import type { GetBikesOptions } from '@/types/GetBikesOptions';
 import type { Product } from '@/types/Product';
 import type { Order } from '@/types/Order';
+import type { SentMessage } from '@/types/SentMessage';
 
 /**
  * A centralized module for all API interactions.
@@ -284,5 +285,21 @@ export async function adminUpdateOrderStatus(id: number, status: string): Promis
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
     });
+    return handleResponse(response);
+}
+
+// --- Notifications Endpoints ---
+
+export async function adminGetSentMessages(options: { channel?: string; status?: string; message_type?: string; page?: number } = {}): Promise<PaginatedResponse<SentMessage>> {
+    const params = new URLSearchParams({ page: String(options.page ?? 1) });
+    if (options.channel) params.append('channel', options.channel);
+    if (options.status) params.append('status', options.status);
+    if (options.message_type) params.append('message_type', options.message_type);
+    const response = await authedFetch(`/api/notifications/messages/?${params.toString()}`);
+    return handleResponse(response);
+}
+
+export async function adminGetSentMessage(id: number): Promise<SentMessage> {
+    const response = await authedFetch(`/api/notifications/messages/${id}/`);
     return handleResponse(response);
 }

@@ -6,11 +6,10 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-PERTH_TZ = ZoneInfo("Australia/Perth")
-
-from notifications.models import Notification
+from notifications.models import SentMessage
 
 logger = logging.getLogger(__name__)
+PERTH_TZ = ZoneInfo("Australia/Perth")
 
 
 def _send_mailgun(to, subject, html_body, text_body):
@@ -28,17 +27,22 @@ def _send_mailgun(to, subject, html_body, text_body):
     ).raise_for_status()
 
 
-def _record(obj, notification_type, status):
+def _record(obj, message_type, to, subject, body_text, body_html, status, error_message=''):
     try:
-        Notification.objects.create(
+        SentMessage.objects.create(
             content_object=obj,
-            notification_type=notification_type,
+            message_type=message_type,
             channel='email',
+            to=to,
+            subject=subject,
+            body_text=body_text,
+            body_html=body_html,
             status=status,
+            error_message=error_message,
             sent_at=timezone.now() if status == 'sent' else None,
         )
     except Exception as e:
-        logger.error("Failed to record notification (%s, %s): %s", notification_type, status, e)
+        logger.error("Failed to record sent message (%s): %s", message_type, e)
 
 
 def _effective_price(product):
@@ -46,6 +50,8 @@ def _effective_price(product):
 
 
 def send_customer_confirmation(order):
+    to = order.customer_email
+    subject = f"Order confirmed — {order.order_reference}"
     context = {'order': order}
     html_body = render_to_string('notifications/emails/customer_confirmation.html', context)
     price = _effective_price(order.product)
@@ -61,16 +67,11 @@ def send_customer_confirmation(order):
         + f"\n\nWe'll be in touch when your order is dispatched.\n\nThank you for shopping with ScooterShop!"
     )
     try:
-        _send_mailgun(
-            to=order.customer_email,
-            subject=f"Order confirmed — {order.order_reference}",
-            html_body=html_body,
-            text_body=text_body,
-        )
-        _record(order, 'customer_confirmation', 'sent')
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'sent')
     except Exception as e:
         logger.error("Failed to send customer confirmation for order %s: %s", order.order_reference, e)
-        _record(order, 'customer_confirmation', 'failed')
+        _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'failed', str(e))
 
 
 def send_admin_new_order(order):
@@ -82,6 +83,8 @@ def send_admin_new_order(order):
         )
         return
 
+    to = admin_email
+    subject = f"New ScooterShop order — {order.order_reference}"
     context = {'order': order}
     html_body = render_to_string('notifications/emails/admin_new_order.html', context)
     price = _effective_price(order.product)
@@ -96,16 +99,11 @@ def send_admin_new_order(order):
         f"Address: {order.address_line1}, {order.suburb} {order.state} {order.postcode}\n"
     )
     try:
-        _send_mailgun(
-            to=admin_email,
-            subject=f"New ScooterShop order — {order.order_reference}",
-            html_body=html_body,
-            text_body=text_body,
-        )
-        _record(order, 'admin_new_order', 'sent')
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(order, 'admin_new_order', to, subject, text_body, html_body, 'sent')
     except Exception as e:
         logger.error("Failed to send admin new order notification for order %s: %s", order.order_reference, e)
-        _record(order, 'admin_new_order', 'failed')
+        _record(order, 'admin_new_order', to, subject, text_body, html_body, 'failed', str(e))
 
 
 def send_admin_reminder(order):
@@ -117,6 +115,8 @@ def send_admin_reminder(order):
         )
         return
 
+    to = admin_email
+    subject = f"Reminder: Unfulfilled order — {order.order_reference}"
     context = {'order': order}
     html_body = render_to_string('notifications/emails/admin_reminder.html', context)
     text_body = (
@@ -127,13 +127,8 @@ def send_admin_reminder(order):
         f"Order date: {order.created_at.strftime('%d %b %Y')}\n"
     )
     try:
-        _send_mailgun(
-            to=admin_email,
-            subject=f"Reminder: Unfulfilled order — {order.order_reference}",
-            html_body=html_body,
-            text_body=text_body,
-        )
-        _record(order, 'admin_reminder', 'sent')
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(order, 'admin_reminder', to, subject, text_body, html_body, 'sent')
     except Exception as e:
         logger.error("Failed to send admin reminder for order %s: %s", order.order_reference, e)
-        _record(order, 'admin_reminder', 'failed')
+        _record(order, 'admin_reminder', to, subject, text_body, html_body, 'failed', str(e))

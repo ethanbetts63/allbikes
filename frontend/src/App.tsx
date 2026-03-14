@@ -35,6 +35,8 @@ const CheckoutProcessingPage = lazy(() => import('./pages/CheckoutProcessingPage
 const CheckoutSuccessPage = lazy(() => import('./pages/CheckoutSuccessPage'));
 const AdminOrderDashboardPage = lazy(() => import('./pages/admin/AdminOrderDashboardPage'));
 const AdminOrderDetailPage = lazy(() => import('./pages/admin/AdminOrderDetailPage'));
+const AdminSentMessagesPage = lazy(() => import('./pages/admin/AdminSentMessagesPage'));
+const AdminSentMessageDetailPage = lazy(() => import('./pages/admin/AdminSentMessageDetailPage'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -88,6 +90,8 @@ function App() {
                   <Route path="products/:id/edit" element={<AdminProductDetailPage />} />
                   <Route path="orders" element={<AdminOrderDashboardPage />} />
                   <Route path="orders/:id" element={<AdminOrderDetailPage />} />
+                  <Route path="messages" element={<AdminSentMessagesPage />} />
+                  <Route path="messages/:id" element={<AdminSentMessageDetailPage />} />
                 </Route>
 
               </Routes>
