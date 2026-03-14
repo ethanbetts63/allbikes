@@ -9,7 +9,7 @@ const AdminLayout = () => {
   const { user, isLoading: isAuthLoading } = useAuth();
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `w-full justify-start flex items-center gap-2 ${isActive ? 'bg-muted text-primary' : 'hover:bg-muted/50'}`;
+    `w-full justify-start flex items-center gap-2 ${isActive ? 'bg-[var(--bg-light-secondary)] text-highlight1' : 'hover:bg-[var(--bg-light-secondary)]/50'}`;
 
   if (isAuthLoading) {
     return (

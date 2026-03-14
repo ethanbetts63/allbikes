@@ -24,7 +24,7 @@ const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, button
           {paragraph}
         </p>
         <Link to="/booking">
-          <Button className="bg-primary text-[var(--text-light-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
+          <Button className="bg-highlight1 text-[var(--text-light-primary)] font-bold px-8 py-5 text-xl hover:bg-highlight1/80 flex items-center gap-2">
             {buttonText} <ArrowRight className="h-5" />
           </Button>
         </Link>
@@ -45,7 +45,7 @@ const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, button
             </Alert>
           ) : !jobTypes || jobTypes.length === 0 ? (
             <div className="bg-foreground p-6 rounded-lg flex items-center gap-4">
-                <Cog className="h-8 w-8 text-primary flex-shrink-0" />
+                <Cog className="h-8 w-8 text-highlight1 flex-shrink-0" />
                 <div>
                     <h3 className="text-xl font-bold mb-2">No Services Currently Listed</h3>
                     <p className="text-[var(--text-light-secondary)]">
@@ -56,7 +56,7 @@ const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, button
           ) : (
             jobTypes.map((job) => (
               <div key={job.name} className="bg-foreground p-6 rounded-lg shadow-md flex items-center gap-4">
-                <Cog className="h-8 w-8 text-primary flex-shrink-0" />
+                <Cog className="h-8 w-8 text-highlight1 flex-shrink-0" />
                 <div>
                     <h3 className="text-xl font-bold mb-2 text-[var(--text-light-primary)]">{job.name}</h3>
                     <p className="text-[var(--text-light-secondary)]">

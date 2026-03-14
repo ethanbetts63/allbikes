@@ -143,7 +143,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
 
                 <div>
                     <Label className="mb-2 block">Job Type <span className="text-destructive">*</span></Label>
-                    <p className="text-sm text-muted-foreground mb-2">Please select one or more job types that best describe the service you require.</p>
+                    <p className="text-sm text-[var(--text-dark-secondary)] mb-2">Please select one or more job types that best describe the service you require.</p>
                     <div className="space-y-4 mt-2 p-4 border rounded-md max-h-64 overflow-y-auto">
                         {jobTypes.length > 0 ? jobTypes.map((job) => (
                             <div key={job.name}>
@@ -156,18 +156,18 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                                     <Label htmlFor={job.name} className="font-semibold">{job.name}</Label>
                                 </div>
                                 {job.description && (
-                                    <p className="text-sm text-muted-foreground ml-6 mt-1">
+                                    <p className="text-sm text-[var(--text-dark-secondary)] ml-6 mt-1">
                                         {job.description}
                                     </p>
                                 )}
                             </div>
-                        )) : <p className="text-sm text-muted-foreground">Loading services...</p>}
+                        )) : <p className="text-sm text-[var(--text-dark-secondary)]">Loading services...</p>}
                     </div>
                 </div>
                 
                 <div>
                     <Label htmlFor="notes" className="mb-2 block">Notes</Label>
-                    <p className="text-sm text-muted-foreground mb-2">Please provide details about your service requirements. (e.g., specific issues, weird sounds, the circumstances it broke under, etc.)</p>
+                    <p className="text-sm text-[var(--text-dark-secondary)] mb-2">Please provide details about your service requirements. (e.g., specific issues, weird sounds, the circumstances it broke under, etc.)</p>
                     <Textarea 
                         id="notes"
                         placeholder="Add any notes for the mechanic (e.g., details about the issue)" 

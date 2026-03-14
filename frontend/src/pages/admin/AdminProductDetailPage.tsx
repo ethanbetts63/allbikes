@@ -104,7 +104,7 @@ const AdminProductDetailPage = () => {
   };
 
   if (id && isLoading && !initialData) {
-    return <p className="text-muted-foreground">Loading...</p>;
+    return <p className="text-[var(--text-dark-secondary)]">Loading...</p>;
   }
 
   return (

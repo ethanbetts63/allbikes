@@ -29,7 +29,7 @@ const MotorcycleMovers = () => {
                     rel="noopener noreferrer"
                     className="mt-6 inline-block"
                 >
-                    <Button className="bg-primary text-[var(--text-light-primary)] font-bold px-8 py-5 text-xl hover:bg-primary/90 flex items-center gap-2">
+                    <Button className="bg-highlight1 text-[var(--text-light-primary)] font-bold px-8 py-5 text-xl hover:bg-highlight1/80 flex items-center gap-2">
                         Book with Movers <ArrowRight className="h-5" />
                     </Button>
                 </a>

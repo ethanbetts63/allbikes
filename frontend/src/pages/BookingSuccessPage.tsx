@@ -12,7 +12,7 @@ const BookingSuccessPage = () => {
                 description="Your service booking has been submitted successfully. We will contact you shortly to confirm."
                 noindex={true}
             />
-            <div className="p-8 border rounded-lg shadow-lg bg-card">
+            <div className="p-8 border rounded-lg shadow-lg bg-[var(--bg-light-primary)]">
                 <CheckCircle className="mx-auto h-16 w-16 text-highlight1 mb-4" />
                 <h1 className="text-3xl font-bold mb-4">Booking Submitted Successfully!</h1>
                 <p className="text-lg text-[var(--text-dark-primary)] mb-8">
