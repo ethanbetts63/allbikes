@@ -20,8 +20,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.name', read_only=True)
-    product_price = serializers.CharField(source='product.price', read_only=True)
-    product_discount_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
@@ -30,8 +28,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'order_reference',
             'product',
             'product_name',
-            'product_price',
-            'product_discount_price',
+            'amount_paid',
             'customer_name',
             'customer_email',
             'customer_phone',
@@ -44,11 +41,6 @@ class OrderSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-
-    def get_product_discount_price(self, obj):
-        if obj.product.discount_price:
-            return str(obj.product.discount_price)
-        return None
 
 
 class OrderStatusSerializer(serializers.ModelSerializer):

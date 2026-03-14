@@ -27,6 +27,14 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def in_stock(self):
+        return self.stock_quantity > 0
+
+    @property
+    def low_stock(self):
+        return 0 < self.stock_quantity <= self.LOW_STOCK_THRESHOLD
+
     def __str__(self):
         return self.name
 

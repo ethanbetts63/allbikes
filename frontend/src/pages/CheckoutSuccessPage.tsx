@@ -45,9 +45,7 @@ const CheckoutSuccessPage = () => {
     return <p className="text-red-500 text-center mt-8">{error || 'Order not found.'}</p>;
   }
 
-  const displayPrice = order.product_discount_price && parseFloat(order.product_discount_price) > 0
-    ? order.product_discount_price
-    : order.product_price;
+  const displayPrice = order.amount_paid ?? '0';
 
   return (
     <>

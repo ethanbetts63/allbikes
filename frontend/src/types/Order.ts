@@ -3,8 +3,7 @@ export interface Order {
   order_reference: string;
   product: number;
   product_name: string;
-  product_price: string;
-  product_discount_price: string | null;
+  amount_paid: string | null;
   customer_name: string;
   customer_email: string;
   customer_phone: string;

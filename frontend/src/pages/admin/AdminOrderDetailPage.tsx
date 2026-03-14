@@ -83,9 +83,7 @@ const AdminOrderDetailPage = () => {
   }
 
   const badge = STATUS_BADGE[order.status];
-  const displayPrice = order.product_discount_price && parseFloat(order.product_discount_price) > 0
-    ? order.product_discount_price
-    : order.product_price;
+  const displayPrice = order.amount_paid ?? '0';
 
   const address = [
     order.address_line1,

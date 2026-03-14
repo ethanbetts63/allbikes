@@ -27,6 +27,13 @@ class Order(models.Model):
     state = models.CharField(max_length=10)
     postcode = models.CharField(max_length=10)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending_payment')
+    amount_paid = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="The amount actually charged at the time of payment. Set by the payment webhook.",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

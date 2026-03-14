@@ -30,7 +30,8 @@ def handle_payment_intent_succeeded(payment_intent):
 
         order = payment.order
         order.status = 'paid'
-        order.save(update_fields=['status', 'updated_at'])
+        order.amount_paid = payment.amount
+        order.save(update_fields=['status', 'amount_paid', 'updated_at'])
 
         # Atomic stock decrement — log if sold out between intent and webhook
         updated = Product.objects.filter(
