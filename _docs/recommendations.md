@@ -58,13 +58,4 @@ Stock is adjusted by directly PATCHing `stock_quantity`. In a concurrent environ
 **4. `product_price` serialized as `CharField` (`order_serializer.py:23`)**
 `serializers.CharField(source='product.price')` coerces a `DecimalField` to a string. It works, but it's semantically wrong — downstream consumers expecting a number will get a string. Should be `DecimalField(source='product.price', max_digits=10, decimal_places=2)`.
 
-**6. `handle_payment_intent_failed` not wrapped in a transaction (`webhook_handlers.py:52-63`)**
-`handle_payment_intent_succeeded` uses `transaction.atomic()` for safety; `handle_payment_intent_failed` does not. If the `payment.save()` were to fail mid-way (rare, but possible), the handler could leave state inconsistent. Low risk with a single save, but worth making consistent.
-
----
-
-
-**3. Generic FK on `SentMessage` is over-engineered (`models.py:24-26`)**
-`content_type` / `object_id` / `content_object` adds a `ContentType` join on every lookup — but in practice only ever links to `Order`. A plain nullable `ForeignKey` to `Order` would be simpler, faster to query, and easier to read.
-
 
