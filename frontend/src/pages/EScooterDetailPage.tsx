@@ -150,7 +150,7 @@ const EScooterDetailPage = () => {
                                     <span className="text-4xl font-semibold text-[var(--highlight)]">
                                         ${parseFloat(product.discount_price).toLocaleString()}
                                     </span>
-                                    <span className="text-xl text-stone-400 line-through">
+                                    <span className="text-xl text-[var(--text-dark-secondary)] line-through">
                                         ${parseFloat(product.price).toLocaleString()}
                                     </span>
                                 </div>
@@ -187,7 +187,7 @@ const EScooterDetailPage = () => {
                                 <p>✓ Free delivery Australia-wide</p>
                             </div>
                             <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
-                                <span className="text-xs text-stone-400">Powered by</span>
+                                <span className="text-xs text-[var(--text-dark-secondary)]">Powered by</span>
                                 <img src={stripeLogo} alt="Stripe" className="h-6 w-auto opacity-70" />
                             </div>
                         </div>

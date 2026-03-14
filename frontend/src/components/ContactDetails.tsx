@@ -33,16 +33,16 @@ const ContactDetails = () => {
                     <div className="space-y-3">
                         {primaryPhone && (
                             <div className="flex items-center gap-2.5">
-                                <Phone className="h-4 w-4 text-stone-400 shrink-0" />
-                                <a href={`tel:${primaryPhone}`} className="text-stone-700 text-sm font-semibold hover:text-amber-500 transition-colors">
+                                <Phone className="h-4 w-4 text-[var(--text-dark-secondary)] shrink-0" />
+                                <a href={`tel:${primaryPhone}`} className="text-stone-700 text-sm font-semibold hover:text-[var(--highlight)] transition-colors">
                                     {displayPhone}
                                 </a>
                             </div>
                         )}
                         {s.email_address && (
                             <div className="flex items-center gap-2.5">
-                                <Mail className="h-4 w-4 text-stone-400 shrink-0" />
-                                <a href={`mailto:${s.email_address}`} className="text-stone-700 text-sm font-semibold hover:text-amber-500 transition-colors">
+                                <Mail className="h-4 w-4 text-[var(--text-dark-secondary)] shrink-0" />
+                                <a href={`mailto:${s.email_address}`} className="text-stone-700 text-sm font-semibold hover:text-[var(--highlight)] transition-colors">
                                     {s.email_address}
                                 </a>
                             </div>
@@ -63,7 +63,7 @@ const ContactDetails = () => {
                             return (
                                 <li key={label} className="flex justify-between items-center py-2 text-sm">
                                     <span className="text-[var(--text-dark-secondary)] font-medium">{label}</span>
-                                    <span className={closed ? 'text-stone-400' : 'text-[var(--text-dark-primary)] font-semibold'}>
+                                    <span className={closed ? 'text-[var(--text-dark-secondary)]' : 'text-[var(--text-dark-primary)] font-semibold'}>
                                         {hours}
                                     </span>
                                 </li>

@@ -170,7 +170,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             &amp; Scooter<br />
             Specialists
           </h1>
-          <p className="text-stone-400 text-sm leading-relaxed mb-8 max-w-xs">
+          <p className="text-[var(--text-dark-secondary)] text-sm leading-relaxed mb-8 max-w-xs">
             Mechanic and dealership for over 30 years. New and used sales, servicing, tyres, and repairs — petrol and electric models.
           </p>
           {/* Contact buttons styled to match the dark panel */}
@@ -272,7 +272,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             <h2 className="text-[var(--text-light-primary)] text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">
               Get Your Bike Serviced.
             </h2>
-            <p className="text-stone-400 text-sm leading-relaxed max-w-sm">
+            <p className="text-[var(--text-dark-secondary)] text-sm leading-relaxed max-w-sm">
               Servicing, tyres, puncture repairs, and general maintenance — petrol and electric.
             </p>
           </div>

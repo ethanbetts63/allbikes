@@ -90,15 +90,15 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                     <div>
                       {product.discount_price && parseFloat(product.discount_price) > 0 ? (
                         <div className="flex items-baseline gap-2">
-                          <span className="text-stone-400 line-through text-sm">${parseFloat(product.price).toLocaleString()}</span>
-                          <span className="text-amber-500 font-black text-xl">${parseFloat(product.discount_price).toLocaleString()}</span>
+                          <span className="text-[var(--text-dark-secondary)] line-through text-sm">${parseFloat(product.price).toLocaleString()}</span>
+                          <span className="text-[var(--highlight)] font-black text-xl">${parseFloat(product.discount_price).toLocaleString()}</span>
                         </div>
                       ) : (
                         <span className="text-[var(--text-dark-primary)] font-black text-xl">${parseFloat(displayPrice).toLocaleString()}</span>
                       )}
                       <p className="text-xs text-[var(--text-dark-secondary)] mt-0.5">incl. GST</p>
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-widest text-amber-500 group-hover:underline">
+                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--highlight)] group-hover:underline">
                       View →
                     </span>
                   </div>

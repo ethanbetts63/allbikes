@@ -25,7 +25,7 @@ const ServiceCTAV2 = () => {
                         <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
                             Get Your<br />Bike<br />Sorted.
                         </h2>
-                        <p className="text-stone-400 text-lg leading-relaxed max-w-sm mb-10">
+                        <p className="text-[var(--text-dark-secondary)] text-lg leading-relaxed max-w-sm mb-10">
                             Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes.
                         </p>
                         <Link to="/booking">

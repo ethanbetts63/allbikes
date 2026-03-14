@@ -256,7 +256,7 @@ const BikeDetailPage = () => {
                     {bike.status === 'available_soon' && (
                         <p className="mt-3 text-sm text-[var(--text-dark-secondary)] max-w-lg">
                             This bike is currently being inspected by our mechanic. It's not quite ready for sale yet — if you're interested feel free to{' '}
-                            <Link to="/contact" className="text-amber-500 underline hover:text-amber-600">get in touch</Link> and we'll keep you in the loop.
+                            <Link to="/contact" className="text-[var(--highlight)] underline hover:text-amber-600">get in touch</Link> and we'll keep you in the loop.
                         </p>
                     )}
                 </div>
@@ -318,7 +318,7 @@ const BikeDetailPage = () => {
                                     <span className="text-4xl font-semibold text-[var(--highlight)]">
                                         ${parseFloat(bike.discount_price).toLocaleString()}
                                     </span>
-                                    <span className="text-xl text-stone-400 line-through">
+                                    <span className="text-xl text-[var(--text-dark-secondary)] line-through">
                                         ${parseFloat(bike.price).toLocaleString()}
                                     </span>
                                 </div>

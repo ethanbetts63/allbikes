@@ -64,7 +64,7 @@ const CheckoutSuccessPage = () => {
           <div className="bg-stone-50 border border-stone-200 rounded-lg p-5 mb-6 text-center">
             <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-1">Order Reference</p>
             <p className="text-2xl font-black text-[var(--text-dark-primary)] font-mono tracking-wider">{order.order_reference}</p>
-            <p className="text-xs text-stone-400 mt-1">Keep this for your records</p>
+            <p className="text-xs text-[var(--text-dark-secondary)] mt-1">Keep this for your records</p>
           </div>
 
           {/* Order details */}

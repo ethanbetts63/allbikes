@@ -34,7 +34,7 @@ const RefundsPage = () => {
               <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Our Policy</h2>
               <p className="text-[var(--text-dark-secondary)] text-sm leading-relaxed mb-3">
                 All e-scooter purchases are covered by our returns and refunds policy, which is set out in full in our{' '}
-                <Link to="/terms" className="text-amber-500 hover:underline font-semibold">
+                <Link to="/terms" className="text-[var(--highlight)] hover:underline font-semibold">
                   Terms and Conditions
                 </Link>
                 . We recommend reading these before making a purchase.
@@ -64,7 +64,7 @@ const RefundsPage = () => {
                   <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Email</p>
                   <a
                     href={`mailto:${siteSettings.email_address}`}
-                    className="text-sm font-semiboldtext-[var(--text-dark-secondary)] hover:text-amber-500 transition-colors"
+                    className="text-sm font-semiboldtext-[var(--text-dark-secondary)] hover:text-[var(--highlight)] transition-colors"
                   >
                     {siteSettings.email_address}
                   </a>
@@ -78,7 +78,7 @@ const RefundsPage = () => {
                   <p className="text-xs text-[var(--text-dark-secondary)] uppercase tracking-widest font-bold mb-0.5">Phone</p>
                   <a
                     href={`tel:${primaryPhone}`}
-                    className="text-sm font-semiboldtext-[var(--text-dark-secondary)] hover:text-amber-500 transition-colors"
+                    className="text-sm font-semiboldtext-[var(--text-dark-secondary)] hover:text-[var(--highlight)] transition-colors"
                   >
                     {displayPhone}
                   </a>
@@ -87,7 +87,7 @@ const RefundsPage = () => {
             )}
             <p className="text-xs text-[var(--text-dark-secondary)] pt-2 border-t border-stone-100">
               Prefer to visit in person?{' '}
-              <Link to="/contact" className="text-amber-500 hover:underline font-semibold">
+              <Link to="/contact" className="text-[var(--highlight)] hover:underline font-semibold">
                 See our location and opening hours
               </Link>
               .

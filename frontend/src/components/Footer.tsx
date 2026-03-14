@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { siteSettings } from '@/config/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 
-const LINK_CLASS = 'text-stone-400 hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
+const LINK_CLASS = 'text-[var(--text-dark-secondary)] hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
 
 const Footer = () => {
   const { user, logout } = useAuth();
@@ -31,7 +31,7 @@ const Footer = () => {
         {/* Contact */}
         <div>
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Contact Us</p>
-          <div className="space-y-1.5 text-sm text-stone-400">
+          <div className="space-y-1.5 text-sm text-[var(--text-dark-secondary)]">
             <p>{siteSettings.street_address}</p>
             <p>{siteSettings.address_locality}, {siteSettings.address_region} {siteSettings.postal_code}</p>
             {displayedPhone && <p className="pt-1">{displayedPhone}</p>}
@@ -74,7 +74,7 @@ const Footer = () => {
             {hours.map(([day, time]) => (
               <div key={day} className="flex gap-3 text-sm">
                 <span className="text-[var(--text-dark-secondary)] w-8 shrink-0">{day}</span>
-                <span className="text-stone-400">{time}</span>
+                <span className="text-[var(--text-dark-secondary)]">{time}</span>
               </div>
             ))}
           </div>
