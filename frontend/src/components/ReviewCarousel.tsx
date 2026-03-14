@@ -125,7 +125,6 @@ const ReviewCarousel = () => {
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-gray-900 leading-tight">{review.author_name}</p>
-                        <p className="text-xs text-gray-400 leading-tight">{review.date}</p>
                       </div>
                     </div>
                     <GoogleG size={18} />
