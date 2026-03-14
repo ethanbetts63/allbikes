@@ -1,9 +1,12 @@
 import logging
+from zoneinfo import ZoneInfo
 
 import requests
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
+
+PERTH_TZ = ZoneInfo("Australia/Perth")
 
 from notifications.models import Notification
 
@@ -38,18 +41,24 @@ def _record(obj, notification_type, status):
         logger.error("Failed to record notification (%s, %s): %s", notification_type, status, e)
 
 
+def _effective_price(product):
+    return product.discount_price if product.discount_price else product.price
+
+
 def send_customer_confirmation(order):
     context = {'order': order}
     html_body = render_to_string('notifications/emails/customer_confirmation.html', context)
+    price = _effective_price(order.product)
     text_body = (
         f"Hi {order.customer_name},\n\n"
         f"Your ScooterShop order has been confirmed!\n\n"
         f"Order reference: {order.order_reference}\n"
         f"Product: {order.product.name}\n"
-        f"Price: ${order.product.price} (inc. GST)\n"
-        f"Delivery to: {order.address_line1}, {order.suburb} {order.state} {order.postcode}\n\n"
-        f"We'll be in touch when your order is dispatched.\n\n"
-        f"Thank you for shopping with ScooterShop!"
+        f"Price: ${price} incl. GST · Free delivery Australia-wide\n"
+        f"Delivery to: {order.address_line1}, {order.suburb} {order.state} {order.postcode}\n"
+        f"Contact: {order.customer_email}"
+        + (f" / {order.customer_phone}" if order.customer_phone else "")
+        + f"\n\nWe'll be in touch when your order is dispatched.\n\nThank you for shopping with ScooterShop!"
     )
     try:
         _send_mailgun(
@@ -75,14 +84,16 @@ def send_admin_new_order(order):
 
     context = {'order': order}
     html_body = render_to_string('notifications/emails/admin_new_order.html', context)
+    price = _effective_price(order.product)
     text_body = (
-        f"New order received: {order.order_reference}\n\n"
+        f"New order received: {order.order_reference}\n"
+        f"Date: {order.created_at.astimezone(PERTH_TZ).strftime('%d %b %Y, %I:%M %p')} AWST\n\n"
         f"Product: {order.product.name}\n"
+        f"Price: ${price} incl. GST\n\n"
         f"Customer: {order.customer_name}\n"
         f"Email: {order.customer_email}\n"
         f"Phone: {order.customer_phone or 'not provided'}\n"
         f"Address: {order.address_line1}, {order.suburb} {order.state} {order.postcode}\n"
-        f"Price: ${order.product.price} (inc. GST)\n"
     )
     try:
         _send_mailgun(

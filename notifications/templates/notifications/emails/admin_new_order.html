@@ -1,25 +1,61 @@
 {% extends "notifications/emails/base.html" %}
+{% load tz %}
 
 {% block title %}New ScooterShop order — {{ order.order_reference }}{% endblock %}
 
 {% block preheader %}New order received: {{ order.order_reference }} — {{ order.customer_name }}, {{ order.product.name }}.{% endblock %}
 
 {% block content %}
-<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: bold; color: #1a1a1a; margin: 0 0 16px 0;">New Order Received</h1>
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 24px 0; line-height: 1.1;">New Order Received</h1>
 
-<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f5f5; border-radius: 6px; margin-bottom: 28px;">
+<!-- Order -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
     <tr>
-        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #333333; line-height: 26px;">
-            <p style="margin: 0 0 8px 0;"><strong>Order reference:</strong> {{ order.order_reference }}</p>
-            <p style="margin: 0 0 8px 0;"><strong>Product:</strong> {{ order.product.name }}</p>
-            <p style="margin: 0 0 8px 0;"><strong>Price:</strong> ${{ order.product.price }} (inc. GST)</p>
-            <p style="margin: 0 0 16px 0; border-top: 1px solid #e0e0e0; padding-top: 16px;"><strong>Customer:</strong> {{ order.customer_name }}</p>
-            <p style="margin: 0 0 8px 0;"><strong>Email:</strong> <a href="mailto:{{ order.customer_email }}" style="color: #333333;">{{ order.customer_email }}</a></p>
-            {% if order.customer_phone %}<p style="margin: 0 0 8px 0;"><strong>Phone:</strong> {{ order.customer_phone }}</p>{% endif %}
-            <p style="margin: 0 0 8px 0;"><strong>Delivery address:</strong><br>
-                {{ order.address_line1 }}{% if order.address_line2 %}, {{ order.address_line2 }}{% endif %}<br>
-                {{ order.suburb }} {{ order.state }} {{ order.postcode }}
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Order</p>
+            <p style="margin: 0 0 4px 0;"><strong style="color: #1c1917;">{{ order.order_reference }}</strong></p>
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #a8a29e; margin: 0;">{{ order.created_at|timezone:"Australia/Perth"|date:"d M Y, g:iA" }} AWST</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Product -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Product</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ order.product.name }}</p>
+            <p style="margin: 0;">
+                {% if order.product.discount_price %}
+                    ${{ order.product.discount_price }} incl. GST
+                    <span style="color: #a8a29e; text-decoration: line-through; margin-left: 6px;">${{ order.product.price }}</span>
+                {% else %}
+                    ${{ order.product.price }} incl. GST
+                {% endif %}
             </p>
+        </td>
+    </tr>
+</table>
+
+<!-- Customer -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Customer</p>
+            <p style="font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ order.customer_name }}</p>
+            <p style="margin: 0 0 4px 0;"><a href="mailto:{{ order.customer_email }}" style="color: #44403c;">{{ order.customer_email }}</a></p>
+            {% if order.customer_phone %}<p style="margin: 0;">{{ order.customer_phone }}</p>{% endif %}
+        </td>
+    </tr>
+</table>
+
+<!-- Delivery address -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 0;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Delivery Address</p>
+            <p style="margin: 0;">{{ order.address_line1 }}{% if order.address_line2 %}<br>{{ order.address_line2 }}{% endif %}<br>
+            {{ order.suburb }} {{ order.state }} {{ order.postcode }}</p>
         </td>
     </tr>
 </table>
