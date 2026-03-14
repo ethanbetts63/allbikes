@@ -1,19 +1,6 @@
 
-### Bugs / Logical Issues
-
-**1. No validation that `discount_price < price` (`product.py:16-22`)**
-`discount_price` is a free `DecimalField` with no constraint. An admin could accidentally set it higher than `price`, making the "discounted" price actually more expensive. A `clean()` method or serializer validation should enforce `discount_price < price` when both are set.
-
-**2. `stock_quantity` has no minimum value constraint (`product.py:23`)**
-`IntegerField(default=0)` with no `MinValueValidator(0)`. An admin PATCH can set stock to a negative number with no error. Should add `validators=[MinValueValidator(0)]`.
-
-**3. `manage_images` swallows all exceptions with no logging (`product_viewset.py:83`)**
-The bare `except Exception` returns a generic 500 with no logging whatsoever (the inventory version had at least a comment about it). Any bug inside the atomic block disappears silently. Should log with `logger.exception(...)` at minimum.
 
 ### Simplification / Design Issues
-
-**4. `in_stock` / `low_stock` only exist in the serializer (`product_serializer.py:32-36`)**
-These are logical properties of a product but live only as `SerializerMethodField`s. If any other part of the codebase (e.g., payments) needs to check stock status, it has to re-implement `stock_quantity > 0`. These belong as `@property` methods on the `Product` model, with the serializer just referencing them.
 
 **5. No atomic stock decrement on purchase**
 Stock is adjusted by directly PATCHing `stock_quantity`. In a concurrent environment (two simultaneous orders), a direct set is a race condition — both reads could see `stock_quantity = 1`, both proceed, and stock goes to -1. A `F()` expression-based update or a dedicated decrement endpoint would be safer.
@@ -23,21 +10,12 @@ Stock is adjusted by directly PATCHing `stock_quantity`. In a concurrent environ
 ## `payments` app
 
 ### Bugs / Logical Issues
-
-**1. Float arithmetic used for currency amounts (`create_payment_intent_view.py:42-45`)**
-`float(discount)` and `float(product.price)` convert `Decimal` values to floats before multiplying by 100 to get cents. Floating-point imprecision with currency is a classic bug — e.g., `float(Decimal('14.99')) * 100` can produce `1498.9999999999998`. Should work entirely in `Decimal` or convert to cents using `int(price * 100)` where `price` is still a `Decimal`.
-
 **2. `OrderRetrieveView` exposes full PII to anyone (`order_views.py:28-36`)**
 The endpoint is `AllowAny` and only requires the `order_reference` in the URL. Anyone who knows or guesses the 8-character hex reference can retrieve the customer's full name, email, phone number, and delivery address. There's no rate limiting and no additional verification step. At minimum, require the customer to also supply their email to match against the order before returning the full payload.
 
-**3. Order doesn't snapshot price at purchase time (`order.py`, `order_serializer.py:23`)**
-`OrderSerializer.product_price` reads from `product.price` at serialization time, not the price that was actually charged. If a product's price changes after an order is placed, the order history shows the wrong price. The actual charged amount is in `Payment.amount`, but the serializer doesn't use it. `Payment.amount` should be the source of truth and exposed via the order serializer.
 
 **4. `product_price` serialized as `CharField` (`order_serializer.py:23`)**
 `serializers.CharField(source='product.price')` coerces a `DecimalField` to a string. It works, but it's semantically wrong — downstream consumers expecting a number will get a string. Should be `DecimalField(source='product.price', max_digits=10, decimal_places=2)`.
-
-**5. Orphaned `Notification` model and migration (`payments/migrations/`, `payments/models/`)**
-`0003_notification.py`, `notification.py`, and `notification_factory.py` were all deleted but their compiled `.pyc` files remain. If this migration was ever applied to a database, the `payments_notification` table exists in the DB but is no longer tracked by Django's migration state — `migrate --check` will fail and future migrations may have integrity issues. The `.pyc` files should be cleared and if the migration was applied, a squash or compensating migration is needed.
 
 **6. `handle_payment_intent_failed` not wrapped in a transaction (`webhook_handlers.py:52-63`)**
 `handle_payment_intent_succeeded` uses `transaction.atomic()` for safety; `handle_payment_intent_failed` does not. If the `payment.save()` were to fail mid-way (rare, but possible), the handler could leave state inconsistent. Low risk with a single save, but worth making consistent.

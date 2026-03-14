@@ -10,7 +10,7 @@ from product.models import Product
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-STRIPE_MINIMUM = 50  # cents
+STRIPE_MINIMUM = Decimal('0.50')
 
 
 class CreatePaymentIntentView(APIView):
@@ -34,18 +34,16 @@ class CreatePaymentIntentView(APIView):
         if product.stock_quantity <= 0:
             return Response({'detail': 'This product is out of stock.'}, status=409)
 
-        # Determine amount
+        # Determine amount — stay in Decimal to avoid float imprecision
         discount = product.discount_price
-        price = float(discount) if discount and float(discount) > 0 else float(product.price)
-        amount_decimal = max(price, 0.50)
-
-        amount_cents = round(amount_decimal * 100)
-        amount_cents = max(amount_cents, STRIPE_MINIMUM)
+        price = discount if discount and discount > 0 else product.price
+        amount = max(price, STRIPE_MINIMUM)
+        amount_cents = int(amount * 100)
 
         # Idempotency: reuse existing pending Payment if amount matches
         existing = Payment.objects.filter(order=order, status='pending').first()
         if existing:
-            if existing.amount == Decimal(str(round(amount_decimal, 2))):
+            if existing.amount == amount:
                 intent = stripe.PaymentIntent.retrieve(existing.stripe_payment_intent_id)
                 return Response({'clientSecret': intent.client_secret})
             else:
@@ -63,7 +61,7 @@ class CreatePaymentIntentView(APIView):
         Payment.objects.create(
             order=order,
             stripe_payment_intent_id=intent.id,
-            amount=round(amount_decimal, 2),
+            amount=amount,
             status='pending',
         )
 
