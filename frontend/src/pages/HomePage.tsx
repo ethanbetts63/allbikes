@@ -143,7 +143,9 @@ const HomePage = () => {
         />
         <ReviewCarousel />
         
-        {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
+        <ServiceCTAV2 />
+
+        
 
         <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
@@ -160,7 +162,7 @@ const HomePage = () => {
           linkText="All Used Bikes"
         />
 
-        <ServiceCTAV2 />
+        {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
 
         <BrandsSection />
 
