@@ -20,7 +20,7 @@ const ServiceSettingsForm = ({
                 </Button>
             </div>
             
-            {successMessage && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{successMessage}</div>}
+            {successMessage && <div className="bg-green-100 border border-green-400 text-highlight1 px-4 py-3 rounded relative mb-4" role="alert">{successMessage}</div>}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card>

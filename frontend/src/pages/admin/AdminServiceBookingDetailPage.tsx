@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const STATUS_BADGE: Record<string, string> = {
-  Success: 'border-green-600 text-green-700',
+  Success: 'border-green-600 text-highlight1',
   Failed:  'border-red-500 text-destructive',
 };
 

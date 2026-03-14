@@ -36,7 +36,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
             </span>
           )}
           {bike.status === 'available_soon' && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-stone-900/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Coming Soon
             </span>
           )}

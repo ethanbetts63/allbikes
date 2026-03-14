@@ -55,7 +55,7 @@ const CheckoutSuccessPage = () => {
 
           {/* Header */}
           <div className="text-center mb-10">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+            <CheckCircle className="h-16 w-16 text-highlight1 mx-auto mb-4" />
             <h1 className="text-3xl font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-2">Order Confirmed</h1>
             <p className="text-[var(--text-dark-secondary)] text-sm">A confirmation email will be sent to {order.customer_email}.</p>
           </div>

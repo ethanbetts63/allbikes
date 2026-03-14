@@ -96,7 +96,7 @@ const EScooterDetailPage = () => {
                                 Low Stock
                             </span>
                         )}
-                        <span className="bg-stone-900/80 text-green-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1">
+                        <span className="bg-stone-900/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1">
                             <Truck className="h-3 w-3" />
                             Free Delivery
                         </span>

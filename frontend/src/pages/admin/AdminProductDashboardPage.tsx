@@ -97,7 +97,7 @@ const AdminProductDashboardPage = () => {
         if (product.low_stock) {
           return <Badge variant="outline" className="border-orange-500 text-orange-600">{product.stock_quantity} — Low</Badge>;
         }
-        return <Badge variant="outline" className="border-green-600 text-green-700">{product.stock_quantity} in stock</Badge>;
+        return <Badge variant="outline" className="border-green-600 text-highlight1">{product.stock_quantity} in stock</Badge>;
       },
     },
     {
@@ -105,7 +105,7 @@ const AdminProductDashboardPage = () => {
       header: () => <div className="text-[var(--text-dark-primary)]">Status</div>,
       cell: ({ row }) =>
         row.getValue('is_active') ? (
-          <Badge variant="outline" className="border-green-600 text-green-700">Active</Badge>
+          <Badge variant="outline" className="border-green-600 text-highlight1">Active</Badge>
         ) : (
           <Badge variant="outline" className="text-[var(--text-dark-secondary)] border-gray-400">Inactive</Badge>
         ),

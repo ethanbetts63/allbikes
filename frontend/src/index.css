@@ -29,12 +29,16 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-highlight: var(--highlight);
+  --color-highlight1: var(--highlight1);
 }
 
 :root {
   --radius: 0.625rem;
   --background: hsl(217.5, 44.44%, 10.59%);
   --foreground: hsl(217.5, 44.44%, 16.59%);
+  --highlight: hsl(43, 96%, 56%);
+  --highlight1: hsl(152, 69%, 47%);
   --text-light-primary: hsl(0 0% 95%);
   --text-light-secondary: hsl(0 0% 70%);
   --text-dark-primary: hsl(0 0% 11%);
