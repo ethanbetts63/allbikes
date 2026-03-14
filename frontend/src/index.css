@@ -45,7 +45,7 @@
   --background: hsl(217.5, 44.44%, 10.59%);
   --foreground: hsl(217.5, 44.44%, 16.59%);
   --highlight: var(--color-amber-400);
-  --highlight1: var(--color-emerald-500);
+  --highlight1: var(--color-emerald-600);
   --bg-light-primary: var(--color-white);
   --bg-light-secondary: var(--color-stone-50);
   --bg-dark-primary: var(--color-stone-900);

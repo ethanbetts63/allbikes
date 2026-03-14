@@ -248,7 +248,7 @@ const BikeDetailPage = () => {
                             </span>
                         )}
                         {bike.status === 'available_soon' && (
-                            <span className="bg-[var(--bg-dark-primary)]/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Coming Soon
                             </span>
                         )}
