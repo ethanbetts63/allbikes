@@ -1,6 +1,9 @@
+import logging
 import requests
 from django.conf import settings
 from json import JSONDecodeError
+
+logger = logging.getLogger(__name__)
 
 
 class MechanicsDeskService:
@@ -12,13 +15,13 @@ class MechanicsDeskService:
     def _make_request(self, method, endpoint, params=None, data=None):
         """Helper method to make requests to the MechanicDesk API."""
         if not self.token:
-            print("ERROR: MechanicDesk API token is not configured.")
+            logger.error("MechanicDesk API token is not configured.")
             return {"error": "MechanicDesk API token is not configured."}
 
         url = f"{self.BASE_URL}/{endpoint}"
-        
+
         request_args = {'params': params}
-        
+
         # Add the token to the request
         if method.upper() == "GET":
             if params is None:
@@ -32,10 +35,6 @@ class MechanicsDeskService:
             # Send as JSON, which was working
             request_args['json'] = data
 
-        print(f"Making {method} request to {url}")
-        if data:
-            print(f"Request payload: {request_args.get('json', {})}")
-
         try:
             response = requests.request(method, url, **request_args)
             response.raise_for_status()
@@ -48,16 +47,13 @@ class MechanicsDeskService:
             try:
                 return response.json()
             except JSONDecodeError:
-                print("Response was not JSON. Raw response text:")
-                print(response.text)
+                logger.error("MechanicDesk returned non-JSON response for %s %s: %s", method, url, response.text)
                 return {"error": "Received non-JSON response from external service", "details": response.text}
         except requests.exceptions.HTTPError as e:
-            print(f"HTTP Error occurred: {e}")
-            print(f"Response status code: {e.response.status_code}")
-            print(f"Response content: {e.response.text}")
+            logger.error("MechanicDesk HTTP error for %s %s: %s — %s", method, url, e.response.status_code, e.response.text)
             return {"error": f"An error occurred: {e}", "details": e.response.text}
         except requests.exceptions.RequestException as e:
-            print(f"Request Exception occurred: {e}")
+            logger.error("MechanicDesk request failed for %s %s: %s", method, url, e)
             return {"error": f"An error occurred: {e}"}
 
     def get_job_types(self):
@@ -80,4 +76,3 @@ class MechanicsDeskService:
         :param booking_data: A dictionary containing the booking details.
         """
         return self._make_request("POST", "booking_requests/create_booking", data=booking_data)
-

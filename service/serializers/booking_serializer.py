@@ -6,7 +6,6 @@ class BookingSerializer(serializers.Serializer):
     The fields correspond to the expected payload for the Mechanics Desk API.
     """
     # Customer details
-    name = serializers.CharField(max_length=255, required=False)
     first_name = serializers.CharField(max_length=100)
     last_name = serializers.CharField(max_length=100)
     phone = serializers.CharField(max_length=20)
@@ -45,9 +44,7 @@ class BookingSerializer(serializers.Serializer):
         Combine first_name and last_name to create the full 'name' field,
         and convert numeric/boolean fields to strings for the MechanicDesk API.
         """
-        # Ensure 'name' is created if not present, but keep first/last name
-        if 'name' not in data or not data['name']:
-            data['name'] = f"{data.get('first_name', '')} {data.get('last_name', '')}".strip()
+        data['name'] = f"{data['first_name']} {data['last_name']}".strip()
 
         # Convert numeric fields to strings if they exist
         if 'year' in data and data['year'] is not None:
