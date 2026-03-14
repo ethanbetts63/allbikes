@@ -31,9 +31,8 @@ class MechanicsDeskService:
         elif method.upper() == "POST":
             if data is None:
                 data = {}
-            data['token'] = self.token
-            # Send as JSON, which was working
-            request_args['json'] = data
+            payload = {**data, 'token': self.token}
+            request_args['json'] = payload
 
         try:
             response = requests.request(method, url, **request_args)

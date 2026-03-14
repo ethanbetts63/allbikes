@@ -11,6 +11,7 @@ import type { GetBikesOptions } from '@/types/GetBikesOptions';
 import type { Product } from '@/types/Product';
 import type { Order } from '@/types/Order';
 import type { SentMessage } from '@/types/SentMessage';
+import type { BookingRequestLog } from '@/types/BookingRequestLog';
 
 /**
  * A centralized module for all API interactions.
@@ -301,5 +302,19 @@ export async function adminGetSentMessages(options: { channel?: string; status?:
 
 export async function adminGetSentMessage(id: number): Promise<SentMessage> {
     const response = await authedFetch(`/api/notifications/messages/${id}/`);
+    return handleResponse(response);
+}
+
+// --- Service Booking Log Endpoints ---
+
+export async function adminGetBookingLogs(options: { status?: string; page?: number } = {}): Promise<PaginatedResponse<BookingRequestLog>> {
+    const params = new URLSearchParams({ page: String(options.page ?? 1) });
+    if (options.status) params.append('status', options.status);
+    const response = await authedFetch(`/api/service/admin/booking-logs/?${params.toString()}`);
+    return handleResponse(response);
+}
+
+export async function adminGetBookingLog(id: number): Promise<BookingRequestLog> {
+    const response = await authedFetch(`/api/service/admin/booking-logs/${id}/`);
     return handleResponse(response);
 }

@@ -37,6 +37,8 @@ const AdminOrderDashboardPage = lazy(() => import('./pages/admin/AdminOrderDashb
 const AdminOrderDetailPage = lazy(() => import('./pages/admin/AdminOrderDetailPage'));
 const AdminSentMessagesPage = lazy(() => import('./pages/admin/AdminSentMessagesPage'));
 const AdminSentMessageDetailPage = lazy(() => import('./pages/admin/AdminSentMessageDetailPage'));
+const AdminServiceBookingsDashboardPage = lazy(() => import('./pages/admin/AdminServiceBookingsDashboardPage'));
+const AdminServiceBookingDetailPage = lazy(() => import('./pages/admin/AdminServiceBookingDetailPage'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -92,6 +94,8 @@ function App() {
                   <Route path="orders/:id" element={<AdminOrderDetailPage />} />
                   <Route path="messages" element={<AdminSentMessagesPage />} />
                   <Route path="messages/:id" element={<AdminSentMessageDetailPage />} />
+                  <Route path="service-bookings" element={<AdminServiceBookingsDashboardPage />} />
+                  <Route path="service-bookings/:id" element={<AdminServiceBookingDetailPage />} />
                 </Route>
 
               </Routes>

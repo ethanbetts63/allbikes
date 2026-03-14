@@ -1,3 +1,4 @@
 from .booking_serializer import BookingSerializer
 from .service_settings_serializer import ServiceSettingsSerializer
 from .job_type_serializer import JobTypeSerializer
+from .booking_request_log_serializer import BookingRequestLogListSerializer, BookingRequestLogDetailSerializer
