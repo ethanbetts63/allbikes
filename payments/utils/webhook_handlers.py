@@ -3,7 +3,7 @@ from django.db import transaction
 from django.db.models import F
 
 from ..models import Order, Payment
-from ..utils.email import send_customer_confirmation, send_admin_new_order
+from notifications.utils.email import send_customer_confirmation, send_admin_new_order
 from product.models import Product
 
 logger = logging.getLogger(__name__)

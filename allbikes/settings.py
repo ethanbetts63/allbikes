@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "service",
     "product",
     "payments",
+    "notifications",
     "imagekit",
 ]
 

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from payments.models import Notification
+from notifications.models import Notification
 
 logger = logging.getLogger(__name__)
 
@@ -25,13 +25,17 @@ def _send_mailgun(to, subject, html_body, text_body):
     ).raise_for_status()
 
 
-def _record(order, notification_type, status):
-    Notification.objects.create(
-        order=order,
-        notification_type=notification_type,
-        status=status,
-        sent_at=timezone.now() if status == 'sent' else None,
-    )
+def _record(obj, notification_type, status):
+    try:
+        Notification.objects.create(
+            content_object=obj,
+            notification_type=notification_type,
+            channel='email',
+            status=status,
+            sent_at=timezone.now() if status == 'sent' else None,
+        )
+    except Exception as e:
+        logger.error("Failed to record notification (%s, %s): %s", notification_type, status, e)
 
 
 def send_customer_confirmation(order):

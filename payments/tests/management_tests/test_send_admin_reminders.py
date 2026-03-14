@@ -1,14 +1,20 @@
 import pytest
+from django.contrib.contenttypes.models import ContentType
 from django.core.management import call_command
 
-from payments.models import Notification
+from notifications.models import Notification
 from payments.tests.factories.order_factory import OrderFactory
+
+
+def _notifs_for(obj, **kwargs):
+    ct = ContentType.objects.get_for_model(obj)
+    return Notification.objects.filter(content_type=ct, object_id=obj.pk, **kwargs)
 
 
 @pytest.fixture(autouse=True)
 def mock_mailgun(mocker):
     from unittest.mock import MagicMock
-    mock = mocker.patch('payments.utils.email.requests.post')
+    mock = mocker.patch('notifications.utils.email.requests.post')
     mock.return_value = MagicMock(raise_for_status=MagicMock())
     return mock
 
@@ -28,12 +34,8 @@ class TestSendAdminRemindersCommand:
 
         call_command('send_admin_reminders')
 
-        assert Notification.objects.filter(
-            order=order1, notification_type='admin_reminder', status='sent',
-        ).exists()
-        assert Notification.objects.filter(
-            order=order2, notification_type='admin_reminder', status='sent',
-        ).exists()
+        assert _notifs_for(order1, notification_type='admin_reminder', status='sent').exists()
+        assert _notifs_for(order2, notification_type='admin_reminder', status='sent').exists()
 
     def test_ignores_dispatched_orders(self, settings):
         """
@@ -46,7 +48,7 @@ class TestSendAdminRemindersCommand:
 
         call_command('send_admin_reminders')
 
-        assert not Notification.objects.filter(order=order, notification_type='admin_reminder').exists()
+        assert not _notifs_for(order, notification_type='admin_reminder').exists()
 
     def test_ignores_pending_payment_orders(self, settings):
         """
@@ -59,7 +61,7 @@ class TestSendAdminRemindersCommand:
 
         call_command('send_admin_reminders')
 
-        assert not Notification.objects.filter(order=order, notification_type='admin_reminder').exists()
+        assert not _notifs_for(order, notification_type='admin_reminder').exists()
 
     def test_outputs_count(self, settings, capsys):
         """

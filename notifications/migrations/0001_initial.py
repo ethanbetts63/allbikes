@@ -6,8 +6,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = [
-        ("payments", "0002_payment"),
+        ("contenttypes", "0002_remove_content_type_name"),
     ]
 
     operations = [
@@ -23,6 +25,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
+                ("object_id", models.PositiveIntegerField(blank=True, null=True)),
                 (
                     "notification_type",
                     models.CharField(
@@ -34,25 +37,29 @@ class Migration(migrations.Migration):
                         max_length=30,
                     ),
                 ),
+                (
+                    "channel",
+                    models.CharField(
+                        choices=[("email", "Email"), ("sms", "SMS")],
+                        default="email",
+                        max_length=10,
+                    ),
+                ),
                 ("sent_at", models.DateTimeField(blank=True, null=True)),
                 (
                     "status",
                     models.CharField(
-                        choices=[
-                            ("pending", "Pending"),
-                            ("sent", "Sent"),
-                            ("failed", "Failed"),
-                        ],
-                        default="pending",
+                        choices=[("sent", "Sent"), ("failed", "Failed")],
                         max_length=10,
                     ),
                 ),
                 (
-                    "order",
+                    "content_type",
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="notifications",
-                        to="payments.order",
+                        to="contenttypes.contenttype",
                     ),
                 ),
             ],

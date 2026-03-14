@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from payments.models import Order
-from payments.utils.email import send_admin_reminder
+from notifications.utils.email import send_admin_reminder
 
 
 class Command(BaseCommand):
