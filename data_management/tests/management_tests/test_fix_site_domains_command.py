@@ -11,6 +11,7 @@ class FixSiteDomainsCommandTest(TestCase):
         """
         self.new_domain = 'www.scootershop.com.au'
         # Get or create the default 'example.com' site
+        Site.objects.clear_cache()
         self.site, _ = Site.objects.get_or_create(
             pk=1, 
             defaults={'domain': 'example.com', 'name': 'example.com'}

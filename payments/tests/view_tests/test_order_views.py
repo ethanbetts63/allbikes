@@ -120,10 +120,10 @@ class TestOrderRetrieveView:
         """
         GIVEN an existing order
         WHEN retrieved
-        THEN the response includes product_name and product_price.
+        THEN the response includes product_name and amount_paid.
         """
         order = OrderFactory()
         url = reverse('payments:order-detail', kwargs={'order_reference': order.order_reference})
         response = api_client.get(url)
         assert 'product_name' in response.data
-        assert 'product_price' in response.data
+        assert 'amount_paid' in response.data

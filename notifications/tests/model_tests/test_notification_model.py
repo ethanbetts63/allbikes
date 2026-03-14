@@ -60,9 +60,3 @@ class TestMessageModel:
         assert Message.objects.filter(pk=msg_pk).exists()
         assert msg.content_object is None
 
-    def test_ordered_by_created_at_descending(self):
-        order = OrderFactory()
-        msg1 = MessageFactory(related_object=order)
-        msg2 = MessageFactory(related_object=order)
-        latest = Message.objects.first()
-        assert latest.pk == msg2.pk

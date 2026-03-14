@@ -83,37 +83,25 @@ class TestOrderSerializer:
         data = OrderSerializer(order).data
         assert data['product_name'] == order.product.name
 
-    def test_includes_product_price(self):
+    def test_amount_paid_is_none_before_payment(self):
         """
-        GIVEN an Order
+        GIVEN an Order that hasn't been paid yet
         WHEN serialized
-        THEN product_price matches the related product's price.
+        THEN amount_paid is None.
         """
-        order = OrderFactory()
+        order = OrderFactory(amount_paid=None)
         data = OrderSerializer(order).data
-        assert float(data['product_price']) == float(order.product.price)
+        assert data['amount_paid'] is None
 
-    def test_discount_price_is_none_when_not_set(self):
+    def test_amount_paid_is_returned_after_payment(self):
         """
-        GIVEN an Order whose product has no discount_price
+        GIVEN an Order with amount_paid set by the webhook
         WHEN serialized
-        THEN product_discount_price is None.
+        THEN amount_paid matches the recorded value.
         """
-        product = ProductFactory(discount_price=None)
-        order = OrderFactory(product=product)
+        order = OrderFactory(amount_paid='1200.00')
         data = OrderSerializer(order).data
-        assert data['product_discount_price'] is None
-
-    def test_discount_price_is_returned_when_set(self):
-        """
-        GIVEN an Order whose product has a discount_price
-        WHEN serialized
-        THEN product_discount_price contains the correct value as a string.
-        """
-        product = ProductFactory(discount_price='999.00')
-        order = OrderFactory(product=product)
-        data = OrderSerializer(order).data
-        assert float(data['product_discount_price']) == 999.00
+        assert float(data['amount_paid']) == 1200.00
 
 
 @pytest.mark.django_db
