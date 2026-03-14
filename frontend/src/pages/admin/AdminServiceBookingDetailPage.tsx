@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { adminGetBookingLog } from '@/api';
+import { formatDateTime } from '@/utils/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
@@ -76,7 +77,7 @@ const AdminServiceBookingDetailPage = () => {
             </Badge>
           </div>
           <span className="text-sm text-[var(--text-dark-secondary)]">
-            {new Date(log.created_at).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+            {formatDateTime(log.created_at)}
           </span>
         </div>
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { adminGetOrder, adminUpdateOrderStatus } from '@/api';
+import { formatDate } from '@/utils/formatting';
 import type { Order } from '@/types/Order';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
@@ -132,8 +133,8 @@ const AdminOrderDetailPage = () => {
           <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Order Details</h2>
           <Row label="Product" value={order.product_name} />
           <Row label="Price" value={`$${parseFloat(displayPrice).toLocaleString()} incl. GST`} />
-          <Row label="Placed" value={new Date(order.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })} />
-          <Row label="Last Updated" value={new Date(order.updated_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })} />
+          <Row label="Placed" value={formatDate(order.created_at)} />
+          <Row label="Last Updated" value={formatDate(order.updated_at)} />
         </div>
 
         <div className="mb-6">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminGetSentMessages } from '@/api';
+import { formatDateTime } from '@/utils/formatting';
 import type { SentMessage } from '@/types/SentMessage';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -100,9 +101,7 @@ const AdminSentMessagesPage = () => {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-[var(--text-dark-primary)] text-sm">
-                          {msg.sent_at
-                            ? new Date(msg.sent_at).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-                            : '—'}
+                          {formatDateTime(msg.sent_at)}
                         </TableCell>
                       </TableRow>
                     ))

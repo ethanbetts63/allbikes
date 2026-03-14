@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminGetBookingLogs } from '@/api';
+import { formatDate } from '@/utils/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -121,7 +122,7 @@ const AdminServiceBookingsDashboardPage = () => {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-[var(--text-dark-primary)] text-sm">
-                          {new Date(log.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          {formatDate(log.created_at)}
                         </TableCell>
                       </TableRow>
                     ))

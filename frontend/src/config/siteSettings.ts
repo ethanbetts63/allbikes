@@ -4,6 +4,8 @@ import type { SiteSettings } from '@/types/SiteSettings';
 // The values are hardcoded from the last known database backup.
 // To update these values, edit this file directly.
 
+export const SITE_TIMEZONE = 'Australia/Perth';
+
 export const siteSettings: SiteSettings = {
   id: 1,
   enable_motorcycle_mover: true,

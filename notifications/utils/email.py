@@ -1,5 +1,4 @@
 import logging
-from zoneinfo import ZoneInfo
 
 import requests
 from django.conf import settings
@@ -9,7 +8,6 @@ from django.utils import timezone
 from notifications.models import Message
 
 logger = logging.getLogger(__name__)
-PERTH_TZ = ZoneInfo("Australia/Perth")
 
 
 def _send_mailgun(to, subject, html_body, text_body):
@@ -90,7 +88,7 @@ def send_admin_new_order(order):
     price = _effective_price(order.product)
     text_body = (
         f"New order received: {order.order_reference}\n"
-        f"Date: {order.created_at.astimezone(PERTH_TZ).strftime('%d %b %Y, %I:%M %p')} AWST\n\n"
+        f"Date: {timezone.localtime(order.created_at).strftime('%d %b %Y, %I:%M %p')} AWST\n\n"
         f"Product: {order.product.name}\n"
         f"Price: ${price} incl. GST\n\n"
         f"Customer: {order.customer_name}\n"

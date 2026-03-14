@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from 'react';
+import { formatDate } from '@/utils/formatting';
 import { useNavigate } from 'react-router-dom';
 import {
   flexRender,
@@ -118,7 +119,7 @@ const OrderTable = () => {
       ),
       cell: ({ row }) => (
         <div className="text-[var(--text-dark-primary)] text-sm">
-          {new Date(row.getValue('created_at')).toLocaleDateString('en-AU')}
+          {formatDate(row.getValue('created_at'))}
         </div>
       ),
     },

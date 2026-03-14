@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { adminGetSentMessage } from '@/api';
+import { formatDateTime } from '@/utils/formatting';
 import type { SentMessage } from '@/types/SentMessage';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -88,10 +89,8 @@ const AdminSentMessageDetailPage = () => {
           <Row label="To" value={message.to} />
           <Row label="Subject" value={message.subject || '—'} />
           <Row label="Channel" value={message.channel} />
-          <Row label="Sent" value={message.sent_at
-            ? new Date(message.sent_at).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-            : '—'} />
-          <Row label="Created" value={new Date(message.created_at).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} />
+          <Row label="Sent" value={formatDateTime(message.sent_at)} />
+          <Row label="Created" value={formatDateTime(message.created_at)} />
         </div>
 
         {/* Error */}
