@@ -160,7 +160,7 @@ const AdminProductDashboardPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+      <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
         {isLoading ? (
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading products...</p>
         ) : (

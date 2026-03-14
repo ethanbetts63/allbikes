@@ -159,7 +159,7 @@ const JobTypesPage = () => {
             </CardContent>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="bg-white">
+                <DialogContent className="bg-[var(--bg-light-primary)]">
                     <DialogHeader>
                         <DialogTitle className="text-[var(--text-dark-primary)]">{editingJobType ? 'Edit Job Type' : 'Add New Job Type'}</DialogTitle>
                         <DialogDescription className="text-[var(--text-dark-primary)]">

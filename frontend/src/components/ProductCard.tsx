@@ -13,7 +13,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link to={`/escooters/${product.slug}`} className="block group">
-      <div className="bg-white rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200 overflow-hidden flex flex-col h-full">
+      <div className="bg-[var(--bg-light-primary)] rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200 overflow-hidden flex flex-col h-full">
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
@@ -25,19 +25,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full bg-stone-100 flex items-center justify-center text-[var(--text-light-secondary)] text-sm">
+            <div className="w-full h-full bg-[var(--bg-light-secondary)] flex items-center justify-center text-[var(--text-light-secondary)] text-sm">
               No image
             </div>
           )}
 
           {/* Stock status pill */}
           {!product.in_stock && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Out of Stock
             </span>
           )}
           {product.low_stock && product.in_stock && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Low Stock
             </span>
           )}

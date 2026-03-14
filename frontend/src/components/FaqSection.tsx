@@ -48,7 +48,7 @@ export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
           <div className="flex flex-col items-center gap-4">
             {faqData.map((faq, index) => (
               <div key={index} className="w-full md:w-2/3 lg:w-2/3">
-                <Card className="bg-white text-[var(--text-dark-primary)] rounded-lg shadow-md">
+                <Card className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] rounded-lg shadow-md">
                   <CardContent className="p-0">
                     <div
                       className="flex justify-between items-center p-4 cursor-pointer"

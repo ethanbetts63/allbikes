@@ -160,7 +160,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
 
       {/* ── TEXT PANEL (mobile: order 1, desktop: order 2 / right-top) ── */}
       <div className="order-1 lg:order-2 lg:w-[38%] flex flex-col">
-        <div className="bg-stone-900 flex flex-col justify-center items-center lg:items-start px-8 py-10 md:px-10 md:py-12 flex-1 text-center lg:text-left">
+        <div className="bg-[var(--bg-dark-primary)] flex flex-col justify-center items-center lg:items-start px-8 py-10 md:px-10 md:py-12 flex-1 text-center lg:text-left">
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-5">
             Allbikes &amp; Scooters &nbsp;·&nbsp; Dianella, Perth
           </p>
@@ -177,7 +177,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
           {(phoneNumber || mobileNumber) && (
             <a
               href={`tel:${phoneNumber || mobileNumber}`}
-              className="inline-flex items-center gap-2.5 bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-5 py-3 mb-3 transition-colors duration-200 w-full sm:w-auto justify-center lg:justify-start"
+              className="inline-flex items-center gap-2.5 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-5 py-3 mb-3 transition-colors duration-200 w-full sm:w-auto justify-center lg:justify-start"
             >
               <Phone className="h-4 w-4 shrink-0" />
               {phoneNumber && mobileNumber ? `${phoneNumber} / ${mobileNumber}` : (phoneNumber || mobileNumber)}
@@ -205,7 +205,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             {renderUsedCrossfadeImages(usedSlots, usedIsDefaultA, usedIsDefaultB)}
             {/* Overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-stone-900/20 group-hover:bg-transparent transition-colors duration-300" />
+            <div className="absolute inset-0 bg-[var(--bg-dark-primary)]/20 group-hover:bg-transparent transition-colors duration-300" />
             {/* Content */}
             <div className="absolute bottom-0 left-0 p-7">
               <p className="text-[var(--highlight)] text-[9px] font-bold uppercase tracking-[0.25em] mb-2">
@@ -223,7 +223,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             </div>
           </Link>
         ) : (
-          <div className="flex-1 min-h-[200px] flex items-center justify-center bg-stone-800 text-[var(--text-dark-secondary)] text-sm p-4 text-center">
+          <div className="flex-1 min-h-[200px] flex items-center justify-center bg-[var(--bg-dark-secondary)] text-[var(--text-dark-secondary)] text-sm p-4 text-center">
             Could not load images.
           </div>
         )}
@@ -241,7 +241,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             {renderCrossfadeImages(newSlots, newIsDefaultA, newIsDefaultB, true)}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-stone-900/30 group-hover:bg-transparent transition-colors duration-300" />
+            <div className="absolute inset-0 bg-[var(--bg-dark-primary)]/30 group-hover:bg-transparent transition-colors duration-300" />
             <div className="absolute bottom-0 left-0 p-7 md:p-9">
               <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
                 Browse Inventory
@@ -258,13 +258,13 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             </div>
           </Link>
         ) : (
-          <div className="flex-1 min-h-[300px] flex items-center justify-center bg-stone-800 text-[var(--text-dark-secondary)] text-sm p-4 text-center">
+          <div className="flex-1 min-h-[300px] flex items-center justify-center bg-[var(--bg-dark-secondary)] text-[var(--text-dark-secondary)] text-sm p-4 text-center">
             Could not load images.
           </div>
         )}
 
         {/* Service strip */}
-        <div className="bg-stone-900 flex flex-col sm:flex-row items-center justify-between gap-6 px-8 py-8 md:px-10">
+        <div className="bg-[var(--bg-dark-primary)] flex flex-col sm:flex-row items-center justify-between gap-6 px-8 py-8 md:px-10">
           <div>
             <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
               Allbikes Workshop &nbsp;·&nbsp; Perth
@@ -278,7 +278,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
           </div>
           <Link
             to="/booking"
-            className="shrink-0 inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
+            className="shrink-0 inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
           >
             Book Online
             <ArrowRight className="h-4 w-4" />

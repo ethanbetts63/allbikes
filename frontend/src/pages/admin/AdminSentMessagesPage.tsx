@@ -65,7 +65,7 @@ const AdminSentMessagesPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+      <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
         {isLoading ? (
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading messages...</p>
         ) : (
@@ -86,7 +86,7 @@ const AdminSentMessagesPage = () => {
                     messages.map((msg) => (
                       <TableRow
                         key={msg.id}
-                        className="border-gray-300 cursor-pointer hover:bg-gray-50"
+                        className="border-gray-300 cursor-pointer hover:bg-[var(--bg-light-secondary)]"
                         onClick={() => navigate(`/dashboard/messages/${msg.id}`)}
                       >
                         <TableCell className="text-[var(--text-dark-primary)] text-sm">

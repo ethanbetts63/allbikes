@@ -56,7 +56,7 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
               <h2 className="text-2xl font-black tracking-tight mb-2 text-[var(--text-light-primary)] leading-tight">{title}</h2>
               <p className="text-sm text-[var(--text-light-secondary)] mb-6 leading-relaxed">{description}</p>
               <Link to={linkTo}>
-                <Button className="bg-amber-400 text-[var(--text-dark-primary)] font-bold px-5 py-2.5 text-sm hover:bg-amber-300 flex items-center gap-1.5 mx-auto md:mx-0">
+                <Button className="bg-highlight text-[var(--text-dark-primary)] font-bold px-5 py-2.5 text-sm hover:bg-highlight/80 flex items-center gap-1.5 mx-auto md:mx-0">
                   {linkText} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>

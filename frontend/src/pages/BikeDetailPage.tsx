@@ -199,7 +199,7 @@ const BikeDetailPage = () => {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-white">
+            <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
                 <Spinner className="h-12 w-12" />
             </div>
         );
@@ -216,7 +216,7 @@ const BikeDetailPage = () => {
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
     return (
-        <div className="bg-white text-[var(--text-dark-primary)]">
+        <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
             <Seo
                 title={`${pageTitle} | Allbikes`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes & Scooters, Perth's most experienced motorcycle and scooter dealership.`}
@@ -233,22 +233,22 @@ const BikeDetailPage = () => {
                     <h1 className="text-3xl md:text-4xl font-black text-[var(--text-dark-primary)] leading-tight mb-3">{cardTitle}</h1>
                     <div className="flex flex-wrap items-center gap-2">
                         {/* Condition */}
-                        <span className="bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                        <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                             {bike.condition}
                         </span>
                         {/* Status */}
                         {bike.status === 'sold' && (
-                            <span className="bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Sold
                             </span>
                         )}
                         {bike.status === 'reserved' && (
-                            <span className="bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Reserved
                             </span>
                         )}
                         {bike.status === 'available_soon' && (
-                            <span className="bg-stone-900/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-[var(--bg-dark-primary)]/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Coming Soon
                             </span>
                         )}
@@ -265,7 +265,7 @@ const BikeDetailPage = () => {
 
                     {/* Left Column: Image Gallery */}
                     <div>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-stone-100">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-[var(--bg-light-secondary)]">
                             {selectedMedia === 'YOUTUBE' && videoId ? (
                                 <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
                             ) : (
@@ -273,12 +273,12 @@ const BikeDetailPage = () => {
                             )}
                             {/* Status overlay pill on main image */}
                             {bike.status === 'sold' && (
-                                <span className="absolute top-4 left-4 bg-stone-900/80 text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
+                                <span className="absolute top-4 left-4 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
                                     Sold
                                 </span>
                             )}
                             {bike.status === 'reserved' && (
-                                <span className="absolute top-4 left-4 bg-stone-900/80 text-[var(--highlight)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
+                                <span className="absolute top-4 left-4 bg-[var(--bg-dark-primary)]/80 text-[var(--highlight)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
                                     Reserved
                                 </span>
                             )}

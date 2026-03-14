@@ -65,7 +65,7 @@ const AdminServiceBookingDetailPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+      <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
@@ -120,7 +120,7 @@ const AdminServiceBookingDetailPage = () => {
           <Row label="Status Code" value={String(log.response_status_code)} />
           <div className="py-2">
             <span className="text-[var(--text-dark-primary)] font-semibold text-sm">Response Body</span>
-            <pre className="mt-1 text-xs text-[var(--text-dark-secondary)] bg-gray-50 rounded p-3 overflow-auto">
+            <pre className="mt-1 text-xs text-[var(--text-dark-secondary)] bg-[var(--bg-light-secondary)] rounded p-3 overflow-auto">
               {JSON.stringify(log.response_body, null, 2)}
             </pre>
           </div>

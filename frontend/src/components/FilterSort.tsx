@@ -33,7 +33,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
   };
 
   return (
-    <div className="bg-white border border-stone-200 rounded-lg shadow-sm p-4 mb-8">
+    <div className="bg-[var(--bg-light-primary)] border border-stone-200 rounded-lg shadow-sm p-4 mb-8">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
 
         {/* Sort */}
@@ -126,7 +126,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
         {/* Apply */}
         <Button
           onClick={handleApplyFilters}
-          className="w-full bg-amber-400 text-[var(--text-dark-primary)] font-bold hover:bg-amber-300 text-sm"
+          className="w-full bg-highlight text-[var(--text-dark-primary)] font-bold hover:bg-highlight/80 text-sm"
         >
           Apply Filters
         </Button>

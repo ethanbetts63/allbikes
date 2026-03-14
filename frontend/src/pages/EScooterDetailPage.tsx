@@ -52,7 +52,7 @@ const EScooterDetailPage = () => {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-white">
+            <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
                 <Spinner className="h-12 w-12" />
             </div>
         );
@@ -65,7 +65,7 @@ const EScooterDetailPage = () => {
     const mainImageUrl = selectedImage?.medium || selectedImage?.image;
 
     return (
-        <div className="bg-white text-[var(--text-dark-primary)]">
+        <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
             <Seo
                 title={`${product.name} | Scooter Shop`}
                 description={product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`}
@@ -82,21 +82,21 @@ const EScooterDetailPage = () => {
                     </h1>
                     <div className="flex flex-wrap items-center gap-2">
                         {product.brand && (
-                            <span className="bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 {product.brand}
                             </span>
                         )}
                         {!product.in_stock && (
-                            <span className="bg-stone-900/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-[var(--bg-dark-primary)]/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Out of Stock
                             </span>
                         )}
                         {product.low_stock && product.in_stock && (
-                            <span className="bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Low Stock
                             </span>
                         )}
-                        <span className="bg-stone-900/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1">
+                        <span className="bg-[var(--bg-dark-primary)]/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1">
                             <Truck className="h-3 w-3" />
                             Free Delivery
                         </span>
@@ -107,7 +107,7 @@ const EScooterDetailPage = () => {
 
                     {/* Left Column: Image Gallery */}
                     <div>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-stone-100">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-[var(--bg-light-secondary)]">
                             {mainImageUrl ? (
                                 <img
                                     src={mainImageUrl}
@@ -177,7 +177,7 @@ const EScooterDetailPage = () => {
                             <button
                                 disabled={!product.in_stock}
                                 onClick={() => navigate(`/checkout/${product.slug}`)}
-                                className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-[var(--text-dark-primary)]"
+                                className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
                             >
                                 {product.in_stock ? 'Buy Now' : 'Out of Stock'}
                             </button>

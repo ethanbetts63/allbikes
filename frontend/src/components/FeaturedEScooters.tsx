@@ -11,7 +11,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
   if (products.length === 0) return null;
 
   return (
-    <section className="bg-stone-900 py-14 px-6">
+    <section className="bg-[var(--bg-dark-primary)] py-14 px-6">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
@@ -39,7 +39,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
         </div>
 
         {/* Free delivery banner */}
-        <div className="flex items-center gap-3 bg-stone-800 px-5 py-3 mb-6 w-fit">
+        <div className="flex items-center gap-3 bg-[var(--bg-dark-secondary)] px-5 py-3 mb-6 w-fit">
           <Truck className="h-5 w-5 text-[var(--highlight)] shrink-0" />
           <span className="text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest">Free Delivery Australia-Wide</span>
         </div>
@@ -56,9 +56,9 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
               <Link
                 key={product.id}
                 to={`/escooters/${product.slug}`}
-                className="group bg-white rounded-lg overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-200"
+                className="group bg-[var(--bg-light-primary)] rounded-lg overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-200"
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
+                <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-light-secondary)]">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -71,12 +71,12 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                     </div>
                   )}
                   {!product.in_stock && (
-                    <span className="absolute top-3 left-3 bg-stone-900/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                    <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                       Out of Stock
                     </span>
                   )}
                   {product.low_stock && product.in_stock && (
-                    <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                    <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                       Low Stock
                     </span>
                   )}
@@ -111,7 +111,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
         {/* Mobile CTA */}
         <Link
           to="/escooters"
-          className="sm:hidden inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
+          className="sm:hidden inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
         >
           View All E-Scooters
           <ArrowRight className="h-4 w-4" />

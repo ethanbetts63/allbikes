@@ -162,7 +162,7 @@ const InventoryTable = () => {
   });
 
   return (
-    <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+    <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
       {notification && (
         <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
           <AlertDescription>{notification.message}</AlertDescription>
@@ -172,21 +172,21 @@ const InventoryTable = () => {
         <Button 
           variant="outline"
           onClick={() => handleFilterChange(null)} 
-          className={!conditionFilter ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+          className={!conditionFilter ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           All
         </Button>
         <Button 
           variant="outline"
           onClick={() => handleFilterChange('new')} 
-          className={conditionFilter === 'new' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+          className={conditionFilter === 'new' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           New
         </Button>
         <Button 
           variant="outline"
           onClick={() => handleFilterChange('used')} 
-          className={conditionFilter === 'used' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+          className={conditionFilter === 'used' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           Used
         </Button>

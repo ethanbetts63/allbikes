@@ -18,7 +18,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
 
   return (
     <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
-      <div className="relative w-full overflow-hidden flex flex-col h-full bg-white rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200">
+      <div className="relative w-full overflow-hidden flex flex-col h-full bg-[var(--bg-light-primary)] rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200">
         {bike.status === 'sold' && (
           <span className="absolute top-2.5 left-2.5 z-10 bg-red-600 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
             Sold

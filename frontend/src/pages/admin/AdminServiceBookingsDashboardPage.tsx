@@ -68,19 +68,19 @@ const AdminServiceBookingsDashboardPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+      <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
         <div className="flex items-center space-x-2 py-4">
           <Button
             variant="outline"
             onClick={() => handleFilterChange('all')}
-            className={filter === 'all' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+            className={filter === 'all' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
           >
             All
           </Button>
           <Button
             variant="outline"
             onClick={() => handleFilterChange('failed')}
-            className={filter === 'failed' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+            className={filter === 'failed' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
           >
             Failed
           </Button>
@@ -105,7 +105,7 @@ const AdminServiceBookingsDashboardPage = () => {
                     data.map(log => (
                       <TableRow
                         key={log.id}
-                        className="border-gray-300 cursor-pointer hover:bg-stone-50"
+                        className="border-gray-300 cursor-pointer hover:bg-[var(--bg-light-secondary)]"
                         onClick={() => navigate(`/dashboard/service-bookings/${log.id}`)}
                       >
                         <TableCell className="text-[var(--text-dark-primary)]">

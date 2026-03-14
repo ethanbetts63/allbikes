@@ -68,7 +68,7 @@ const AdminSentMessageDetailPage = () => {
 
   return (
     <div>
-      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+      <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
@@ -132,7 +132,7 @@ const AdminSentMessageDetailPage = () => {
                 title="Email HTML preview"
               />
             ) : (
-              <pre className="whitespace-pre-wrap text-sm text-[var(--text-dark-secondary)] bg-gray-50 border border-gray-200 rounded p-4 font-mono">
+              <pre className="whitespace-pre-wrap text-sm text-[var(--text-dark-secondary)] bg-[var(--bg-light-secondary)] border border-gray-200 rounded p-4 font-mono">
                 {message.body_text}
               </pre>
             )}

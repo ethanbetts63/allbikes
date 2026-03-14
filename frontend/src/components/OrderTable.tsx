@@ -136,7 +136,7 @@ const OrderTable = () => {
   const totalPages = Math.ceil(count / PAGE_SIZE);
 
   return (
-    <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+    <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
       {notification && (
         <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
           <AlertDescription>{notification.message}</AlertDescription>
@@ -147,14 +147,14 @@ const OrderTable = () => {
         <Button
           variant="outline"
           onClick={() => handleFilterChange('todo')}
-          className={filter === 'todo' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+          className={filter === 'todo' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           To Do
         </Button>
         <Button
           variant="outline"
           onClick={() => handleFilterChange('all')}
-          className={filter === 'all' ? 'bg-white text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+          className={filter === 'all' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           All Orders
         </Button>
@@ -178,7 +178,7 @@ const OrderTable = () => {
               table.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
-                  className="border-gray-300 cursor-pointer hover:bg-stone-50"
+                  className="border-gray-300 cursor-pointer hover:bg-[var(--bg-light-secondary)]"
                   onClick={() => navigate(`/dashboard/orders/${row.original.id}`)}
                 >
                   {row.getVisibleCells().map(cell => (

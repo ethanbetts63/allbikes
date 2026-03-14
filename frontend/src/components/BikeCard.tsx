@@ -10,7 +10,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
 
   return (
     <Link to={`/inventory/motorcycles/${bike.slug}`} className="block group">
-      <div className="bg-white rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200 overflow-hidden flex flex-col h-full">
+      <div className="bg-[var(--bg-light-primary)] rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200 overflow-hidden flex flex-col h-full">
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
@@ -26,17 +26,17 @@ const BikeCard = ({ bike }: BikeCardProps) => {
           </span>
           {/* Status pills */}
           {bike.status === 'sold' && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Sold
             </span>
           )}
           {bike.status === 'reserved' && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--highlight)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Reserved
             </span>
           )}
           {bike.status === 'available_soon' && (
-            <span className="absolute top-3 left-3 bg-stone-900/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
+            <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-highlight1 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
               Coming Soon
             </span>
           )}

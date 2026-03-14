@@ -13,7 +13,7 @@ const checkItems = [
 
 const ServiceCTAV2 = () => {
     return (
-        <section className="bg-stone-900 py-20 px-4">
+        <section className="bg-[var(--bg-dark-primary)] py-20 px-4">
             <div className="container mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
@@ -31,7 +31,7 @@ const ServiceCTAV2 = () => {
                         <Link to="/booking">
                             <Button
                                 size="lg"
-                                className="bg-amber-400 hover:bg-amber-300 text-[var(--text-dark-primary)] font-bold px-8 text-base group"
+                                className="bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold px-8 text-base group"
                             >
                                 Book Online
                                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />

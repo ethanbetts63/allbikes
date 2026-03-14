@@ -112,7 +112,7 @@ const ReviewCarousel = () => {
                   href={GOOGLE_REVIEWS_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-shrink-0 w-72 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 p-5 flex flex-col gap-3"
+                  className="flex-shrink-0 w-72 bg-[var(--bg-light-primary)] rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 p-5 flex flex-col gap-3"
                 >
                   {/* Author row */}
                   <div className="flex items-center justify-between">

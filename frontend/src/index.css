@@ -31,6 +31,10 @@
   --color-ring: var(--ring);
   --color-highlight: var(--highlight);
   --color-highlight1: var(--highlight1);
+  --color-bg-light-primary: var(--bg-light-primary);
+  --color-bg-light-secondary: var(--bg-light-secondary);
+  --color-bg-dark-primary: var(--bg-dark-primary);
+  --color-bg-dark-secondary: var(--bg-dark-secondary);
 }
 
 :root {
@@ -39,6 +43,10 @@
   --foreground: hsl(217.5, 44.44%, 16.59%);
   --highlight: hsl(43, 96%, 56%);
   --highlight1: hsl(152, 69%, 47%);
+  --bg-light-primary: hsl(0, 0%, 100%);
+  --bg-light-secondary: hsl(60, 5%, 96%);
+  --bg-dark-primary: hsl(24, 9.8%, 10%);
+  --bg-dark-secondary: hsl(12, 6.5%, 15%);
   --text-light-primary: hsl(0 0% 95%);
   --text-light-secondary: hsl(0 0% 70%);
   --text-dark-primary: hsl(0 0% 11%);

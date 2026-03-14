@@ -61,7 +61,7 @@ const ProcessingInner = () => {
   }, [stripe]);
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen gap-4 bg-white">
+    <div className="flex flex-col justify-center items-center h-screen gap-4 bg-[var(--bg-light-primary)]">
       <Spinner className="h-12 w-12" />
       <p className="text-[var(--text-dark-secondary)] text-sm">Confirming your payment&hellip;</p>
     </div>

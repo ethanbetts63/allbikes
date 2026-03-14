@@ -73,7 +73,7 @@ const PaymentForm = ({ orderReference, productSlug }: PaymentFormProps) => {
       <button
         type="submit"
         disabled={isSubmitting || !stripe || !elements}
-        className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-500 text-[var(--text-dark-primary)]"
+        className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
       >
         {isSubmitting ? 'Processing...' : 'Pay Now'}
       </button>
@@ -114,7 +114,7 @@ const CheckoutPaymentPage = () => {
 
   if (isLoadingProduct) {
     return (
-      <div className="flex justify-center items-center h-screen bg-white">
+      <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
         <Spinner className="h-12 w-12" />
       </div>
     );
@@ -135,12 +135,12 @@ const CheckoutPaymentPage = () => {
   return (
     <>
       <Seo title="Payment | Scooter Shop" noindex={true} />
-      <div className="bg-white text-[var(--text-dark-primary)] min-h-screen">
+      <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
 
           {/* Product summary */}
           {product && (
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 mb-8 flex items-center gap-4">
+            <div className="bg-[var(--bg-light-secondary)] border border-stone-200 rounded-lg p-4 mb-8 flex items-center gap-4">
               {imageUrl && (
                 <img src={imageUrl} alt={product.name} className="w-20 h-20 object-cover rounded-md shrink-0" />
               )}

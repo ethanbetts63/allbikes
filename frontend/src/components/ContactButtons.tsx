@@ -25,13 +25,13 @@ const ContactButtons = ({ phoneNumber, mobileNumber, emailAddress }: ContactButt
             {/* Clickable on mobile */}
             <a
               href={`tel:${primaryPhoneNumber}`}
-              className="md:hidden w-full sm:w-auto flex items-center justify-center gap-2.5 bg-amber-400 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full hover:bg-amber-300 transition-colors"
+              className="md:hidden w-full sm:w-auto flex items-center justify-center gap-2.5 bg-highlight text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full hover:bg-highlight/80 transition-colors"
             >
               <Phone className="h-4 w-4" />
               {displayedPhoneNumbers}
             </a>
             {/* Static on desktop */}
-            <div className="hidden md:flex items-center justify-center gap-2.5 bg-amber-400 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full cursor-default">
+            <div className="hidden md:flex items-center justify-center gap-2.5 bg-highlight text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 rounded-full cursor-default">
               <Phone className="h-4 w-4" />
               {displayedPhoneNumbers}
             </div>

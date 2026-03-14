@@ -99,7 +99,7 @@ const AdminOrderDetailPage = () => {
         </Alert>
       )}
 
-      <div className="w-full bg-white text-[var(--text-dark-primary)] p-4 rounded-lg">
+      <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
 
         {/* Header: reference, badge, status update */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
