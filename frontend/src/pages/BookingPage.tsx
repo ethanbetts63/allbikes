@@ -52,17 +52,20 @@ const BookingPage = () => {
     const prevStep = () => setStep(prev => prev - 1);
 
     const [error, setError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         setError(null);
         try {
             await createBooking(formData);
             localStorage.removeItem(LOCAL_STORAGE_KEY);
             navigate('/booking/success');
-
         } catch (error) {
             console.error("Booking submission error:", error);
             setError("There was an error submitting your booking. Please try again.");
+            setIsSubmitting(false);
         }
     };
     
@@ -73,7 +76,7 @@ const BookingPage = () => {
             case 2:
                 return <BikeDetailsForm formData={formData} setFormData={setFormData} nextStep={nextStep} prevStep={prevStep} />;
             case 3:
-                return <PersonalDetailsForm formData={formData} setFormData={setFormData} prevStep={prevStep} handleSubmit={handleSubmit} error={error} />;
+                return <PersonalDetailsForm formData={formData} setFormData={setFormData} prevStep={prevStep} handleSubmit={handleSubmit} isSubmitting={isSubmitting} error={error} />;
             default:
                 // This case should ideally not be reached if navigation happens on submit
                 return <div>Form complete. Thank you!</div>;

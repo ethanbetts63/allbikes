@@ -1,4 +1,5 @@
 import { type ChangeEvent } from 'react';
+import { Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +9,7 @@ import { Link } from 'react-router-dom';
 import type { PersonalDetailsFormProps } from '@/types/PersonalDetailsFormProps';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
-const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, error }: PersonalDetailsFormProps) => {
+const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, isSubmitting, error }: PersonalDetailsFormProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev: any) => ({ ...prev, [id]: value }));
@@ -64,8 +65,12 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, er
           <Button variant="destructive" className="text-[var(--text-light-primary)]" onClick={prevStep}>
             Back
           </Button>
-          <Button onClick={handleSubmit} disabled={!formData.terms_accepted}>
-            Submit Booking
+          <Button onClick={handleSubmit} disabled={!formData.terms_accepted || isSubmitting}>
+            {isSubmitting ? (
+              <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting...</>
+            ) : (
+              'Submit Booking'
+            )}
           </Button>
         </div>
       </div>

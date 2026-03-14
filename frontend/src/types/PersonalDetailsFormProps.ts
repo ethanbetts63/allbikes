@@ -5,5 +5,6 @@ export interface PersonalDetailsFormProps {
   setFormData: React.Dispatch<React.SetStateAction<any>>;
   prevStep: () => void;
   handleSubmit: () => void;
+  isSubmitting: boolean;
   error: string | null;
 }
