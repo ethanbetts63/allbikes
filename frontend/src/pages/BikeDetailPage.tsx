@@ -256,7 +256,7 @@ const BikeDetailPage = () => {
                     {bike.status === 'available_soon' && (
                         <p className="mt-3 text-sm text-[var(--text-dark-secondary)] max-w-lg">
                             This bike is currently being inspected by our mechanic. It's not quite ready for sale yet — if you're interested feel free to{' '}
-                            <Link to="/contact" className="text-[var(--highlight)] underline hover:text-amber-600">get in touch</Link> and we'll keep you in the loop.
+                            <Link to="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">get in touch</Link> and we'll keep you in the loop.
                         </p>
                     )}
                 </div>

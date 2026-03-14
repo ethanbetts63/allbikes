@@ -87,7 +87,7 @@ const EScooterDetailPage = () => {
                             </span>
                         )}
                         {!product.in_stock && (
-                            <span className="bg-stone-900/80 text-red-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                            <span className="bg-stone-900/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Out of Stock
                             </span>
                         )}

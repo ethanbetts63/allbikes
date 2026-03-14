@@ -25,7 +25,7 @@ import { adminGetOrders } from '@/api';
 import type { Order } from '@/types/Order';
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
-  pending_payment: { label: 'Pending Payment', className: 'border-amber-500 text-amber-600' },
+  pending_payment: { label: 'Pending Payment', className: 'border-amber-500 text-[var(--highlight)]' },
   paid:            { label: 'Paid',            className: 'border-green-600 text-green-700' },
   dispatched:      { label: 'Dispatched',      className: 'border-blue-500 text-blue-600' },
   delivered:       { label: 'Delivered',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },

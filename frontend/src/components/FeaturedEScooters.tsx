@@ -71,7 +71,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                     </div>
                   )}
                   {!product.in_stock && (
-                    <span className="absolute top-3 left-3 bg-stone-900/80 text-red-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                    <span className="absolute top-3 left-3 bg-stone-900/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                       Out of Stock
                     </span>
                   )}

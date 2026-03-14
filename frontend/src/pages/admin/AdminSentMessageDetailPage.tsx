@@ -96,7 +96,7 @@ const AdminSentMessageDetailPage = () => {
 
         {/* Error */}
         {message.status === 'failed' && message.error_message && (
-          <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+          <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded text-sm text-destructive">
             <span className="font-semibold">Error: </span>{message.error_message}
           </div>
         )}
