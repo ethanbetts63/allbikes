@@ -143,7 +143,7 @@ const HomePage = () => {
         />
         <ReviewCarousel />
         
-        <FeaturedEScooters products={featuredProducts} />
+        {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
 
         <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}

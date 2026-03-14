@@ -7,6 +7,7 @@ import logo1024 from '../assets/logo-1024w.webp';
 import logo1280 from '../assets/logo-1280w.webp';
 import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
+import { siteSettings } from '@/config/siteSettings';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,7 +65,7 @@ const NavBar = () => {
             <span className="hidden lg:inline">Used Motorcycles &amp; Scooters</span>
             <span className="lg:hidden">Used Bikes</span>
           </Link>
-          <Link to="/escooters" className={NAV_LINK}>E-Scooters</Link>
+          {!siteSettings.hide_escooters && <Link to="/escooters" className={NAV_LINK}>E-Scooters</Link>}
           <Link to="/service" className={NAV_LINK}>Servicing</Link>
           <Link to="/contact" className={cn(NAV_LINK, 'border border-white/30 px-4 py-2 hover:border-amber-400')}>
             Contact Us
@@ -88,7 +89,7 @@ const NavBar = () => {
           <nav className="flex flex-col px-6 py-4 gap-5">
             <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>New Motorcycles &amp; Scooters</Link>
             <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Used Motorcycles &amp; Scooters</Link>
-            <Link to="/escooters" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>E-Scooters</Link>
+            {!siteSettings.hide_escooters && <Link to="/escooters" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>E-Scooters</Link>}
             <Link to="/service" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Servicing</Link>
             <Link to="/contact" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Contact Us</Link>
           </nav>

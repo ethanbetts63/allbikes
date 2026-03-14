@@ -25,4 +25,5 @@ export interface SiteSettings {
   opening_hours_saturday: string;
   opening_hours_sunday: string;
   last_updated: string;
+  hide_escooters: boolean;
 }
