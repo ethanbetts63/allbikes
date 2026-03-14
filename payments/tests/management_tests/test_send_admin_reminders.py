@@ -2,13 +2,13 @@ import pytest
 from django.contrib.contenttypes.models import ContentType
 from django.core.management import call_command
 
-from notifications.models import SentMessage
+from notifications.models import Message
 from payments.tests.factories.order_factory import OrderFactory
 
 
 def _messages_for(obj, **kwargs):
     ct = ContentType.objects.get_for_model(obj)
-    return SentMessage.objects.filter(content_type=ct, object_id=obj.pk, **kwargs)
+    return Message.objects.filter(content_type=ct, object_id=obj.pk, **kwargs)
 
 
 @pytest.fixture(autouse=True)

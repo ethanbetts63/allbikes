@@ -6,7 +6,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from notifications.models import SentMessage
+from notifications.models import Message
 
 logger = logging.getLogger(__name__)
 PERTH_TZ = ZoneInfo("Australia/Perth")
@@ -29,7 +29,7 @@ def _send_mailgun(to, subject, html_body, text_body):
 
 def _record(obj, message_type, to, subject, body_text, body_html, status, error_message=''):
     try:
-        SentMessage.objects.create(
+        Message.objects.create(
             content_object=obj,
             message_type=message_type,
             channel='email',

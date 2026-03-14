@@ -1,17 +1,17 @@
 from rest_framework import serializers
 
-from notifications.models import SentMessage
+from notifications.models import Message
 
 
-class SentMessageListSerializer(serializers.ModelSerializer):
+class MessageListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SentMessage
+        model = Message
         fields = ['id', 'to', 'subject', 'message_type', 'channel', 'status', 'sent_at', 'created_at']
 
 
-class SentMessageDetailSerializer(serializers.ModelSerializer):
+class MessageDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SentMessage
+        model = Message
         fields = [
             'id', 'to', 'subject', 'message_type', 'channel',
             'status', 'error_message', 'body_html', 'body_text',

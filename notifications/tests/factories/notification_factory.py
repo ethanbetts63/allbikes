@@ -3,13 +3,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from factory.django import DjangoModelFactory
 
-from notifications.models import SentMessage
+from notifications.models import Message
 from payments.tests.factories.order_factory import OrderFactory
 
 
-class SentMessageFactory(DjangoModelFactory):
+class MessageFactory(DjangoModelFactory):
     class Meta:
-        model = SentMessage
+        model = Message
         exclude = ['related_object']
 
     related_object = factory.SubFactory(OrderFactory)

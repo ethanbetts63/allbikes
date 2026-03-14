@@ -2,14 +2,14 @@ import pytest
 from unittest.mock import MagicMock
 from django.contrib.contenttypes.models import ContentType
 
-from notifications.models import SentMessage
+from notifications.models import Message
 from notifications.utils.email import send_customer_confirmation, send_admin_new_order, send_admin_reminder
 from payments.tests.factories.order_factory import OrderFactory
 
 
 def _messages_for(obj, **kwargs):
     ct = ContentType.objects.get_for_model(obj)
-    return SentMessage.objects.filter(content_type=ct, object_id=obj.pk, **kwargs)
+    return Message.objects.filter(content_type=ct, object_id=obj.pk, **kwargs)
 
 
 @pytest.fixture
