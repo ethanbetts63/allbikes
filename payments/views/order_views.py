@@ -17,7 +17,7 @@ class OrderCreateView(APIView):
 
         product = serializer.validated_data['product']
 
-        # First gate: stock check (stock decrement moves to webhook in Phase 4)
+        # First gate: stock check (atomic decrement happens in the payment webhook)
         if product.stock_quantity <= 0:
             return Response({'detail': 'This product is out of stock.'}, status=409)
 

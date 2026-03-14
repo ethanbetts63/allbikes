@@ -35,12 +35,9 @@ class CreatePaymentIntentView(APIView):
             return Response({'detail': 'This product is out of stock.'}, status=409)
 
         # Determine amount
-        if request.user and request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
-            amount_decimal = 1.00
-        else:
-            discount = product.discount_price
-            price = float(discount) if discount and float(discount) > 0 else float(product.price)
-            amount_decimal = max(price, 0.50)
+        discount = product.discount_price
+        price = float(discount) if discount and float(discount) > 0 else float(product.price)
+        amount_decimal = max(price, 0.50)
 
         amount_cents = round(amount_decimal * 100)
         amount_cents = max(amount_cents, STRIPE_MINIMUM)

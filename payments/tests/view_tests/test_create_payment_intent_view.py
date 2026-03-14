@@ -150,22 +150,6 @@ class TestCreatePaymentIntentView:
         called_amount = mock_create.call_args[1]['amount']
         assert called_amount == 120000  # 1200.00 * 100
 
-    def test_staff_override_uses_one_dollar(self, api_client):
-        """
-        GIVEN a staff user and a valid order
-        WHEN a staff user calls create-payment-intent
-        THEN Stripe is called with $1.00 (100 cents).
-        """
-        staff = UserFactory(is_staff=True)
-        api_client.force_authenticate(user=staff)
-        product = ProductFactory(price='1500.00', stock_quantity=5)
-        order = OrderFactory(status='pending_payment', product=product)
-        with patch('payments.views.create_payment_intent_view.stripe.PaymentIntent.create') as mock_create:
-            mock_create.return_value = _mock_intent()
-            api_client.post(self.URL, {'order_id': order.id}, format='json')
-
-        called_amount = mock_create.call_args[1]['amount']
-        assert called_amount == 100  # $1.00
 
     # --- Idempotency ---
 
