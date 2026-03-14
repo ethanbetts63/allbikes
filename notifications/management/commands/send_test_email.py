@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.template.loader import render_to_string
 
 from notifications.utils.email import _send_mailgun
 
@@ -39,7 +40,11 @@ class Command(BaseCommand):
         self.stdout.write(f"Sending test email to {to}...")
 
         try:
-            _send_mailgun(to=to, subject=subject, html_body=f"<p>{body}</p>", text_body=body)
+            html_body = render_to_string('notifications/emails/test_email.html', {
+                'subject': subject,
+                'body': body,
+            })
+            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=body)
             self.stdout.write(self.style.SUCCESS(f"Email sent successfully to {to}."))
         except Exception as e:
             self.stderr.write(self.style.ERROR(f"Failed to send email: {e}"))

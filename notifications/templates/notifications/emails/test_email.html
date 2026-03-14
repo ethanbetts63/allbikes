@@ -1,0 +1,11 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}{{ subject }}{% endblock %}
+
+{% block preheader %}{{ subject }}{% endblock %}
+
+{% block content %}
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 16px 0;">Test Email</p>
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 20px 0; line-height: 1;">{{ subject }}</h1>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0; line-height: 26px;">{{ body }}</p>
+{% endblock %}
