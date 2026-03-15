@@ -33,5 +33,5 @@ export const siteSettings: SiteSettings = {
   opening_hours_saturday: "Closed",
   opening_hours_sunday: "Closed",
   last_updated: "2026-01-05T15:44:26.657Z",
-  hide_escooters: true,
+  hide_escooters: false,
 };
