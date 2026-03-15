@@ -23,5 +23,5 @@ class TermsAndConditionsSerializerTest(TestCase):
 
         self.assertEqual(data['version'], "1.5")
         self.assertEqual(data['content'], "<p>Test content here.</p>")
-        # Compare the date and time, ignoring microseconds and timezone format differences
-        self.assertEqual(data['published_at'][:19], now.isoformat()[:19])
+        # Compare in local time — DRF serializes using the configured TIME_ZONE
+        self.assertEqual(data['published_at'][:19], timezone.localtime(now).isoformat()[:19])
