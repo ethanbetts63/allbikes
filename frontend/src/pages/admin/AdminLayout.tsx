@@ -46,6 +46,12 @@ const AdminLayout = () => {
               </NavLink>
             </Button>
             <Button asChild variant="ghost">
+              <NavLink to="/dashboard/service-bookings" className={getNavLinkClass}>
+                <CalendarCheck className="h-4 w-4" />
+                Service Bookings
+              </NavLink>
+            </Button>
+            <Button asChild variant="ghost">
               <NavLink to="/dashboard/service-settings" className={getNavLinkClass}>
                 <Wrench className="h-4 w-4" />
                 Service Settings
@@ -82,12 +88,7 @@ const AdminLayout = () => {
                 Messages
               </NavLink>
             </Button>
-            <Button asChild variant="ghost">
-              <NavLink to="/dashboard/service-bookings" className={getNavLinkClass}>
-                <CalendarCheck className="h-4 w-4" />
-                Service Bookings
-              </NavLink>
-            </Button>
+
           </nav>
         </aside>
 
