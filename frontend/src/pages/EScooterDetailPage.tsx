@@ -8,6 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Truck } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import { siteSettings } from '@/config/siteSettings';
+import PayLaterSection from '@/components/PayLaterSection';
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -198,8 +199,10 @@ const EScooterDetailPage = () => {
                 </div>
             </div>
 
+            {siteSettings.accept_online_payment && <PayLaterSection />}
+
             {/* Back to E-Scooters */}
-            <div className="container mx-auto px-4 lg:px-8 pb-12">
+            <div className="container mx-auto px-4 lg:px-8 py-8">
                 <Link
                     to="/escooters"
                     className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"

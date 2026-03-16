@@ -21,6 +21,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import { siteSettings } from '@/config/siteSettings';
+import PayLaterSection from '@/components/PayLaterSection';
 
 const getYouTubeVideoId = (url: string): string | null => {
     if (!url) return null;
@@ -405,6 +406,8 @@ const BikeDetailPage = () => {
                     </div>
                 </div>
             </div>
+
+            {siteSettings.accept_online_payment && bike.condition === 'new' && <PayLaterSection />}
 
             {/* Featured bikes carousels */}
             <div className="mt-4 mb-4">
