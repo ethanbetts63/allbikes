@@ -70,6 +70,11 @@ const ContactDetails = () => {
                             );
                         })}
                     </ul>
+                    {s.special_hours_note && (
+                        <p className="mt-3 text-xs text-[var(--text-dark-secondary)] border-t border-stone-100 pt-3">
+                            {s.special_hours_note}
+                        </p>
+                    )}
                 </div>
 
             </div>

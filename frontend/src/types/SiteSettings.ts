@@ -24,6 +24,7 @@ export interface SiteSettings {
   opening_hours_friday: string;
   opening_hours_saturday: string;
   opening_hours_sunday: string;
+  special_hours_note: string;
   last_updated: string;
   hide_escooters: boolean;
 }

@@ -78,6 +78,11 @@ const Footer = () => {
               </div>
             ))}
           </div>
+          {siteSettings.special_hours_note && (
+            <p className="mt-3 text-xs text-[var(--text-light-secondary)] border-t border-stone-800 pt-3">
+              {siteSettings.special_hours_note}
+            </p>
+          )}
         </div>
 
       </div>
