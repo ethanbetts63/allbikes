@@ -75,14 +75,14 @@ class TestAdminOrderListView:
     def test_status_filter_accepts_comma_separated_values(self, admin_client):
         """
         GIVEN orders with various statuses
-        WHEN admin filters by status=paid,dispatched
+        WHEN admin filters by status=paid,completed
         THEN only orders with those two statuses are returned.
         """
         OrderFactory(status='paid')
-        OrderFactory(status='dispatched')
+        OrderFactory(status='completed')
         OrderFactory(status='pending_payment')
         url = reverse('payments:admin-order-list')
-        response = admin_client.get(url, {'status': 'paid,dispatched'})
+        response = admin_client.get(url, {'status': 'paid,completed'})
         assert response.status_code == status.HTTP_200_OK
         assert response.data['count'] == 2
 
@@ -121,15 +121,15 @@ class TestAdminOrderStatusView:
     def test_admin_can_update_status(self, admin_client):
         """
         GIVEN a pending_payment order
-        WHEN an admin patches it to dispatched
+        WHEN an admin patches it to completed
         THEN 200 OK is returned and the order status is updated.
         """
         order = OrderFactory(status='pending_payment')
         url = reverse('payments:admin-order-status', kwargs={'pk': order.pk})
-        response = admin_client.patch(url, {'status': 'dispatched'}, format='json')
+        response = admin_client.patch(url, {'status': 'completed'}, format='json')
         assert response.status_code == status.HTTP_200_OK
         order.refresh_from_db()
-        assert order.status == 'dispatched'
+        assert order.status == 'completed'
 
     def test_invalid_status_returns_400(self, admin_client):
         """

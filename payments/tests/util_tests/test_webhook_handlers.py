@@ -2,9 +2,10 @@ import pytest
 
 from payments.models import Order, Payment
 from payments.utils.webhook_handlers import handle_payment_intent_succeeded, handle_payment_intent_failed
-from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import OrderFactory, MotorcycleOrderFactory
 from payments.tests.factories.payment_factory import PaymentFactory
 from product.tests.factories.product_factory import ProductFactory
+from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 
 
 def _intent(intent_id):
@@ -82,6 +83,23 @@ class TestHandlePaymentIntentSucceeded:
         handle_payment_intent_succeeded(_intent('pi_4'))
 
         order.refresh_from_db()
+        assert order.status == 'paid'
+
+    def test_deposit_order_does_not_change_motorcycle_status(self):
+        """
+        GIVEN a deposit order linked to a for_sale motorcycle
+        WHEN the succeeded handler is called
+        THEN the motorcycle status remains for_sale — admin manages availability manually.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        order = MotorcycleOrderFactory(status='pending_payment', motorcycle=motorcycle)
+        PaymentFactory(order=order, stripe_payment_intent_id='pi_dep_1', status='pending', amount='550.00')
+
+        handle_payment_intent_succeeded(_intent('pi_dep_1'))
+
+        motorcycle.refresh_from_db()
+        order.refresh_from_db()
+        assert motorcycle.status == 'for_sale'
         assert order.status == 'paid'
 
     def test_unknown_intent_id_does_not_raise(self):

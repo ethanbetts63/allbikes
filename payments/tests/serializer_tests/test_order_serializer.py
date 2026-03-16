@@ -3,6 +3,7 @@ import pytest
 from payments.serializers.order_serializer import OrderCreateSerializer, OrderSerializer, OrderStatusSerializer
 from payments.tests.factories.order_factory import OrderFactory
 from product.tests.factories.product_factory import ProductFactory
+from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 
 
 @pytest.mark.django_db
@@ -67,6 +68,52 @@ class TestOrderCreateSerializer:
         serializer = OrderCreateSerializer(data=self._valid_payload(99999))
         assert not serializer.is_valid()
         assert 'product' in serializer.errors
+
+    def test_product_order_requires_address(self):
+        """
+        GIVEN a product order payload missing address_line1
+        WHEN validated
+        THEN the serializer is invalid.
+        """
+        product = ProductFactory()
+        data = self._valid_payload(product.id)
+        del data['address_line1']
+        serializer = OrderCreateSerializer(data=data)
+        assert not serializer.is_valid()
+        assert 'address_line1' in serializer.errors
+
+    def test_deposit_order_requires_phone(self):
+        """
+        GIVEN a deposit order payload with no customer_phone
+        WHEN validated
+        THEN the serializer is invalid — admin needs to call the customer.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        data = {
+            'motorcycle': motorcycle.id,
+            'customer_name': 'Jane Smith',
+            'customer_email': 'jane@example.com',
+            'customer_phone': '',
+        }
+        serializer = OrderCreateSerializer(data=data)
+        assert not serializer.is_valid()
+        assert 'customer_phone' in serializer.errors
+
+    def test_deposit_order_does_not_require_address(self):
+        """
+        GIVEN a deposit order payload with no address fields
+        WHEN validated
+        THEN the serializer is valid — pickup is arranged separately.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        data = {
+            'motorcycle': motorcycle.id,
+            'customer_name': 'Jane Smith',
+            'customer_email': 'jane@example.com',
+            'customer_phone': '0400000000',
+        }
+        serializer = OrderCreateSerializer(data=data)
+        assert serializer.is_valid(), serializer.errors
 
 
 @pytest.mark.django_db

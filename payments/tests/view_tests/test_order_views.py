@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 from payments.models import Order
 from payments.tests.factories.order_factory import OrderFactory
 from product.tests.factories.product_factory import ProductFactory
+from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 
 
 @pytest.fixture
@@ -127,3 +128,77 @@ class TestOrderRetrieveView:
         response = api_client.get(url)
         assert 'product_name' in response.data
         assert 'amount_paid' in response.data
+
+
+def _deposit_payload(motorcycle_id):
+    return {
+        'motorcycle': motorcycle_id,
+        'customer_name': 'Jane Smith',
+        'customer_email': 'jane@example.com',
+        'customer_phone': '0400000000',
+    }
+
+
+@pytest.mark.django_db
+class TestDepositOrderCreateView:
+    """Tests for deposit orders via POST /api/payments/orders/"""
+
+    def test_creates_deposit_order_for_for_sale_motorcycle(self, api_client):
+        """
+        GIVEN a for_sale new motorcycle
+        WHEN a deposit order is created
+        THEN 201 is returned with order_id and order_reference.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        url = reverse('payments:order-create')
+        response = api_client.post(url, _deposit_payload(motorcycle.id), format='json')
+        assert response.status_code == status.HTTP_201_CREATED
+        assert 'order_id' in response.data
+        assert 'order_reference' in response.data
+
+    def test_deposit_order_payment_type_is_forced_to_deposit(self, api_client):
+        """
+        GIVEN a for_sale motorcycle
+        WHEN a deposit order is created
+        THEN the saved order has payment_type='deposit' regardless of client payload.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        url = reverse('payments:order-create')
+        api_client.post(url, _deposit_payload(motorcycle.id), format='json')
+        order = Order.objects.get(motorcycle=motorcycle)
+        assert order.payment_type == 'deposit'
+
+    def test_returns_409_when_motorcycle_is_reserved(self, api_client):
+        """
+        GIVEN a motorcycle with status='reserved'
+        WHEN a deposit order is attempted
+        THEN 409 Conflict is returned.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='reserved')
+        url = reverse('payments:order-create')
+        response = api_client.post(url, _deposit_payload(motorcycle.id), format='json')
+        assert response.status_code == status.HTTP_409_CONFLICT
+
+    def test_returns_409_when_motorcycle_is_sold(self, api_client):
+        """
+        GIVEN a motorcycle with status='sold'
+        WHEN a deposit order is attempted
+        THEN 409 Conflict is returned.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='sold')
+        url = reverse('payments:order-create')
+        response = api_client.post(url, _deposit_payload(motorcycle.id), format='json')
+        assert response.status_code == status.HTTP_409_CONFLICT
+
+    def test_returns_400_when_phone_missing(self, api_client):
+        """
+        GIVEN a deposit payload with no phone number
+        WHEN posted
+        THEN 400 Bad Request is returned.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        url = reverse('payments:order-create')
+        payload = _deposit_payload(motorcycle.id)
+        payload['customer_phone'] = ''
+        response = api_client.post(url, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
