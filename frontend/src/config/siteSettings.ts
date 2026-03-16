@@ -30,7 +30,7 @@ export const siteSettings: SiteSettings = {
   opening_hours_wednesday: "9:00 AM - 5:00 PM",
   opening_hours_thursday: "9:00 AM - 5:00 PM",
   opening_hours_friday: "9:00 AM - 5:00 PM",
-  opening_hours_saturday: "Closed",
+  opening_hours_saturday: "10:00 AM - 1:00 PM",
   opening_hours_sunday: "Closed",
   last_updated: "2026-01-05T15:44:26.657Z",
   hide_escooters: false,
