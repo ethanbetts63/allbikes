@@ -33,6 +33,6 @@ export const siteSettings: SiteSettings = {
   opening_hours_saturday: "10:00 AM - 1:00 PM",
   opening_hours_sunday: "Closed",
   special_hours_note: "Closed on public holidays including Easter and Christmas.",
-  hide_escooters: false,
-  accept_online_payment: true,
+  hide_escooters: true,
+  accept_online_payment: false,
 };
