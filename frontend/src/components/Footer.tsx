@@ -55,7 +55,7 @@ const Footer = () => {
             {user ? (
               <>
                 {user.is_staff && (
-                  <li><Link to="/dashboard/inventory" className={LINK_CLASS}>Inventory Management</Link></li>
+                  <li><Link to="/dashboard" className={LINK_CLASS}>Dashboard</Link></li>
                 )}
                 <li>
                   <button onClick={logout} className={LINK_CLASS}>Logout</button>

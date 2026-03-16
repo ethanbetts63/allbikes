@@ -9,6 +9,7 @@ import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import type { GetBikesOptions } from '@/types/GetBikesOptions';
 import type { Product } from '@/types/Product';
 import type { Order } from '@/types/Order';
+import type { AdminDashboard } from '@/types/AdminDashboard';
 import type { SentMessage } from '@/types/SentMessage';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 
@@ -289,6 +290,11 @@ export async function adminUpdateDepositSettings(depositAmount: string): Promise
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ deposit_amount: depositAmount }),
     });
+    return handleResponse(response);
+}
+
+export async function adminGetDashboard(): Promise<AdminDashboard> {
+    const response = await authedFetch('/api/payments/admin/dashboard/');
     return handleResponse(response);
 }
 

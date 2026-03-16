@@ -8,7 +8,7 @@ from payments.models import Order
 
 
 class Command(BaseCommand):
-    help = 'Sends a weekly admin summary of paid and dispatched orders. Runs only on Mondays.'
+    help = 'Sends a weekly admin summary of paid (unactioned) orders. Runs only on Mondays.'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -28,11 +28,15 @@ class Command(BaseCommand):
             self.stderr.write(self.style.ERROR("ADMIN_EMAIL is not configured."))
             return
 
-        paid_orders = list(Order.objects.filter(status='paid').order_by('created_at'))
-        dispatched_orders = list(Order.objects.filter(status='dispatched').order_by('created_at'))
+        paid_orders = list(
+            Order.objects
+            .filter(status='paid')
+            .select_related('product', 'motorcycle')
+            .order_by('created_at')
+        )
 
-        if not paid_orders and not dispatched_orders:
-            self.stdout.write("No paid or dispatched orders — nothing to send.")
+        if not paid_orders:
+            self.stdout.write("No paid orders — nothing to send.")
             return
 
         date_str = today.strftime('%d %b %Y')
@@ -40,22 +44,18 @@ class Command(BaseCommand):
 
         context = {
             'paid_orders': paid_orders,
-            'dispatched_orders': dispatched_orders,
             'date_str': date_str,
         }
         html_body = render_to_string('notifications/emails/admin_weekly_summary.html', context)
 
         text_lines = [f"Weekly Order Summary — {date_str}\n"]
-        text_lines.append(f"PAID — awaiting dispatch ({len(paid_orders)})")
-        text_lines += [
-            f"  {o.order_reference}  |  {o.customer_name}  |  {o.product.name}  |  Placed: {timezone.localtime(o.created_at).strftime('%d %b %Y')}"
-            for o in paid_orders
-        ] or ["  None."]
-        text_lines.append(f"\nDISPATCHED — awaiting delivery ({len(dispatched_orders)})")
-        text_lines += [
-            f"  {o.order_reference}  |  {o.customer_name}  |  {o.product.name}  |  Placed: {timezone.localtime(o.created_at).strftime('%d %b %Y')}"
-            for o in dispatched_orders
-        ] or ["  None."]
+        text_lines.append(f"PAID — awaiting action ({len(paid_orders)})")
+        for o in paid_orders:
+            item_name = o.motorcycle.__str__() if o.motorcycle else o.product.name
+            order_type = "Deposit" if o.payment_type == 'deposit' else "Order"
+            text_lines.append(
+                f"  [{order_type}] {o.order_reference}  |  {item_name}  |  {o.customer_name}  |  Placed: {timezone.localtime(o.created_at).strftime('%d %b %Y')}"
+            )
         text_body = "\n".join(text_lines)
 
         try:

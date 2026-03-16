@@ -57,3 +57,16 @@ A living to-do list of approved improvements.
 
 
 
+A few things worth looking at before you go live:
+
+  ---
+  1. Stale management command — fix before production
+
+  send_admin_reminders still queries status='dispatched' orders. That status was removed, so the weekly summary email will silently miss orders.
+  Worth fixing now.
+
+  2. Processing page fallback
+
+  After 30 seconds of polling without getting paid, the page redirects to success anyway. If a webhook is genuinely slow, the customer sees "$0
+  deposit paid". Unlikely in production but possible. You could show an error/contact page instead of forcing through to success — worth
+  considering.

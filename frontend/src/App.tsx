@@ -81,7 +81,7 @@ function App() {
 
                 {/* Dashboard Section */}
                 <Route path="/dashboard" element={<AdminLayout />}>
-                  <Route path="home" element={<AdminHomePage />} />
+                  <Route index element={<AdminHomePage />} />
                   <Route path="inventory" element={<InventoryManagementPage />} />
                   <Route path="add-motorcycle" element={<AddMotorcyclePage />} />
                   <Route path="edit-motorcycle/:id" element={<AddMotorcyclePage />} />

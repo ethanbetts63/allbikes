@@ -27,5 +27,6 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'stock_number',
             'warranty_months',
             'transmission',
-            'images', 
+            'images',
+            'date_posted',
         ]
