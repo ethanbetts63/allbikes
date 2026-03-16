@@ -17,11 +17,11 @@ End-to-end flow for purchasing an e-scooter — from browsing to confirmation �
        /escooters/:slug  (EScooterDetailPage)
             ├─ Image gallery, full description, specs
             ├─ Price display (amber discount / regular)
-            ├─ "Buy Now" button → /checkout/:productSlug
+            ├─ "Buy Now" button → /checkout/:slug
             └─ Button disabled + "Out of Stock" if stock_quantity = 0
                  │
                  ▼
-            /checkout/:productSlug  (CheckoutPage)
+            /checkout/:slug  (CheckoutPage)
                  ├─ Product summary card (image, name, price)
                  ├─ Customer details form
                  │    ├─ Full Name *
@@ -43,11 +43,11 @@ End-to-end flow for purchasing an e-scooter — from browsing to confirmation �
                  │      └─ Creates Stripe PaymentIntent + local Payment record
                  │         Returns: clientSecret
                  │
-                 │  Navigate → /checkout/:productSlug/payment
+                 │  Navigate → /checkout/:slug/payment
                  │    (clientSecret + orderReference passed via router state)
                  │
                  ▼
-            /checkout/:productSlug/payment  (CheckoutPaymentPage)
+            /checkout/:slug/payment  (CheckoutPaymentPage)
                  ├─ Product summary card (same as above)
                  ├─ Order reference displayed
                  ├─ Stripe <Elements> wrapper (clientSecret + stripe theme)
@@ -99,10 +99,11 @@ End-to-end flow for purchasing an e-scooter — from browsing to confirmation �
 
 ```
 /dashboard/orders  (AdminOrderDashboardPage → OrderTable)
-  ├─ "To Do" filter  → shows orders with status: paid, dispatched
+  ├─ "To Do" filter  → shows orders with status: paid
   ├─ "All Orders" filter → shows all statuses
-  ├─ Sortable columns: Product, Customer, Date
+  ├─ Sortable columns: Item, Customer, Date
   ├─ Status badges (colour-coded)
+  ├─ Deposit orders show a "Deposit" sub-label on the reference cell
   └─ Click row → /dashboard/orders/:id
        │
        ▼
@@ -112,8 +113,8 @@ End-to-end flow for purchasing an e-scooter — from browsing to confirmation �
        │    └─ Status dropdown + "Update Status" button    [right]
        │
        ├─ Order Details
-       │    ├─ Product name
-       │    ├─ Price (incl. GST)
+       │    ├─ Product name  (or motorcycle name + "Deposit" badge for deposit orders)
+       │    ├─ Price / Deposit amount
        │    ├─ Date placed
        │    └─ Last updated
        │
@@ -122,7 +123,7 @@ End-to-end flow for purchasing an e-scooter — from browsing to confirmation �
        │    ├─ Email
        │    └─ Phone (if provided)
        │
-       ├─ Delivery Address
+       ├─ Delivery Address  (product orders only — not shown for deposits)
        │    └─ Full address on one line
        │
        └─ ← Back to Orders  [bottom left]
@@ -139,14 +140,13 @@ pending_payment
       │
       │  (admin updates manually)
       ▼
-  dispatched       ← admin sees this in "To Do"
-      │
-      ▼
-  delivered
+  completed
       │
       ├─ cancelled  (can be set from any status by admin)
       └─ refunded   (can be set from any status by admin)
 ```
+
+Applies to both product orders and motorcycle deposit orders. For deposits, `completed` means the pickup has been organised and the sale is finalised.
 
 ---
 
@@ -156,8 +156,8 @@ pending_payment
 |---|---|---|
 | Scooter list | `/escooters` | `src/pages/EScooterListPage.tsx` |
 | Scooter detail | `/escooters/:slug` | `src/pages/EScooterDetailPage.tsx` |
-| Checkout — details | `/checkout/:productSlug` | `src/pages/CheckoutPage.tsx` |
-| Checkout — payment | `/checkout/:productSlug/payment` | `src/pages/CheckoutPaymentPage.tsx` |
+| Checkout — details | `/checkout/:slug` | `src/pages/CheckoutPage.tsx` |
+| Checkout — payment | `/checkout/:slug/payment` | `src/pages/CheckoutPaymentPage.tsx` |
 | Checkout — processing | `/checkout/processing` | `src/pages/CheckoutProcessingPage.tsx` |
 | Checkout — success | `/checkout/success` | `src/pages/CheckoutSuccessPage.tsx` |
 | Admin — order list | `/dashboard/orders` | `src/pages/admin/AdminOrderDashboardPage.tsx` |
