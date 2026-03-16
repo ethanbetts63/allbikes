@@ -5,7 +5,6 @@ from django.db.models import F
 from ..models import Order, Payment
 from notifications.utils.email import send_customer_confirmation, send_admin_new_order
 from product.models import Product
-from inventory.models import Motorcycle
 
 logger = logging.getLogger(__name__)
 
@@ -34,20 +33,7 @@ def handle_payment_intent_succeeded(payment_intent):
         order.amount_paid = payment.amount
         order.save(update_fields=['status', 'amount_paid', 'updated_at'])
 
-        if order.payment_type == 'deposit':
-            # Mark motorcycle as reserved
-            updated = Motorcycle.objects.filter(
-                pk=order.motorcycle_id,
-                status='for_sale',
-            ).update(status='reserved')
-
-            if not updated:
-                logger.warning(
-                    "Webhook: Motorcycle %s was not 'for_sale' when deposit webhook fired for order %s",
-                    order.motorcycle_id,
-                    order.order_reference,
-                )
-        else:
+        if order.payment_type == 'full':
             # Atomic stock decrement — log if sold out between intent and webhook
             updated = Product.objects.filter(
                 pk=order.product_id,

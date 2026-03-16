@@ -132,9 +132,8 @@ Signature verified via `stripe.Webhook.construct_event()`. Invalid signature →
 - Wrapped in `transaction.atomic()`
 - Marks `Payment.status = succeeded`
 - Marks `Order.status = paid`
-- Branch on `order.payment_type`:
-  - **`full`**: Atomic stock decrement: `Product.objects.filter(pk=..., stock_quantity__gt=0).update(stock_quantity=F('stock_quantity') - 1)`. If product already at 0 → logs warning, does not fail.
-  - **`deposit`**: Atomic status update: `Motorcycle.objects.filter(pk=..., status='for_sale').update(status='reserved')`. If motorcycle already reserved → logs warning, does not fail.
+- For `payment_type == 'full'`: atomic stock decrement: `Product.objects.filter(pk=..., stock_quantity__gt=0).update(stock_quantity=F('stock_quantity') - 1)`. If product already at 0 → logs warning, does not fail.
+- For `payment_type == 'deposit'`: no automatic status change. Motorcycle availability is managed manually by admin.
 
 **`payment_intent.payment_failed`**:
 - Marks `Payment.status = failed`

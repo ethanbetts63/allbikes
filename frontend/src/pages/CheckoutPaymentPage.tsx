@@ -60,7 +60,7 @@ const PaymentForm = ({ orderReference, slug, initialError }: PaymentFormProps) =
     }
 
     if (paymentIntent?.status === 'succeeded') {
-      navigate(`/checkout/success?ref=${orderReference}`);
+      navigate(`/checkout/processing?ref=${orderReference}`);
       return;
     }
 

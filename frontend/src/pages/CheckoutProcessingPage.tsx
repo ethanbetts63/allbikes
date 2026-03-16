@@ -4,6 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe } from '@stripe/react-stripe-js';
 import { Spinner } from '@/components/ui/spinner';
 import Seo from '@/components/Seo';
+import { getOrderByReference } from '@/api';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -14,50 +15,56 @@ const ProcessingInner = () => {
   const stripe = useStripe();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const pollCount = useRef(0);
+  const started = useRef(false);
 
   const clientSecret = searchParams.get('payment_intent_client_secret');
   const ref = searchParams.get('ref');
   const slug = searchParams.get('slug');
 
-  useEffect(() => {
-    if (!stripe || !clientSecret) return;
-
-    const check = async () => {
-      const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);
-
-      if (!paymentIntent) {
-        navigate(`/checkout/success?ref=${ref}`);
-        return;
+  const startPolling = () => {
+    let count = 0;
+    const poll = async () => {
+      try {
+        const order = await getOrderByReference(ref!);
+        if (order.status === 'paid') {
+          navigate(`/checkout/success?ref=${ref}`);
+          return;
+        }
+      } catch {
+        // ignore errors, keep polling
       }
-
-      switch (paymentIntent.status) {
-        case 'succeeded':
-          navigate(`/checkout/success?ref=${ref}`);
-          break;
-
-        case 'requires_payment_method':
-          navigate(`/checkout/${slug}/payment`, {
-            state: { clientSecret, orderReference: ref, error: 'Payment failed. Please try again.' },
-          });
-          break;
-
-        case 'processing':
-          pollCount.current += 1;
-          if (pollCount.current >= MAX_POLLS) {
-            // Timed out — send to success anyway (webhook will sort it out)
-            navigate(`/checkout/success?ref=${ref}`);
-          } else {
-            setTimeout(check, POLL_INTERVAL_MS);
-          }
-          break;
-
-        default:
-          navigate(`/checkout/success?ref=${ref}`);
+      count += 1;
+      if (count >= MAX_POLLS) {
+        navigate(`/checkout/success?ref=${ref}`);
+      } else {
+        setTimeout(poll, POLL_INTERVAL_MS);
       }
     };
+    poll();
+  };
 
-    check();
+  // Non-3DS path: payment already confirmed inline, just poll backend
+  useEffect(() => {
+    if (clientSecret) return;
+    if (!ref) { navigate('/'); return; }
+    startPolling();
+  }, []);
+
+  // 3DS redirect path: check Stripe first (catches payment failures), then poll backend
+  useEffect(() => {
+    if (!clientSecret || !stripe || !ref) return;
+    if (started.current) return;
+    started.current = true;
+
+    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+      if (!paymentIntent || paymentIntent.status === 'requires_payment_method') {
+        navigate(`/checkout/${slug}/payment`, {
+          state: { clientSecret, orderReference: ref, error: 'Payment failed. Please try again.' },
+        });
+        return;
+      }
+      startPolling();
+    });
   }, [stripe]);
 
   return (

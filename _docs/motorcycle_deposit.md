@@ -70,9 +70,7 @@ This uses the same checkout pages as product orders (`CheckoutPage`, `CheckoutPa
        ▼
   Stripe webhook → POST /api/payments/webhook/
        ├─ Payment.status = succeeded
-       ├─ Order.status = paid
-       └─ Motorcycle.objects.filter(pk=..., status='for_sale').update(status='reserved')
-            (atomic — if already reserved, logs warning and continues)
+       └─ Order.status = paid
 ```
 
 ---
@@ -133,7 +131,7 @@ After contacting the customer and completing the pickup, admin sets the order st
 | `reserved` | Deposit paid, pickup pending | Hidden — "Reserved" message + contact link |
 | `sold` | Sale finalised | Hidden — "Sold" message + contact link |
 
-Status is managed manually in the admin (Django admin or inventory table). The webhook automatically flips `for_sale → reserved` on successful deposit payment.
+Status is managed manually by admin (Django admin or inventory table). The webhook does **not** change motorcycle status — marking a bike as reserved is an explicit admin action after contacting the customer.
 
 ---
 
