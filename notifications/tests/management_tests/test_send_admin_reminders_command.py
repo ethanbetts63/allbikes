@@ -67,19 +67,19 @@ class TestSendAdminRemindersCommand:
              call_command('send_admin_reminders')
              
         captured = capsys.readouterr()
-        assert "No paid or dispatched orders" in captured.out
+        assert "No paid orders" in captured.out
         mock_send_mailgun.assert_not_called()
 
     def test_sends_email_with_orders(self, capsys, mock_send_mailgun, mock_settings):
         monday = datetime.datetime(2023, 1, 2, tzinfo=datetime.timezone.utc)
         
         order1 = OrderFactory(status='paid', order_reference='REF1')
-        order2 = OrderFactory(status='dispatched', order_reference='REF2')
-        
+        order2 = OrderFactory(status='paid', order_reference='REF2')
+
         with patch('django.utils.timezone.now', return_value=monday):
             with patch('notifications.management.commands.send_admin_reminders.render_to_string', return_value="<html>Orders</html>"):
                 call_command('send_admin_reminders')
-                
+
         mock_send_mailgun.assert_called_once()
         args, kwargs = mock_send_mailgun.call_args
         assert kwargs['to'] == 'admin@example.com'
