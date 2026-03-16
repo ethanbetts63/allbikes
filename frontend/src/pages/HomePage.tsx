@@ -165,7 +165,7 @@ const HomePage = () => {
 
         {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
 
-        {siteSettings.accept_online_payment && <PayLaterSection />}
+        <PayLaterSection />
 
         <BrandsSection />
 

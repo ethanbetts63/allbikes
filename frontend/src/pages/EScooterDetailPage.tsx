@@ -199,7 +199,7 @@ const EScooterDetailPage = () => {
                 </div>
             </div>
 
-            {siteSettings.accept_online_payment && <PayLaterSection />}
+            <PayLaterSection />
 
             {/* Back to E-Scooters */}
             <div className="container mx-auto px-4 lg:px-8 py-8">

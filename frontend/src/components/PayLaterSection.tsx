@@ -1,6 +1,7 @@
 import afterpayLogo from '@/assets/afterpay_logo.svg';
 import klarnaLogo from '@/assets/klarna_logo.svg';
 import zipLogo from '@/assets/zip_logo.svg';
+import { siteSettings } from '@/config/siteSettings';
 
 const providers = [
   {
@@ -27,6 +28,8 @@ const providers = [
 ];
 
 const PayLaterSection = () => {
+  if (!siteSettings.accept_online_payment) return null;
+
   return (
     <section className="bg-foreground py-20 px-4">
       <div className="container mx-auto">

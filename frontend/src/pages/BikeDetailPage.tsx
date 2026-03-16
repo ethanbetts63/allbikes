@@ -407,7 +407,7 @@ const BikeDetailPage = () => {
                 </div>
             </div>
 
-            {siteSettings.accept_online_payment && bike.condition === 'new' && <PayLaterSection />}
+            {bike.condition === 'new' && <PayLaterSection />}
 
             {/* Featured bikes carousels */}
             <div>
