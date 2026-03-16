@@ -6,20 +6,23 @@ const providers = [
   {
     name: 'Afterpay',
     logo: afterpayLogo,
-    tagline: 'Pay in four fortnightly instalments',
-    detail: 'No interest. No fees when you pay on time.',
+    logoClass: 'h-9',
+    tagline: 'Pay in 4 & Monthly Instalments',
+    detail: '4 interest-free fortnightly payments, or spread over 6 or 12 months.',
   },
   {
     name: 'Klarna',
     logo: klarnaLogo,
-    tagline: 'Flexible payment schedules',
-    detail: 'Pay in instalments or defer your payment.',
+    logoClass: 'h-[80px]',
+    tagline: 'Flexible payment options',
+    detail: 'Multiple ways to pay in instalments — available in Australia and New Zealand.',
   },
   {
     name: 'Zip',
     logo: zipLogo,
-    tagline: 'Buy now, pay over time',
-    detail: 'Spread the cost across weekly or fortnightly repayments.',
+    logoClass: 'h-9',
+    tagline: 'Zip Pay — always interest-free',
+    detail: 'A flexible line of credit so you can buy now and pay at your own pace.',
   },
 ];
 
@@ -43,15 +46,15 @@ const PayLaterSection = () => {
           </div>
 
           {/* Right — provider list */}
-          <div className="lg:border-l lg:border-stone-700 lg:pl-16 flex flex-col divide-y divide-stone-700">
-            {providers.map(({ name, logo, tagline, detail }) => (
+          <div className="bg-[var(--bg-light-primary)] rounded-2xl p-8 flex flex-col divide-y divide-[var(--border-light)]">
+            {providers.map(({ name, logo, logoClass, tagline, detail }) => (
               <div key={name} className="flex items-center gap-6 py-6 first:pt-0 last:pb-0">
-                <div className="bg-[var(--bg-light-primary)] rounded-lg px-5 py-3 flex items-center justify-center shrink-0 w-32">
-                  <img src={logo} alt={name} className="h-6 w-auto" loading="lazy" />
+                <div className="flex items-center justify-center shrink-0 w-32">
+                  <img src={logo} alt={name} className={`${logoClass} w-auto`} loading="lazy" />
                 </div>
                 <div>
-                  <p className="text-[var(--text-light-primary)] font-semibold text-sm leading-tight mb-1">{tagline}</p>
-                  <p className="text-[var(--text-light-secondary)] text-xs leading-relaxed">{detail}</p>
+                  <p className="text-[var(--text-dark-primary)] font-semibold text-sm leading-tight mb-1">{tagline}</p>
+                  <p className="text-[var(--text-dark-secondary)] text-xs leading-relaxed">{detail}</p>
                 </div>
               </div>
             ))}
