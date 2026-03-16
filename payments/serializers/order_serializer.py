@@ -7,6 +7,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         model = Order
         fields = [
             'product',
+            'motorcycle',
+            'payment_type',
             'customer_name',
             'customer_email',
             'customer_phone',
@@ -17,17 +19,30 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'postcode',
         ]
 
+    def validate(self, data):
+        has_product = bool(data.get('product'))
+        has_motorcycle = bool(data.get('motorcycle'))
+        if not has_product and not has_motorcycle:
+            raise serializers.ValidationError("Either 'product' or 'motorcycle' must be provided.")
+        if has_product and has_motorcycle:
+            raise serializers.ValidationError("Provide either 'product' or 'motorcycle', not both.")
+        return data
+
 
 class OrderSerializer(serializers.ModelSerializer):
-    product_name = serializers.CharField(source='product.name', read_only=True)
+    product_name = serializers.SerializerMethodField()
+    motorcycle_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
         fields = [
             'id',
             'order_reference',
+            'payment_type',
             'product',
             'product_name',
+            'motorcycle',
+            'motorcycle_name',
             'amount_paid',
             'customer_name',
             'customer_email',
@@ -41,6 +56,16 @@ class OrderSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+
+    def get_product_name(self, obj):
+        return obj.product.name if obj.product_id else None
+
+    def get_motorcycle_name(self, obj):
+        if obj.motorcycle_id:
+            m = obj.motorcycle
+            name = f"{m.year} {m.make} {m.model}" if m.year else f"{m.make} {m.model}"
+            return name.strip()
+        return None
 
 
 class OrderStatusSerializer(serializers.ModelSerializer):

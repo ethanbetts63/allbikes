@@ -1,4 +1,5 @@
 import secrets
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -6,16 +7,34 @@ class Order(models.Model):
     STATUS_CHOICES = [
         ('pending_payment', 'Pending Payment'),
         ('paid', 'Paid'),
-        ('dispatched', 'Dispatched'),
-        ('delivered', 'Delivered'),
+        ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
         ('refunded', 'Refunded'),
+    ]
+
+    PAYMENT_TYPE_CHOICES = [
+        ('full', 'Full Payment'),
+        ('deposit', 'Deposit'),
     ]
 
     product = models.ForeignKey(
         'product.Product',
         on_delete=models.PROTECT,
         related_name='orders',
+        null=True,
+        blank=True,
+    )
+    motorcycle = models.ForeignKey(
+        'inventory.Motorcycle',
+        on_delete=models.PROTECT,
+        related_name='orders',
+        null=True,
+        blank=True,
+    )
+    payment_type = models.CharField(
+        max_length=10,
+        choices=PAYMENT_TYPE_CHOICES,
+        default='full',
     )
     order_reference = models.CharField(max_length=20, unique=True, blank=True)
     customer_name = models.CharField(max_length=200)
@@ -39,6 +58,14 @@ class Order(models.Model):
 
     def __str__(self):
         return self.order_reference
+
+    def clean(self):
+        has_product = self.product_id is not None
+        has_motorcycle = self.motorcycle_id is not None
+        if not has_product and not has_motorcycle:
+            raise ValidationError("An order must be linked to either a product or a motorcycle.")
+        if has_product and has_motorcycle:
+            raise ValidationError("An order cannot be linked to both a product and a motorcycle.")
 
     def save(self, *args, **kwargs):
         if not self.order_reference:

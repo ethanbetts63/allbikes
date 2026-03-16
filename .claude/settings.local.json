@@ -10,7 +10,8 @@
       "Bash(grep:*)",
       "Bash(find:*)",
       "Bash(cd:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(venv/Scripts/python.exe manage.py migrate 2>&1)"
     ]
   }
 }

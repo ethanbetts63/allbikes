@@ -242,7 +242,9 @@ export async function manageProductImages(productId: number, images: Pick<Manage
 // --- Shop / Order Endpoints ---
 
 interface CreateOrderData {
-    product: number;
+    product?: number;
+    motorcycle?: number;
+    payment_type?: 'full' | 'deposit';
     customer_name: string;
     customer_email: string;
     customer_phone: string;
@@ -273,6 +275,20 @@ export async function createPaymentIntent(orderId: number): Promise<{ clientSecr
 
 export async function getOrderByReference(reference: string): Promise<Order> {
     const response = await fetch(`/api/payments/orders/${reference}/`);
+    return handleResponse(response);
+}
+
+export async function getDepositSettings(): Promise<{ deposit_amount: string }> {
+    const response = await fetch('/api/payments/deposit-settings/');
+    return handleResponse(response);
+}
+
+export async function adminUpdateDepositSettings(depositAmount: string): Promise<{ deposit_amount: string }> {
+    const response = await authedFetch('/api/payments/admin/deposit-settings/', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deposit_amount: depositAmount }),
+    });
     return handleResponse(response);
 }
 

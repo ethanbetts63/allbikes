@@ -1,8 +1,11 @@
 export interface Order {
   id: number;
   order_reference: string;
-  product: number;
-  product_name: string;
+  payment_type: 'full' | 'deposit';
+  product: number | null;
+  product_name: string | null;
+  motorcycle: number | null;
+  motorcycle_name: string | null;
   amount_paid: string | null;
   customer_name: string;
   customer_email: string;

@@ -1,28 +1,41 @@
 {% extends "notifications/emails/base.html" %}
 {% load tz %}
 
-{% block title %}New ScooterShop order — {{ order.order_reference }}{% endblock %}
+{% block title %}
+{% if order.payment_type == 'deposit' %}New deposit — {{ order.order_reference }}{% else %}New ScooterShop order — {{ order.order_reference }}{% endif %}
+{% endblock %}
 
-{% block preheader %}New order received: {{ order.order_reference }} — {{ order.customer_name }}, {{ order.product.name }}.{% endblock %}
+{% block preheader %}
+{% if order.payment_type == 'deposit' %}Deposit received: {{ order.order_reference }} — {{ order.customer_name }}, {{ order.motorcycle }}.{% else %}New order received: {{ order.order_reference }} — {{ order.customer_name }}, {{ order.product.name }}.{% endif %}
+{% endblock %}
 
 {% block content %}
-<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 24px 0; line-height: 1.1;">New Order Received</h1>
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 24px 0; line-height: 1.1;">
+    {% if order.payment_type == 'deposit' %}New Deposit Received{% else %}New Order Received{% endif %}
+</h1>
 
 <!-- Order -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
     <tr>
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
-            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Order</p>
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">
+                {% if order.payment_type == 'deposit' %}Deposit{% else %}Order{% endif %}
+            </p>
             <p style="margin: 0 0 4px 0;"><strong style="color: #1c1917;">{{ order.order_reference }}</strong></p>
             <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #a8a29e; margin: 0;">{{ order.created_at|timezone:"Australia/Perth"|date:"d M Y, g:iA" }} AWST</p>
         </td>
     </tr>
 </table>
 
-<!-- Product -->
+<!-- Item -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
     <tr>
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            {% if order.payment_type == 'deposit' %}
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Motorcycle</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ order.motorcycle }}</p>
+            <p style="margin: 0;">Deposit: ${{ order.amount_paid }}</p>
+            {% else %}
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Product</p>
             <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ order.product.name }}</p>
             <p style="margin: 0;">
@@ -33,6 +46,7 @@
                     ${{ order.product.price }} incl. GST
                 {% endif %}
             </p>
+            {% endif %}
         </td>
     </tr>
 </table>
@@ -49,6 +63,7 @@
     </tr>
 </table>
 
+{% if order.payment_type != 'deposit' %}
 <!-- Delivery address -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 0;">
     <tr>
@@ -59,4 +74,5 @@
         </td>
     </tr>
 </table>
+{% endif %}
 {% endblock %}

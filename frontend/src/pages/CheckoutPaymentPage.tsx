@@ -4,29 +4,39 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
-import { getProductById } from '@/api';
-import type { Product } from '@/types/Product';
+import { getOrderByReference } from '@/api';
+import type { Order } from '@/types/Order';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
+interface ItemSummary {
+  name: string;
+  imageUrl: string | null;
+  priceLabel: string;
+  isDeposit: boolean;
+}
 
 interface LocationState {
   clientSecret: string;
   orderReference: string;
+  itemSummary?: ItemSummary;
+  error?: string;
 }
 
 // --- Inner form rendered inside <Elements> ---
 
 interface PaymentFormProps {
   orderReference: string;
-  productSlug: string;
+  slug: string;
+  initialError?: string;
 }
 
-const PaymentForm = ({ orderReference, productSlug }: PaymentFormProps) => {
+const PaymentForm = ({ orderReference, slug, initialError }: PaymentFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(initialError ?? null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +48,7 @@ const PaymentForm = ({ orderReference, productSlug }: PaymentFormProps) => {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/checkout/processing?ref=${orderReference}&slug=${productSlug}`,
+        return_url: `${window.location.origin}/checkout/processing?ref=${orderReference}&slug=${slug}`,
       },
       redirect: 'if_required',
     });
@@ -84,48 +94,49 @@ const PaymentForm = ({ orderReference, productSlug }: PaymentFormProps) => {
 // --- Page wrapper ---
 
 const CheckoutPaymentPage = () => {
-  const { productSlug } = useParams<{ productSlug: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as LocationState | null;
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [isLoadingProduct, setIsLoadingProduct] = useState(true);
-
-  const productId = productSlug ? Number(productSlug.split('-').pop()) : null;
+  const [itemSummary, setItemSummary] = useState<ItemSummary | null>(state?.itemSummary ?? null);
+  const [isLoadingSummary, setIsLoadingSummary] = useState(!state?.itemSummary);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!state?.clientSecret || !state?.orderReference) {
-      navigate(`/checkout/${productSlug}`);
+      navigate(`/checkout/${slug}`);
       return;
     }
-    if (!productId || isNaN(productId)) {
-      navigate('/escooters');
-      return;
+    // If itemSummary wasn't passed (e.g. 3DS recovery from processing page), fetch order to build it
+    if (!state.itemSummary && state.orderReference) {
+      getOrderByReference(state.orderReference)
+        .then((order: Order) => {
+          setItemSummary({
+            name: order.motorcycle_name ?? order.product_name ?? '',
+            imageUrl: null,
+            priceLabel: order.payment_type === 'deposit'
+              ? `$${parseFloat(order.amount_paid ?? '0').toLocaleString()} deposit`
+              : `$${parseFloat(order.amount_paid ?? '0').toLocaleString()} incl. GST`,
+            isDeposit: order.payment_type === 'deposit',
+          });
+        })
+        .catch(() => {/* summary is optional, payment still works */})
+        .finally(() => setIsLoadingSummary(false));
+    } else {
+      setIsLoadingSummary(false);
     }
-    getProductById(productId)
-      .then(setProduct)
-      .catch(() => navigate('/escooters'))
-      .finally(() => setIsLoadingProduct(false));
   }, []);
 
   if (!state?.clientSecret) return null;
 
-  if (isLoadingProduct) {
+  if (isLoadingSummary) {
     return (
       <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
         <Spinner className="h-12 w-12" />
       </div>
     );
   }
-
-  const displayPrice = product?.discount_price && parseFloat(product.discount_price) > 0
-    ? product.discount_price
-    : product?.price ?? '0';
-
-  const sortedImages = product ? [...product.images].sort((a, b) => a.order - b.order) : [];
-  const imageUrl = sortedImages[0]?.thumbnail || sortedImages[0]?.image;
 
   const elementsOptions = {
     clientSecret: state.clientSecret,
@@ -138,29 +149,30 @@ const CheckoutPaymentPage = () => {
       <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
 
-          {/* Product summary */}
-          {product && (
+          {/* Item summary */}
+          {itemSummary && (
             <div className="bg-[var(--bg-light-secondary)] border border-border-light rounded-lg p-4 mb-8 flex items-center gap-4">
-              {imageUrl && (
-                <img src={imageUrl} alt={product.name} className="w-20 h-20 object-cover rounded-md shrink-0" />
+              {itemSummary.imageUrl && (
+                <img src={itemSummary.imageUrl} alt={itemSummary.name} className="w-20 h-20 object-cover rounded-md shrink-0" />
               )}
               <div className="flex-1 min-w-0">
-                {product.brand && (
-                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{product.brand}</p>
+                {itemSummary.isDeposit && (
+                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">Deposit Reservation</p>
                 )}
-                <p className="font-bold text-[var(--text-dark-primary)] truncate">{product.name}</p>
-                <p className="text-sm text-[var(--text-dark-secondary)]">
-                  ${parseFloat(displayPrice).toLocaleString()} incl. GST &middot; Free delivery Australia-wide
-                </p>
+                <p className="font-bold text-[var(--text-dark-primary)] truncate">{itemSummary.name}</p>
+                <p className="text-sm text-[var(--text-dark-secondary)]">{itemSummary.priceLabel}</p>
               </div>
             </div>
           )}
 
           <h1 className="text-2xl font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-6">Payment</h1>
-          <p className="text-sm text-[var(--text-dark-secondary)] mb-6">Order reference: <span className="font-mono font-semibold text-[var(--text-dark-primary)]">{state.orderReference}</span></p>
+          <p className="text-sm text-[var(--text-dark-secondary)] mb-6">
+            {itemSummary?.isDeposit ? 'Deposit reference' : 'Order reference'}:{' '}
+            <span className="font-mono font-semibold text-[var(--text-dark-primary)]">{state.orderReference}</span>
+          </p>
 
           <Elements stripe={stripePromise} options={elementsOptions}>
-            <PaymentForm orderReference={state.orderReference} productSlug={productSlug!} />
+            <PaymentForm orderReference={state.orderReference} slug={slug!} initialError={state.error} />
           </Elements>
 
         </div>

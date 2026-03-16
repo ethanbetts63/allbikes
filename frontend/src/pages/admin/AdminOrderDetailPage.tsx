@@ -11,8 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 const STATUS_OPTIONS = [
   { value: 'pending_payment', label: 'Pending Payment' },
   { value: 'paid',            label: 'Paid' },
-  { value: 'dispatched',      label: 'Dispatched' },
-  { value: 'delivered',       label: 'Delivered' },
+  { value: 'completed',       label: 'Completed' },
   { value: 'cancelled',       label: 'Cancelled' },
   { value: 'refunded',        label: 'Refunded' },
 ];
@@ -20,8 +19,7 @@ const STATUS_OPTIONS = [
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   pending_payment: { label: 'Pending Payment', className: 'border-amber-500 text-[var(--highlight)]' },
   paid:            { label: 'Paid',            className: 'border-green-600 text-highlight1' },
-  dispatched:      { label: 'Dispatched',      className: 'border-blue-500 text-blue-600' },
-  delivered:       { label: 'Delivered',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },
+  completed:       { label: 'Completed',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },
   cancelled:       { label: 'Cancelled',       className: 'border-red-500 text-destructive' },
   refunded:        { label: 'Refunded',        className: 'border-orange-500 text-orange-600' },
 };
@@ -84,6 +82,7 @@ const AdminOrderDetailPage = () => {
   }
 
   const badge = STATUS_BADGE[order.status];
+  const isDeposit = order.payment_type === 'deposit';
   const displayPrice = order.amount_paid ?? '0';
 
   const address = [
@@ -106,9 +105,14 @@ const AdminOrderDetailPage = () => {
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
           <div>
             <h1 className="text-2xl font-bold text-[var(--text-dark-primary)] font-mono mb-1">{order.order_reference}</h1>
-            {badge && (
-              <Badge variant="outline" className={`text-sm px-3 py-1 ${badge.className}`}>{badge.label}</Badge>
-            )}
+            <div className="flex items-center gap-2">
+              {badge && (
+                <Badge variant="outline" className={`text-sm px-3 py-1 ${badge.className}`}>{badge.label}</Badge>
+              )}
+              {isDeposit && (
+                <Badge variant="outline" className="text-sm px-3 py-1 border-[var(--highlight)] text-[var(--highlight)]">Deposit</Badge>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <select
@@ -130,9 +134,20 @@ const AdminOrderDetailPage = () => {
         </div>
 
         <div className="mb-6">
-          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Order Details</h2>
-          <Row label="Product" value={order.product_name} />
-          <Row label="Price" value={`$${parseFloat(displayPrice).toLocaleString()} incl. GST`} />
+          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">
+            {isDeposit ? 'Deposit Details' : 'Order Details'}
+          </h2>
+          {isDeposit ? (
+            <>
+              <Row label="Motorcycle" value={order.motorcycle_name ?? '—'} />
+              <Row label="Deposit Paid" value={`$${parseFloat(displayPrice).toLocaleString()}`} />
+            </>
+          ) : (
+            <>
+              <Row label="Product" value={order.product_name ?? '—'} />
+              <Row label="Price" value={`$${parseFloat(displayPrice).toLocaleString()} incl. GST`} />
+            </>
+          )}
           <Row label="Placed" value={formatDate(order.created_at)} />
           <Row label="Last Updated" value={formatDate(order.updated_at)} />
         </div>
@@ -144,10 +159,12 @@ const AdminOrderDetailPage = () => {
           {order.customer_phone && <Row label="Phone" value={order.customer_phone} />}
         </div>
 
-        <div className="mb-6">
-          <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Delivery Address</h2>
-          <Row label="Address" value={address} />
-        </div>
+        {!isDeposit && (
+          <div className="mb-6">
+            <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Delivery Address</h2>
+            <Row label="Address" value={address} />
+          </div>
+        )}
 
         <Link to="/dashboard/orders" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Orders

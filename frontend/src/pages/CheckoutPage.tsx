@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { getProductById, createOrder, createPaymentIntent } from '@/api';
+import { getProductById, getBikeById, getDepositSettings, createOrder, createPaymentIntent } from '@/api';
 import type { Product } from '@/types/Product';
+import type { Bike } from '@/types/Bike';
 
 interface CheckoutFormData {
   customer_name: string;
@@ -19,56 +20,118 @@ interface CheckoutFormData {
   postcode: string;
 }
 
+interface LocationState {
+  checkoutType?: 'product' | 'deposit';
+}
+
+interface ItemSummary {
+  name: string;
+  imageUrl: string | null;
+  priceLabel: string;
+  isDeposit: boolean;
+}
+
 const AU_STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'];
 
 const CheckoutPage = () => {
-  const { productSlug } = useParams<{ productSlug: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as LocationState | null;
+  const checkoutType = locationState?.checkoutType ?? 'product';
+
   const [product, setProduct] = useState<Product | null>(null);
-  const [isLoadingProduct, setIsLoadingProduct] = useState(true);
+  const [bike, setBike] = useState<Bike | null>(null);
+  const [depositAmount, setDepositAmount] = useState<string | null>(null);
+  const [isLoadingItem, setIsLoadingItem] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const productId = productSlug ? Number(productSlug.split('-').pop()) : null;
+  const productId = slug ? Number(slug.split('-').pop()) : null;
 
   const { register, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!productId || isNaN(productId)) {
-      navigate('/escooters');
-      return;
+
+    if (checkoutType === 'deposit') {
+      if (!slug) { navigate('/inventory/motorcycles/new'); return; }
+      const bikeId = slug.split('-').pop();
+      if (!bikeId) { navigate('/inventory/motorcycles/new'); return; }
+      Promise.all([getBikeById(bikeId), getDepositSettings()])
+        .then(([bikeData, settings]) => {
+          if (bikeData.status !== 'for_sale' || bikeData.condition !== 'new') {
+            navigate(`/inventory/motorcycles/${slug}`);
+            return;
+          }
+          setBike(bikeData);
+          setDepositAmount(settings.deposit_amount);
+        })
+        .catch(() => navigate('/inventory/motorcycles/new'))
+        .finally(() => setIsLoadingItem(false));
+    } else {
+      if (!productId || isNaN(productId)) { navigate('/escooters'); return; }
+      getProductById(productId)
+        .then(data => {
+          if (!data.in_stock) { navigate(`/escooters/${slug}`); return; }
+          setProduct(data);
+        })
+        .catch(() => navigate('/escooters'))
+        .finally(() => setIsLoadingItem(false));
     }
-    const fetchProduct = async () => {
-      try {
-        const data = await getProductById(productId);
-        if (!data.in_stock) {
-          navigate(`/escooters/${productSlug}`);
-          return;
-        }
-        setProduct(data);
-      } catch {
-        navigate('/escooters');
-      } finally {
-        setIsLoadingProduct(false);
-      }
-    };
-    fetchProduct();
-  }, [productId]);
+  }, []);
+
+  const buildItemSummary = (): ItemSummary => {
+    if (checkoutType === 'deposit' && bike && depositAmount) {
+      const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
+      return {
+        name: bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`,
+        imageUrl: sortedImages[0]?.image ?? null,
+        priceLabel: `$${parseFloat(depositAmount).toLocaleString()} deposit`,
+        isDeposit: true,
+      };
+    }
+    if (product) {
+      const sortedImages = [...product.images].sort((a, b) => a.order - b.order);
+      const price = product.discount_price && parseFloat(product.discount_price) > 0
+        ? product.discount_price
+        : product.price;
+      return {
+        name: product.name,
+        imageUrl: sortedImages[0]?.thumbnail ?? sortedImages[0]?.image ?? null,
+        priceLabel: `$${parseFloat(price).toLocaleString()} incl. GST · Free delivery Australia-wide`,
+        isDeposit: false,
+      };
+    }
+    return { name: '', imageUrl: null, priceLabel: '', isDeposit: false };
+  };
 
   const onSubmit = async (formData: CheckoutFormData) => {
-    if (!product) return;
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const order = await createOrder({ product: product.id, ...formData });
+      const orderPayload =
+        checkoutType === 'deposit' && bike
+          ? { motorcycle: bike.id, payment_type: 'deposit' as const, ...formData }
+          : { product: product!.id, ...formData };
+
+      const order = await createOrder(orderPayload);
       const { clientSecret } = await createPaymentIntent(order.order_id);
-      navigate(`/checkout/${productSlug}/payment`, {
-        state: { clientSecret, orderReference: order.order_reference },
+
+      navigate(`/checkout/${slug}/payment`, {
+        state: {
+          clientSecret,
+          orderReference: order.order_reference,
+          itemSummary: buildItemSummary(),
+        },
       });
     } catch (err: any) {
       if (err?.status === 409) {
-        setSubmitError('Sorry, this product just sold out. Please go back and choose another.');
+        setSubmitError(
+          checkoutType === 'deposit'
+            ? 'Sorry, this motorcycle has just been reserved. Please contact us for availability.'
+            : 'Sorry, this product just sold out. Please go back and choose another.'
+        );
       } else {
         setSubmitError('Something went wrong. Please try again.');
       }
@@ -77,7 +140,7 @@ const CheckoutPage = () => {
     }
   };
 
-  if (isLoadingProduct) {
+  if (isLoadingItem) {
     return (
       <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
         <Spinner className="h-12 w-12" />
@@ -85,13 +148,10 @@ const CheckoutPage = () => {
     );
   }
 
-  if (!product) return null;
+  if (checkoutType === 'deposit' && !bike) return null;
+  if (checkoutType === 'product' && !product) return null;
 
-  const sortedImages = [...product.images].sort((a, b) => a.order - b.order);
-  const imageUrl = sortedImages[0]?.thumbnail || sortedImages[0]?.image;
-  const displayPrice = product.discount_price && parseFloat(product.discount_price) > 0
-    ? product.discount_price
-    : product.price;
+  const summary = buildItemSummary();
 
   return (
     <>
@@ -99,19 +159,20 @@ const CheckoutPage = () => {
       <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
 
-          {/* Product summary */}
+          {/* Item summary */}
           <div className="bg-[var(--bg-light-secondary)] border border-border-light rounded-lg p-4 mb-8 flex items-center gap-4">
-            {imageUrl && (
-              <img src={imageUrl} alt={product.name} className="w-20 h-20 object-cover rounded-md shrink-0" />
+            {summary.imageUrl && (
+              <img src={summary.imageUrl} alt={summary.name} className="w-20 h-20 object-cover rounded-md shrink-0" />
             )}
             <div className="flex-1 min-w-0">
-              {product.brand && (
+              {checkoutType === 'deposit' && (
+                <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">Deposit Reservation</p>
+              )}
+              {checkoutType === 'product' && product?.brand && (
                 <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{product.brand}</p>
               )}
-              <p className="font-bold text-[var(--text-dark-primary)] truncate">{product.name}</p>
-              <p className="text-sm text-[var(--text-dark-secondary)]">
-                ${parseFloat(displayPrice).toLocaleString()} incl. GST &middot; Free delivery Australia-wide
-              </p>
+              <p className="font-bold text-[var(--text-dark-primary)] truncate">{summary.name}</p>
+              <p className="text-sm text-[var(--text-dark-secondary)]">{summary.priceLabel}</p>
             </div>
           </div>
 
@@ -225,8 +286,14 @@ const CheckoutPage = () => {
                 {isSubmitting ? 'Please wait...' : 'Continue to Payment'}
               </button>
               <div className="text-sm text-[var(--text-dark-secondary)] space-y-1">
-                <p>✓ Free delivery Australia-wide</p>
-                <p>✓ Order confirmation sent to your email</p>
+                {checkoutType === 'deposit' ? (
+                  <p>✓ Secure your motorcycle with a ${depositAmount && parseFloat(depositAmount).toLocaleString()} deposit — our team will be in touch</p>
+                ) : (
+                  <>
+                    <p>✓ Free delivery Australia-wide</p>
+                    <p>✓ Order confirmation sent to your email</p>
+                  </>
+                )}
               </div>
             </div>
 

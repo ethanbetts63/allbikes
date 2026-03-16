@@ -28,8 +28,7 @@ import type { Order } from '@/types/Order';
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   pending_payment: { label: 'Pending Payment', className: 'border-amber-500 text-[var(--highlight)]' },
   paid:            { label: 'Paid',            className: 'border-green-600 text-highlight1' },
-  dispatched:      { label: 'Dispatched',      className: 'border-blue-500 text-blue-600' },
-  delivered:       { label: 'Delivered',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },
+  completed:       { label: 'Completed',       className: 'text-[var(--text-dark-secondary)] border-gray-400' },
   cancelled:       { label: 'Cancelled',       className: 'border-red-500 text-destructive' },
   refunded:        { label: 'Refunded',        className: 'border-orange-500 text-orange-600' },
 };
@@ -52,7 +51,7 @@ const OrderTable = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const statusParam = filter === 'todo' ? 'paid,dispatched' : undefined;
+        const statusParam = filter === 'todo' ? 'paid' : undefined;
         const result = await adminGetOrders(statusParam, page);
         setData(result.results);
         setCount(result.count);
@@ -75,16 +74,28 @@ const OrderTable = () => {
     {
       accessorKey: 'order_reference',
       header: () => <div className="text-[var(--text-dark-primary)]">Reference</div>,
-      cell: ({ row }) => <div className="font-mono font-semibold text-[var(--text-dark-primary)]">{row.getValue('order_reference')}</div>,
+      cell: ({ row }) => (
+        <div>
+          <div className="font-mono font-semibold text-[var(--text-dark-primary)]">{row.getValue('order_reference')}</div>
+          {row.original.payment_type === 'deposit' && (
+            <div className="text-xs text-[var(--highlight)] font-bold uppercase tracking-wider mt-0.5">Deposit</div>
+          )}
+        </div>
+      ),
     },
     {
-      accessorKey: 'product_name',
+      id: 'item',
       header: ({ column }) => (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-[var(--text-dark-primary)]">
-          Product <ArrowUpDown className="ml-2 h-4 w-4" />
+          Item <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => <div className="text-[var(--text-dark-primary)]">{row.getValue('product_name')}</div>,
+      accessorFn: (row) => row.product_name ?? row.motorcycle_name ?? '',
+      cell: ({ row }) => (
+        <div className="text-[var(--text-dark-primary)]">
+          {row.original.product_name ?? row.original.motorcycle_name ?? '—'}
+        </div>
+      ),
     },
     {
       accessorKey: 'customer_name',

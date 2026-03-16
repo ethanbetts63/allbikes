@@ -18,7 +18,7 @@ class AdminOrderListView(APIView):
 
     def get(self, request):
         status_filter = request.query_params.get('status')
-        orders = Order.objects.select_related('product').order_by('-created_at')
+        orders = Order.objects.select_related('product', 'motorcycle').order_by('-created_at')
         if status_filter:
             statuses = [s.strip() for s in status_filter.split(',')]
             orders = orders.filter(status__in=statuses)
@@ -32,7 +32,7 @@ class AdminOrderDetailView(APIView):
 
     def get(self, request, pk):
         try:
-            order = Order.objects.select_related('product').get(pk=pk)
+            order = Order.objects.select_related('product', 'motorcycle').get(pk=pk)
         except Order.DoesNotExist:
             return Response({'detail': 'Order not found.'}, status=404)
         return Response(OrderSerializer(order).data)

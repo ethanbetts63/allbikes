@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { getBikeById, getBikes } from '@/api';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { getBikeById, getBikes, getDepositSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
 import Seo from '@/components/Seo';
@@ -41,12 +41,14 @@ const getYouTubeVideoId = (url: string): string | null => {
 
 const BikeDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
+    const navigate = useNavigate();
     const [bike, setBike] = useState<Bike | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedMedia, setSelectedMedia] = useState<string>('YOUTUBE');
     const [newBikes, setNewBikes] = useState<Bike[]>([]);
     const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
+    const [depositAmount, setDepositAmount] = useState<string | null>(null);
 
     const videoId = bike?.youtube_link ? getYouTubeVideoId(bike.youtube_link) : null;
 
@@ -76,6 +78,10 @@ const BikeDetailPage = () => {
                 data.images = sortedImages;
 
                 setBike(data);
+
+                if (data.condition === 'new' && data.status === 'for_sale') {
+                    getDepositSettings().then(s => setDepositAmount(s.deposit_amount)).catch(() => {});
+                }
 
                 if (data.youtube_link && getYouTubeVideoId(data.youtube_link)) {
                     setSelectedMedia('YOUTUBE');
@@ -335,6 +341,31 @@ const BikeDetailPage = () => {
                                 </p>
                             )}
                         </div>
+
+                        {/* Reserve with Deposit — new bikes only */}
+                        {bike.condition === 'new' && bike.status === 'for_sale' && depositAmount && (
+                            <div className="mb-6">
+                                <button
+                                    onClick={() => navigate(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}
+                                    className="w-full py-3 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
+                                >
+                                    Reserve — ${parseFloat(depositAmount).toLocaleString()} Deposit
+                                </button>
+                                <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
+                                    Secure this motorcycle with a deposit. Our team will be in touch to arrange the sale.
+                                </p>
+                            </div>
+                        )}
+                        {bike.condition === 'new' && (bike.status === 'reserved' || bike.status === 'sold') && (
+                            <div className="mb-6 p-4 bg-[var(--bg-light-secondary)] border border-border-light rounded-lg text-center">
+                                <p className="text-sm font-semibold text-[var(--text-dark-secondary)]">
+                                    {bike.status === 'reserved' ? 'This motorcycle is currently reserved.' : 'This motorcycle has been sold.'}
+                                </p>
+                                <Link to="/contact" className="text-sm text-[var(--highlight)] hover:underline mt-1 inline-block">
+                                    Contact us about similar bikes
+                                </Link>
+                            </div>
+                        )}
 
                         {/* Specifications */}
                         <div className="mb-8">

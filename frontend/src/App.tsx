@@ -76,8 +76,8 @@ function App() {
                 <Route path="/refunds" element={<RefundsPage />} />
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 <Route path="/checkout/processing" element={<CheckoutProcessingPage />} />
-                <Route path="/checkout/:productSlug" element={<CheckoutPage />} />
-                <Route path="/checkout/:productSlug/payment" element={<CheckoutPaymentPage />} />
+                <Route path="/checkout/:slug" element={<CheckoutPage />} />
+                <Route path="/checkout/:slug/payment" element={<CheckoutPaymentPage />} />
 
                 {/* Dashboard Section */}
                 <Route path="/dashboard" element={<AdminLayout />}>
