@@ -35,7 +35,7 @@ const ProcessingInner = () => {
       }
       count += 1;
       if (count >= MAX_POLLS) {
-        navigate(`/checkout/success?ref=${ref}`);
+        navigate(`/checkout/error?ref=${ref}`);
       } else {
         setTimeout(poll, POLL_INTERVAL_MS);
       }

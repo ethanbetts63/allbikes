@@ -33,6 +33,7 @@ const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const CheckoutPaymentPage = lazy(() => import('./pages/CheckoutPaymentPage'));
 const CheckoutProcessingPage = lazy(() => import('./pages/CheckoutProcessingPage'));
 const CheckoutSuccessPage = lazy(() => import('./pages/CheckoutSuccessPage'));
+const CheckoutErrorPage = lazy(() => import('./pages/CheckoutErrorPage'));
 const AdminOrderDashboardPage = lazy(() => import('./pages/admin/AdminOrderDashboardPage'));
 const AdminOrderDetailPage = lazy(() => import('./pages/admin/AdminOrderDetailPage'));
 const AdminSentMessagesPage = lazy(() => import('./pages/admin/AdminSentMessagesPage'));
@@ -75,6 +76,7 @@ function App() {
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
                 <Route path="/refunds" element={<RefundsPage />} />
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+                <Route path="/checkout/error" element={<CheckoutErrorPage />} />
                 <Route path="/checkout/processing" element={<CheckoutProcessingPage />} />
                 <Route path="/checkout/:slug" element={<CheckoutPage />} />
                 <Route path="/checkout/:slug/payment" element={<CheckoutPaymentPage />} />

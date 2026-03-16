@@ -60,10 +60,6 @@ A living to-do list of approved improvements.
 A few things worth looking at before you go live:
 
   ---
-  1. Stale management command — fix before production
-
-  send_admin_reminders still queries status='dispatched' orders. That status was removed, so the weekly summary email will silently miss orders.
-  Worth fixing now.
 
   2. Processing page fallback
 
