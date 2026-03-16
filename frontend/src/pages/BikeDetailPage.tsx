@@ -410,7 +410,7 @@ const BikeDetailPage = () => {
             {siteSettings.accept_online_payment && bike.condition === 'new' && <PayLaterSection />}
 
             {/* Featured bikes carousels */}
-            <div className="mt-4 mb-4">
+            <div>
                 {bike.condition.toLowerCase() === 'new' && newBikes.length > 0 && (
                     <FeaturedBikes
                         title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
