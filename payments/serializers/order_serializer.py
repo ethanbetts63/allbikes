@@ -26,6 +26,15 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Either 'product' or 'motorcycle' must be provided.")
         if has_product and has_motorcycle:
             raise serializers.ValidationError("Provide either 'product' or 'motorcycle', not both.")
+
+        if has_motorcycle:
+            if not data.get('customer_phone'):
+                raise serializers.ValidationError({'customer_phone': 'Phone number is required for motorcycle reservations.'})
+        else:
+            for field in ('address_line1', 'suburb', 'state', 'postcode'):
+                if not data.get(field):
+                    raise serializers.ValidationError({field: 'This field is required.'})
+
         return data
 
 

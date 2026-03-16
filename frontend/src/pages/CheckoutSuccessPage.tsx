@@ -81,7 +81,7 @@ const CheckoutSuccessPage = () => {
                 <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-2">Motorcycle Reserved</p>
                 <p className="font-bold text-[var(--text-dark-primary)]">{order.motorcycle_name}</p>
                 <p className="text-[var(--text-dark-secondary)] text-sm">
-                  ${parseFloat(order.amount_paid ?? '0').toLocaleString()} deposit paid — our team will be in touch shortly.
+                  ${parseFloat(order.amount_paid ?? '0').toLocaleString()} deposit paid — our team will be in touch as soon as possible to organise pickup.
                 </p>
               </div>
             ) : (

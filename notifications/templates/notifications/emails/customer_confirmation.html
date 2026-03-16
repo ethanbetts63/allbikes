@@ -12,7 +12,7 @@
 {% if order.payment_type == 'deposit' %}
 <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Deposit Confirmed</h1>
 <p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0 0 24px 0; line-height: 26px;">
-    Hi {{ order.customer_name }}, your deposit has been received and your motorcycle is now reserved. Our team will be in touch shortly to discuss next steps.
+    Hi {{ order.customer_name }}, your deposit has been received and your motorcycle is now reserved. Our team will be in touch as soon as possible to organise pickup.
 </p>
 {% else %}
 <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Order Confirmed</h1>
@@ -84,9 +84,9 @@
 
 <p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c; margin: 0; line-height: 24px;">
     {% if order.payment_type == 'deposit' %}
-    Our team will be in touch to confirm the next steps. Questions? Contact us at <a href="mailto:info@scootershop.com.au" style="color: #1c1917;">info@scootershop.com.au</a>.
+    We'll be in touch as soon as possible to organise pickup. Questions? Contact us at <a href="mailto:admin@scootershop.com.au" style="color: #1c1917;">admin@scootershop.com.au</a>.
     {% else %}
-    We'll email you again when your order has been dispatched. Questions? Contact us at <a href="mailto:info@scootershop.com.au" style="color: #1c1917;">info@scootershop.com.au</a>.
+    We'll email you again when your order has been dispatched. Questions? Contact us at <a href="mailto:admin@scootershop.com.au" style="color: #1c1917;">admin@scootershop.com.au</a>.
     {% endif %}
 </p>
 {% endblock %}

@@ -59,8 +59,8 @@ def send_customer_confirmation(order):
             f"Deposit reference: {order.order_reference}\n"
             f"Motorcycle: {motorcycle_name}\n"
             f"Deposit paid: ${order.amount_paid}\n\n"
-            f"Our team will be in touch shortly to discuss next steps.\n\n"
-            f"Questions? Contact us at info@scootershop.com.au"
+            f"Our team will be in touch as soon as possible to organise pickup.\n\n"
+            f"Questions? Contact us at admin@scootershop.com.au"
         )
     else:
         subject = f"Order confirmed — {order.order_reference}"
@@ -108,8 +108,9 @@ def send_admin_new_order(order):
             f"Motorcycle: {motorcycle_name}\n"
             f"Deposit: ${order.amount_paid}\n\n"
             f"Customer: {order.customer_name}\n"
-            f"Email: {order.customer_email}\n"
-            f"Phone: {order.customer_phone or 'not provided'}\n"
+            f"Phone: {order.customer_phone}\n"
+            f"Email: {order.customer_email}\n\n"
+            f"Contact the customer to organise pickup.\n"
         )
     else:
         subject = f"New ScooterShop order — {order.order_reference}"

@@ -57,11 +57,22 @@
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Customer</p>
             <p style="font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ order.customer_name }}</p>
+            {% if order.payment_type == 'deposit' %}
+            <p style="margin: 0 0 4px 0;"><a href="tel:{{ order.customer_phone }}" style="color: #1c1917; font-weight: bold;">{{ order.customer_phone }}</a></p>
+            <p style="margin: 0;"><a href="mailto:{{ order.customer_email }}" style="color: #44403c;">{{ order.customer_email }}</a></p>
+            {% else %}
             <p style="margin: 0 0 4px 0;"><a href="mailto:{{ order.customer_email }}" style="color: #44403c;">{{ order.customer_email }}</a></p>
             {% if order.customer_phone %}<p style="margin: 0;">{{ order.customer_phone }}</p>{% endif %}
+            {% endif %}
         </td>
     </tr>
 </table>
+
+{% if order.payment_type == 'deposit' %}
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; margin: 16px 0 0 0; line-height: 24px;">
+    Contact the customer to organise pickup.
+</p>
+{% endif %}
 
 {% if order.payment_type != 'deposit' %}
 <!-- Delivery address -->
