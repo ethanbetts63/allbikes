@@ -8,7 +8,7 @@ const providers = [
     logo: afterpayLogo,
     logoClass: 'h-9',
     tagline: 'Pay in 4 & Monthly Instalments',
-    detail: '4 interest-free fortnightly payments, or spread over 6 or 12 months.',
+    detail: 'Interest-free fortnightly instalments or longer-term monthly payment plans.',
   },
   {
     name: 'Klarna',
