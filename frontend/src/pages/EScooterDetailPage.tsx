@@ -66,13 +66,42 @@ const EScooterDetailPage = () => {
 
     const mainImageUrl = selectedImage?.medium || selectedImage?.image;
 
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
+                    { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/escooters" },
+                    { "@type": "ListItem", "position": 3, "name": product.name, "item": `https://www.scootershop.com.au/escooters/${product.slug}` }
+                ]
+            },
+            {
+                "@type": "Product",
+                "name": product.name,
+                "image": sortedImages[0]?.image,
+                "description": product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`,
+                ...(product.brand && { "brand": { "@type": "Brand", "name": product.brand } }),
+                "offers": {
+                    "@type": "Offer",
+                    "price": product.discount_price && parseFloat(product.discount_price) > 0 ? product.discount_price : product.price,
+                    "priceCurrency": "AUD",
+                    "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                    "url": `https://www.scootershop.com.au/escooters/${product.slug}`
+                }
+            }
+        ]
+    };
+
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
             <Seo
                 title={`${product.name} | Scooter Shop`}
                 description={product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`}
                 canonicalPath={`/escooters/${product.slug}`}
-                ogImage={sortedImages[0]?.medium}
+                ogImage={sortedImages[0]?.image}
+                structuredData={structuredData}
             />
 
             <div className="container mx-auto px-4 pb-12 lg:px-8">

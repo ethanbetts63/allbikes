@@ -10,13 +10,14 @@ from data_management.views.token_views import (
     CookieLogoutView,
 )
 from django.contrib.sitemaps.views import sitemap
-from .sitemaps import MotorcycleSitemap, StaticViewSitemap
+from .sitemaps import MotorcycleSitemap, ProductSitemap, StaticViewSitemap
 
 def strip_trailing_slash(request, path):
     return HttpResponsePermanentRedirect(f'/{path}')
 
 sitemaps = {
     'motorcycles': MotorcycleSitemap,
+    'products': ProductSitemap,
     'static': StaticViewSitemap,
 }
 

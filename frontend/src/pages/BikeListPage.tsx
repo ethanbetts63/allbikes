@@ -122,7 +122,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { name: 'Home', href: '/' },
-    { name: pageTitle, href: isNew ? '/bikes/new' : '/bikes/used' }
+    { name: pageTitle, href: isNew ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used' }
   ];
   
   const structuredData = bikes && bikes.length > 0 ? {

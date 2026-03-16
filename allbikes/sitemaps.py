@@ -1,5 +1,6 @@
 from django.contrib.sitemaps import Sitemap
 from inventory.models import Motorcycle
+from product.models.product import Product
 
 class MotorcycleSitemap(Sitemap):
     """
@@ -14,6 +15,22 @@ class MotorcycleSitemap(Sitemap):
 
     def lastmod(self, obj):
         return obj.date_posted
+
+class ProductSitemap(Sitemap):
+    """Sitemap for e-scooter products that are active."""
+    changefreq = "weekly"
+    priority = 0.8
+    protocol = 'https'
+
+    def items(self):
+        return Product.objects.filter(is_active=True)
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+    def location(self, obj):
+        return f'/escooters/{obj.slug}'
+
 
 class StaticViewSitemap(Sitemap):
     """
