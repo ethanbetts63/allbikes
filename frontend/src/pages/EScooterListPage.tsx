@@ -49,12 +49,47 @@ const EScooterListPage = () => {
     fetchProducts();
   }, []);
 
+  const structuredData = products.length > 0 ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
+          { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/escooters" }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "itemListElement": products.map((product, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Product",
+            "url": `https://www.scootershop.com.au/escooters/${product.slug}`,
+            "name": product.name,
+            ...(product.images[0]?.image && { "image": product.images[0].image }),
+            ...(product.description && { "description": product.description }),
+            ...(product.brand && { "brand": { "@type": "Brand", "name": product.brand } }),
+            "offers": {
+              "@type": "Offer",
+              "price": product.discount_price && parseFloat(product.discount_price) > 0 ? product.discount_price : product.price,
+              "priceCurrency": "AUD",
+              "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+            }
+          }
+        }))
+      }
+    ]
+  } : undefined;
+
   return (
     <>
       <Seo
         title="Electric Scooters | Scooter Shop"
         description="Shop our range of electric scooters online. All prices include GST with free delivery Australia-wide. Secure payment via Stripe."
         canonicalPath="/escooters"
+        structuredData={structuredData}
       />
 
       <Hero
