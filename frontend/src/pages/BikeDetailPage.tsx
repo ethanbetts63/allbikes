@@ -16,7 +16,9 @@ import {
     FileText,
     CalendarClock,
     ShieldCheck,
-    PlayCircle
+    PlayCircle,
+    Mail,
+    Phone
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
@@ -225,6 +227,25 @@ const BikeDetailPage = () => {
 
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
+            {/* Contact banner */}
+            <div className="bg-[var(--bg-dark-primary)] border-b border-white/10">
+                <div className="container mx-auto px-4 lg:px-8 py-3 flex flex-wrap items-center gap-x-6 gap-y-2">
+                    <span className="text-[var(--text-light-secondary)] text-xs uppercase tracking-widest font-bold hidden sm:inline">Interested?</span>
+                    {siteSettings.phone_number && (
+                        <a href={`tel:${siteSettings.phone_number}`} className="flex items-center gap-2 text-[var(--text-light-primary)] hover:text-[var(--highlight)] transition-colors text-sm font-semibold">
+                            <Phone className="h-3.5 w-3.5 text-[var(--highlight)]" />
+                            {siteSettings.phone_number}{siteSettings.mobile_number && ` / ${siteSettings.mobile_number}`}
+                        </a>
+                    )}
+                    {siteSettings.email_address && (
+                        <a href={`mailto:${siteSettings.email_address}`} className="flex items-center gap-2 text-[var(--text-light-primary)] hover:text-[var(--highlight)] transition-colors text-sm font-semibold">
+                            <Mail className="h-3.5 w-3.5 text-[var(--highlight)] shrink-0" />
+                            {siteSettings.email_address}
+                        </a>
+                    )}
+                </div>
+            </div>
+
             <Seo
                 title={`${pageTitle} | Allbikes`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes & Scooters, Perth's most experienced motorcycle and scooter dealership.`}
