@@ -50,7 +50,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
     if (newBikes.length > 0) {
       const urls = newBikes.map(bike => {
         const sorted = [...bike.images].sort((a, b) => a.order - b.order);
-        return sorted[0]?.image;
+        return sorted[0]?.medium || sorted[0]?.image;
       }).filter(Boolean) as string[];
       if (urls.length > 0) {
         setNewBikeImageUrls(urls);
@@ -64,7 +64,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
     if (usedBikes.length > 0) {
       const urls = usedBikes.map(bike => {
         const sorted = [...bike.images].sort((a, b) => a.order - b.order);
-        return sorted[0]?.image;
+        return sorted[0]?.medium || sorted[0]?.image;
       }).filter(Boolean) as string[];
       if (urls.length > 0) {
         setUsedBikeImageUrls(urls);

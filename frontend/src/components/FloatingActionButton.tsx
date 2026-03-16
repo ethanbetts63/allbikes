@@ -6,12 +6,12 @@ export const FloatingActionButton = () => {
     <Link
       to="/booking"
       className="fixed bottom-8 right-8 z-50
-                 bg-highlight1 text-[var(--text-light-primary)]
+                 bg-emerald-800 text-[var(--text-light-primary)]
                  rounded-full shadow-md
                  px-5 py-3
                  flex items-center gap-2.5
                  text-sm font-bold uppercase tracking-widest
-                 hover:bg-emerald-400 transition-colors duration-200"
+                 hover:bg-emerald-900 transition-colors duration-200"
     >
       <Wrench className="h-4 w-4 shrink-0" />
       Book Service
