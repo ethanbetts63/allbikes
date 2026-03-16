@@ -12,6 +12,7 @@ import { siteSettings } from '@/config/siteSettings';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import FeaturedEScooters from '@/components/FeaturedEScooters';
+import PayLaterSection from '@/components/PayLaterSection';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
@@ -163,6 +164,8 @@ const HomePage = () => {
         />
 
         {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
+
+        {siteSettings.accept_online_payment && <PayLaterSection />}
 
         <BrandsSection />
 
