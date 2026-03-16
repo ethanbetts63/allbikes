@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
+import { siteSettings } from '@/config/siteSettings';
 
 const getYouTubeVideoId = (url: string): string | null => {
     if (!url) return null;
@@ -343,7 +344,7 @@ const BikeDetailPage = () => {
                         </div>
 
                         {/* Reserve with Deposit — new bikes only */}
-                        {bike.condition === 'new' && bike.status === 'for_sale' && depositAmount && (
+                        {siteSettings.accept_online_payment && bike.condition === 'new' && bike.status === 'for_sale' && depositAmount && (
                             <div className="mb-6">
                                 <button
                                     onClick={() => navigate(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}

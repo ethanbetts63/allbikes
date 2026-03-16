@@ -7,6 +7,7 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Truck } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
+import { siteSettings } from '@/config/siteSettings';
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -173,24 +174,26 @@ const EScooterDetailPage = () => {
                         )}
 
                         {/* CTA */}
-                        <div className="space-y-3">
-                            <button
-                                disabled={!product.in_stock}
-                                onClick={() => navigate(`/checkout/${product.slug}`)}
-                                className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
-                            >
-                                {product.in_stock ? 'Buy Now' : 'Out of Stock'}
-                            </button>
+                        {siteSettings.accept_online_payment && (
+                            <div className="space-y-3">
+                                <button
+                                    disabled={!product.in_stock}
+                                    onClick={() => navigate(`/checkout/${product.slug}`)}
+                                    className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
+                                >
+                                    {product.in_stock ? 'Buy Now' : 'Out of Stock'}
+                                </button>
 
-                            <div className="text-sm text-[var(--text-dark-secondary)] space-y-1 pt-1">
-                                <p>✓ Order confirmation sent to your email</p>
-                                <p>✓ Free delivery Australia-wide</p>
+                                <div className="text-sm text-[var(--text-dark-secondary)] space-y-1 pt-1">
+                                    <p>✓ Order confirmation sent to your email</p>
+                                    <p>✓ Free delivery Australia-wide</p>
+                                </div>
+                                <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
+                                    <span className="text-xs text-[var(--text-dark-secondary)]">Powered by</span>
+                                    <img src={stripeLogo} alt="Stripe" className="h-6 w-auto opacity-70" />
+                                </div>
                             </div>
-                            <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
-                                <span className="text-xs text-[var(--text-dark-secondary)]">Powered by</span>
-                                <img src={stripeLogo} alt="Stripe" className="h-6 w-auto opacity-70" />
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
