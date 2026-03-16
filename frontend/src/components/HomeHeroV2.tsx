@@ -138,6 +138,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         srcSet={isDefaultA ? defaultUsedSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 40vw"
         alt=""
+        fetchPriority="high"
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
       />
       <img
