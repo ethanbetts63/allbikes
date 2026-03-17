@@ -144,7 +144,9 @@ const HomePage = () => {
         />
         <ReviewCarousel />
         
-        <ServiceCTAV2 />
+
+        {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
+ 
 
         
 
@@ -163,7 +165,7 @@ const HomePage = () => {
           linkText="All Used Bikes"
         />
 
-        {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
+        <ServiceCTAV2 />
 
         <PayLaterSection />
 
