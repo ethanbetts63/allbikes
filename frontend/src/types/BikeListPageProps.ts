@@ -1,3 +1,3 @@
 export interface BikeListPageProps {
-  bikeCondition: 'new,demo' | 'used';
+  bikeCondition: 'new,demo' | 'used' | 'parts';
 }

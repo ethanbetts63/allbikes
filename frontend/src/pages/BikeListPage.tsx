@@ -62,6 +62,25 @@ const usedBikeFaqs = [
   }
 ];
 
+const partsBikeFaqs = [
+  {
+    question: "What is the Workshop Clearance?",
+    answer: "Running a busy workshop means we accumulate bikes over time — machines that came in for repairs but were never collected, bikes bought cheaply that aren't worth our time to fully restore, or donor bikes we've stripped for parts. Rather than let them gather dust, we list them here so enthusiasts, tinkerers, and mechanics can give them a second life."
+  },
+  {
+    question: "Are these bikes roadworthy?",
+    answer: "Not necessarily. These bikes are sold as-is, primarily for parts or as project bikes. They are not workshop-prepared or safety checked for road use. Please inspect carefully before purchasing."
+  },
+  {
+    question: "Can I come in and inspect a parts bike?",
+    answer: "Yes. You're welcome to come into our Perth workshop to take a look before buying. Give us a call or shoot us an email to arrange a time."
+  },
+  {
+    question: "Do you deliver parts bikes?",
+    answer: "Delivery may be possible depending on size and location. Contact us to discuss your options."
+  },
+];
+
 const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
   const [bikes, setBikes] = useState<Bike[] | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
@@ -103,26 +122,30 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
   };
 
   const isNew = bikeCondition === 'new,demo';
-  const pageTitle = isNew ? 'New Motorcycles & Scooters' : 'Used Motorcycles & Scooters';
+  const isParts = bikeCondition === 'parts';
+
+  const pageTitle = isNew ? 'New Motorcycles & Scooters' : isParts ? 'Workshop Clearance' : 'Used Motorcycles & Scooters';
   const responsivePageTitle = isNew ? (
     <>
       <span className="hidden md:inline">New Motorcycles & Scooters</span>
       <span className="md:hidden">New Bikes</span>
     </>
-  ) : (
+  ) : isParts ? 'Workshop Clearance' : (
     <>
       <span className="hidden md:inline">Used Motorcycles & Scooters</span>
       <span className="md:hidden">Used Bikes</span>
     </>
   );
 
-  const description = isNew 
+  const description = isNew
     ? "Browse our range of New Motorcycles & Scooters available in Perth, including petrol and electric models. All New Motorcycles & Scooters are workshop-prepared and available for local purchase through our Perth dealership. All New Motorcycles & Scooters come with a warranty."
+    : isParts
+    ? "Running a workshop means you collect bikes. Some came in for repairs and never left. Some we picked up cheap knowing they'd never see the road again. Some gave their parts to better machines. They're all here — half-runners, project bikes, and parts donors. If you're a tinkerer, a restorer, or just after a specific component, have a dig through what's in the shed."
     : "Browse our range of Used Motorcycles & Scooters available in Perth, including petrol and electric models. All Used Motorcycles & Scooters are workshop-prepared and available for local purchase through our Perth dealership.";
 
   const breadcrumbItems: BreadcrumbItem[] = [
     { name: 'Home', href: '/' },
-    { name: pageTitle, href: isNew ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used' }
+    { name: pageTitle, href: isNew ? '/inventory/motorcycles/new' : isParts ? '/inventory/motorcycles/parts' : '/inventory/motorcycles/used' }
   ];
   
   const structuredData = bikes && bikes.length > 0 ? {
@@ -170,7 +193,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
       <Seo 
         title={`${pageTitle} | Allbikes`}
         description={description}
-        canonicalPath={isNew ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used'}
+        canonicalPath={isNew ? '/inventory/motorcycles/new' : isParts ? '/inventory/motorcycles/parts' : '/inventory/motorcycles/used'}
         structuredData={structuredData}
       />
       <Hero 
@@ -237,9 +260,9 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
           )}
         </div>
       </div>
-      <FaqSection 
-        title={isNew ? "New Bike FAQs" : "Used Bike FAQs"} 
-        faqData={isNew ? newBikeFaqs : usedBikeFaqs} 
+      <FaqSection
+        title={isNew ? "New Bike FAQs" : isParts ? "Workshop Clearance FAQs" : "Used Bike FAQs"}
+        faqData={isNew ? newBikeFaqs : isParts ? partsBikeFaqs : usedBikeFaqs}
       />
     </>
   );

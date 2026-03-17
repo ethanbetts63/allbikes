@@ -66,6 +66,7 @@ const NavBar = () => {
             <span className="lg:hidden">Used Bikes</span>
           </Link>
           {!siteSettings.hide_escooters && <Link to="/escooters" className={NAV_LINK}>E-Scooters</Link>}
+          <Link to="/inventory/motorcycles/parts" className={NAV_LINK}>Workshop Clearance</Link>
           <Link to="/service" className={NAV_LINK}>Servicing</Link>
           <Link to="/contact" className={cn(NAV_LINK, 'border border-white/30 px-4 py-2 hover:border-amber-400')}>
             Contact Us
@@ -90,6 +91,7 @@ const NavBar = () => {
             <Link to="/inventory/motorcycles/new" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>New Motorcycles &amp; Scooters</Link>
             <Link to="/inventory/motorcycles/used" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Used Motorcycles &amp; Scooters</Link>
             {!siteSettings.hide_escooters && <Link to="/escooters" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>E-Scooters</Link>}
+            <Link to="/inventory/motorcycles/parts" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Workshop Clearance</Link>
             <Link to="/service" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Servicing</Link>
             <Link to="/contact" onClick={() => setIsMenuOpen(false)} className={NAV_LINK}>Contact Us</Link>
           </nav>

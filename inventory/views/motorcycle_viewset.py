@@ -32,7 +32,7 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
         # Filtering by condition (supports comma-separated values e.g. "new,demo")
         condition = self.request.query_params.get('condition')
         if condition:
-            valid = {'new', 'used', 'demo'}
+            valid = {'new', 'used', 'demo', 'parts'}
             conditions = [c for c in condition.split(',') if c in valid]
             if conditions:
                 queryset = queryset.filter(condition__in=conditions)

@@ -14,6 +14,7 @@ class Motorcycle(models.Model):
         ("new", "New"),
         ("used", "Used"),
         ("demo", "Demo"),
+        ("parts", "Parts"),
     ]
 
     TRANSMISSION_CHOICES = [
