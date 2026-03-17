@@ -60,7 +60,7 @@ const CheckoutPage = () => {
       if (!bikeId) { navigate('/inventory/motorcycles/new'); return; }
       Promise.all([getBikeById(bikeId), getDepositSettings()])
         .then(([bikeData, settings]) => {
-          if (bikeData.status !== 'for_sale' || bikeData.condition !== 'new') {
+          if (bikeData.status !== 'for_sale' || (bikeData.condition !== 'new' && bikeData.condition !== 'demo')) {
             navigate(`/inventory/motorcycles/${slug}`);
             return;
           }

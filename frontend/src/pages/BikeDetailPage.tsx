@@ -84,7 +84,7 @@ const BikeDetailPage = () => {
 
                 setBike(data);
 
-                if (data.condition === 'new' && data.status === 'for_sale') {
+                if ((data.condition === 'new' || data.condition === 'demo') && data.status === 'for_sale') {
                     getDepositSettings().then(s => setDepositAmount(s.deposit_amount)).catch(() => {});
                 }
 
@@ -367,7 +367,7 @@ const BikeDetailPage = () => {
                         </div>
 
                         {/* Reserve with Deposit — new bikes only */}
-                        {siteSettings.accept_online_payment && bike.condition === 'new' && bike.status === 'for_sale' && depositAmount && (
+                        {siteSettings.accept_online_payment && (bike.condition === 'new' || bike.condition === 'demo') && bike.status === 'for_sale' && depositAmount && (
                             <div className="mb-6">
                                 <button
                                     onClick={() => navigate(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}
