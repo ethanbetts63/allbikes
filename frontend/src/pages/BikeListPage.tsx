@@ -65,11 +65,11 @@ const usedBikeFaqs = [
 const partsBikeFaqs = [
   {
     question: "What is the Workshop Clearance?",
-    answer: "Running a busy workshop means we accumulate bikes over time — machines that came in for repairs but were never collected, bikes bought cheaply that aren't worth our time to fully restore, or donor bikes we've stripped for parts. Rather than let them gather dust, we list them here so enthusiasts, tinkerers, and mechanics can give them a second life."
+    answer: "Running a busy workshop means we accumulate bikes over time — bikes that aren't worth our time to fully restore, or donor bikes we've stripped for parts. Rather than let them gather dust, we list them here so enthusiasts, tinkerers, and mechanics can give them a second life."
   },
   {
     question: "Are these bikes roadworthy?",
-    answer: "Not necessarily. These bikes are sold as-is, primarily for parts or as project bikes. They are not workshop-prepared or safety checked for road use. Please inspect carefully before purchasing."
+    answer: "Almost certainly not. These bikes are sold as-is, primarily for parts or as project bikes. They are not workshop-prepared or safety checked for road use. Please inspect carefully before purchasing."
   },
   {
     question: "Can I come in and inspect a parts bike?",
@@ -77,7 +77,7 @@ const partsBikeFaqs = [
   },
   {
     question: "Do you deliver parts bikes?",
-    answer: "Delivery may be possible depending on size and location. Contact us to discuss your options."
+    answer: "We don't delivery bikes directly but we partner with a motorcyle mover who can transport around Perth."
   },
 ];
 
