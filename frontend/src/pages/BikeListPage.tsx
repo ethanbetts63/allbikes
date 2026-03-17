@@ -220,7 +220,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
                   <BikeCard key={bike.id} bike={bike} />
                 ))
               ) : (
-                <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">No bikes found for this category.</p>
+                <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">No bikes found for this category. Sorry, we must have sold out. We'll be sure to update this page as soon as possible.</p>
               )}
             </div>
           )}

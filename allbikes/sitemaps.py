@@ -45,6 +45,7 @@ class StaticViewSitemap(Sitemap):
             '/',
             '/inventory/motorcycles/new',
             '/inventory/motorcycles/used',
+            '/inventory/motorcycles/parts',
             '/contact',
             '/service', 
             '/escooters',
