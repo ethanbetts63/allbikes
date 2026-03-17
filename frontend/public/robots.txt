@@ -18,6 +18,8 @@ Disallow: /showroom/
 Disallow: /segway-electric-scooters
 Disallow: /bikes/
 Disallow: /info/
+Disallow: /view-all/
+Disallow: /shop-online/
 Disallow: /about_us
 Disallow: /gts-sport-300i
 Disallow: /sym-mio-50i
