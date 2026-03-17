@@ -140,7 +140,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
   const description = isNew
     ? "Browse our range of New Motorcycles & Scooters available in Perth, including petrol and electric models. All New Motorcycles & Scooters are workshop-prepared and available for local purchase through our Perth dealership. All New Motorcycles & Scooters come with a warranty."
     : isParts
-    ? "Running a workshop means you collect bikes. Some came in for repairs and never left. Some we picked up cheap knowing they'd never see the road again. Some gave their parts to better machines. They're all here — half-runners, project bikes, and parts donors. If you're a tinkerer, a restorer, or just after a specific component, have a dig through what's in the shed."
+    ? "Running a busy workshop means we accumulate bikes over time — bikes that aren't worth our time to fully restore, or donor bikes we've stripped for parts. Rather than let them gather dust, we list them here so enthusiasts, tinkerers, and mechanics can give them a second life."
     : "Browse our range of Used Motorcycles & Scooters available in Perth, including petrol and electric models. All Used Motorcycles & Scooters are workshop-prepared and available for local purchase through our Perth dealership.";
 
   const breadcrumbItems: BreadcrumbItem[] = [

@@ -56,13 +56,13 @@ const NavBar = () => {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8 self-center">
+        <nav className="hidden md:flex items-center gap-10 self-center ml-auto">
           <Link to="/inventory/motorcycles/new" className={NAV_LINK}>
-            <span className="hidden lg:inline">New Motorcycles &amp; Scooters</span>
+            <span className="hidden lg:inline">New Bikes</span>
             <span className="lg:hidden">New Bikes</span>
           </Link>
           <Link to="/inventory/motorcycles/used" className={NAV_LINK}>
-            <span className="hidden lg:inline">Used Motorcycles &amp; Scooters</span>
+            <span className="hidden lg:inline">Used Bikes</span>
             <span className="lg:hidden">Used Bikes</span>
           </Link>
           {!siteSettings.hide_escooters && <Link to="/escooters" className={NAV_LINK}>E-Scooters</Link>}
