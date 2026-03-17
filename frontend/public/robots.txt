@@ -11,5 +11,18 @@ Disallow: /checkout/
 Disallow: /_mycart
 Disallow: /security
 Disallow: /privacy
+Disallow: /brand/
+Disallow: /blog/
+Disallow: /about-us
+Disallow: /showroom/
+Disallow: /segway-electric-scooters
+Disallow: /bikes/
+Disallow: /info/
+Disallow: /about_us
+Disallow: /gts-sport-300i
+Disallow: /sym-mio-50i
+Disallow: /*?main_page=
+Disallow: /returns_policy
+Disallow: /terms_of_use
 
 Sitemap: https://www.scootershop.com.au/sitemap.xml
