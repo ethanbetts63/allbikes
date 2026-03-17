@@ -21,6 +21,7 @@ import {
     Phone
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import clickIcon from '@/assets/click.svg';
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
@@ -370,12 +371,13 @@ const BikeDetailPage = () => {
                             <div className="mb-6">
                                 <button
                                     onClick={() => navigate(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}
-                                    className="w-full py-3 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
+                                    className="w-full py-3 px-6 rounded-lg text-lg font-bold uppercase tracking-widest transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] border-2 border-[var(--text-dark-primary)]/20 hover:border-[var(--text-dark-primary)]/40 flex items-center justify-center gap-3"
                                 >
-                                    Reserve — ${parseFloat(depositAmount).toLocaleString()} Deposit
+                                    <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
+                                    Reserve with ${parseFloat(depositAmount).toLocaleString()} Deposit
                                 </button>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
-                                    Secure this motorcycle with a deposit. Our team will be in touch to arrange the sale.
+                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch within 24 hours to arrange the rest.
                                 </p>
                             </div>
                         )}
