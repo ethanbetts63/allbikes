@@ -66,6 +66,27 @@ class TestProductSerializerStockFields:
         data = ProductSerializer(product).data
         assert data["low_stock"] is False
 
+    def test_youtube_link_is_included_in_serialized_output(self):
+        """
+        GIVEN a product with a youtube_link
+        WHEN serialized
+        THEN youtube_link is present in the output.
+        """
+        product = ProductFactory(youtube_link="https://www.youtube.com/watch?v=abc123")
+        data = ProductSerializer(product).data
+        assert "youtube_link" in data
+        assert data["youtube_link"] == "https://www.youtube.com/watch?v=abc123"
+
+    def test_youtube_link_is_null_when_not_set(self):
+        """
+        GIVEN a product with no youtube_link
+        WHEN serialized
+        THEN youtube_link is None.
+        """
+        product = ProductFactory(youtube_link=None)
+        data = ProductSerializer(product).data
+        assert data["youtube_link"] is None
+
     def test_slug_is_read_only(self):
         """
         GIVEN a product

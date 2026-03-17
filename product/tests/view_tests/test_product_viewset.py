@@ -186,6 +186,83 @@ class TestProductViewSetWriteAccess:
 
 
 @pytest.mark.django_db
+class TestProductViewSetFilterAndSort:
+    """Tests for the filtering and ordering query params on the ProductViewSet list action."""
+
+    def test_filter_by_min_price_excludes_cheaper_products(self, api_client):
+        """
+        GIVEN products at $500, $1000, and $2000
+        WHEN listing with min_price=900
+        THEN only the $1000 and $2000 products are returned.
+        """
+        ProductFactory(is_active=True, price="500.00")
+        ProductFactory(is_active=True, price="1000.00")
+        ProductFactory(is_active=True, price="2000.00")
+        url = reverse("product:product-list")
+        response = api_client.get(url, {"min_price": 900})
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["count"] == 2
+
+    def test_filter_by_max_price_excludes_more_expensive_products(self, api_client):
+        """
+        GIVEN products at $500, $1000, and $2000
+        WHEN listing with max_price=1100
+        THEN only the $500 and $1000 products are returned.
+        """
+        ProductFactory(is_active=True, price="500.00")
+        ProductFactory(is_active=True, price="1000.00")
+        ProductFactory(is_active=True, price="2000.00")
+        url = reverse("product:product-list")
+        response = api_client.get(url, {"max_price": 1100})
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["count"] == 2
+
+    def test_filter_by_price_range(self, api_client):
+        """
+        GIVEN products at $500, $1000, and $2000
+        WHEN listing with min_price=800 and max_price=1500
+        THEN only the $1000 product is returned.
+        """
+        ProductFactory(is_active=True, price="500.00")
+        ProductFactory(is_active=True, price="1000.00")
+        ProductFactory(is_active=True, price="2000.00")
+        url = reverse("product:product-list")
+        response = api_client.get(url, {"min_price": 800, "max_price": 1500})
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["count"] == 1
+
+    def test_ordering_price_asc(self, api_client):
+        """
+        GIVEN products at $2000, $500, and $1000
+        WHEN listing with ordering=price_asc
+        THEN results are returned cheapest first.
+        """
+        ProductFactory(is_active=True, price="2000.00")
+        ProductFactory(is_active=True, price="500.00")
+        ProductFactory(is_active=True, price="1000.00")
+        url = reverse("product:product-list")
+        response = api_client.get(url, {"ordering": "price_asc"})
+        assert response.status_code == status.HTTP_200_OK
+        prices = [float(p["price"]) for p in response.data["results"]]
+        assert prices == sorted(prices)
+
+    def test_ordering_price_desc(self, api_client):
+        """
+        GIVEN products at $2000, $500, and $1000
+        WHEN listing with ordering=price_desc
+        THEN results are returned most expensive first.
+        """
+        ProductFactory(is_active=True, price="2000.00")
+        ProductFactory(is_active=True, price="500.00")
+        ProductFactory(is_active=True, price="1000.00")
+        url = reverse("product:product-list")
+        response = api_client.get(url, {"ordering": "price_desc"})
+        assert response.status_code == status.HTTP_200_OK
+        prices = [float(p["price"]) for p in response.data["results"]]
+        assert prices == sorted(prices, reverse=True)
+
+
+@pytest.mark.django_db
 class TestManageImagesAction:
     """Tests for the manage_images custom action on ProductViewSet."""
 

@@ -12,7 +12,8 @@
       "Bash(cd:*)",
       "Bash(rm:*)",
       "Bash(venv/Scripts/python.exe manage.py migrate 2>&1)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(pytest:*)"
     ]
   }
 }

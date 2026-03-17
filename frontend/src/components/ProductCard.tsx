@@ -74,7 +74,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 ${parseFloat(product.price).toLocaleString()}
               </span>
             )}
-            <span className="text-xs text-[var(--text-dark-secondary)]">incl. GST</span>
+            <span className="text-xs text-[var(--text-dark-secondary)] mt-0.5 block">incl. GST</span>
           </div>
         </div>
 
