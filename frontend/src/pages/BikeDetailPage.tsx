@@ -377,7 +377,7 @@ const BikeDetailPage = () => {
                                     Reserve with ${parseFloat(depositAmount).toLocaleString()} Deposit
                                 </button>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
-                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch within as soon as possible to arrange the rest.
+                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch as soon as possible to arrange the rest.
                                 </p>
                             </div>
                         )}
