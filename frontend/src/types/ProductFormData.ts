@@ -9,5 +9,6 @@ export interface ProductFormData {
   stock_quantity: number;
   is_active: boolean;
   is_featured: boolean;
+  youtube_link: string;
   managedImages: ManagedImage[];
 }

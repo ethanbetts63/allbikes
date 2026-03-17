@@ -2,13 +2,31 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProductById } from '@/api';
 import type { Product } from '@/types/Product';
-import type { ProductImage } from '@/types/ProductImage';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
-import { Truck } from 'lucide-react';
+import { Truck, PlayCircle } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
+import YouTube from 'react-youtube';
+
+const getYouTubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+    try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname === 'youtu.be') {
+            return urlObj.pathname.slice(1);
+        }
+        if (urlObj.hostname.includes('youtube.com')) {
+            const videoId = urlObj.searchParams.get('v');
+            if (videoId) return videoId;
+        }
+    } catch (error) {
+        console.error("Invalid YouTube URL:", error);
+        return null;
+    }
+    return null;
+};
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -16,7 +34,9 @@ const EScooterDetailPage = () => {
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
+    const [selectedMedia, setSelectedMedia] = useState<string>('');
+
+    const videoId = product?.youtube_link ? getYouTubeVideoId(product.youtube_link) : null;
 
     const productId = slug ? Number(slug.split('-').pop()) : null;
 
@@ -34,8 +54,10 @@ const EScooterDetailPage = () => {
                 const data = await getProductById(productId);
                 setProduct(data);
                 const sorted = [...data.images].sort((a, b) => a.order - b.order);
-                if (sorted.length > 0) {
-                    setSelectedImage(sorted[0]);
+                if (data.youtube_link && getYouTubeVideoId(data.youtube_link)) {
+                    setSelectedMedia('YOUTUBE');
+                } else if (sorted.length > 0) {
+                    setSelectedMedia(sorted[0].image);
                 }
             } catch {
                 setError('Product not found.');
@@ -64,7 +86,9 @@ const EScooterDetailPage = () => {
         return <p className="text-destructive text-center mt-8">{error || 'Product not found.'}</p>;
     }
 
-    const mainImageUrl = selectedImage?.medium || selectedImage?.image;
+    const ogImage = selectedMedia === 'YOUTUBE' && videoId
+        ? `https://img.youtube.com/vi/${videoId}/0.jpg`
+        : (selectedMedia !== 'YOUTUBE' ? selectedMedia : undefined);
 
     const structuredData = {
         "@context": "https://schema.org",
@@ -89,7 +113,17 @@ const EScooterDetailPage = () => {
                     "priceCurrency": "AUD",
                     "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
                     "url": `https://www.scootershop.com.au/escooters/${product.slug}`
-                }
+                },
+                ...(videoId && {
+                    "video": {
+                        "@type": "VideoObject",
+                        "name": `${product.name} - Walkthrough`,
+                        "description": product.description,
+                        "thumbnailUrl": `https://img.youtube.com/vi/${videoId}/0.jpg`,
+                        "embedUrl": `https://www.youtube.com/embed/${videoId}`,
+                        "uploadDate": product.created_at
+                    }
+                })
             }
         ]
     };
@@ -100,7 +134,7 @@ const EScooterDetailPage = () => {
                 title={`${product.name} | Scooter Shop`}
                 description={product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`}
                 canonicalPath={`/escooters/${product.slug}`}
-                ogImage={sortedImages[0]?.image}
+                ogImage={ogImage}
                 structuredData={structuredData}
             />
 
@@ -139,12 +173,10 @@ const EScooterDetailPage = () => {
                     {/* Left Column: Image Gallery */}
                     <div>
                         <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-[var(--bg-light-secondary)]">
-                            {mainImageUrl ? (
-                                <img
-                                    src={mainImageUrl}
-                                    alt={product.name}
-                                    className="w-full h-full object-cover"
-                                />
+                            {selectedMedia === 'YOUTUBE' && videoId ? (
+                                <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
+                            ) : selectedMedia ? (
+                                <img src={selectedMedia} alt={product.name} className="w-full h-full object-cover" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-[var(--text-light-secondary)]">
                                     <span className="text-sm">No image available</span>
@@ -153,23 +185,32 @@ const EScooterDetailPage = () => {
                         </div>
 
                         {/* Thumbnail strip */}
-                        {sortedImages.length > 1 && (
-                            <div className="flex gap-2 flex-wrap">
-                                {sortedImages.map((img, index) => (
-                                    <button
-                                        key={img.id}
-                                        onClick={() => setSelectedImage(img)}
-                                        className={`w-20 h-20 overflow-hidden rounded-md ${selectedImage?.id === img.id ? 'ring-2 ring-amber-400' : 'ring-1 ring-stone-200'}`}
-                                    >
-                                        <img
-                                            src={img.medium || img.image}
-                                            alt={`${product.name} thumbnail ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
+                        <div className="flex gap-2 flex-wrap">
+                            {videoId && (
+                                <button
+                                    onClick={() => setSelectedMedia('YOUTUBE')}
+                                    className={`relative w-20 h-20 overflow-hidden rounded-md ${selectedMedia === 'YOUTUBE' ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
+                                >
+                                    <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                        <PlayCircle className="h-8 w-8 text-[var(--text-light-primary)]" />
+                                    </div>
+                                </button>
+                            )}
+                            {sortedImages.map((img, index) => (
+                                <button
+                                    key={img.id}
+                                    onClick={() => setSelectedMedia(img.image)}
+                                    className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === img.image ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
+                                >
+                                    <img
+                                        src={img.medium || img.image}
+                                        alt={`${product.name} thumbnail ${index + 1}`}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Right Column: Price, Description, CTA */}

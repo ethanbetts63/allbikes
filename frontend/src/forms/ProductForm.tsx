@@ -38,6 +38,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
             stock_quantity: 0,
             is_active: true,
             is_featured: false,
+            youtube_link: '',
             managedImages: [],
         },
     });
@@ -58,6 +59,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                 stock_quantity: initialData.stock_quantity,
                 is_active: initialData.is_active,
                 is_featured: initialData.is_featured,
+                youtube_link: initialData.youtube_link || '',
                 managedImages: (initialData.images || [])
                     .sort((a, b) => a.order - b.order)
                     .map(img => ({
@@ -160,6 +162,12 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                     <div className="space-y-2">
                         <Label htmlFor="description">Description</Label>
                         <Textarea id="description" {...register('description')} rows={5} />
+                    </div>
+
+                    {/* YouTube Link */}
+                    <div className="space-y-2">
+                        <Label htmlFor="youtube_link">YouTube Video URL</Label>
+                        <Input id="youtube_link" type="url" {...register('youtube_link')} placeholder="https://www.youtube.com/watch?v=..." />
                     </div>
 
                     {/* Image Upload */}
