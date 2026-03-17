@@ -1,9 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Seo from '@/components/Seo';
 import ProductCard from '@/components/ProductCard';
+import ProductFilterSort from '@/components/ProductFilterSort';
 import type { Product } from '@/types/Product';
+import type { FilterSortOptions } from '@/types/FilterSortOptions';
 import { getProducts } from '@/api';
 import { Spinner } from '@/components/ui/spinner';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
 import { FaqSection } from '@/components/FaqSection';
@@ -28,28 +37,43 @@ const faqData = [
 ];
 
 const EScooterListPage = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[] | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterOptions, setFilterOptions] = useState<FilterSortOptions>({});
+
+  const fetchProducts = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await getProducts({
+        page: currentPage,
+        ordering: filterOptions.ordering,
+        min_price: filterOptions.min_price,
+        max_price: filterOptions.max_price,
+      });
+      setProducts(data.results);
+      setTotalPages(Math.ceil(data.count / 12));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, filterOptions]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await getProducts();
-        setProducts(data.results);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
-  const structuredData = products.length > 0 ? {
+  const handleFilterChange = (newOptions: FilterSortOptions) => {
+    setCurrentPage(1);
+    setFilterOptions(newOptions);
+  };
+
+  const structuredData = products && products.length > 0 ? {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -98,26 +122,64 @@ const EScooterListPage = () => {
         imageUrl={SymImage}
       />
 
-      <div className="container mx-auto p-4">
-        {isLoading && (
-          <div className="flex justify-center items-center h-64">
-            <Spinner className="h-12 w-12" />
-          </div>
-        )}
+      <div className="bg-[var(--card)]">
+        <div className="container mx-auto px-4 lg:px-8 py-8">
+          <ProductFilterSort options={filterOptions} onFilterChange={handleFilterChange} />
 
-        {error && <p className="text-destructive text-center">{error}</p>}
+          {isLoading && (
+            <div className="flex justify-center items-center h-64">
+              <Spinner className="h-12 w-12" />
+            </div>
+          )}
 
-        {!isLoading && !error && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.length > 0 ? (
-              products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            ) : (
-              <p>No e-scooters currently available. Check back soon.</p>
-            )}
-          </div>
-        )}
+          {error && <p className="text-destructive text-center">{error}</p>}
+
+          {!isLoading && !error && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products && products.length > 0 ? (
+                products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))
+              ) : (
+                <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">No e-scooters currently available. Check back soon.</p>
+              )}
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="mt-8">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage((prev) => Math.max(prev - 1, 1));
+                      }}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <span className="p-2 text-sm">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                      }}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
+        </div>
       </div>
 
       <FaqSection title="E-Scooter FAQs" faqData={faqData} />

@@ -13,7 +13,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link to={`/escooters/${product.slug}`} className="block group">
-      <div className="bg-[var(--bg-light-primary)] rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200 overflow-hidden flex flex-col h-full">
+      <div className="bg-[var(--card)] border border-[var(--border-light)] group-hover:border-[var(--highlight)] transition-colors duration-200 flex flex-col h-full">
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
@@ -44,7 +44,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         {/* Body */}
-        <div className="px-3.5 py-3 flex flex-col gap-2 flex-1">
+        <div className="px-4 py-4 flex flex-col gap-2.5 flex-1">
           <div>
             {product.brand && (
               <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{product.brand}</p>
@@ -59,7 +59,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </p>
 
           {/* Price */}
-          <div className="mt-auto pt-1">
+          <div className="mt-auto pt-3 border-t border-[var(--border-light)]">
             {product.discount_price && parseFloat(product.discount_price) > 0 ? (
               <div className="flex items-baseline gap-2">
                 <span className="text-[var(--text-dark-secondary)] line-through text-sm">

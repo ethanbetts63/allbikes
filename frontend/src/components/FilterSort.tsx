@@ -33,7 +33,7 @@ const FilterSort = ({ options, onFilterChange }: FilterSortProps) => {
   };
 
   return (
-    <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg shadow-sm p-4 mb-8">
+    <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg p-4 mb-8">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
 
         {/* Sort */}

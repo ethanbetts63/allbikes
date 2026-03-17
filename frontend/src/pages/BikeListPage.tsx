@@ -178,62 +178,64 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
         description={description}
         imageUrl={SymImage}
       />
-<div className="container mx-auto p-4">
-        <FilterSort options={filterOptions} onFilterChange={handleFilterChange} />
-        
-        {isLoading && (
+<div className="bg-[var(--card)]">
+        <div className="container mx-auto px-4 lg:px-8 py-8">
+          <FilterSort options={filterOptions} onFilterChange={handleFilterChange} />
+
+          {isLoading && (
             <div className="flex justify-center items-center h-64">
-                <Spinner className="h-12 w-12" />
+              <Spinner className="h-12 w-12" />
             </div>
-        )}
-        
-        {error && <p className="text-destructive text-center">{error}</p>}
+          )}
 
-        {!isLoading && !error && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {bikes && bikes.length > 0 ? (
-              bikes.map(bike => (
-                <BikeCard key={bike.id} bike={bike} />
-              ))
-            ) : (
-              <p>No bikes found for this category.</p>
-            )}
-          </div>
-        )}
+          {error && <p className="text-destructive text-center">{error}</p>}
 
-        {totalPages > 1 && (
-          <div className="mt-8">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage((prev) => Math.max(prev - 1, 1));
-                    }}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <span className="p-2 text-sm">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-                    }}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
+          {!isLoading && !error && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {bikes && bikes.length > 0 ? (
+                bikes.map(bike => (
+                  <BikeCard key={bike.id} bike={bike} />
+                ))
+              ) : (
+                <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">No bikes found for this category.</p>
+              )}
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="mt-8">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage((prev) => Math.max(prev - 1, 1));
+                      }}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <span className="p-2 text-sm">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                      }}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
+        </div>
       </div>
       <FaqSection 
         title={isNew ? "New Bike FAQs" : "Used Bike FAQs"} 

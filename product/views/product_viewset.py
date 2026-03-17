@@ -28,6 +28,19 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.request.query_params.get('is_featured') == 'true':
             qs = qs.filter(is_featured=True)
 
+        min_price = self.request.query_params.get('min_price')
+        max_price = self.request.query_params.get('max_price')
+        if min_price:
+            qs = qs.filter(price__gte=min_price)
+        if max_price:
+            qs = qs.filter(price__lte=max_price)
+
+        ordering = self.request.query_params.get('ordering')
+        if ordering == 'price_asc':
+            return qs.order_by('price')
+        if ordering == 'price_desc':
+            return qs.order_by('-price')
+
         return qs.order_by("-created_at")
 
     def get_permissions(self):
