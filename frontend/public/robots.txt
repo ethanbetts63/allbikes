@@ -8,6 +8,7 @@ Disallow: /booking/success
 Disallow: /refunds
 Disallow: /service/booking-terms/
 Disallow: /checkout/
+Disallow: /_mycart
 Disallow: /security
 Disallow: /privacy
 
