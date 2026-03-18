@@ -157,7 +157,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
   const usedIsDefaultB = usedSlots.b === defaultUsedImage;
 
   return (
-    <div className="w-full flex flex-col lg:flex-row min-h-[600px] lg:min-h-[700px]">
+    <div className="w-full flex flex-col lg:flex-row min-h-[480px] md:min-h-[560px]">
 
       {/* ── TEXT PANEL (mobile: order 1, desktop: order 2 / right-top) ── */}
       <div className="order-1 lg:order-2 lg:w-[38%] flex flex-col">
@@ -201,7 +201,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         {!error ? (
           <Link
             to="/inventory/motorcycles/used"
-            className="relative group overflow-hidden min-h-[260px] lg:flex-1"
+            className="relative group overflow-hidden min-h-[260px] md:min-h-[300px] lg:flex-1"
           >
             {renderUsedCrossfadeImages(usedSlots, usedIsDefaultA, usedIsDefaultB)}
             {/* Overlays */}
