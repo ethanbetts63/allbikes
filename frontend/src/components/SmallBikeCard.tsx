@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Wrench, Cog } from "lucide-react";
+import { Wrench, Cog, Flame } from "lucide-react";
 import type { SmallBikeCardProps } from "@/types/SmallBikeCardProps";
 
 const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
@@ -18,7 +18,13 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
 
   return (
     <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
-      <div className="relative w-full overflow-hidden flex flex-col h-full bg-[var(--bg-light-primary)] rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200">
+      <div className={`relative w-full overflow-hidden flex flex-col h-full bg-[var(--bg-light-primary)] rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200 ${bike.popular ? 'ring-2 ring-[var(--highlight)]' : ''}`}>
+        {bike.popular && (
+          <span className="absolute top-2.5 right-2.5 z-10 bg-[var(--highlight)] text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded flex items-center gap-1">
+            <Flame className="h-3 w-3" />
+            Popular
+          </span>
+        )}
         {bike.status === 'sold' && (
           <span className="absolute top-2.5 left-2.5 z-10 bg-red-600 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
             Sold
