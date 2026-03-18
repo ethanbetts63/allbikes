@@ -4,6 +4,7 @@ import { getProductById } from '@/api';
 import type { Product } from '@/types/Product';
 import Seo from '@/components/Seo';
 import stripeLogo from '@/assets/stripe-ar21.svg';
+import clickIcon from '@/assets/click.svg';
 import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
 import FreeDeliveryBadge from '@/components/FreeDeliveryBadge';
@@ -177,8 +178,9 @@ const EScooterDetailPage = () => {
                                 <button
                                     disabled={!product.in_stock}
                                     onClick={() => navigate(`/checkout/${product.slug}`)}
-                                    className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
+                                    className="w-full py-3 px-6 rounded-lg text-lg font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] border-2 border-[var(--text-dark-primary)]/20 hover:border-[var(--text-dark-primary)]/40 flex items-center justify-center gap-3"
                                 >
+                                    <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
                                     {product.in_stock ? 'Buy Now' : 'Out of Stock'}
                                 </button>
 

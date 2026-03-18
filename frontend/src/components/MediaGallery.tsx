@@ -8,7 +8,7 @@ const MediaGallery = ({ videoId, images, selectedMedia, onSelect, altText, overl
             {selectedMedia === 'YOUTUBE' && videoId ? (
                 <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
             ) : selectedMedia ? (
-                <img src={selectedMedia} alt={altText} className="w-full h-full object-cover" />
+                <img src={selectedMedia} alt={altText} className="w-full h-full object-contain" />
             ) : (
                 <div className="w-full h-full flex items-center justify-center text-[var(--text-light-secondary)]">
                     <span className="text-sm">No image available</span>
