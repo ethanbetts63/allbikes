@@ -1,11 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Zap, Truck, ArrowRight, ShieldCheck } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
-import type { Product } from '@/types/Product';
-
-interface FeaturedEScootersProps {
-  products: Product[];
-}
+import type { FeaturedEScootersProps } from '@/types/FeaturedEScootersProps';
 
 const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
   if (products.length === 0) return null;

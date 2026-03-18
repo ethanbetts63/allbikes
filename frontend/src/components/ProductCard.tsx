@@ -1,10 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Truck, ShieldCheck } from 'lucide-react';
-import type { Product } from '@/types/Product';
-
-interface ProductCardProps {
-  product: Product;
-}
+import type { ProductCardProps } from '@/types/ProductCardProps';
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const sortedImages = [...product.images].sort((a, b) => a.order - b.order);
