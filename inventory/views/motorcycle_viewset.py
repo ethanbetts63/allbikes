@@ -18,7 +18,7 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
     Read-only access is public.
     Write access is restricted to admin users.
     """
-    queryset = Motorcycle.objects.all().order_by('-date_posted')
+    queryset = Motorcycle.objects.all().order_by('-popular', '-date_posted')
     serializer_class = MotorcycleSerializer
     pagination_class = StandardResultsSetPagination
 
@@ -78,7 +78,7 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
             else:
                 queryset = queryset.order_by('-date_posted')
         else:
-            queryset = queryset.order_by('-date_posted')
+            queryset = queryset.order_by('-popular', '-date_posted')
             
         return queryset
 

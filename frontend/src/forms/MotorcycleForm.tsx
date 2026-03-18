@@ -99,8 +99,8 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                         <div className="space-y-2"><Label htmlFor="seats">Seats</Label><Input id="seats" type="number" {...register('seats', { valueAsNumber: true })} /></div>
                     </div>
 
-                    {/* Status, Condition, Transmission, and Featured Switch */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                    {/* Status, Condition, Transmission, and Featured/Popular Switches */}
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
                         <div className="space-y-2">
                             <Label>Status</Label>
                             <Controller name="status" control={control} render={({ field }) => (
@@ -146,7 +146,13 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                              <Controller name="is_featured" control={control} render={({ field }) => (
                                 <Switch id="is_featured" checked={field.value} onCheckedChange={field.onChange} />
                              )} />
-                            <Label htmlFor="is_featured">Featured Motorcycle?</Label>
+                            <Label htmlFor="is_featured">Featured?</Label>
+                        </div>
+                        <div className="flex items-center space-x-2 pt-6">
+                            <Controller name="popular" control={control} render={({ field }) => (
+                                <Switch id="popular" checked={!!field.value} onCheckedChange={field.onChange} />
+                            )} />
+                            <Label htmlFor="popular">Popular?</Label>
                         </div>
                     </div>
 
