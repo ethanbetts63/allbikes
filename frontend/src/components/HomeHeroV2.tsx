@@ -118,7 +118,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         srcSet={isDefaultA ? defaultNewSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 60vw"
         alt=""
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
         {...(priority ? { fetchPriority: 'high' as const } : {})}
       />
       <img
@@ -126,7 +126,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         srcSet={isDefaultB ? defaultNewSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 60vw"
         alt=""
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
     </>
   );
@@ -237,7 +237,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         {!error ? (
           <Link
             to="/inventory/motorcycles/new"
-            className="relative flex-1 group overflow-hidden min-h-[300px] lg:min-h-0"
+            className="relative flex-1 group overflow-hidden min-h-[300px] lg:min-h-0 bg-[var(--bg-dark-primary)]"
           >
             {renderCrossfadeImages(newSlots, newIsDefaultA, newIsDefaultB, true)}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
