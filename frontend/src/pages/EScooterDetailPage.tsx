@@ -12,6 +12,7 @@ import MediaGallery from '@/components/MediaGallery';
 import PriceDisplay from '@/components/PriceDisplay';
 import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
+import { ShieldCheck } from 'lucide-react';
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -187,6 +188,10 @@ const EScooterDetailPage = () => {
                                 <div className="text-sm text-[var(--text-dark-secondary)] space-y-1 pt-1">
                                     <p>✓ Order confirmation sent to your email</p>
                                     <p>✓ Free delivery Australia-wide</p>
+                                    <p className="flex items-center gap-1.5">
+                                        <ShieldCheck className="h-4 w-4 shrink-0 text-[var(--highlight1)]" />
+                                        12 months manufacturer warranty
+                                    </p>
                                 </div>
                                 <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
                                     <span className="text-xs text-[var(--text-dark-secondary)]">Powered by</span>

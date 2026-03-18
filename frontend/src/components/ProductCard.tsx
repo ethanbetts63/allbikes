@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Truck } from 'lucide-react';
+import { Truck, ShieldCheck } from 'lucide-react';
 import type { Product } from '@/types/Product';
 
 interface ProductCardProps {
@@ -52,11 +52,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <h3 className="text-base font-bold text-[var(--text-dark-primary)] leading-snug">{product.name}</h3>
           </div>
 
-          {/* Free delivery */}
-          <p className="flex items-center gap-1 text-xs text-[var(--text-dark-secondary)]">
-            <Truck className="h-3.5 w-3.5" />
-            Free delivery Australia-wide
-          </p>
+          {/* Free delivery + warranty */}
+          <div className="flex flex-col gap-1">
+            <p className="flex items-center gap-1 text-xs text-[var(--text-dark-secondary)]">
+              <Truck className="h-3.5 w-3.5 shrink-0" />
+              Free delivery Australia-wide
+            </p>
+            <p className="flex items-center gap-1 text-xs text-[var(--text-dark-secondary)]">
+              <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-[var(--highlight1)]" />
+              12 months manufacturer warranty
+            </p>
+          </div>
 
           {/* Price */}
           <div className="mt-auto pt-3 border-t border-[var(--border-light)]">

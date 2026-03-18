@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Zap, Truck, ArrowRight } from 'lucide-react';
+import { Zap, Truck, ArrowRight, ShieldCheck } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import type { Product } from '@/types/Product';
 
@@ -38,10 +38,16 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
           </div>
         </div>
 
-        {/* Free delivery banner */}
-        <div className="flex items-center gap-3 bg-[var(--bg-dark-secondary)] px-5 py-3 mb-6 w-fit">
-          <Truck className="h-5 w-5 text-[var(--highlight)] shrink-0" />
-          <span className="text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest">Free Delivery Australia-Wide</span>
+        {/* Banners */}
+        <div className="flex flex-wrap gap-3 mb-6">
+          <div className="flex items-center gap-3 bg-[var(--bg-dark-secondary)] px-5 py-3 w-fit">
+            <Truck className="h-5 w-5 text-[var(--highlight)] shrink-0" />
+            <span className="text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest">Free Delivery Australia-Wide</span>
+          </div>
+          <div className="flex items-center gap-3 bg-[var(--bg-dark-secondary)] px-5 py-3 w-fit">
+            <ShieldCheck className="h-5 w-5 text-[var(--highlight1)] shrink-0" />
+            <span className="text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest">12 Months Manufacturer Warranty</span>
+          </div>
         </div>
 
         {/* Product tiles */}
@@ -86,6 +92,10 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                     <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">{product.brand}</p>
                   )}
                   <p className="font-bold text-[var(--text-dark-primary)] text-lg leading-snug">{product.name}</p>
+                  <p className="flex items-center gap-1 text-xs text-[var(--text-dark-secondary)]">
+                    <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-[var(--highlight1)]" />
+                    12 months manufacturer warranty
+                  </p>
                   <div className="mt-auto pt-2 flex items-end justify-between">
                     <div>
                       {product.discount_price && parseFloat(product.discount_price) > 0 ? (
