@@ -68,6 +68,10 @@ class Motorcycle(models.Model):
         default=True,
         help_text="Featured bikes are shown on the homepage.",
     )
+    popular = models.BooleanField(
+        default=False,
+        help_text="Popular bikes are highlighted in the listing page.",
+    )
     odometer = models.IntegerField(default=0)
     engine_size = models.IntegerField(
         null=True,

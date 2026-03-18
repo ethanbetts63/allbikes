@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Wrench, Cog, Gauge } from "lucide-react";
+import { Wrench, Cog, Gauge, Flame } from "lucide-react";
 import type { BikeCardProps } from "@/types/BikeCardProps";
 
 const BikeCard = ({ bike }: BikeCardProps) => {
@@ -10,7 +10,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
 
   return (
     <Link to={`/inventory/motorcycles/${bike.slug}`} className="block group">
-      <div className="bg-[var(--card)] border border-[var(--border-light)] group-hover:border-[var(--highlight)] transition-colors duration-200 flex flex-col h-full">
+      <div className={`bg-[var(--card)] border transition-colors duration-200 flex flex-col h-full ${bike.popular ? 'border-[var(--highlight)]' : 'border-[var(--border-light)] group-hover:border-[var(--highlight)]'}`}>
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
@@ -24,6 +24,13 @@ const BikeCard = ({ bike }: BikeCardProps) => {
           <span className="absolute bottom-2 left-2 bg-black/60 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
             {bike.condition}
           </span>
+          {/* Popular pill */}
+          {bike.popular && (
+            <span className="absolute top-3 right-3 bg-[var(--highlight)] text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1">
+              <Flame className="h-3 w-3" />
+              Popular
+            </span>
+          )}
           {/* Status pills */}
           {bike.status === 'sold' && (
             <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">

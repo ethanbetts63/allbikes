@@ -26,6 +26,7 @@ import MediaGallery from '@/components/MediaGallery';
 import PriceDisplay from '@/components/PriceDisplay';
 import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
+import PopularBadge from '@/components/PopularBadge';
 
 const BikeDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -243,7 +244,8 @@ const BikeDetailPage = () => {
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 
                 {/* Title + badges */}
-                <div className="mb-6 pt-4">
+                <div className="mb-6 pt-4 flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
+                    <div>
                     <h1 className="text-3xl md:text-4xl font-black text-[var(--text-dark-primary)] leading-tight mb-3">{cardTitle}</h1>
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
@@ -273,6 +275,8 @@ const BikeDetailPage = () => {
                             }
                         </p>
                     )}
+                    </div>
+                    {bike.popular && <PopularBadge className="shrink-0 md:mt-1 self-start" />}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
