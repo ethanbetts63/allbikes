@@ -35,4 +35,5 @@ export const siteSettings: SiteSettings = {
   special_hours_note: "Closed on public holidays including Easter and Christmas.",
   hide_escooters: false,
   accept_online_payment: true,
+  show_workshop_clearance: false,
 };

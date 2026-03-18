@@ -27,4 +27,5 @@ export interface SiteSettings {
   special_hours_note: string;
   hide_escooters: boolean;
   accept_online_payment: boolean;
+  show_workshop_clearance: boolean;
 }
