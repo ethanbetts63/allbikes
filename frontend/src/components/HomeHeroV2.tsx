@@ -161,17 +161,17 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
 
       {/* ── TEXT PANEL (mobile: order 1, desktop: order 2 / right-top) ── */}
       <div className="order-1 lg:order-2 lg:w-[38%] flex flex-col">
-        <div className="bg-[var(--bg-dark-primary)] flex flex-col justify-center items-center lg:items-start px-8 py-6 md:px-10 md:py-8 flex-1 text-center lg:text-left">
-          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+        <div className="bg-[var(--bg-dark-primary)] flex flex-col justify-center items-center lg:items-start px-8 py-4 md:px-10 md:py-5 flex-1 text-center lg:text-left">
+          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-2">
             Allbikes &amp; Scooters &nbsp;·&nbsp; Dianella, Perth
           </p>
-          <h1 className="text-[var(--text-light-primary)] text-4xl sm:text-5xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-[0.92] mb-4">
+          <h1 className="text-[var(--text-light-primary)] text-4xl sm:text-5xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-[0.92] mb-3">
             Perth's<br />
             Motorcycle<br />
             &amp; Scooter<br />
             Specialists
           </h1>
-          <p className="text-[var(--text-light-secondary)] text-sm leading-relaxed mb-5 max-w-xs">
+          <p className="text-[var(--text-light-secondary)] text-sm leading-relaxed mb-4 max-w-xs">
             Mechanic and dealership for over 30 years. New and used sales, servicing, tyres, and repairs — petrol and electric models.
           </p>
           {/* Contact buttons styled to match the dark panel */}
@@ -265,7 +265,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         )}
 
         {/* Service strip */}
-        <div className="bg-[var(--bg-dark-primary)] flex flex-col sm:flex-row items-center justify-between gap-6 px-8 py-5 md:px-10">
+        <div className="bg-[var(--bg-dark-primary)] flex flex-col sm:flex-row items-center justify-between gap-4 px-8 py-4 md:px-10">
           <div>
             <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
               Allbikes Workshop &nbsp;·&nbsp; Perth
