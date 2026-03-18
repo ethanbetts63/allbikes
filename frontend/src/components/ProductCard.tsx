@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Truck, ShieldCheck } from 'lucide-react';
+import { Truck, ShieldCheck, Flame } from 'lucide-react';
 import type { ProductCardProps } from '@/types/ProductCardProps';
 
 const ProductCard = ({ product }: ProductCardProps) => {
@@ -9,7 +9,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link to={`/escooters/${product.slug}`} className="block group">
-      <div className="bg-[var(--card)] border border-[var(--border-light)] group-hover:border-[var(--highlight)] transition-colors duration-200 flex flex-col h-full">
+      <div className={`bg-[var(--card)] border transition-colors duration-200 flex flex-col h-full ${product.popular ? 'border-[var(--highlight)]' : 'border-[var(--border-light)] group-hover:border-[var(--highlight)]'}`}>
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
@@ -26,6 +26,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </div>
           )}
 
+          {/* Popular pill */}
+          {product.popular && (
+            <span className="absolute top-3 right-3 bg-[var(--highlight)] text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1">
+              <Flame className="h-3 w-3" />
+              Popular
+            </span>
+          )}
           {/* Stock status pill */}
           {!product.in_stock && (
             <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">

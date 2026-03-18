@@ -21,6 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "stock_quantity",
             "is_active",
             "is_featured",
+            "popular",
             "youtube_link",
             "images",
             "in_stock",

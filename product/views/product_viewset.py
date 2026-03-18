@@ -41,7 +41,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         if ordering == 'price_desc':
             return qs.order_by('-price')
 
-        return qs.order_by("-created_at")
+        return qs.order_by("-popular", "-created_at")
 
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:

@@ -18,13 +18,7 @@ import {
 } from '@/components/ui/table';
 import type { ManagedImage } from '@/types/ManagedImage';
 import type { ProductFormData } from '@/types/ProductFormData';
-import type { Product } from '@/types/Product';
-
-interface ProductFormProps {
-    initialData?: Product;
-    onSubmit: (data: ProductFormData) => Promise<void>;
-    isLoading: boolean;
-}
+import type { ProductFormProps } from '@/types/ProductFormProps';
 
 const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => {
 
@@ -38,6 +32,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
             stock_quantity: 0,
             is_active: true,
             is_featured: false,
+            popular: false,
             youtube_link: '',
             managedImages: [],
         },
@@ -59,6 +54,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                 stock_quantity: initialData.stock_quantity,
                 is_active: initialData.is_active,
                 is_featured: initialData.is_featured,
+                popular: initialData.popular ?? false,
                 youtube_link: initialData.youtube_link || '',
                 managedImages: (initialData.images || [])
                     .sort((a, b) => a.order - b.order)
@@ -155,6 +151,16 @@ const ProductForm = ({ initialData, onSubmit, isLoading }: ProductFormProps) => 
                                 )}
                             />
                             <Label htmlFor="is_featured">Featured (show on home page)</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Controller
+                                name="popular"
+                                control={control}
+                                render={({ field }) => (
+                                    <Switch id="popular" checked={!!field.value} onCheckedChange={field.onChange} />
+                                )}
+                            />
+                            <Label htmlFor="popular">Popular</Label>
                         </div>
                     </div>
 

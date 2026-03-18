@@ -23,6 +23,7 @@ class Product(models.Model):
     stock_quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False, help_text="Show this product in the featured section on the home page.")
+    popular = models.BooleanField(default=False, help_text="Popular products are highlighted in the listing page.")
     youtube_link = models.URLField(
         max_length=255,
         blank=True,

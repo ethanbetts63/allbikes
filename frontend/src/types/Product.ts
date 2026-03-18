@@ -11,6 +11,7 @@ export interface Product {
   stock_quantity: number;
   is_active: boolean;
   is_featured: boolean;
+  popular?: boolean;
   youtube_link: string | null;
   images: ProductImage[];
   in_stock: boolean;

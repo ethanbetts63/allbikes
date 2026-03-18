@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Zap, Truck, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Zap, Truck, ArrowRight, ShieldCheck, Flame } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import type { FeaturedEScootersProps } from '@/types/FeaturedEScootersProps';
 
@@ -58,7 +58,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
               <Link
                 key={product.id}
                 to={`/escooters/${product.slug}`}
-                className="group bg-[var(--bg-light-primary)] rounded-lg overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-200"
+                className={`group bg-[var(--bg-light-primary)] rounded-lg overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-200 ${product.popular ? 'ring-2 ring-[var(--highlight)]' : ''}`}
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-light-secondary)]">
                   {imageUrl ? (
@@ -71,6 +71,12 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
                     <div className="w-full h-full flex items-center justify-center">
                       <Zap className="h-10 w-10 text-[var(--text-light-secondary)]" />
                     </div>
+                  )}
+                  {product.popular && (
+                    <span className="absolute top-3 right-3 bg-[var(--highlight)] text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1">
+                      <Flame className="h-3 w-3" />
+                      Popular
+                    </span>
                   )}
                   {!product.in_stock && (
                     <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-destructive text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">

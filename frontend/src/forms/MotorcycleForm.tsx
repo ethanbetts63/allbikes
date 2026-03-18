@@ -95,6 +95,8 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                         <div className="space-y-2"><Label htmlFor="stock_number">Stock Number</Label><Input id="stock_number" {...register('stock_number', { setValueAs: (v) => v === '' ? null : v })} /></div>
                         <div className="space-y-2"><Label htmlFor="rego">Rego</Label><Input id="rego" {...register('rego', { setValueAs: (v) => v === '' ? null : v })} /></div>
                         <div className="space-y-2"><Label htmlFor="rego_exp">Rego Expiry</Label><Input id="rego_exp" type="date" {...register('rego_exp', { setValueAs: (v) => v === '' ? null : v })} /></div>
+                        <div className="space-y-2"><Label htmlFor="engine_size">Engine Size (cc)</Label><Input id="engine_size" type="number" {...register('engine_size', { valueAsNumber: true })} /></div>
+                        <div className="space-y-2"><Label htmlFor="warranty_months">Warranty (months)</Label><Input id="warranty_months" type="number" {...register('warranty_months', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="range">Range (km)</Label><Input id="range" type="number" {...register('range', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="seats">Seats</Label><Input id="seats" type="number" {...register('seats', { valueAsNumber: true })} /></div>
                     </div>
@@ -160,6 +162,12 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                     <div className="space-y-2">
                         <Label htmlFor="description">Description</Label>
                         <Textarea id="description" {...register('description')} />
+                    </div>
+
+                    {/* YouTube Link */}
+                    <div className="space-y-2">
+                        <Label htmlFor="youtube_link">YouTube Video URL</Label>
+                        <Input id="youtube_link" type="url" {...register('youtube_link')} placeholder="https://www.youtube.com/watch?v=..." />
                     </div>
 
 

@@ -8,6 +8,7 @@ import clickIcon from '@/assets/click.svg';
 import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
 import FreeDeliveryBadge from '@/components/FreeDeliveryBadge';
+import PopularBadge from '@/components/PopularBadge';
 import MediaGallery from '@/components/MediaGallery';
 import PriceDisplay from '@/components/PriceDisplay';
 import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
@@ -141,7 +142,10 @@ const EScooterDetailPage = () => {
                             )}
                         </div>
                     </div>
-                    <FreeDeliveryBadge className="shrink-0 md:mt-1 self-start" />
+                    <div className="flex flex-wrap gap-2 self-start">
+                        {product.popular && <PopularBadge className="shrink-0 md:mt-1" />}
+                        <FreeDeliveryBadge className="shrink-0 md:mt-1" />
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
