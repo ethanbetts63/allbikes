@@ -3,31 +3,14 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProductById } from '@/api';
 import type { Product } from '@/types/Product';
 import Seo from '@/components/Seo';
-import { Spinner } from '@/components/ui/spinner';
-import { PlayCircle } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
 import FreeDeliveryBadge from '@/components/FreeDeliveryBadge';
-import YouTube from 'react-youtube';
-
-const getYouTubeVideoId = (url: string): string | null => {
-    if (!url) return null;
-    try {
-        const urlObj = new URL(url);
-        if (urlObj.hostname === 'youtu.be') {
-            return urlObj.pathname.slice(1);
-        }
-        if (urlObj.hostname.includes('youtube.com')) {
-            const videoId = urlObj.searchParams.get('v');
-            if (videoId) return videoId;
-        }
-    } catch (error) {
-        console.error("Invalid YouTube URL:", error);
-        return null;
-    }
-    return null;
-};
+import MediaGallery from '@/components/MediaGallery';
+import PriceDisplay from '@/components/PriceDisplay';
+import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
+import { getYouTubeVideoId } from '@/utils/youtube';
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -75,17 +58,8 @@ const EScooterDetailPage = () => {
         return [...product.images].sort((a, b) => a.order - b.order);
     }, [product]);
 
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
-                <Spinner className="h-12 w-12" />
-            </div>
-        );
-    }
-
-    if (error || !product) {
-        return <p className="text-destructive text-center mt-8">{error || 'Product not found.'}</p>;
-    }
+    if (isLoading) return <LoadingScreen />;
+    if (error || !product) return <ErrorScreen message={error || 'Product not found.'} />;
 
     const ogImage = selectedMedia === 'YOUTUBE' && videoId
         ? `https://img.youtube.com/vi/${videoId}/0.jpg`
@@ -171,68 +145,21 @@ const EScooterDetailPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                     {/* Left Column: Image Gallery */}
-                    <div>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-[var(--bg-light-secondary)]">
-                            {selectedMedia === 'YOUTUBE' && videoId ? (
-                                <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
-                            ) : selectedMedia ? (
-                                <img src={selectedMedia} alt={product.name} className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center text-[var(--text-light-secondary)]">
-                                    <span className="text-sm">No image available</span>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Thumbnail strip */}
-                        <div className="flex gap-2 flex-wrap">
-                            {videoId && (
-                                <button
-                                    onClick={() => setSelectedMedia('YOUTUBE')}
-                                    className={`relative w-20 h-20 overflow-hidden rounded-md ${selectedMedia === 'YOUTUBE' ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
-                                >
-                                    <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                        <PlayCircle className="h-8 w-8 text-[var(--text-light-primary)]" />
-                                    </div>
-                                </button>
-                            )}
-                            {sortedImages.map((img, index) => (
-                                <button
-                                    key={img.id}
-                                    onClick={() => setSelectedMedia(img.image)}
-                                    className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === img.image ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
-                                >
-                                    <img
-                                        src={img.medium || img.image}
-                                        alt={`${product.name} thumbnail ${index + 1}`}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    <MediaGallery
+                        videoId={videoId}
+                        images={sortedImages}
+                        selectedMedia={selectedMedia}
+                        onSelect={setSelectedMedia}
+                        altText={product.name}
+                    />
 
                     {/* Right Column: Price, Description, CTA */}
                     <div>
-                        {/* Price */}
-                        <div className="mb-6 pb-4 border-b border-border-light">
-                            {product.discount_price && parseFloat(product.discount_price) > 0 ? (
-                                <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-semibold text-[var(--highlight)]">
-                                        ${parseFloat(product.discount_price).toLocaleString()}
-                                    </span>
-                                    <span className="text-xl text-[var(--text-dark-secondary)] line-through">
-                                        ${parseFloat(product.price).toLocaleString()}
-                                    </span>
-                                </div>
-                            ) : (
-                                <span className="text-4xl font-semibold text-[var(--text-dark-primary)]">
-                                    ${parseFloat(product.price).toLocaleString()}
-                                </span>
-                            )}
-                            <p className="text-sm text-[var(--text-dark-secondary)] mt-1">Price includes GST · Free delivery Australia-wide</p>
-                        </div>
+                        <PriceDisplay
+                            price={product.price}
+                            discount_price={product.discount_price}
+                            subtitle={<p className="text-sm text-[var(--text-dark-secondary)]">Price includes GST · Free delivery Australia-wide</p>}
+                        />
 
                         {/* Description */}
                         {product.description && (

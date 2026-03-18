@@ -4,9 +4,7 @@ import { getBikeById, getBikes, getDepositSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
 import Seo from '@/components/Seo';
-import { Spinner } from '@/components/ui/spinner';
 import FeaturedBikes from "@/components/FeaturedBikes";
-import YouTube from 'react-youtube';
 import {
     Hash,
     Gauge,
@@ -16,7 +14,6 @@ import {
     FileText,
     CalendarClock,
     ShieldCheck,
-    PlayCircle,
     Mail,
     Phone
 } from 'lucide-react';
@@ -25,24 +22,10 @@ import clickIcon from '@/assets/click.svg';
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
-
-const getYouTubeVideoId = (url: string): string | null => {
-    if (!url) return null;
-    try {
-        const urlObj = new URL(url);
-        if (urlObj.hostname === 'youtu.be') {
-            return urlObj.pathname.slice(1);
-        }
-        if (urlObj.hostname.includes('youtube.com')) {
-            const videoId = urlObj.searchParams.get('v');
-            if (videoId) return videoId;
-        }
-    } catch (error) {
-        console.error("Invalid YouTube URL:", error);
-        return null;
-    }
-    return null;
-};
+import MediaGallery from '@/components/MediaGallery';
+import PriceDisplay from '@/components/PriceDisplay';
+import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
+import { getYouTubeVideoId } from '@/utils/youtube';
 
 const BikeDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -208,23 +191,25 @@ const BikeDetailPage = () => {
         ]
     } : undefined;
 
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
-                <Spinner className="h-12 w-12" />
-            </div>
-        );
-    }
-
-    if (error) {
-        return <p className="text-destructive text-center mt-8">{error}</p>;
-    }
-
-    if (!bike) {
-        return <p className="text-center mt-8 text-[var(--text-dark-secondary)]">Bike not found.</p>;
-    }
+    if (isLoading) return <LoadingScreen />;
+    if (error) return <ErrorScreen message={error} />;
+    if (!bike) return <ErrorScreen message="Bike not found." />;
 
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
+
+    const bikeSubtitle = bike.condition === 'new'
+        ? <p className="text-sm text-[var(--text-dark-secondary)]">
+            {bike.warranty_months && bike.warranty_months > 0
+                ? `Includes 3 months rego & ${bike.warranty_months} months warranty`
+                : 'Includes 3 months rego'}
+          </p>
+        : undefined;
+
+    const statusOverlay = (bike.status === 'sold' || bike.status === 'reserved') ? (
+        <span className={`absolute top-4 left-4 bg-[var(--bg-dark-primary)]/80 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm ${bike.status === 'reserved' ? 'text-[var(--highlight)]' : 'text-[var(--text-light-primary)]'}`}>
+            {bike.status === 'reserved' ? 'Reserved' : 'Sold'}
+        </span>
+    ) : undefined;
 
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
@@ -255,18 +240,15 @@ const BikeDetailPage = () => {
                 structuredData={structuredData}
             />
 
-
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 
                 {/* Title + badges */}
                 <div className="mb-6 pt-4">
                     <h1 className="text-3xl md:text-4xl font-black text-[var(--text-dark-primary)] leading-tight mb-3">{cardTitle}</h1>
                     <div className="flex flex-wrap items-center gap-2">
-                        {/* Condition */}
                         <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                             {bike.condition}
                         </span>
-                        {/* Status */}
                         {bike.status === 'sold' && (
                             <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                                 Sold
@@ -294,77 +276,22 @@ const BikeDetailPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                     {/* Left Column: Image Gallery */}
-                    <div>
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-3 bg-[var(--bg-light-secondary)]">
-                            {selectedMedia === 'YOUTUBE' && videoId ? (
-                                <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
-                            ) : (
-                                <img src={selectedMedia} alt={cardTitle} className="w-full h-full object-cover" />
-                            )}
-                            {/* Status overlay pill on main image */}
-                            {bike.status === 'sold' && (
-                                <span className="absolute top-4 left-4 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
-                                    Sold
-                                </span>
-                            )}
-                            {bike.status === 'reserved' && (
-                                <span className="absolute top-4 left-4 bg-[var(--bg-dark-primary)]/80 text-[var(--highlight)] text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-sm">
-                                    Reserved
-                                </span>
-                            )}
-                        </div>
-
-                        {/* Thumbnail strip */}
-                        <div className="flex gap-2 flex-wrap">
-                            {videoId && (
-                                <button
-                                    onClick={() => setSelectedMedia('YOUTUBE')}
-                                    className={`relative w-20 h-20 overflow-hidden rounded-md ${selectedMedia === 'YOUTUBE' ? 'ring-2 ring-amber-400' : 'ring-1 ring-stone-200'}`}
-                                >
-                                    <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                        <PlayCircle className="h-8 w-8 text-[var(--text-light-primary)]" />
-                                    </div>
-                                </button>
-                            )}
-                            {sortedImages.map((img, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setSelectedMedia(img.image)}
-                                    className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === img.image ? 'ring-2 ring-amber-400' : 'ring-1 ring-stone-200'}`}
-                                >
-                                    <img src={img.image} alt={`${cardTitle} thumbnail ${index + 1}`} className="w-full h-full object-cover" />
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    <MediaGallery
+                        videoId={videoId}
+                        images={sortedImages}
+                        selectedMedia={selectedMedia}
+                        onSelect={setSelectedMedia}
+                        altText={cardTitle}
+                        overlay={statusOverlay}
+                    />
 
                     {/* Right Column: Specifications & Description */}
                     <div>
-                        {/* Price */}
-                        <div className="mb-6 pb-4 border-b border-border-light">
-                            {bike.discount_price && parseFloat(bike.discount_price) > 0 ? (
-                                <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-semibold text-[var(--highlight)]">
-                                        ${parseFloat(bike.discount_price).toLocaleString()}
-                                    </span>
-                                    <span className="text-xl text-[var(--text-dark-secondary)] line-through">
-                                        ${parseFloat(bike.price).toLocaleString()}
-                                    </span>
-                                </div>
-                            ) : (
-                                <span className="text-4xl font-semibold text-[var(--text-dark-primary)]">
-                                    ${parseFloat(bike.price).toLocaleString()}
-                                </span>
-                            )}
-                            {bike.condition === 'new' && (
-                                <p className="text-sm text-[var(--text-dark-secondary)] mt-1">
-                                    {bike.warranty_months && bike.warranty_months > 0
-                                        ? `Includes 3 months rego & ${bike.warranty_months} months warranty`
-                                        : 'Includes 3 months rego'}
-                                </p>
-                            )}
-                        </div>
+                        <PriceDisplay
+                            price={bike.price}
+                            discount_price={bike.discount_price}
+                            subtitle={bikeSubtitle}
+                        />
 
                         {/* Reserve with Deposit — new bikes only */}
                         {siteSettings.accept_online_payment && (bike.condition === 'new' || bike.condition === 'demo') && bike.status === 'for_sale' && depositAmount && (
