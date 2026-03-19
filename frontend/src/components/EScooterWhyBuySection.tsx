@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 
 const reasons = [
   "Established Perth dealership — over 30 years on the tools",
-  "We service what we sell — electric scooter servicing available in-store",
   "Personally tested and hand-picked models we stand behind",
   "Secure online checkout powered by Stripe",
   "Order confirmation sent to your inbox immediately",

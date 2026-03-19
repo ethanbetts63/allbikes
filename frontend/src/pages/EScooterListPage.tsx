@@ -17,7 +17,6 @@ import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
 import { FaqSection } from '@/components/FaqSection';
 import EScooterWhyBuySection from '@/components/EScooterWhyBuySection';
-import { Link } from 'react-router-dom';
 
 const faqData = [
   {
@@ -124,20 +123,6 @@ const EScooterListPage = () => {
         imageUrl={SymImage}
       />
 
-      {/* Link to landing page */}
-      <div className="bg-[var(--bg-dark-secondary)] border-b border-stone-700">
-        <div className="container mx-auto px-4 lg:px-8 py-3 flex items-center justify-between gap-4 flex-wrap">
-          <p className="text-[var(--text-light-secondary)] text-sm">
-            Not sure where to start? Read our full guide to buying electric scooters online.
-          </p>
-          <Link
-            to="/electric-scooters"
-            className="text-[var(--highlight)] text-sm font-bold uppercase tracking-widest hover:underline shrink-0"
-          >
-            Electric Scooter Guide →
-          </Link>
-        </div>
-      </div>
 
       <div className="bg-[var(--card)]">
         <div className="container mx-auto px-4 lg:px-8 py-8">
@@ -199,7 +184,7 @@ const EScooterListPage = () => {
         </div>
       </div>
 
-      <EScooterWhyBuySection buttonLink="/electric-scooters" buttonText="Full Buying Guide" />
+      <EScooterWhyBuySection buttonLink="/electric-scooters" buttonText="More about our e-scooters" />
 
       <FaqSection title="E-Scooter FAQs" faqData={faqData} />
     </>
