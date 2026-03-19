@@ -109,8 +109,8 @@ const EScooterDetailPage = () => {
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
             <Seo
-                title={`${product.name} | Scooter Shop`}
-                description={product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`}
+                title={`${product.name} | Free Delivery Australia-Wide | ScooterShop`}
+                description={`Buy the ${product.name} online with free delivery anywhere in Australia. Price includes GST. Secure checkout via Stripe.${product.description ? ' ' + product.description : ''}`}
                 canonicalPath={`/escooters/${product.slug}`}
                 ogImage={ogImage}
                 structuredData={structuredData}

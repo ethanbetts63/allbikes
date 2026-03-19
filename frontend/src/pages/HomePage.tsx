@@ -129,8 +129,8 @@ const HomePage = () => {
   return (
     <div>
       <Seo
-        title="Perth's Motorcycle and Scooter Dealership"
-        description="Discover a wide range of new and Used Motorcycles & Scooters at Scootershop. We offer sales, servicing, and expert advice for riders in Perth."
+        title="Motorcycles, Scooters & Electric Scooters Perth | ScooterShop"
+        description="New and used motorcycles, scooters, and electric scooters for sale in Perth. Buy e-scooters online with free Australia-wide delivery. Servicing and tyre fitting also available."
         canonicalPath="/"
         structuredData={structuredData}
       />
