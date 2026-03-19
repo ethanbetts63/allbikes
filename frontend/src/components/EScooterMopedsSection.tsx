@@ -29,7 +29,7 @@ const EScooterMopedsSection = () => {
         </div>
 
         {/* Text */}
-        <div className="w-full md:w-1/2 bg-[var(--bg-dark-primary)] p-10 flex flex-col justify-center gap-3">
+        <div className="w-full md:w-1/2 bg-foreground p-10 flex flex-col justify-center gap-3">
           <p className="text-[var(--highlight)] text-sm font-bold uppercase tracking-widest">
             Innovation Meets Reliability
           </p>
@@ -46,7 +46,7 @@ const EScooterMopedsSection = () => {
             quality, design, and performance. We're confident these are vehicles we can stand behind —
             and that you'll love riding.
           </p>
-          <Link to="/escooters" className="self-start mt-2">
+          <Link to="/inventory/motorcycles/new" className="self-start mt-2">
             <Button className="bg-highlight text-[var(--text-dark-primary)] font-bold px-6 py-3 text-sm hover:bg-highlight/80 flex items-center gap-2">
               Shop Electric Mopeds
               <ArrowRight className="h-4 w-4" />

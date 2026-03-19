@@ -11,7 +11,12 @@ const reasons = [
   "Free shipping anywhere in Australia — no surprises",
 ];
 
-const EScooterWhyBuySection = () => {
+interface EScooterWhyBuySectionProps {
+  buttonLink: string;
+  buttonText: string;
+}
+
+const EScooterWhyBuySection = ({ buttonLink, buttonText }: EScooterWhyBuySectionProps) => {
   return (
     <section id="why-buy" className="bg-[var(--bg-dark-primary)] py-20 px-4">
       <div className="container mx-auto">
@@ -28,12 +33,12 @@ const EScooterWhyBuySection = () => {
             <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
               We're not a faceless warehouse. We're a real workshop in Perth that has been looking after riders for decades — online sales are an extension of that same service.
             </p>
-            <Link to="/escooters">
+            <Link to={buttonLink}>
               <Button
                 size="lg"
                 className="bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold px-8 text-base group"
               >
-                Browse All E-Scooters
+                {buttonText}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
               </Button>
             </Link>

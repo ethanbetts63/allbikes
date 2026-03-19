@@ -86,7 +86,7 @@ const ElectricScootersLandingPage = () => {
   return (
     <div>
       <Seo
-        title="Buy Electric Scooters Online — Free Delivery Australia-Wide | Scooter Shop"
+        title="Buy Electric Scooters Online — Free Delivery Australia-Wide | Allbikes & Scooters"
         description="Shop electric scooters online with free delivery Australia-wide. All prices include GST. Secure checkout via Stripe. 12-month warranty on every e-scooter."
         canonicalPath="/electric-scooters"
         structuredData={structuredDataBase}
@@ -100,7 +100,7 @@ const ElectricScootersLandingPage = () => {
 
       <EScooterMopedsSection />
 
-      <EScooterWhyBuySection />
+      <EScooterWhyBuySection buttonLink="/escooters" buttonText="Browse All E-Scooters" />
 
       <PayLaterSection />
 
