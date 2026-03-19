@@ -133,6 +133,8 @@ const ReviewCarousel = () => {
             className="flex overflow-x-auto space-x-4 pb-2 no-scrollbar"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
+            onTouchStart={() => setIsHovering(true)}
+            onTouchEnd={() => setIsHovering(false)}
           >
             <div className="flex gap-4 w-max">
             {[...reviewData, ...reviewData].map((review, i) => {

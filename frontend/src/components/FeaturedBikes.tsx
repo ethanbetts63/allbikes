@@ -68,6 +68,8 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
               className="w-full md:w-4/5 overflow-x-auto py-3 featured-no-scrollbar"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
+              onTouchStart={() => setIsHovering(true)}
+              onTouchEnd={() => setIsHovering(false)}
             >
               <div className="flex gap-4 w-max">
                 {[...bikes, ...bikes].map((bike, i) => (
