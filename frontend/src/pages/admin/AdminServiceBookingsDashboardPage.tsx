@@ -105,7 +105,7 @@ const AdminServiceBookingsDashboardPage = () => {
           <p className="text-center text-[var(--text-dark-secondary)] py-8">Loading...</p>
         ) : (
           <>
-            <div className="rounded-md border border-border-light">
+            <div className="rounded-md border border-border-light overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border-light">

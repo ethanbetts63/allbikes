@@ -183,7 +183,7 @@ const EScooterDetailPage = () => {
                                 <button
                                     disabled={!product.in_stock}
                                     onClick={() => navigate(`/checkout/${product.slug}`)}
-                                    className="w-full py-3 px-6 rounded-lg text-lg font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] border-2 border-[var(--text-dark-primary)]/20 hover:border-[var(--text-dark-primary)]/40 flex items-center justify-center gap-3"
+                                    className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
                                     <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
                                     {product.in_stock ? 'Buy Now' : 'Out of Stock'}

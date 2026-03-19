@@ -304,10 +304,10 @@ const BikeDetailPage = () => {
                             <div className="mb-6">
                                 <button
                                     onClick={() => navigate(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}
-                                    className="w-full py-3 px-6 rounded-lg text-lg font-bold uppercase tracking-widest transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] border-2 border-[var(--text-dark-primary)]/20 hover:border-[var(--text-dark-primary)]/40 flex items-center justify-center gap-3"
+                                    className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
                                     <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
-                                    Reserve with ${parseFloat(depositAmount).toLocaleString()} Deposit
+                                    Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
                                 </button>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
                                     Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch as soon as possible to arrange the rest.

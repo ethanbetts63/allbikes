@@ -125,8 +125,10 @@ const NavBar = () => {
               <div className="border-t border-white/10 pt-5 flex flex-col gap-5">
                 <NavLink to="/dashboard" end className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Dashboard</NavLink>
                 <NavLink to="/dashboard/inventory" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Inventory</NavLink>
+                <NavLink to="/dashboard/add-motorcycle" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Add Motorcycle</NavLink>
                 <NavLink to="/dashboard/orders" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Orders</NavLink>
                 <NavLink to="/dashboard/products" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Products</NavLink>
+                <NavLink to="/dashboard/products/new" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Add Product</NavLink>
                 <NavLink to="/dashboard/service-bookings" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Bookings</NavLink>
                 <NavLink to="/dashboard/service-settings" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Service Settings</NavLink>
                 <NavLink to="/dashboard/job-types" className={({ isActive }) => isActive ? `${NAV_LINK} text-[var(--highlight)]` : NAV_LINK} onClick={() => setIsMenuOpen(false)}>Job Types</NavLink>

@@ -172,7 +172,7 @@ const OrderTable = () => {
         </Button>
       </div>
 
-      <div className="rounded-md border border-border-light">
+      <div className="rounded-md border border-border-light overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(hg => (

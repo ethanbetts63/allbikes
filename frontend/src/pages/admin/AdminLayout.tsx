@@ -159,7 +159,7 @@ const AdminLayout = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-grow bg-card">
+        <main className="flex-grow min-w-0 bg-card overflow-x-hidden">
           <Outlet />
         </main>
 
