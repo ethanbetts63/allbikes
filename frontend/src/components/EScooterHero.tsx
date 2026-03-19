@@ -5,7 +5,7 @@ const YOUTUBE_VIDEO_ID = 'cQJm8NcpzMU';
 
 const EScooterHero = () => {
   return (
-    <div className="w-full flex flex-col lg:flex-row min-h-[520px]">
+    <div className="w-full flex flex-col lg:flex-row">
 
       {/* Text panel */}
       <div className="order-1 lg:order-1 lg:w-[45%] bg-[var(--bg-dark-primary)] flex flex-col justify-center px-8 py-12 md:px-14 md:py-16">
@@ -13,25 +13,12 @@ const EScooterHero = () => {
           Scooter Shop · Australia-Wide
         </p>
         <h1 className="text-[var(--text-light-primary)] text-4xl sm:text-5xl xl:text-6xl font-black uppercase italic leading-[0.9] mb-5">
-          Buy Electric<br />
-          Scooters<br />
-          Online
+          Buy E-Scooters<br />
+          Online Now
         </h1>
         <p className="text-[var(--text-light-secondary)] text-base leading-relaxed mb-8 max-w-sm">
           Browse our range of electric scooters and buy directly online. Free delivery anywhere in Australia — all prices include GST.
         </p>
-
-        {/* Inline trust chips */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          <div className="flex items-center gap-2 bg-[var(--bg-dark-secondary)] px-4 py-2">
-            <Truck className="h-4 w-4 text-[var(--highlight)] shrink-0" />
-            <span className="text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest">Free Delivery AU-Wide</span>
-          </div>
-          <div className="flex items-center gap-2 bg-[var(--bg-dark-secondary)] px-4 py-2">
-            <ShieldCheck className="h-4 w-4 text-[var(--highlight1)] shrink-0" />
-            <span className="text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest">12 Month Warranty</span>
-          </div>
-        </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
@@ -51,7 +38,7 @@ const EScooterHero = () => {
       </div>
 
       {/* Video panel */}
-      <div className="order-2 lg:order-2 lg:flex-1 bg-black flex items-center justify-center min-h-[280px] lg:min-h-0">
+      <div className="order-2 lg:order-2 lg:flex-1 flex flex-col">
         <div className="w-full aspect-video">
           <iframe
             src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
@@ -60,6 +47,17 @@ const EScooterHero = () => {
             allowFullScreen
             className="w-full h-full"
           />
+        </div>
+        {/* Fill remaining height with trust chips on same dark bg as text panel */}
+        <div className="flex-1 bg-[var(--bg-dark-primary)] flex items-center justify-center px-8 md:px-10 py-5 gap-4 flex-wrap">
+          <div className="flex items-center gap-2 bg-[var(--bg-dark-secondary)] px-4 py-2">
+            <Truck className="h-4 w-4 text-[var(--highlight)] shrink-0" />
+            <span className="text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest">Free Delivery AU-Wide</span>
+          </div>
+          <div className="flex items-center gap-2 bg-[var(--bg-dark-secondary)] px-4 py-2">
+            <ShieldCheck className="h-4 w-4 text-[var(--highlight1)] shrink-0" />
+            <span className="text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest">12 Month Warranty</span>
+          </div>
         </div>
       </div>
 
