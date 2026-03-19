@@ -8,7 +8,7 @@ const BookingSuccessPage = () => {
     return (
         <div className="container mx-auto py-10 max-w-4xl text-center">
             <Seo
-                title="Booking Successful | Allbikes Perth"
+                title="Booking Successful | ScooterShop Perth"
                 description="Your service booking has been submitted successfully. We will contact you shortly to confirm."
                 noindex={true}
             />

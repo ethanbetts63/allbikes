@@ -98,7 +98,7 @@ const ServicePage = () => {
     return (
         <div>
             <Seo
-                title="Motorcycle & Scooter Servicing Dianella, Perth | Allbikes & Scooters"
+                title="Motorcycle & Scooter Servicing Dianella, Perth | ScooterShop"
                 description="Expert motorcycle and scooter servicing, repairs, and tyre fitting in Perth. Book online today."
                 canonicalPath="/service"
                 structuredData={structuredData}

@@ -191,7 +191,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
   return (
     <>
       <Seo 
-        title={`${pageTitle} | Allbikes`}
+        title={`${pageTitle} | ScooterShop`}
         description={description}
         canonicalPath={isNew ? '/inventory/motorcycles/new' : isParts ? '/inventory/motorcycles/parts' : '/inventory/motorcycles/used'}
         structuredData={structuredData}

@@ -101,7 +101,7 @@ const TyreFittingPage = () => {
     return (
         <div>
             <Seo
-                title="Motorcycle & Scooter Tyre Fitting Perth | Allbikes & Scooters"
+                title="Motorcycle & Scooter Tyre Fitting Perth | ScooterShop"
                 description="Motorcycle tyre change, scooter tyre replacement, puncture repair, and flat tyre repair in Perth. Supply and fit or fit-only. Book online."
                 canonicalPath="/tyre-fitting"
                 structuredData={structuredData}

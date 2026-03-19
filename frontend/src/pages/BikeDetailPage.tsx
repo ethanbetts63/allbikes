@@ -234,7 +234,7 @@ const BikeDetailPage = () => {
             </div>
 
             <Seo
-                title={`${pageTitle} | Allbikes`}
+                title={`${pageTitle} | ScooterShop`}
                 description={bike.description || `Check out the ${pageTitle} at Allbikes & Scooters, Perth's most experienced motorcycle and scooter dealership.`}
                 canonicalPath={`/inventory/motorcycles/${bike.slug}`}
                 ogImage={ogImage}

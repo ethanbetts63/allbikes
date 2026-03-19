@@ -56,7 +56,7 @@ const TermsAndConditionsPage = () => {
     return (
         <>
             <Seo
-                title="Terms & Conditions | Allbikes"
+                title="Terms & Conditions | ScooterShop"
                 description="Read the Terms & Conditions for purchasing and using Allbikes & Scooters products and services."
                 canonicalPath="/terms"
             />

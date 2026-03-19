@@ -4,7 +4,7 @@ const PrivacyPolicyPage = () => {
   return (
     <>
       <Seo
-        title="Privacy Policy | Allbikes"
+        title="Privacy Policy | ScooterShop"
         description="Our privacy policy sets out how we use and protects any information that you give us when you use this website."
         canonicalPath="/privacy"
       />

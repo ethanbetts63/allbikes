@@ -73,7 +73,7 @@ const AdminLayout = () => {
 
   return (
     <>
-      <Seo title="Admin | Allbikes" noindex={true} />
+      <Seo title="Admin | ScooterShop" noindex={true} />
       <div className="flex min-h-screen">
 
         {/* Sidebar */}

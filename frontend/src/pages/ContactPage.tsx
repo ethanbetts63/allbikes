@@ -55,7 +55,7 @@ const ContactPage = () => {
     return (
         <div>
             <Seo
-                title="Contact Us | Allbikes"
+                title="Contact Us | ScooterShop"
                 description={description}
                 canonicalPath="/contact"
             />

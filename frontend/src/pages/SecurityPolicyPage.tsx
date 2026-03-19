@@ -4,7 +4,7 @@ const SecurityPolicyPage = () => {
   return (
     <>
       <Seo
-        title="Security Policy | Allbikes"
+        title="Security Policy | ScooterShop"
         description="Our security policy outlines the steps we take to protect your information, including electronic and hard-copy data protection."
         canonicalPath="/security"
       />
