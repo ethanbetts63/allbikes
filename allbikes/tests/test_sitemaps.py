@@ -31,8 +31,9 @@ class TestStaticViewSitemap:
             '/',
             '/inventory/motorcycles/new',
             '/inventory/motorcycles/used',
+            '/inventory/motorcycles/parts',
             '/contact',
-            '/service', 
+            '/service',
             '/escooters',
             '/tyre-fitting',
         ]

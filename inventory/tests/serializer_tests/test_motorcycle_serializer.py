@@ -13,7 +13,7 @@ def test_motorcycle_serializer_contains_expected_fields():
     data = serializer.data
     expected_keys = [
                     'id', 'slug', 'make', 'model', 'year', 'price', 'condition', 'status',
-                    'is_featured', 'odometer', 'engine_size', 'description', 'youtube_link',
+                    'is_featured', 'popular', 'odometer', 'engine_size', 'description', 'youtube_link',
                     'rego', 'rego_exp', 'stock_number', 'warranty_months', 'transmission', 'images',
                     'discount_price', 'date_posted']
     assert set(data.keys()) == set(expected_keys)

@@ -26,6 +26,7 @@ const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const EScooterListPage = lazy(() => import('./pages/EScooterListPage'));
 const EScooterDetailPage = lazy(() => import('./pages/EScooterDetailPage'));
+const ElectricScootersLandingPage = lazy(() => import('./pages/ElectricScootersLandingPage'));
 const RefundsPage = lazy(() => import('./pages/RefundsPage'));
 const AdminProductDashboardPage = lazy(() => import('./pages/admin/AdminProductDashboardPage'));
 const AdminProductDetailPage = lazy(() => import('./pages/admin/AdminProductDetailPage'));
@@ -73,6 +74,7 @@ function App() {
                 <Route path="/terms" element={<TermsAndConditionsPage />} />
                 <Route path="/security" element={<SecurityPolicyPage />} /> 
                 <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                <Route path="/electric-scooters" element={<ElectricScootersLandingPage />} />
                 <Route path="/escooters" element={<EScooterListPage />} />
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
                 <Route path="/refunds" element={<RefundsPage />} />

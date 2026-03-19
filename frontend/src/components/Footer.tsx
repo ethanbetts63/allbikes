@@ -46,6 +46,7 @@ const Footer = () => {
             <li><Link to="/inventory/motorcycles/new" className={LINK_CLASS}>New Motorcycles &amp; Scooters</Link></li>
             <li><Link to="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles &amp; Scooters</Link></li>
             {!siteSettings.hide_escooters && <li><Link to="/escooters" className={LINK_CLASS}>E-Scooters</Link></li>}
+            {!siteSettings.hide_escooters && <li><Link to="/electric-scooters" className={LINK_CLASS}>Buy Electric Scooters Online</Link></li>}
             {siteSettings.show_workshop_clearance && <li><Link to="/inventory/motorcycles/parts" className={LINK_CLASS}>Workshop Clearance</Link></li>}
             <li><Link to="/service" className={LINK_CLASS}>Servicing</Link></li>
             <li><Link to="/tyre-fitting" className={LINK_CLASS}>Tyre Fitting</Link></li>
