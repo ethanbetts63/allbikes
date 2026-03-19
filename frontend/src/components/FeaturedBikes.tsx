@@ -74,7 +74,7 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
                 setIsHovering(true);
               }}
               onTouchEnd={() => {
-                touchTimeoutRef.current = setTimeout(() => setIsHovering(false), 1000);
+                touchTimeoutRef.current = setTimeout(() => setIsHovering(false), 1500);
               }}
             >
               <div className="flex gap-4 w-max">
