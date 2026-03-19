@@ -6,6 +6,7 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
+import ServiceAreasSection from '@/components/ServiceAreasSection';
 
 const ServiceFaqs = [
   {
@@ -129,6 +130,8 @@ const ServicePage = () => {
                     </div>
                 </div>
             </div>
+
+            <ServiceAreasSection />
 
             {/* Motorcycle Movers */}
             <div className="container mx-auto px-4 mb-4">
