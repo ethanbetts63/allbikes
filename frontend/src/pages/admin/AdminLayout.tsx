@@ -76,8 +76,8 @@ const AdminLayout = () => {
       <Seo title="Admin | ScooterShop" noindex={true} />
       <div className="flex min-h-screen">
 
-        {/* Sidebar */}
-        <aside className="w-60 flex-shrink-0 flex flex-col bg-foreground text-[var(--text-light-primary)] border-r border-white/10">
+        {/* Sidebar — hidden on mobile, shown from md up */}
+        <aside className="hidden md:flex w-60 flex-shrink-0 flex-col bg-foreground text-[var(--text-light-primary)] border-r border-white/10">
 
           {/* Brand */}
           <div className="px-4 py-5 border-b border-white/10">
