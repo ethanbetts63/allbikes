@@ -48,13 +48,10 @@ const LoadingFallback = () => (
   </div>
 );
 
-import BannerV2 from './components/BannerV2';
-
 function App() {
   return (
     <HelmetProvider>
         <div className="min-h-screen flex flex-col">
-          <BannerV2 />
           <NavBar />
           <main className="flex-grow">
             <Suspense fallback={<LoadingFallback />}>

@@ -8,6 +8,7 @@ import logo1280 from '../assets/logo-1280w.webp';
 import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
 import { siteSettings } from '@/config/siteSettings';
+import { MapPin } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { logoutUser } from '@/api';
 import { useNavigate } from 'react-router-dom';
@@ -58,6 +59,17 @@ const NavBar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-white/10">
+      {/* Banner — hidden when mobile menu is open */}
+      {!isMenuOpen && siteSettings.enable_banner && siteSettings.banner_text && (
+        <div className="bg-highlight text-[var(--text-dark-primary)] py-2 px-4">
+          <div className="container mx-auto flex items-center justify-center gap-2">
+            <MapPin className="h-3.5 w-3.5 shrink-0" strokeWidth={2.5} />
+            <p className="text-xs sm:text-sm font-semibold text-center leading-snug">
+              {siteSettings.banner_text}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="container flex h-20 items-stretch justify-between px-6">
 
         {/* Logo */}
