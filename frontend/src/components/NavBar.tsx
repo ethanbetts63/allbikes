@@ -21,7 +21,6 @@ const NavBar = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const isAdminRoute = location.pathname.startsWith('/dashboard');
 
   useEffect(() => {
     setIsMenuOpen(false);
