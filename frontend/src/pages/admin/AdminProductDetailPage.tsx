@@ -108,7 +108,7 @@ const AdminProductDetailPage = () => {
   }
 
   return (
-    <div>
+    <div className="p-4 md:p-6">
       {notification && (
         <Alert
           variant={notification.type === 'error' ? 'destructive' : 'default'}

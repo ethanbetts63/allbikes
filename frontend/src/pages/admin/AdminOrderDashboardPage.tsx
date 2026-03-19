@@ -2,8 +2,8 @@ import OrderTable from '@/components/OrderTable';
 
 const AdminOrderDashboardPage = () => {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4 text-[var(--text-light-primary)]">Orders</h1>
+    <div className="p-4 md:p-6">
+      <h1 className="text-2xl font-bold mb-4 text-[var(--text-dark-primary)]">Orders</h1>
       <OrderTable />
     </div>
   );

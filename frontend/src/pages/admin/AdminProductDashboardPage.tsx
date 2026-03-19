@@ -145,9 +145,9 @@ const AdminProductDashboardPage = () => {
   });
 
   return (
-    <div>
+    <div className="p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-[var(--text-light-primary)]">E-Scooter Products</h1>
+        <h1 className="text-2xl font-bold text-[var(--text-dark-primary)]">E-Scooter Products</h1>
         <Button onClick={() => navigate('/dashboard/products/new')}>
           <PlusSquare className="h-4 w-4 mr-2" />
           Add Product

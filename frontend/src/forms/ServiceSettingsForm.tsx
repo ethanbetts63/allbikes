@@ -14,7 +14,7 @@ const ServiceSettingsForm = ({
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-[var(--text-light-primary)]">Service Settings</h1>
+                <h1 className="text-2xl font-bold text-[var(--text-dark-primary)]">Service Settings</h1>
                 <Button type="submit" disabled={loading}>
                     {loading ? 'Saving...' : 'Save Settings'}
                 </Button>

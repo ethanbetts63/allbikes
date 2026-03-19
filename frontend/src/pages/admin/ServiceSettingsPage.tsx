@@ -69,6 +69,7 @@ const ServiceSettingsPage = () => {
     }
 
     return (
+        <div className="p-4 md:p-6">
         <ServiceSettingsForm
             settings={settings}
             loading={loading}
@@ -76,6 +77,7 @@ const ServiceSettingsPage = () => {
             handleSubmit={handleSubmit}
             handleChange={handleChange}
         />
+        </div>
     );
 };
 

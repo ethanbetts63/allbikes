@@ -92,7 +92,7 @@ const AdminOrderDetailPage = () => {
   ].filter(Boolean).join(', ');
 
   return (
-    <div>
+    <div className="p-4 md:p-6">
       {notification && (
         <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
           <AlertDescription>{notification.message}</AlertDescription>

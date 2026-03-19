@@ -25,9 +25,9 @@ const AdminHomePage = () => {
     dashboard.attention_products.length === 0;
 
   return (
-    <>
-      <h1 className="text-2xl font-bold mb-1 text-[var(--text-light-primary)]">Dashboard</h1>
-      <p className="text-[var(--text-light-secondary)] text-sm mb-8">
+    <div className="p-4 md:p-6">
+      <h1 className="text-2xl font-bold mb-1 text-[var(--text-dark-primary)]">Dashboard</h1>
+      <p className="text-[var(--text-dark-secondary)] text-sm mb-8">
         Welcome back, {user?.first_name || user?.email}.
       </p>
 
@@ -40,8 +40,8 @@ const AdminHomePage = () => {
       {!isLoading && allClear && (
         <div className="flex flex-col items-center pt-12 text-center gap-3">
           <CheckCircle className="h-12 w-12 text-green-500" />
-          <p className="text-[var(--text-light-primary)] font-semibold">All clear</p>
-          <p className="text-[var(--text-light-secondary)] text-sm">No outstanding items.</p>
+          <p className="text-[var(--text-dark-primary)] font-semibold">All clear</p>
+          <p className="text-[var(--text-dark-secondary)] text-sm">No outstanding items.</p>
         </div>
       )}
 
@@ -51,7 +51,7 @@ const AdminHomePage = () => {
           {/* Orders to action */}
           {dashboard.paid_orders.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-light-secondary)] mb-3">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
                 Orders to action — {dashboard.paid_orders.length}
               </h2>
               <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light overflow-hidden">
@@ -95,7 +95,7 @@ const AdminHomePage = () => {
           {/* Reserved motorcycles */}
           {dashboard.reserved_bikes.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-light-secondary)] mb-3">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
                 Reserved motorcycles — {dashboard.reserved_bikes.length}
               </h2>
               <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light divide-y divide-stone-100">
@@ -118,7 +118,7 @@ const AdminHomePage = () => {
           {/* Attention products */}
           {dashboard.attention_products.length > 0 && (
             <section>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-light-secondary)] mb-3">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
                 Product stock — {dashboard.attention_products.length}
               </h2>
               <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light divide-y divide-stone-100">
@@ -144,7 +144,7 @@ const AdminHomePage = () => {
 
         </div>
       )}
-    </>
+    </div>
   );
 };
 

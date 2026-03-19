@@ -68,7 +68,7 @@ const AdminSentMessageDetailPage = () => {
   const badge = STATUS_BADGE[message.status];
 
   return (
-    <div>
+    <div className="p-4 md:p-6">
       <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
 
         {/* Header */}

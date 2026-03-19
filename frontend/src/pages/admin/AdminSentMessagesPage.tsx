@@ -57,8 +57,8 @@ const AdminSentMessagesPage = () => {
   }, [page]);
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4 text-[var(--text-light-primary)]">Sent Messages</h1>
+    <div className="p-4 md:p-6">
+      <h1 className="text-2xl font-bold mb-4 text-[var(--text-dark-primary)]">Sent Messages</h1>
 
       {error && (
         <Alert variant="destructive" className="mb-4">
