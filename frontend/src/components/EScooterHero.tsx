@@ -1,13 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, ShieldCheck } from 'lucide-react';
-import segwayImage from '@/assets/segway_1.webp';
-import segwayImage320 from '@/assets/segway_1-320w.webp';
-import segwayImage640 from '@/assets/segway_1-640w.webp';
-import segwayImage768 from '@/assets/segway_1-768w.webp';
-import segwayImage1024 from '@/assets/segway_1-1024w.webp';
-import segwayImage1280 from '@/assets/segway_1-1280w.webp';
 
-const segwaySrcSet = `${segwayImage320} 320w, ${segwayImage640} 640w, ${segwayImage768} 768w, ${segwayImage1024} 1024w, ${segwayImage1280} 1280w`;
+const YOUTUBE_VIDEO_ID = 'cQJm8NcpzMU';
 
 const EScooterHero = () => {
   return (
@@ -56,27 +50,16 @@ const EScooterHero = () => {
         </div>
       </div>
 
-      {/* Image panel */}
-      <div className="order-2 lg:order-2 lg:flex-1 relative overflow-hidden min-h-[320px] lg:min-h-0 bg-[var(--bg-dark-secondary)]">
-        <img
-          src={segwayImage}
-          srcSet={segwaySrcSet}
-          sizes="(max-width: 1024px) 100vw, 55vw"
-          alt="Electric scooter — buy online with free delivery Australia-wide"
-          className="absolute inset-0 w-full h-full object-cover"
-          fetchPriority="high"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-dark-primary)] via-transparent to-transparent lg:block hidden" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-        {/* Overlay label */}
-        <div className="absolute bottom-0 left-0 p-7">
-          <p className="text-[var(--highlight)] text-[9px] font-bold uppercase tracking-[0.25em] mb-1">
-            Featured
-          </p>
-          <p className="text-[var(--text-light-primary)] text-xl font-black uppercase italic leading-none">
-            Segway Electric Mopeds
-          </p>
+      {/* Video panel */}
+      <div className="order-2 lg:order-2 lg:flex-1 bg-black flex items-center justify-center min-h-[280px] lg:min-h-0">
+        <div className="w-full aspect-video">
+          <iframe
+            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
+            title="Electric Scooters — Scooter Shop"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          />
         </div>
       </div>
 

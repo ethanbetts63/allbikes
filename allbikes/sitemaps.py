@@ -49,6 +49,7 @@ class StaticViewSitemap(Sitemap):
             '/contact',
             '/service', 
             '/escooters',
+            '/electric-scooters',
             '/tyre-fitting',
         ]
 

@@ -4,6 +4,7 @@ import EScooterHero from '@/components/EScooterHero';
 import EScooterUSPs from '@/components/EScooterUSPs';
 import FeaturedEScooters from '@/components/FeaturedEScooters';
 import EScooterWhyBuySection from '@/components/EScooterWhyBuySection';
+import EScooterMopedsSection from '@/components/EScooterMopedsSection';
 import PayLaterSection from '@/components/PayLaterSection';
 import { FaqSection } from '@/components/FaqSection';
 import { getProducts } from '@/api';
@@ -96,6 +97,8 @@ const ElectricScootersLandingPage = () => {
       <EScooterUSPs />
 
       {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
+
+      <EScooterMopedsSection />
 
       <EScooterWhyBuySection />
 
