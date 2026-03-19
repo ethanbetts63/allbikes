@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, ShieldCheck } from 'lucide-react';
+import YouTube from 'react-youtube';
 
 const YOUTUBE_VIDEO_ID = 'cQJm8NcpzMU';
 
@@ -40,13 +41,7 @@ const EScooterHero = () => {
       {/* Video panel */}
       <div className="order-2 lg:order-2 lg:flex-1 flex flex-col">
         <div className="w-full aspect-video">
-          <iframe
-            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
-            title="Electric Scooters — Scooter Shop"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="w-full h-full"
-          />
+          <YouTube videoId={YOUTUBE_VIDEO_ID} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
         </div>
         {/* Fill remaining height with trust chips on same dark bg as text panel */}
         <div className="flex-1 bg-[var(--bg-dark-primary)] flex items-center justify-center px-8 md:px-10 py-5 gap-4 flex-wrap">
