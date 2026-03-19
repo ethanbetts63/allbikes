@@ -134,9 +134,7 @@ const ServicePage = () => {
             <ServiceAreasSection />
 
             {/* Motorcycle Movers */}
-            <div className="container mx-auto px-4 mb-4">
-                <MotorcycleMovers />
-            </div>
+            <MotorcycleMovers />
 
             <FaqSection title="Workshop FAQ" faqData={ServiceFaqs} />
 
