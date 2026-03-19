@@ -77,6 +77,7 @@ const ReviewCarousel = () => {
   const animationFrameRef = useRef<number | null>(null);
   const positionRef = useRef(0);
   const [isHovering, setIsHovering] = useState(false);
+  const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const scroll = () => {
@@ -133,8 +134,13 @@ const ReviewCarousel = () => {
             className="flex overflow-x-auto space-x-4 pb-2 no-scrollbar"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
-            onTouchStart={() => setIsHovering(true)}
-            onTouchEnd={() => setIsHovering(false)}
+            onTouchStart={() => {
+              if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current);
+              setIsHovering(true);
+            }}
+            onTouchEnd={() => {
+              touchTimeoutRef.current = setTimeout(() => setIsHovering(false), 1000);
+            }}
           >
             <div className="flex gap-4 w-max">
             {[...reviewData, ...reviewData].map((review, i) => {
