@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Star } from "lucide-react";
 
 const GOOGLE_REVIEWS_URL = "https://www.google.com/search?sca_esv=c50016dede84fb5a&cs=1&sxsrf=ANbL-n7auNsA8EF9qA71_DeC0xkkejRXgQ:1773338332751&q=Scooter+Shop+Reviews&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxIxNDCzMDUxNDAxMjc3tzCysACSGxgZXzGKBCfn55ekFikEZ-QXKASllmWmlhcvYsUqDADhIHceSQAAAA&rldimm=10685410427778288778&tbm=lcl&hl=en-DK&sa=X&ved=2ahUKEwipoY6L-JqTAxXK3AIHHQwDItoQ9fQKegQIEBAG&biw=1440&bih=731&dpr=2#lkt=LocalPoiReviews";
@@ -72,6 +73,36 @@ const scrollbarHideStyle = `
 `;
 
 const ReviewCarousel = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const positionRef = useRef(0);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const scroll = () => {
+      if (scrollRef.current) {
+        const halfwayPoint = scrollRef.current.scrollWidth / 2;
+        positionRef.current += 0.3;
+        if (positionRef.current >= halfwayPoint) {
+          positionRef.current = 0;
+        }
+        scrollRef.current.scrollLeft = positionRef.current;
+      }
+      animationFrameRef.current = requestAnimationFrame(scroll);
+    };
+
+    if (!isHovering) {
+      positionRef.current = scrollRef.current?.scrollLeft || 0;
+      animationFrameRef.current = requestAnimationFrame(scroll);
+    }
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [isHovering]);
+
   return (
     <>
       <style>{scrollbarHideStyle}</style>
@@ -97,8 +128,14 @@ const ReviewCarousel = () => {
           </div>
 
           {/* Cards */}
-          <div className="flex overflow-x-auto space-x-4 pb-2 no-scrollbar">
-            {reviewData.map((review) => {
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto space-x-4 pb-2 no-scrollbar"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
+            <div className="flex gap-4 w-max">
+            {[...reviewData, ...reviewData].map((review, i) => {
               const charLimit = 220;
               const truncatedText = review.text.length > charLimit
                 ? review.text.substring(0, charLimit) + "…"
@@ -108,7 +145,7 @@ const ReviewCarousel = () => {
 
               return (
                 <a
-                  key={review.pk}
+                  key={`${review.pk}-${i}`}
                   href={GOOGLE_REVIEWS_URL}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -142,6 +179,7 @@ const ReviewCarousel = () => {
                 </a>
               );
             })}
+            </div>
           </div>
 
         </div>
