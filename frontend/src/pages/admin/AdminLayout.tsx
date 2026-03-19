@@ -81,7 +81,7 @@ const AdminLayout = () => {
 
           {/* Brand */}
           <div className="px-4 py-5 border-b border-white/10">
-            <p className="text-base font-black uppercase tracking-widest text-[var(--text-light-primary)]">Allbikes</p>
+            <p className="text-base font-black uppercase tracking-widest text-[var(--text-light-primary)]">ScooterShop</p>
             <p className="text-xs text-[var(--text-light-secondary)]/50 mt-0.5">Admin Panel</p>
           </div>
 

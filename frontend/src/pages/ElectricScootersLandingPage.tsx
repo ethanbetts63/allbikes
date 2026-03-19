@@ -37,10 +37,6 @@ const faqData = [
     answer: 'Yes. Our workshop in Dianella, Perth services electric scooters and electric mopeds. If you purchase from us and need a service or repair down the track, we\'re here to help.',
   },
   {
-    question: 'Are electric scooters legal to ride in Australia?',
-    answer: 'Regulations vary by state and territory. In general, electric scooters (e-scooters) are legal on private property, but rules for public roads, footpaths, and shared paths differ across states. We recommend checking your state or territory\'s road authority for the current rules before riding in public.',
-  },
-  {
     question: 'What is the range of an electric scooter?',
     answer: 'Range depends on the model, rider weight, terrain, and speed. Most of the e-scooters we carry offer a practical range of 25–60 km per charge. Check each product listing for specific range specifications.',
   },
