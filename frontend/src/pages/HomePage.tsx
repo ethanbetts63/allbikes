@@ -129,8 +129,8 @@ const HomePage = () => {
   return (
     <div>
       <Seo
-        title="Allbikes & Scooters - Perth's Motorcycle and Scooter Dealership"
-        description="Discover a wide range of new and Used Motorcycles & Scooters at Allbikes. We offer sales, servicing, and expert advice for riders in Perth."
+        title="Perth's Motorcycle and Scooter Dealership"
+        description="Discover a wide range of new and Used Motorcycles & Scooters at Scootershop. We offer sales, servicing, and expert advice for riders in Perth."
         canonicalPath="/"
         structuredData={structuredData}
       />

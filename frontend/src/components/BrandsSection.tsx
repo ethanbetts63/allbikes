@@ -66,7 +66,7 @@ We've tested a lot of brands, but Segway's electric mopeds impressed us with the
       <BrandCard
         image={symImage}
         imageSrcSet={symSrcSet}
-        alt="SYM Scooter"
+        alt="SYM scooter for sale at ScooterShop, Dianella Perth"
         title="SYM Scooters"
         subtitle="Reliable, Affordable, and Built to Last"
         description={symText}
@@ -75,7 +75,7 @@ We've tested a lot of brands, but Segway's electric mopeds impressed us with the
       <BrandCard
         image={segwayImage}
         imageSrcSet={segwaySrcSet}
-        alt="Segway Electric Moped"
+        alt="Segway electric moped for sale at ScooterShop Perth"
         title="Segway Electric Mopeds"
         subtitle="Innovation Meets Reliability"
         description={segwayText}

@@ -117,7 +117,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         src={slots.a}
         srcSet={isDefaultA ? defaultNewSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 60vw"
-        alt=""
+        alt="New motorcycles and scooters for sale at ScooterShop Perth"
         className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
         {...(priority ? { fetchPriority: 'high' as const } : {})}
       />
@@ -125,7 +125,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         src={slots.b}
         srcSet={isDefaultB ? defaultNewSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 60vw"
-        alt=""
+        alt="New motorcycles and scooters for sale at ScooterShop Perth"
         className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
     </>
@@ -137,7 +137,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         src={slots.a}
         srcSet={isDefaultA ? defaultUsedSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 40vw"
-        alt=""
+        alt="Used motorcycles and scooters for sale at ScooterShop Perth"
         fetchPriority="high"
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
       />
@@ -145,7 +145,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         src={slots.b}
         srcSet={isDefaultB ? defaultUsedSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 40vw"
-        alt=""
+        alt="Used motorcycles and scooters for sale at ScooterShop Perth"
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
     </>
