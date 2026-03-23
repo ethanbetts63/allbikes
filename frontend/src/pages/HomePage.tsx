@@ -57,7 +57,7 @@ const HomePage = () => {
     },
     {
       "question": "What types of motorcycles and scooters do you service?",
-      "answer": "We service all motorcycles and most scooters. For scooters, we specialise in Italian brands and mid to upper-end Asian brands. Some brands are excluded due to parts availability and build quality concerns, allowing us to maintain reliable, long-lasting repairs. Full details are listed on our service page."
+      "answer": "We service all motorcycles and scooters. For scooters, we specialise in Italian brands and mid to upper-end Asian brands but we regularly and happily service all kinds of bikes."
     },
     {
       "question": "What areas of Perth do you service?",
