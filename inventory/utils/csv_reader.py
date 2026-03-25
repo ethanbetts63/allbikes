@@ -1,8 +1,7 @@
 import csv
 from datetime import datetime
-from pathlib import Path
 
-INBOX_DIR = Path(__file__).resolve().parents[1] / "inbox"
+from .ftp_download import INBOX_DIR
 
 TRANSMISSION_MAP = {
     "manual": "manual",

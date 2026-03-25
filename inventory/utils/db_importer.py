@@ -4,9 +4,7 @@ from pathlib import Path
 from django.conf import settings
 
 from ..models import Motorcycle, MotorcycleImage
-
-INBOX_DIR = Path(__file__).resolve().parents[1] / "inbox"
-IMAGES_DIR = INBOX_DIR / "images"
+from .ftp_download import IMAGES_DIR
 
 # Fields the CSV is authoritative over
 CSV_FIELDS = [
