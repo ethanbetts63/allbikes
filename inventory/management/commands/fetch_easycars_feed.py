@@ -4,7 +4,7 @@ from pathlib import Path
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-INBOX_DIR = Path(__file__).resolve().parents[3] / "inbox"
+INBOX_DIR = Path(__file__).resolve().parents[2] / "inbox"
 IMAGES_DIR = INBOX_DIR / "images"
 
 
