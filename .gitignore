@@ -38,6 +38,7 @@ mediafiles/
 mediafiles/CACHE/
 
 inventory/logs/
+data_management/data/archive/
 
 # Claude Code
 .claude/
