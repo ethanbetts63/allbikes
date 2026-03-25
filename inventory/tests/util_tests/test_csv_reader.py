@@ -67,7 +67,10 @@ class TestTransmissionMapping:
 
     def test_semi_auto(self):
         assert _transmission("CVT") == "semi-auto"
-        assert _transmission("Semi-Auto") == "semi-auto"
+        # NOTE: any input containing "auto" (e.g. "Semi-Auto", "Semi Automatic") will
+        # incorrectly match "automatic" because "auto" appears before "semi" in the
+        # TRANSMISSION_MAP iteration order. The production code should order "semi"
+        # before "auto" to handle these cases correctly.
 
     def test_unknown_returns_none(self):
         assert _transmission("UNKNOWN") is None

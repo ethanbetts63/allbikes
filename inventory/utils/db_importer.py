@@ -36,6 +36,7 @@ def import_bikes(stdout, bikes):
         bike.save()
 
     stdout.write(f"Bikes: {created} created, {updated} updated")
+    return created, updated
 
 
 def link_images(stdout, bikes):
@@ -70,6 +71,7 @@ def link_images(stdout, bikes):
             linked += 1
 
     stdout.write(f"Images linked: {linked}")
+    return linked
 
 
 def get_existing_image_paths():

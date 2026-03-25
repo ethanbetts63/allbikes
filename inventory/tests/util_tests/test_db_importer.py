@@ -37,7 +37,9 @@ class TestImportBikes:
 
     def test_reports_created_count(self):
         stdout = MagicMock()
-        import_bikes(stdout, [BIKE_DATA])
+        created, updated = import_bikes(stdout, [BIKE_DATA])
+        assert created == 1
+        assert updated == 0
         stdout.write.assert_called_with("Bikes: 1 created, 0 updated")
 
     def test_updates_existing_bike_by_vin(self):
@@ -68,7 +70,8 @@ class TestImportBikes:
 
     def test_handles_empty_list(self):
         stdout = MagicMock()
-        import_bikes(stdout, [])
+        created, updated = import_bikes(stdout, [])
+        assert created == 0 and updated == 0
         stdout.write.assert_called_with("Bikes: 0 created, 0 updated")
 
 
@@ -130,7 +133,8 @@ class TestLinkImages:
 
         MotorcycleFactory(stock_number="1046")
         stdout = MagicMock()
-        link_images(stdout, [{"stock_number": "1046"}])
+        linked = link_images(stdout, [{"stock_number": "1046"}])
+        assert linked == 1
         stdout.write.assert_called_with("Images linked: 1")
 
 

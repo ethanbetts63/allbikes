@@ -1,7 +1,9 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, call
 from django.core.management import call_command
 
+# Force module into sys.modules so patch() can resolve it
+import inventory.management.commands.fetch_easycars_feed  # noqa: F401
 
 PARSED_BIKES = [
     {
@@ -30,9 +32,9 @@ PARSED_BIKES = [
 @pytest.mark.django_db
 class TestFetchEasycarsFeedCommand:
 
-    @patch("inventory.management.commands.fetch_easycars_feed.link_images")
+    @patch("inventory.management.commands.fetch_easycars_feed.link_images", return_value=0)
     @patch("inventory.management.commands.fetch_easycars_feed.fetch_images")
-    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes")
+    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes", return_value=(1, 0))
     @patch("inventory.management.commands.fetch_easycars_feed.parse_feed", return_value=PARSED_BIKES)
     @patch("inventory.management.commands.fetch_easycars_feed.fetch_csv", return_value="csv,data")
     def test_runs_full_pipeline(self, mock_fetch_csv, mock_parse, mock_import, mock_fetch_images, mock_link):
@@ -55,23 +57,76 @@ class TestFetchEasycarsFeedCommand:
         mock_fetch_images.assert_not_called()
         mock_link.assert_not_called()
 
-    @patch("inventory.management.commands.fetch_easycars_feed.link_images")
+    @patch("inventory.management.commands.fetch_easycars_feed.link_images", return_value=0)
     @patch("inventory.management.commands.fetch_easycars_feed.fetch_images")
-    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes")
+    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes", return_value=(1, 0))
     @patch("inventory.management.commands.fetch_easycars_feed.parse_feed", return_value=PARSED_BIKES)
     @patch("inventory.management.commands.fetch_easycars_feed.fetch_csv", return_value="csv,data")
     def test_passes_stock_numbers_to_fetch_images(self, mock_fetch_csv, mock_parse, mock_import, mock_fetch_images, mock_link):
         call_command("fetch_easycars_feed")
         args, kwargs = mock_fetch_images.call_args
-        stock_numbers = args[2]
-        assert "1046" in stock_numbers
+        assert "1046" in args[2]
 
-    @patch("inventory.management.commands.fetch_easycars_feed.link_images")
+    @patch("inventory.management.commands.fetch_easycars_feed.link_images", return_value=0)
     @patch("inventory.management.commands.fetch_easycars_feed.fetch_images")
-    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes")
+    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes", return_value=(1, 0))
     @patch("inventory.management.commands.fetch_easycars_feed.parse_feed", return_value=PARSED_BIKES)
     @patch("inventory.management.commands.fetch_easycars_feed.fetch_csv", return_value="csv,data")
     def test_outputs_done_on_success(self, mock_fetch_csv, mock_parse, mock_import, mock_fetch_images, mock_link, capsys):
         call_command("fetch_easycars_feed")
         captured = capsys.readouterr()
         assert "Done." in captured.out
+
+    @patch("inventory.management.commands.fetch_easycars_feed.link_images", return_value=2)
+    @patch("inventory.management.commands.fetch_easycars_feed.fetch_images")
+    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes", return_value=(1, 3))
+    @patch("inventory.management.commands.fetch_easycars_feed.parse_feed", return_value=PARSED_BIKES)
+    @patch("inventory.management.commands.fetch_easycars_feed.fetch_csv", return_value="csv,data")
+    def test_writes_log_when_db_changes_occur(self, mock_fetch_csv, mock_parse, mock_import, mock_fetch_images, mock_link, tmp_path):
+        import inventory.management.commands.fetch_easycars_feed as cmd_module
+        original_log_path = cmd_module.LOG_PATH
+        cmd_module.LOG_PATH = tmp_path / "feed_import.log"
+
+        try:
+            call_command("fetch_easycars_feed")
+            assert cmd_module.LOG_PATH.exists()
+            content = cmd_module.LOG_PATH.read_text()
+            assert "bikes_created=1" in content
+            assert "bikes_updated=3" in content
+            assert "images_linked=2" in content
+        finally:
+            cmd_module.LOG_PATH = original_log_path
+
+    @patch("inventory.management.commands.fetch_easycars_feed.link_images", return_value=0)
+    @patch("inventory.management.commands.fetch_easycars_feed.fetch_images")
+    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes", return_value=(0, 0))
+    @patch("inventory.management.commands.fetch_easycars_feed.parse_feed", return_value=PARSED_BIKES)
+    @patch("inventory.management.commands.fetch_easycars_feed.fetch_csv", return_value="csv,data")
+    def test_skips_log_when_no_db_changes(self, mock_fetch_csv, mock_parse, mock_import, mock_fetch_images, mock_link, tmp_path):
+        import inventory.management.commands.fetch_easycars_feed as cmd_module
+        original_log_path = cmd_module.LOG_PATH
+        cmd_module.LOG_PATH = tmp_path / "feed_import.log"
+
+        try:
+            call_command("fetch_easycars_feed")
+            assert not cmd_module.LOG_PATH.exists()
+        finally:
+            cmd_module.LOG_PATH = original_log_path
+
+    @patch("inventory.management.commands.fetch_easycars_feed.link_images", return_value=1)
+    @patch("inventory.management.commands.fetch_easycars_feed.fetch_images")
+    @patch("inventory.management.commands.fetch_easycars_feed.import_bikes", return_value=(1, 0))
+    @patch("inventory.management.commands.fetch_easycars_feed.parse_feed", return_value=PARSED_BIKES)
+    @patch("inventory.management.commands.fetch_easycars_feed.fetch_csv", return_value="csv,data")
+    def test_log_appends_on_multiple_runs(self, mock_fetch_csv, mock_parse, mock_import, mock_fetch_images, mock_link, tmp_path):
+        import inventory.management.commands.fetch_easycars_feed as cmd_module
+        original_log_path = cmd_module.LOG_PATH
+        cmd_module.LOG_PATH = tmp_path / "feed_import.log"
+
+        try:
+            call_command("fetch_easycars_feed")
+            call_command("fetch_easycars_feed")
+            lines = cmd_module.LOG_PATH.read_text().strip().splitlines()
+            assert len(lines) == 2
+        finally:
+            cmd_module.LOG_PATH = original_log_path
