@@ -28,6 +28,7 @@ class MotorcycleFactory(DjangoModelFactory):
     rego = factory.LazyFunction(lambda: fake.license_plate())
     rego_exp = factory.LazyFunction(lambda: fake.future_date(end_date="+1y"))
     stock_number = factory.Sequence(lambda n: f"STOCK-{n+1:05d}")
+    vin = factory.Sequence(lambda n: f"VIN{n+1:014d}")
     warranty_months = factory.LazyFunction(lambda: fake.pyint(min_value=0, max_value=24))
 
     @factory.post_generation
