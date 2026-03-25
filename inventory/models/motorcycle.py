@@ -129,6 +129,14 @@ class Motorcycle(models.Model):
         blank=True,
     )
 
+    vin = models.CharField(
+        max_length=17,
+        unique=True,
+        null=True,
+        blank=True,
+        help_text="Vehicle Identification Number",
+    )
+
     warranty_months = models.IntegerField(
         null=True,
         blank=True,
