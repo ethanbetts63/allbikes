@@ -9,6 +9,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 MECHANICDESK_BOOKING_TOKEN = os.environ.get("MECHANICDESK_BOOKING_TOKEN")
 
+FTP_HOST = os.environ.get("FTP_HOST")
+FTP_USER = os.environ.get("FTP_USER")
+FTP_PASS = os.environ.get("FTP_PASS")
+FTP_FOLDER = os.environ.get("FTP_FOLDER")
+
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 
