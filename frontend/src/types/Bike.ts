@@ -21,6 +21,7 @@ export type Bike = {
   rego: string;
   rego_exp: string;
   stock_number: string;
+  vin?: string;
   warranty_months: number;
   transmission: string;
   images: BikeImage[];

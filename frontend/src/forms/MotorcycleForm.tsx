@@ -93,6 +93,7 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                         <div className="space-y-2"><Label htmlFor="discount_price">Discount Price (AUD)</Label><Input id="discount_price" type="number" step="0.01" {...register('discount_price', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="odometer">Odometer (km)</Label><Input id="odometer" type="number" {...register('odometer', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="stock_number">Stock Number</Label><Input id="stock_number" {...register('stock_number', { setValueAs: (v) => v === '' ? null : v })} /></div>
+                        <div className="space-y-2"><Label htmlFor="vin">VIN</Label><Input id="vin" {...register('vin', { setValueAs: (v) => v === '' ? null : v })} /></div>
                         <div className="space-y-2"><Label htmlFor="rego">Rego</Label><Input id="rego" {...register('rego', { setValueAs: (v) => v === '' ? null : v })} /></div>
                         <div className="space-y-2"><Label htmlFor="rego_exp">Rego Expiry</Label><Input id="rego_exp" type="date" {...register('rego_exp', { setValueAs: (v) => v === '' ? null : v })} /></div>
                         <div className="space-y-2"><Label htmlFor="engine_size">Engine Size (cc)</Label><Input id="engine_size" type="number" {...register('engine_size', { valueAsNumber: true })} /></div>
