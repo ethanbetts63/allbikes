@@ -37,6 +37,7 @@ static/
 mediafiles/
 mediafiles/CACHE/
 inventory/inbox/
+inbox/
 
 # Claude Code
 .claude/
