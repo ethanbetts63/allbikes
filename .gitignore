@@ -36,7 +36,6 @@ static/
 *.backup
 mediafiles/
 mediafiles/CACHE/
-inventory/inbox/
 
 # Claude Code
 .claude/

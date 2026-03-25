@@ -1,12 +1,9 @@
-import shutil
 from pathlib import Path
 
 from django.conf import settings
 
 from ..models import Motorcycle, MotorcycleImage
-from .ftp_download import IMAGES_DIR
 
-# Fields the CSV is authoritative over
 CSV_FIELDS = [
     "stock_number", "vin", "make", "model", "year", "price", "discount_price",
     "odometer", "engine_size", "transmission", "description", "condition",
@@ -37,35 +34,46 @@ def import_bikes(stdout, bikes):
             setattr(bike, field, data.get(field))
 
         bike.save()
-        _import_images(bike, stock_number)
 
     stdout.write(f"Bikes: {created} created, {updated} updated")
 
 
-def _import_images(bike, stock_number):
-    if not stock_number:
-        return
-
+def link_images(stdout, bikes):
     media_dir = Path(settings.MEDIA_ROOT) / "motorcycles" / "additional"
-    media_dir.mkdir(parents=True, exist_ok=True)
+    existing_images = set(MotorcycleImage.objects.values_list("image", flat=True))
+    linked = 0
 
-    inbox_images = sorted(
-        IMAGES_DIR.glob(f"{stock_number}_*"),
-        key=_image_order
-    )
-
-    for src in inbox_images:
-        dest_relative = f"motorcycles/additional/{src.name}"
-        dest_absolute = Path(settings.MEDIA_ROOT) / dest_relative
-
-        # Skip if already linked to this bike
-        if bike.images.filter(image=dest_relative).exists():
+    for data in bikes:
+        stock_number = data.get("stock_number")
+        if not stock_number:
             continue
 
-        shutil.copy2(src, dest_absolute)
+        bike = Motorcycle.objects.filter(stock_number=stock_number).first()
+        if not bike:
+            continue
 
-        order = _image_order(src)
-        MotorcycleImage.objects.create(motorcycle=bike, image=dest_relative, order=order)
+        image_files = sorted(
+            media_dir.glob(f"{stock_number}_*"),
+            key=_image_order
+        )
+
+        for path in image_files:
+            relative = f"motorcycles/additional/{path.name}"
+            if relative in existing_images:
+                continue
+            MotorcycleImage.objects.create(
+                motorcycle=bike,
+                image=relative,
+                order=_image_order(path),
+            )
+            existing_images.add(relative)
+            linked += 1
+
+    stdout.write(f"Images linked: {linked}")
+
+
+def get_existing_image_paths():
+    return set(MotorcycleImage.objects.values_list("image", flat=True))
 
 
 def _image_order(path):

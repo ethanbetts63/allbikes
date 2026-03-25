@@ -1,7 +1,6 @@
 import csv
+import io
 from datetime import datetime
-
-from .ftp_download import INBOX_DIR
 
 TRANSMISSION_MAP = {
     "manual": "manual",
@@ -17,20 +16,11 @@ STATUS_MAP = {
 }
 
 
-def parse_feed():
-    csv_files = list(INBOX_DIR.glob("*.csv"))
-    if not csv_files:
-        raise FileNotFoundError("No CSV file found in inbox.")
-
-    # Use the most recently modified CSV
-    csv_path = max(csv_files, key=lambda p: p.stat().st_mtime)
-
+def parse_feed(csv_text):
     bikes = []
-    with open(csv_path, newline="", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            bikes.append(_map_row(row))
-
+    reader = csv.DictReader(io.StringIO(csv_text))
+    for row in reader:
+        bikes.append(_map_row(row))
     return bikes
 
 
