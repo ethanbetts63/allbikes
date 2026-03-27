@@ -14,7 +14,8 @@
       "Bash(venv/Scripts/python.exe manage.py migrate 2>&1)",
       "Bash(ls:*)",
       "Bash(pytest:*)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "Bash(python:*)"
     ]
   }
 }

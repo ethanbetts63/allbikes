@@ -152,12 +152,26 @@ class TestCookieLogoutView:
 
     def test_logout_returns_200(self):
         """
+        GIVEN a logged-in user with an access_token cookie
         WHEN POST /api/token/logout/
         THEN 200 is returned.
         """
+        refresh = RefreshToken.for_user(self.user)
+        self.client.cookies['access_token'] = str(refresh.access_token)
+
         response = self.client.post(self.url, format='json')
 
         assert response.status_code == 200
+
+    def test_logout_returns_401_when_not_authenticated(self):
+        """
+        GIVEN no access_token cookie
+        WHEN POST /api/token/logout/
+        THEN 401 is returned.
+        """
+        response = self.client.post(self.url, format='json')
+
+        assert response.status_code == 401
 
     def test_logout_clears_access_cookie(self):
         """
@@ -174,11 +188,12 @@ class TestCookieLogoutView:
 
     def test_logout_clears_refresh_cookie(self):
         """
-        GIVEN a logged-in user with a refresh_token cookie
+        GIVEN a logged-in user with access and refresh token cookies
         WHEN POST /api/token/logout/
         THEN the refresh_token cookie is deleted.
         """
         refresh = RefreshToken.for_user(self.user)
+        self.client.cookies['access_token'] = str(refresh.access_token)
         self.client.cookies['refresh_token'] = str(refresh)
 
         response = self.client.post(self.url, format='json')
