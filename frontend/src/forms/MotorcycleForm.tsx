@@ -200,7 +200,7 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                                         At least one rate is required. Priority order: daily → weekly ÷ 7 → monthly ÷ 30.
                                     </p>
                                 </div>
-                            ) : null
+                            ) : <></>
                         )} />
                     </div>
 

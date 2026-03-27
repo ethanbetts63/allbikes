@@ -36,4 +36,5 @@ export const siteSettings: SiteSettings = {
   hide_escooters: false,
   accept_online_payment: true,
   show_workshop_clearance: false,
+  show_hire: false,
 };

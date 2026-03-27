@@ -15,7 +15,8 @@
       "Bash(ls:*)",
       "Bash(pytest:*)",
       "Bash(xargs sed:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

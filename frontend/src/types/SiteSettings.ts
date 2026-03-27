@@ -28,4 +28,5 @@ export interface SiteSettings {
   hide_escooters: boolean;
   accept_online_payment: boolean;
   show_workshop_clearance: boolean;
+  show_hire: boolean;
 }
