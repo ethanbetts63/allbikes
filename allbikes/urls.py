@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, HttpResponseGone
 from data_management.views.token_views import (
     CookieTokenObtainPairView,
     CookieTokenRefreshView,
@@ -46,6 +46,9 @@ urlpatterns += [
     path('api/token/refresh/', CookieTokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/logout/', CookieLogoutView.as_view(), name='token_logout'),
     
+    # Legacy URLs that no longer exist
+    path('_mycart', lambda request: HttpResponseGone()),
+
     # Redirect trailing slashes to canonical non-slash URLs (301)
     re_path(r'^(?!api/|admin/|sitemap\.xml)(.+)/$', strip_trailing_slash),
 

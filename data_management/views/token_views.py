@@ -1,9 +1,10 @@
 from django.conf import settings
 from django.middleware.csrf import get_token
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from data_management.authentication import CookieJWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 
@@ -79,8 +80,8 @@ class CookieTokenRefreshView(APIView):
 
 
 class CookieLogoutView(APIView):
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         response = Response({'detail': 'Logged out successfully.'})
