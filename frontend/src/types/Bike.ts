@@ -9,7 +9,7 @@ export type Bike = {
   price: string;
   discount_price?: string;
   condition: 'new' | 'used' | 'demo';
-  status: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'unavailable';
+  status: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'on_hire' | 'unavailable';
   is_featured?: boolean;
   popular?: boolean;
   odometer: number;
@@ -26,4 +26,8 @@ export type Bike = {
   transmission: string;
   images: BikeImage[];
   date_posted: string;
+  is_hire?: boolean;
+  daily_rate?: string | null;
+  weekly_rate?: string | null;
+  monthly_rate?: string | null;
 };

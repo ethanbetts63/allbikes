@@ -36,6 +36,7 @@ urlpatterns += [
     path("api/inventory/", include("inventory.urls")),
     path("api/product/", include("product.urls")),
     path("api/payments/", include("payments.urls")),
+    path("api/hire/", include("hire.urls")),
     path("api/notifications/", include("notifications.urls")),
 
     # Sitemap

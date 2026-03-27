@@ -7,6 +7,7 @@ class Motorcycle(models.Model):
         ("available_soon", "Available Soon"),
         ("sold", "Sold"),
         ("reserved", "Reserved"),
+        ("on_hire", "On Hire"),
         ("unavailable", "Unavailable"),
     ]
 
@@ -141,6 +142,32 @@ class Motorcycle(models.Model):
         null=True,
         blank=True,
         help_text="Number of months the warranty is valid for",
+    )
+
+    is_hire = models.BooleanField(
+        default=False,
+        help_text="This motorcycle is available for hire.",
+    )
+    daily_rate = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Daily hire rate (AUD). Used first when calculating hire cost.",
+    )
+    weekly_rate = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Weekly hire rate (AUD). Used as daily_rate / 7 if daily_rate is not set.",
+    )
+    monthly_rate = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Monthly hire rate (AUD). Used as monthly_rate / 30 if daily and weekly rates are not set.",
     )
 
     def __str__(self):

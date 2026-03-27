@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "product",
     "payments",
     "notifications",
+    "hire",
     "imagekit",
 ]
 

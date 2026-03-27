@@ -12,6 +12,7 @@ import type { Order } from '@/types/Order';
 import type { AdminDashboard } from '@/types/AdminDashboard';
 import type { SentMessage } from '@/types/SentMessage';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
+import type { HireBooking, HireSettings } from '@/types/HireBooking';
 
 /**
  * A centralized module for all API interactions.
@@ -356,4 +357,41 @@ export async function adminGetBookingLog(id: number): Promise<BookingRequestLog>
 export async function adminDeleteBookingLog(id: number): Promise<void> {
     const response = await authedFetch(`/api/service/admin/booking-logs/${id}/`, { method: 'DELETE' });
     if (!response.ok) throw new Error('Failed to delete booking log.');
+}
+
+// --- Hire ---
+
+export async function adminGetHireSettings(): Promise<HireSettings> {
+    const response = await authedFetch('/api/hire/admin/settings/');
+    return handleResponse(response);
+}
+
+export async function adminUpdateHireSettings(data: Partial<HireSettings>): Promise<HireSettings> {
+    const response = await authedFetch('/api/hire/admin/settings/', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function adminGetHireBookings(status?: string, page = 1): Promise<PaginatedResponse<HireBooking>> {
+    const params = new URLSearchParams({ page: String(page) });
+    if (status) params.append('status', status);
+    const response = await authedFetch(`/api/hire/admin/bookings/?${params.toString()}`);
+    return handleResponse(response);
+}
+
+export async function adminGetHireBooking(id: number): Promise<HireBooking> {
+    const response = await authedFetch(`/api/hire/admin/bookings/${id}/`);
+    return handleResponse(response);
+}
+
+export async function adminUpdateHireBookingStatus(id: number, status: string, notes?: string): Promise<HireBooking> {
+    const response = await authedFetch(`/api/hire/admin/bookings/${id}/status/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, ...(notes !== undefined && { notes }) }),
+    });
+    return handleResponse(response);
 }

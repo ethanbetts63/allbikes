@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAdminUser
 from ..models import Order
 from inventory.models import Motorcycle
 from product.models import Product
+from hire.models import HireBooking
 
 
 class AdminDashboardView(APIView):
@@ -28,6 +29,13 @@ class AdminDashboardView(APIView):
             Product.objects
             .filter(is_active=True, stock_quantity__lte=Product.LOW_STOCK_THRESHOLD)
             .order_by('stock_quantity', 'name')
+        )
+
+        active_hire_bookings = (
+            HireBooking.objects
+            .filter(status__in=['confirmed', 'active'])
+            .select_related('motorcycle')
+            .order_by('hire_start')
         )
 
         return Response({
@@ -61,5 +69,17 @@ class AdminDashboardView(APIView):
                     'low_stock': p.low_stock,
                 }
                 for p in attention_products
+            ],
+            'active_hire_bookings': [
+                {
+                    'id': b.id,
+                    'booking_reference': b.booking_reference,
+                    'motorcycle_name': str(b.motorcycle),
+                    'customer_name': b.customer_name,
+                    'hire_start': b.hire_start,
+                    'hire_end': b.hire_end,
+                    'status': b.status,
+                }
+                for b in active_hire_bookings
             ],
         })

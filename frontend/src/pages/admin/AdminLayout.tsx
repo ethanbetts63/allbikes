@@ -14,6 +14,7 @@ import {
   Tag,
   LogOut,
   Gauge,
+  Key,
 } from 'lucide-react';
 import { adminGetDashboard, logoutUser } from '@/api';
 import type { AdminDashboard } from '@/types/AdminDashboard';
@@ -132,6 +133,17 @@ const AdminLayout = () => {
             <NavLink to="/dashboard/job-types" className={navItem}>
               <Tag className="h-4 w-4 shrink-0" />
               Job Types
+            </NavLink>
+
+            <SectionLabel>Hire</SectionLabel>
+            <NavLink to="/dashboard/hire" className={navItem}>
+              <Key className="h-4 w-4 shrink-0" />
+              <span className="flex-1">Hire Bookings</span>
+              <NavBadge count={dashboard?.active_hire_bookings.length ?? 0} />
+            </NavLink>
+            <NavLink to="/dashboard/hire-settings" className={navItem}>
+              <Settings className="h-4 w-4 shrink-0" />
+              Hire Settings
             </NavLink>
 
             <SectionLabel>Comms</SectionLabel>

@@ -30,4 +30,8 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'transmission',
             'images',
             'date_posted',
+            'is_hire',
+            'daily_rate',
+            'weekly_rate',
+            'monthly_rate',
         ]
