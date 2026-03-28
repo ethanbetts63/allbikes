@@ -126,7 +126,7 @@ const HirePaymentPage = () => {
 
     return (
         <>
-            <Seo title="Payment | Allbikes Hire" noindex={true} />
+            <Seo title="Payment | ScooterShop" noindex={true} />
             <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
                 <div className="container mx-auto px-4 py-8 max-w-2xl">
 

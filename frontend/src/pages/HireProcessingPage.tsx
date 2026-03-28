@@ -80,7 +80,7 @@ const HireProcessingPage = () => {
 
     return (
         <>
-            <Seo title="Processing | Allbikes Hire" noindex={true} />
+            <Seo title="Processing | ScooterShop" noindex={true} />
             <Elements stripe={stripePromise} options={clientSecret ? { clientSecret } : undefined}>
                 <ProcessingInner />
             </Elements>

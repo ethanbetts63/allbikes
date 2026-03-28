@@ -93,8 +93,8 @@ const HireListPage = () => {
   return (
     <>
       <Seo
-        title="Hire a Motorcycle | Allbikes"
-        description="Hire a motorcycle from Allbikes in Perth. Choose from our range of well-maintained used bikes available for daily, weekly, or monthly hire."
+        title="Hire a Motorcycle | ScooterShop"
+        description="Hire a motorcycle from ScooterShop in Perth. Choose from our range of well-maintained bikes available for daily, weekly, or monthly hire."
         canonicalPath="/hire"
       />
       <Hero

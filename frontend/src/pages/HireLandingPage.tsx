@@ -155,7 +155,7 @@ const HireLandingPage = () => {
     return (
         <div>
             <Seo
-                title="Motorcycle Hire Perth | Daily, Weekly & Monthly | Allbikes"
+                title="Motorcycle Hire Perth | Daily, Weekly & Monthly | ScooterShop"
                 description="Hire a motorcycle in Perth from Allbikes & Scooters, Dianella. Flexible daily, weekly, and monthly rates. Book online — refundable bond, maintained fleet."
                 canonicalPath="/motorcycle-hire"
                 structuredData={structuredData}

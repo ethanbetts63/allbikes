@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { siteSettings } from './config/siteSettings';
 import { HelmetProvider } from 'react-helmet-async';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
@@ -83,12 +84,14 @@ function App() {
                 <Route path="/electric-scooters" element={<ElectricScootersLandingPage />} />
                 <Route path="/escooters" element={<EScooterListPage />} />
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
-                <Route path="/hire" element={<HireListPage />} />
-                <Route path="/motorcycle-hire" element={<HireLandingPage />} />
-                <Route path="/hire/confirmation/:bookingReference" element={<HireConfirmationPage />} />
-                <Route path="/hire/processing" element={<HireProcessingPage />} />
-                <Route path="/hire/book" element={<HireBookingPage />} />
-                <Route path="/hire/book/:bookingReference/payment" element={<HirePaymentPage />} />
+                <Route element={siteSettings.show_hire ? <Outlet /> : <Navigate to="/" replace />}>
+                  <Route path="/hire" element={<HireListPage />} />
+                  <Route path="/motorcycle-hire" element={<HireLandingPage />} />
+                  <Route path="/hire/confirmation/:bookingReference" element={<HireConfirmationPage />} />
+                  <Route path="/hire/processing" element={<HireProcessingPage />} />
+                  <Route path="/hire/book" element={<HireBookingPage />} />
+                  <Route path="/hire/book/:bookingReference/payment" element={<HirePaymentPage />} />
+                </Route>
                 <Route path="/refunds" element={<RefundsPage />} />
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 <Route path="/checkout/error" element={<CheckoutErrorPage />} />

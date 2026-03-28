@@ -69,7 +69,7 @@ const HireConfirmationPage = () => {
     return (
         <>
             <Seo
-                title="Booking Confirmed | Allbikes Hire"
+                title="Booking Confirmed | ScooterShop"
                 description="Your motorcycle hire booking has been confirmed."
                 noindex={true}
             />

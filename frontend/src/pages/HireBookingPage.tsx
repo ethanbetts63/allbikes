@@ -143,8 +143,8 @@ const HireBookingPage = () => {
     return (
         <>
             <Seo
-                title={`Book ${bikeName} | Allbikes Hire`}
-                description={`Hire the ${bikeName} from Allbikes.`}
+                title={`Book ${bikeName} | ScooterShop`}
+                description={`Hire the ${bikeName} from ScooterShop Perth.`}
                 noindex={true}
             />
             <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
