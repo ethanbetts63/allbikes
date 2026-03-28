@@ -96,6 +96,7 @@ def send_hire_confirmation(booking):
         else f"{booking.motorcycle.make} {booking.motorcycle.model}"
     ).strip()
     num_days = (booking.hire_end - booking.hire_start).days + 1
+    total_charged = booking.total_hire_amount + booking.bond_amount
     subject = f"Hire booking confirmed — {booking.booking_reference}"
     text_body = (
         f"Hi {booking.customer_name},\n\n"
@@ -105,11 +106,18 @@ def send_hire_confirmation(booking):
         f"Pick-up: {booking.hire_start.strftime('%d %b %Y')}\n"
         f"Return: {booking.hire_end.strftime('%d %b %Y')}\n"
         f"Duration: {num_days} {'day' if num_days == 1 else 'days'}\n"
-        f"Hire total: ${booking.total_hire_amount}\n\n"
+        f"Hire: ${booking.total_hire_amount}\n"
+        + (f"Bond (refundable): ${booking.bond_amount}\n" if booking.bond_amount else "")
+        + f"Total charged: ${total_charged}\n\n"
         f"We'll be in touch to confirm pickup details.\n\n"
         f"Questions? Contact us at admin@scootershop.com.au"
     )
-    context = {'booking': booking, 'motorcycle_name': motorcycle_name, 'num_days': num_days}
+    context = {
+        'booking': booking,
+        'motorcycle_name': motorcycle_name,
+        'num_days': num_days,
+        'total_charged': total_charged,
+    }
     html_body = render_to_string('notifications/emails/hire_customer_confirmation.html', context)
     try:
         _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
