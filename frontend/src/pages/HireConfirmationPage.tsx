@@ -134,7 +134,7 @@ const HireConfirmationPage = () => {
                             </p>
                             <p>
                                 <span className="font-semibold text-[var(--text-dark-primary)]">Drop-off — </span>
-                                Return the bike by close of business on <span className="font-semibold text-[var(--text-dark-primary)]">{formatDate(booking.hire_end)}</span>. You have the bike for the full day.
+                                Return the bike by at least 2 hours before closing time on <span className="font-semibold text-[var(--text-dark-primary)]">{formatDate(booking.hire_end)}</span>.
                             </p>
                             <div className="pt-2 border-t border-[var(--border-light)]">
                                 <p className="font-semibold text-[var(--text-dark-primary)] mb-1">Unit 5 / 6 Cleveland Street, Dianella WA 6059</p>

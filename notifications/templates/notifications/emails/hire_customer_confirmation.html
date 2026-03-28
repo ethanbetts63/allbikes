@@ -7,7 +7,7 @@
 {% block content %}
 <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Hire Booking Confirmed</h1>
 <p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0 0 24px 0; line-height: 26px;">
-    Hi {{ booking.customer_name }}, your hire booking has been confirmed. We'll be in touch to confirm pickup details.
+    Hi {{ booking.customer_name }}, your hire booking is confirmed. Pick-up and drop-off details are below.
 </p>
 
 <!-- Booking reference -->
@@ -66,7 +66,7 @@
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 12px 0;">Pick-up &amp; Drop-off</p>
             <p style="margin: 0 0 8px 0;"><strong style="color: #1c1917;">Pick-up</strong> — Collect your bike any time we are open on <strong style="color: #1c1917;">{{ booking.hire_start|date:"j N Y" }}</strong>.</p>
-            <p style="margin: 0 0 16px 0;"><strong style="color: #1c1917;">Drop-off</strong> — Return the bike by close of business on <strong style="color: #1c1917;">{{ booking.hire_end|date:"j N Y" }}</strong>. You have the bike for the full day.</p>
+            <p style="margin: 0 0 16px 0;"><strong style="color: #1c1917;">Drop-off</strong> — Return the bike at least 2 hours before closing time on <strong style="color: #1c1917;">{{ booking.hire_end|date:"j N Y" }}</strong>.</p>
             <p style="font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">Unit 5 / 6 Cleveland Street, Dianella WA 6059</p>
             <p style="margin: 0; color: #78716c;">Mon – Fri: 9:00 AM – 5:00 PM &nbsp;|&nbsp; Sat: 10:00 AM – 1:00 PM &nbsp;|&nbsp; Sun: Closed</p>
         </td>

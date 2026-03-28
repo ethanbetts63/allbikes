@@ -105,7 +105,11 @@ def send_hire_confirmation(booking):
         f"Hire: ${booking.total_hire_amount}\n"
         + (f"Bond (refundable): ${booking.bond_amount}\n" if booking.bond_amount else "")
         + f"Total charged: ${total_charged}\n\n"
-        f"We'll be in touch to confirm pickup details.\n\n"
+        f"PICK-UP & DROP-OFF\n"
+        f"Pick-up: Collect your bike any time we are open on {booking.hire_start.strftime('%d %b %Y')}.\n"
+        f"Drop-off: Return the bike at least 2 hours before closing time on {booking.hire_end.strftime('%d %b %Y')}.\n\n"
+        f"Unit 5 / 6 Cleveland Street, Dianella WA 6059\n"
+        f"Mon-Fri: 9:00 AM - 5:00 PM | Sat: 10:00 AM - 1:00 PM | Sun: Closed\n\n"
         f"Questions? Contact us at admin@scootershop.com.au"
     )
     context = {
