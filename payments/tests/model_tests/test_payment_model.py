@@ -1,8 +1,10 @@
 import pytest
+from django.db import IntegrityError
 
 from payments.models import Payment
-from payments.tests.factories.payment_factory import PaymentFactory
+from payments.tests.factories.payment_factory import PaymentFactory, HirePaymentFactory
 from payments.tests.factories.order_factory import OrderFactory
+from hire.tests.factories.hire_booking_factory import HireBookingFactory
 
 
 @pytest.mark.django_db
@@ -44,9 +46,46 @@ class TestPaymentModel:
         WHEN a second Payment is created with the same ID
         THEN a database error is raised.
         """
-        from django.db import IntegrityError
         order_a = OrderFactory()
         order_b = OrderFactory()
         PaymentFactory(order=order_a, stripe_payment_intent_id='pi_duplicate')
         with pytest.raises(IntegrityError):
             PaymentFactory(order=order_b, stripe_payment_intent_id='pi_duplicate')
+
+    def test_one_to_one_relationship_with_hire_booking(self):
+        """
+        GIVEN a HireBooking with a Payment
+        WHEN accessed via hire_booking.payment
+        THEN the correct Payment is returned.
+        """
+        payment = HirePaymentFactory()
+        assert payment.hire_booking.payment == payment
+
+    def test_hire_payment_has_null_order(self):
+        """
+        GIVEN a Payment linked to a HireBooking
+        WHEN order is accessed
+        THEN it is None.
+        """
+        payment = HirePaymentFactory()
+        assert payment.order is None
+
+    def test_order_payment_has_null_hire_booking(self):
+        """
+        GIVEN a Payment linked to an Order
+        WHEN hire_booking is accessed
+        THEN it is None.
+        """
+        payment = PaymentFactory()
+        assert payment.hire_booking is None
+
+    def test_hire_booking_one_to_one_is_enforced(self):
+        """
+        GIVEN a HireBooking that already has a Payment
+        WHEN a second Payment is created for the same HireBooking
+        THEN a database error is raised.
+        """
+        booking = HireBookingFactory()
+        HirePaymentFactory(hire_booking=booking, stripe_payment_intent_id='pi_hire_a')
+        with pytest.raises(IntegrityError):
+            HirePaymentFactory(hire_booking=booking, stripe_payment_intent_id='pi_hire_b')
