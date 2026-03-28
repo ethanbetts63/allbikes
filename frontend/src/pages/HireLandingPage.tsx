@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CalendarDays, MousePointerClick, KeyRound, Bike } from 'lucide-react';
 import Seo from '@/components/Seo';
@@ -111,14 +111,46 @@ const structuredData = {
     ]
 };
 
+interface SlotState { a: string; b: string; active: 'a' | 'b'; }
+
 const HireLandingPage = () => {
     const [featuredBikes, setFeaturedBikes] = useState<BikeType[]>([]);
+    const [slots, setSlots] = useState<SlotState | null>(null);
+    const indexRef = useRef(0);
+    const urlsRef = useRef<string[]>([]);
 
     useEffect(() => {
         getHireBikes()
-            .then(bikes => setFeaturedBikes(bikes.slice(0, 3)))
+            .then(bikes => {
+                setFeaturedBikes(bikes.slice(0, 3));
+                const urls = bikes.flatMap(bike => {
+                    const sorted = [...bike.images].sort((a, b) => a.order - b.order);
+                    const url = sorted[0]?.medium || sorted[0]?.image;
+                    return url ? [url] : [];
+                });
+                if (urls.length > 0) {
+                    urlsRef.current = urls;
+                    setSlots({ a: urls[0], b: urls[0], active: 'a' });
+                }
+            })
             .catch(() => { /* silently fail */ });
     }, []);
+
+    useEffect(() => {
+        if (!slots || urlsRef.current.length <= 1) return;
+        const interval = setInterval(() => {
+            const next = (indexRef.current + 1) % urlsRef.current.length;
+            indexRef.current = next;
+            const incoming = urlsRef.current[next];
+            new Image().src = incoming;
+            setSlots(s => {
+                if (!s) return s;
+                const nextSlot = s.active === 'a' ? 'b' : 'a';
+                return { ...s, [nextSlot]: incoming, active: nextSlot };
+            });
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [slots]);
 
     return (
         <div>
@@ -130,25 +162,46 @@ const HireLandingPage = () => {
             />
 
             {/* Hero */}
-            <section className="bg-[var(--bg-dark-primary)] py-20 px-6">
-                <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
-                    <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">
-                        Allbikes &amp; Scooters · Dianella, Perth
-                    </p>
-                    <h1 className="text-[var(--text-light-primary)] text-5xl sm:text-6xl xl:text-7xl font-black uppercase italic leading-[0.9] mb-6">
-                        Hire a Motorcycle<br />in Perth
-                    </h1>
-                    <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed mb-10 max-w-xl">
-                        Flexible daily, weekly, and monthly motorcycle hire from our workshop in Dianella.
-                        Choose your bike, pick your dates, and book online.
-                    </p>
-                    <Link
-                        to="/hire"
-                        className="inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-8 py-4 transition-colors duration-200"
-                    >
-                        Check Availability
-                        <ArrowRight className="h-4 w-4" />
-                    </Link>
+            <section className="relative bg-[var(--bg-dark-primary)] min-h-[480px] flex items-center overflow-hidden">
+                {/* Crossfading bike images */}
+                {slots && (
+                    <>
+                        <img
+                            src={slots.a}
+                            alt=""
+                            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-40' : 'opacity-0'}`}
+                        />
+                        <img
+                            src={slots.b}
+                            alt=""
+                            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-40' : 'opacity-0'}`}
+                        />
+                    </>
+                )}
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-dark-primary)] via-[var(--bg-dark-primary)]/60 to-[var(--bg-dark-primary)]/40" />
+
+                {/* Content */}
+                <div className="relative z-10 w-full px-6 py-20">
+                    <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+                        <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">
+                            Allbikes &amp; Scooters · Dianella, Perth
+                        </p>
+                        <h1 className="text-[var(--text-light-primary)] text-5xl sm:text-6xl xl:text-7xl font-black uppercase italic leading-[0.9] mb-6">
+                            Hire a Motorcycle<br />in Perth
+                        </h1>
+                        <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed mb-10 max-w-xl">
+                            Flexible daily, weekly, and monthly motorcycle hire from our workshop in Dianella.
+                            Choose your bike, pick your dates, and book online.
+                        </p>
+                        <Link
+                            to="/hire"
+                            className="inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-8 py-4 transition-colors duration-200"
+                        >
+                            Check Availability
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </div>
                 </div>
             </section>
 
