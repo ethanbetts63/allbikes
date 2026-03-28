@@ -35,17 +35,15 @@ class TestGetUnavailableMotorycleIds:
         ids = list(get_unavailable_motorcycle_ids(_date(5), _date(10)))
         assert len(ids) == 0
 
-    def test_includes_pending_payment_bookings(self):
+    def test_excludes_pending_payment_bookings(self):
         """
         GIVEN a pending_payment booking for the queried range
         WHEN queried
-        THEN the motorcycle ID is returned (in-progress booking blocks availability).
+        THEN no IDs are returned (unpaid bookings do not block availability).
         """
-        booking = HireBookingFactory(
-            hire_start=_date(5), hire_end=_date(10), status='pending_payment'
-        )
+        HireBookingFactory(hire_start=_date(5), hire_end=_date(10), status='pending_payment')
         ids = list(get_unavailable_motorcycle_ids(_date(5), _date(10)))
-        assert booking.motorcycle.id in ids
+        assert len(ids) == 0
 
     def test_adjacent_booking_is_not_included(self):
         """
@@ -102,16 +100,16 @@ class TestIsMotorcycleAvailable:
         )
         assert is_motorcycle_available(booking.motorcycle.id, _date(5), _date(10)) is True
 
-    def test_returns_false_for_pending_payment_booking(self):
+    def test_returns_true_for_pending_payment_booking(self):
         """
         GIVEN a pending_payment booking for the queried range
         WHEN checked
-        THEN False is returned.
+        THEN True is returned (unpaid bookings do not block availability).
         """
         booking = HireBookingFactory(
             hire_start=_date(5), hire_end=_date(10), status='pending_payment'
         )
-        assert is_motorcycle_available(booking.motorcycle.id, _date(5), _date(10)) is False
+        assert is_motorcycle_available(booking.motorcycle.id, _date(5), _date(10)) is True
 
     def test_returns_true_for_adjacent_booking(self):
         """

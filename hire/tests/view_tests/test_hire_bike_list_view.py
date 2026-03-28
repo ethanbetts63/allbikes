@@ -98,11 +98,11 @@ class TestHireBikeListView:
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
 
-    def test_pending_payment_booking_excludes_bike(self, api_client):
+    def test_pending_payment_booking_does_not_exclude_bike(self, api_client):
         """
         GIVEN a bike with a pending_payment booking for the requested dates
         WHEN GET /api/hire/bikes/ with those dates
-        THEN the bike is excluded (booking in progress counts as unavailable).
+        THEN the bike is still returned (unpaid bookings do not block availability).
         """
         bike = MotorcycleFactory(is_hire=True, status='for_sale')
         HireBookingFactory(
@@ -113,7 +113,7 @@ class TestHireBikeListView:
         )
         response = api_client.get(self.URL, {'start_date': _future(5), 'end_date': _future(10)})
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 0
+        assert len(response.data) == 1
 
     def test_adjacent_booking_does_not_exclude_bike(self, api_client):
         """
