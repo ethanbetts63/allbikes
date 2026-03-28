@@ -8,26 +8,26 @@ const usps = [
 ];
 
 const HireConfidenceSection = () => (
-    <section className="bg-[var(--bg-light-primary)] py-16 px-6 border-b border-[var(--border-light)]">
+    <section className="bg-[var(--bg-dark-primary)] py-16 px-6">
         <div className="max-w-5xl mx-auto">
             <div className="text-center mb-10">
                 <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
                     Why Hire From Us
                 </p>
-                <h2 className="text-3xl sm:text-4xl font-black uppercase italic text-[var(--text-dark-primary)] leading-none">
+                <h2 className="text-3xl sm:text-4xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
                     Hire With Confidence
                 </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {usps.map(({ icon: Icon, title, description }) => (
                     <div key={title} className="flex flex-col items-center text-center gap-3">
-                        <div className="bg-[var(--bg-light-secondary)] p-3 rounded-lg">
+                        <div className="bg-[var(--bg-dark-secondary)] p-3 rounded-lg">
                             <Icon className="h-5 w-5 text-[var(--highlight)]" />
                         </div>
-                        <p className="text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide leading-tight">
+                        <p className="text-[var(--text-light-primary)] font-bold text-sm uppercase tracking-wide leading-tight">
                             {title}
                         </p>
-                        <p className="text-[var(--text-dark-secondary)] text-xs leading-relaxed">
+                        <p className="text-[var(--text-light-secondary)] text-xs leading-relaxed">
                             {description}
                         </p>
                     </div>
