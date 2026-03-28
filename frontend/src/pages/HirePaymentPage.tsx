@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
-import { Spinner } from '@/components/ui/spinner';
 import { CalendarDays } from 'lucide-react';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -133,16 +132,16 @@ const HirePaymentPage = () => {
 
                     {/* Booking summary */}
                     {summary && (
-                        <div className="bg-[var(--bg-light-secondary)] border border-[var(--border-light)] rounded-lg p-4 mb-8 space-y-3 text-sm">
-                            <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">
+                        <div className="bg-[var(--bg-light-secondary)] border border-[var(--border-light)] rounded-lg p-4 mb-8">
+                            <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-1">
                                 Hire Booking
                             </p>
-                            <p className="font-bold text-[var(--text-dark-primary)] text-base">{summary.motorcycleName}</p>
-                            <div className="flex items-center gap-2 text-[var(--text-dark-secondary)]">
+                            <p className="font-bold text-[var(--text-dark-primary)] text-base mb-2">{summary.motorcycleName}</p>
+                            <div className="flex items-center gap-2 text-[var(--text-dark-secondary)] mb-3">
                                 <CalendarDays className="h-4 w-4 shrink-0" />
-                                <span>{formatDate(summary.hireStart)} — {formatDate(summary.hireEnd)}</span>
+                                <span className="text-sm">{formatDate(summary.hireStart)} — {formatDate(summary.hireEnd)}</span>
                             </div>
-                            <div className="border-t border-[var(--border-light)] pt-3 space-y-1.5">
+                            <div className="border-t border-[var(--border-light)] pt-3 space-y-1.5 text-sm">
                                 <div className="flex justify-between text-[var(--text-dark-secondary)]">
                                     <span>Hire total ({summary.numDays} {summary.numDays === 1 ? 'day' : 'days'})</span>
                                     <span>${parseFloat(summary.totalHireAmount).toFixed(2)}</span>

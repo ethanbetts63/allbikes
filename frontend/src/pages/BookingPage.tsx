@@ -26,6 +26,8 @@ const initialFormData = {
     terms_accepted: false
 };
 
+const STEPS = ['Booking Details', 'Bike Details', 'Your Details'];
+
 const BookingPage = () => {
     const [step, setStep] = useState(1);
     const navigate = useNavigate();
@@ -39,7 +41,6 @@ const BookingPage = () => {
         }
     });
 
-    // Persist form data to localStorage on change
     useEffect(() => {
         try {
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData));
@@ -68,7 +69,7 @@ const BookingPage = () => {
             setIsSubmitting(false);
         }
     };
-    
+
     const renderStep = () => {
         switch (step) {
             case 1:
@@ -78,24 +79,51 @@ const BookingPage = () => {
             case 3:
                 return <PersonalDetailsForm formData={formData} setFormData={setFormData} prevStep={prevStep} handleSubmit={handleSubmit} isSubmitting={isSubmitting} error={error} />;
             default:
-                // This case should ideally not be reached if navigation happens on submit
-                return <div>Form complete. Thank you!</div>;
+                return null;
         }
-    }
+    };
 
     return (
-        <div className="container mx-auto py-10 max-w-3xl">
+        <>
             <Seo
                 title="Book a Motorcycle or Scooter Service | ScooterShop Perth"
                 description="Schedule your motorcycle or scooter service online with Allbikes. Our expert technicians are ready to help you with maintenance, repairs, and more."
                 canonicalPath="/booking"
             />
-            <h1 className="text-4xl font-bold text-center mb-8 text-[var(--text-light-primary)] ">Request a Service</h1>
-            
-            <div className="p-8 border rounded-lg shadow-lg bg-[var(--bg-light-primary)]">
-                {renderStep()}
+            <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
+                <div className="container mx-auto px-4 py-8 max-w-2xl">
+
+                    <h1 className="text-2xl font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-2">
+                        Request a Service
+                    </h1>
+
+                    {/* Step indicator */}
+                    <div className="flex items-center gap-2 mb-8">
+                        {STEPS.map((label, i) => {
+                            const n = i + 1;
+                            const active = n === step;
+                            const done = n < step;
+                            return (
+                                <div key={n} className="flex items-center gap-2">
+                                    <div className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest ${active ? 'text-[var(--text-dark-primary)]' : done ? 'text-highlight' : 'text-[var(--text-dark-secondary)]'}`}>
+                                        <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${active ? 'bg-[var(--text-dark-primary)] text-[var(--bg-light-primary)]' : done ? 'bg-highlight text-[var(--text-dark-primary)]' : 'bg-[var(--border-light)] text-[var(--text-dark-secondary)]'}`}>
+                                            {n}
+                                        </span>
+                                        <span className="hidden sm:inline">{label}</span>
+                                    </div>
+                                    {i < STEPS.length - 1 && (
+                                        <span className="text-[var(--border-light)] text-xs">—</span>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {renderStep()}
+
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

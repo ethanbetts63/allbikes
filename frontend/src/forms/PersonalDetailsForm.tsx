@@ -1,13 +1,10 @@
 import { type ChangeEvent } from 'react';
 import { Loader2 } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from 'react-router-dom';
-
 import type { PersonalDetailsFormProps } from '@/types/PersonalDetailsFormProps';
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, isSubmitting, error }: PersonalDetailsFormProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -20,59 +17,66 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
   };
 
   return (
-    <div>
+    <div className="space-y-5">
+      <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">Step 3 — Your Details</p>
+
       {error && (
-        <Alert variant="destructive" className="mb-4">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-destructive text-sm">{error}</p>
+        </div>
       )}
-      <h2 className="text-2xl font-bold mb-6">Step 3: Personal Details</h2>
-      <div className="space-y-4">
-        
-        <div>
-          <Label htmlFor="first_name">First Name <span className="text-destructive">*</span></Label>
-          <Input id="first_name" value={formData.first_name || ''} onChange={handleChange} placeholder="John" />
-        </div>
-        <div>
-          <Label htmlFor="last_name">Last Name <span className="text-destructive">*</span></Label>
-          <Input id="last_name" value={formData.last_name || ''} onChange={handleChange} placeholder="Doe" />
-        </div>
-        <div>
-          <Label htmlFor="email">Email <span className="text-destructive">*</span></Label>
-          <Input id="email" type="email" value={formData.email || ''} onChange={handleChange} placeholder="john.doe@example.com" />
-        </div>
-        <div>
-          <Label htmlFor="phone">Phone <span className="text-destructive">*</span></Label>
-          <Input id="phone" type="tel" value={formData.phone || ''} onChange={handleChange} placeholder="0412 345 678" />
-        </div>
 
-        <div className="flex items-center space-x-2 mt-4">
-            <Checkbox
-                id="terms_accepted"
-                checked={formData.terms_accepted}
-                onCheckedChange={handleCheckboxChange}
-            />
-            <Label htmlFor="terms_accepted">
-                I have read and accept the
-                <Link to="/terms?type=service" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                  Service Terms and Conditions.
-                </Link>
-            </Label>
-        </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="first_name">First Name *</Label>
+        <Input id="first_name" value={formData.first_name || ''} onChange={handleChange} placeholder="John" />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="last_name">Last Name *</Label>
+        <Input id="last_name" value={formData.last_name || ''} onChange={handleChange} placeholder="Doe" />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="email">Email *</Label>
+        <Input id="email" type="email" value={formData.email || ''} onChange={handleChange} placeholder="john.doe@example.com" />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="phone">Phone *</Label>
+        <Input id="phone" type="tel" value={formData.phone || ''} onChange={handleChange} placeholder="0412 345 678" />
+      </div>
 
-        <div className="flex justify-between pt-4">
-          <Button variant="destructive" className="text-[var(--text-light-primary)]" onClick={prevStep}>
-            Back
-          </Button>
-          <Button onClick={handleSubmit} disabled={!formData.terms_accepted || isSubmitting}>
-            {isSubmitting ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting...</>
-            ) : (
-              'Submit Request'
-            )}
-          </Button>
-        </div>
+      <div className="flex items-start gap-3 pt-1">
+        <Checkbox
+          id="terms_accepted"
+          checked={formData.terms_accepted}
+          onCheckedChange={handleCheckboxChange}
+          className="mt-0.5"
+        />
+        <Label htmlFor="terms_accepted" className="text-sm leading-snug cursor-pointer">
+          I have read and agree to the{' '}
+          <Link to="/terms?type=service" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">
+            Service Terms and Conditions
+          </Link>
+          .
+        </Label>
+      </div>
+
+      <div className="flex justify-between pt-2">
+        <button
+          onClick={prevStep}
+          className="py-3 px-8 rounded-lg text-sm font-bold uppercase tracking-widest transition-colors border border-[var(--border-light)] text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] hover:border-[var(--text-dark-secondary)]"
+        >
+          Back
+        </button>
+        <button
+          onClick={handleSubmit}
+          disabled={!formData.terms_accepted || isSubmitting}
+          className="py-3 px-8 rounded-lg text-sm font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
+        >
+          {isSubmitting ? (
+            <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Submitting...</span>
+          ) : (
+            'Submit Request'
+          )}
+        </button>
       </div>
     </div>
   );
