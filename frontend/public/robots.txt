@@ -4,7 +4,7 @@ Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /api/
 Disallow: /login
-Disallow: /booking/success
+Disallow: /booking/confirmation
 Disallow: /hire/confirmation
 Disallow: /hire/processing
 Disallow: /hire/book

@@ -62,7 +62,21 @@ const BookingPage = () => {
         try {
             await createBooking(formData);
             localStorage.removeItem(LOCAL_STORAGE_KEY);
-            navigate('/booking/success');
+            navigate('/booking/confirmation', {
+                state: {
+                    first_name: formData.first_name,
+                    last_name: formData.last_name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    make: formData.make,
+                    model: formData.model,
+                    year: formData.year,
+                    registration_number: formData.registration_number,
+                    drop_off_time: formData.drop_off_time,
+                    job_type_names: formData.job_type_names,
+                    note: formData.note,
+                },
+            });
         } catch (error) {
             console.error("Booking submission error:", error);
             setError("There was an error submitting your booking. Please try again.");

@@ -19,7 +19,7 @@ const TyreFittingPage = lazy(() => import('./pages/TyreFittingPage'));
 const BikeListPage = lazy(() => import('./pages/BikeListPage'));
 const BikeDetailPage = lazy(() => import('./pages/BikeDetailPage'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
-const BookingSuccessPage = lazy(() => import('./pages/BookingSuccessPage'));
+const BookingConfirmationPage = lazy(() => import('./pages/BookingConfirmationPage'));
 const TermsAndConditionsPage = lazy(() => import('./pages/TermsAndConditionsPage'));
 const SecurityPolicyPage = lazy(() => import('./pages/SecurityPolicyPage')); 
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage')); 
@@ -74,7 +74,7 @@ function App() {
                 <Route path="/inventory/motorcycles/parts" element={<BikeListPage bikeCondition="parts" />} />
                 <Route path="/inventory/motorcycles/:slug" element={<BikeDetailPage />} />
                 <Route path="/booking" element={<BookingPage />} />
-                <Route path="/booking/success" element={<BookingSuccessPage />} />
+                <Route path="/booking/confirmation" element={<BookingConfirmationPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/terms" element={<TermsAndConditionsPage />} />
                 <Route path="/security" element={<SecurityPolicyPage />} /> 
