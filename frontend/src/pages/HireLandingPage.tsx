@@ -4,6 +4,7 @@ import { ArrowRight, CalendarDays, MousePointerClick, KeyRound, Bike } from 'luc
 import Seo from '@/components/Seo';
 import { FaqSection } from '@/components/FaqSection';
 import HireConfidenceSection from '@/components/HireConfidenceSection';
+import PayLaterSection from '@/components/PayLaterSection';
 import { getHireBikes } from '@/api';
 import type { Bike as BikeType } from '@/types/Bike';
 import { siteSettings } from '@/config/siteSettings';
@@ -237,6 +238,8 @@ const HireLandingPage = () => {
             )}
 
             <HireConfidenceSection />
+
+            <PayLaterSection />
 
             <FaqSection title="Hire FAQs" faqData={faqData} />
         </div>
