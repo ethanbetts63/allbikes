@@ -463,6 +463,11 @@ export async function adminGetHireBooking(id: number): Promise<HireBooking> {
     return handleResponse(response);
 }
 
+export async function adminDeleteHireBooking(id: number): Promise<void> {
+    const response = await authedFetch(`/api/hire/admin/bookings/${id}/`, { method: 'DELETE' });
+    if (!response.ok) throw new Error('Failed to delete booking.');
+}
+
 export async function adminUpdateHireBookingStatus(id: number, status: string, notes?: string): Promise<HireBooking> {
     const response = await authedFetch(`/api/hire/admin/bookings/${id}/status/`, {
         method: 'PATCH',

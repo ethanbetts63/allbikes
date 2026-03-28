@@ -37,6 +37,14 @@ class AdminHireBookingDetailView(APIView):
             return Response({'detail': 'Hire booking not found.'}, status=404)
         return Response(HireBookingSerializer(booking).data)
 
+    def delete(self, request, pk):
+        try:
+            booking = HireBooking.objects.get(pk=pk)
+        except HireBooking.DoesNotExist:
+            return Response({'detail': 'Hire booking not found.'}, status=404)
+        booking.delete()
+        return Response(status=204)
+
 
 class AdminHireBookingStatusView(APIView):
     permission_classes = [IsAdminUser]

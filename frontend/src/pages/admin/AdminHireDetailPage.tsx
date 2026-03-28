@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { adminGetHireBooking, adminUpdateHireBookingStatus } from '@/api';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { adminGetHireBooking, adminUpdateHireBookingStatus, adminDeleteHireBooking } from '@/api';
 import type { HireBooking } from '@/types/HireBooking';
 import { formatDate } from '@/utils/formatting';
 import { Spinner } from '@/components/ui/spinner';
@@ -33,11 +33,13 @@ const Row = ({ label, value }: { label: string; value: string }) => (
 
 const AdminHireDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [booking, setBooking] = useState<HireBooking | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState('');
   const [notes, setNotes] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
