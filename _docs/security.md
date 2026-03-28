@@ -108,6 +108,18 @@ DRF's `DEFAULT_PERMISSION_CLASSES` is set to `IsAuthenticated`. Every endpoint r
 | `POST /api/token/` | `AllowAny` | Login |
 | `POST /api/token/refresh/` | `AllowAny` | Token refresh |
 | `POST /api/token/logout/` | `AllowAny` | Logout |
+| `GET /api/hire/bikes/` | `AllowAny` | Public hire fleet listing |
+| `GET /api/hire/settings/` | `AllowAny` | Public hire settings (bond, advance days) |
+| `GET /api/hire/availability/` | `AllowAny` | Public availability check |
+| `POST /api/hire/bookings/` | `AllowAny` | Create hire booking |
+| `GET /api/hire/bookings/<reference>/` | `AllowAny` | See Known Issues |
+| `POST /api/hire/create-payment-intent/` | `AllowAny` | Create Stripe PaymentIntent for hire |
+| `GET /api/hire/admin/settings/` | `IsAdminUser` | Retrieve hire settings |
+| `PATCH /api/hire/admin/settings/` | `IsAdminUser` | Update hire settings |
+| `GET /api/hire/admin/bookings/` | `IsAdminUser` | List hire bookings |
+| `GET /api/hire/admin/bookings/<pk>/` | `IsAdminUser` | Retrieve hire booking |
+| `DELETE /api/hire/admin/bookings/<pk>/` | `IsAdminUser` | Delete hire booking |
+| `PATCH /api/hire/admin/bookings/<pk>/status/` | `IsAdminUser` | Update booking status/notes |
 
 ---
 
@@ -165,6 +177,18 @@ This applies to all API endpoints including `/api/token/` (login attempts) and `
 The reference format is `SS-` + 8 random hex characters (~4 billion combinations). Brute forcing against the 250/day anonymous rate limit would take tens of thousands of years. The practical risk is low but the design is not ideal.
 
 **Planned fix**: pass order data through from the checkout page without making an API call, eliminating the public lookup endpoint.
+
+### Hire booking retrieval exposes PII without authentication
+
+`GET /api/hire/bookings/{booking_reference}/` is `AllowAny`. It returns customer PII (name, email, phone) and booking details. This endpoint exists to power the hire confirmation page on refresh (when router state is lost).
+
+Same reference design as orders: `HR-` + 8 random hex characters (~4 billion combinations). The practical brute force risk is the same — negligible against the 250/day rate limit.
+
+**Planned fix**: same approach as orders — pass booking data through router state from the payment page, eliminating the need for a public lookup on the confirmation page.
+
+### `authentication_classes = []` on public hire views
+
+Public hire views (`HireBookingCreateView`, `HireBookingRetrieveView`, `HireCreatePaymentIntentView`) set `authentication_classes = []`. This is intentional for the same reason as the payment views — Django REST Framework's default `SessionAuthentication` would enforce CSRF checks when a session cookie is present (e.g. an admin browsing in the same browser tab). These endpoints are stateless and carry no cookie-based auth, so opting out of authentication entirely is correct.
 
 ---
 

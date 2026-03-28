@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from data_management.tests.factories.user_factory import UserFactory
+from hire.models import HireBooking
 from hire.tests.factories.hire_settings_factory import HireSettingsFactory
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
 
@@ -160,6 +161,40 @@ class TestAdminHireBookingDetailView:
         url = reverse('hire:admin-hire-booking-detail', kwargs={'pk': 9999})
         response = admin_client.get(url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_admin_can_delete_booking(self, admin_client):
+        """
+        GIVEN an existing hire booking
+        WHEN admin DELETE /api/hire/admin/bookings/<pk>/
+        THEN 204 is returned and the booking no longer exists.
+        """
+        booking = HireBookingFactory()
+        url = reverse('hire:admin-hire-booking-detail', kwargs={'pk': booking.pk})
+        response = admin_client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert not HireBooking.objects.filter(pk=booking.pk).exists()
+
+    def test_delete_returns_404_for_unknown_booking(self, admin_client):
+        """
+        GIVEN no booking with pk=9999
+        WHEN admin DELETE /api/hire/admin/bookings/9999/
+        THEN 404 is returned.
+        """
+        url = reverse('hire:admin-hire-booking-detail', kwargs={'pk': 9999})
+        response = admin_client.delete(url)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_anonymous_cannot_delete_booking(self, api_client):
+        """
+        GIVEN an unauthenticated request
+        WHEN DELETE /api/hire/admin/bookings/<pk>/
+        THEN 401 is returned and the booking is not deleted.
+        """
+        booking = HireBookingFactory()
+        url = reverse('hire:admin-hire-booking-detail', kwargs={'pk': booking.pk})
+        response = api_client.delete(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert HireBooking.objects.filter(pk=booking.pk).exists()
 
 
 # ---------------------------------------------------------------------------

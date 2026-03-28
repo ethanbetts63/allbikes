@@ -141,6 +141,66 @@ Signature verified via `stripe.Webhook.construct_event()`. Invalid signature →
 
 ---
 
+---
+
+## Hire Payments
+
+Hire payments share the same Stripe infrastructure and webhook endpoint as product/deposit payments. The `Payment` model is shared — a `Payment` row links to either an `Order` (via `OneToOneField`) or a `HireBooking` (via `OneToOneField`), never both.
+
+### How hire differs from product orders
+
+| Aspect | Product / Deposit | Hire |
+|---|---|---|
+| Order model | `payments.Order` | `hire.HireBooking` |
+| Amount | Product price or flat deposit | `total_hire_amount + bond_amount` |
+| On webhook success | `Order.status = paid`, stock decremented (product) | `HireBooking.status = confirmed` |
+| Status lifecycle | `pending_payment → paid → completed` | `pending_payment → confirmed → active → returned` |
+| Bond | N/A | Included in payment, refunded manually by admin |
+| Emails sent | Order confirmation to customer + admin | Hire confirmation to customer + admin hire notification |
+
+### Payment model — hire link
+
+`Payment` has two nullable FKs — exactly one will be set:
+
+```python
+order      = OneToOneField(Order,       null=True, blank=True, on_delete=CASCADE)
+hire_booking = OneToOneField(HireBooking, null=True, blank=True, on_delete=CASCADE)
+```
+
+The webhook handler branches on `payment.hire_booking_id` to determine which path to take.
+
+### `create-payment-intent` — hire path
+
+`POST /api/hire/create-payment-intent/`
+
+1. Validate `booking_id` — 400 if missing, 404 if not found
+2. Confirm `HireBooking.status == 'pending_payment'` — 400 otherwise
+3. Amount = `booking.total_hire_amount + booking.bond_amount` (both snapshotted at booking creation)
+4. Idempotency — same logic as product orders: reuse existing pending intent if amount matches, cancel and recreate if it differs
+5. Create Stripe `PaymentIntent` with `metadata: { hire_booking_id, hire_booking_reference }`
+6. Create `Payment` record linked to `hire_booking`, status `pending`
+7. Return `{ clientSecret }`
+
+### Webhook — hire path
+
+The hire webhook path runs inside the same `transaction.atomic()` block as the product path:
+
+```
+payment_intent.succeeded
+  └─ Payment.status = succeeded
+  └─ HireBooking.status = confirmed
+  └─ send_hire_confirmation(booking)   → customer email
+  └─ send_admin_new_hire(booking)      → admin email
+
+payment_intent.payment_failed
+  └─ Payment.status = failed
+  └─ HireBooking.status stays pending_payment (customer can retry)
+```
+
+The webhook does **not** handle bond refunds — those are managed manually by the admin outside of Stripe automation.
+
+---
+
 ## Local Development — Stripe CLI
 
 Forward webhooks to the local server:

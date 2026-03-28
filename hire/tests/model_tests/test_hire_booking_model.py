@@ -1,5 +1,6 @@
 import re
 import pytest
+from decimal import Decimal
 
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
 
@@ -55,3 +56,21 @@ class TestHireBookingModel:
         booking.save()
         booking.refresh_from_db()
         assert booking.booking_reference == original_ref
+
+    def test_total_charged_is_sum_of_hire_amount_and_bond(self):
+        """
+        GIVEN a booking with total_hire_amount=300.00 and bond_amount=500.00
+        WHEN total_charged is accessed
+        THEN it returns Decimal('800.00'), not a string concatenation.
+        """
+        booking = HireBookingFactory(total_hire_amount='300.00', bond_amount='500.00')
+        assert booking.total_charged == Decimal('800.00')
+
+    def test_total_charged_with_decimal_values(self):
+        """
+        GIVEN a booking with fractional amounts
+        WHEN total_charged is accessed
+        THEN decimal arithmetic is used, not string concatenation.
+        """
+        booking = HireBookingFactory(total_hire_amount='123.45', bond_amount='250.00')
+        assert booking.total_charged == Decimal('373.45')
