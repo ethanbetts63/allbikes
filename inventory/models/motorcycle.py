@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.utils.text import slugify
 
@@ -178,6 +180,10 @@ class Motorcycle(models.Model):
         return f"/inventory/motorcycles/{self.slug}"
 
     def save(self, *args, **kwargs):
+        if self.description:
+            text = re.sub(r'<[^>]+>', ' ', self.description)
+            self.description = re.sub(r'\s+', ' ', text).strip()
+
         # First, save the object to ensure it has an ID, especially for new objects.
         super().save(*args, **kwargs)
 

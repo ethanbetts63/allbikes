@@ -64,3 +64,72 @@ def test_get_absolute_url():
 
     expected_url = f"/inventory/motorcycles/{motorcycle.slug}"
     assert motorcycle.get_absolute_url() == expected_url
+
+
+@pytest.mark.django_db
+class TestMotorcycleDescriptionCleaning:
+
+    def test_br_tags_are_stripped_on_save(self):
+        """
+        GIVEN a description containing <br /> tags from the sister system
+        WHEN the motorcycle is saved
+        THEN the description contains no HTML tags.
+        """
+        motorcycle = MotorcycleFactory(description='Line one.<br />Line two.<br />Line three.')
+        motorcycle.refresh_from_db()
+        assert '<br' not in motorcycle.description
+        assert 'Line one.' in motorcycle.description
+        assert 'Line two.' in motorcycle.description
+
+    def test_br_variants_are_stripped(self):
+        """
+        GIVEN a description with mixed <br>, <br/>, and <br /> variants
+        WHEN saved
+        THEN all variants are removed.
+        """
+        motorcycle = MotorcycleFactory(description='A<br>B<br/>C<br />D')
+        motorcycle.refresh_from_db()
+        assert '<br' not in motorcycle.description
+        assert 'A' in motorcycle.description
+        assert 'D' in motorcycle.description
+
+    def test_other_html_tags_are_stripped(self):
+        """
+        GIVEN a description with arbitrary HTML tags
+        WHEN saved
+        THEN all tags are removed, leaving only text.
+        """
+        motorcycle = MotorcycleFactory(description='<p>Hello <strong>world</strong>.</p>')
+        motorcycle.refresh_from_db()
+        assert motorcycle.description == 'Hello world.'
+
+    def test_whitespace_is_normalised(self):
+        """
+        GIVEN a description where tag removal would leave multiple spaces
+        WHEN saved
+        THEN consecutive whitespace is collapsed to a single space.
+        """
+        motorcycle = MotorcycleFactory(description='One.<br /><br />Two.')
+        motorcycle.refresh_from_db()
+        assert '  ' not in motorcycle.description
+        assert motorcycle.description == 'One. Two.'
+
+    def test_plain_description_is_unchanged(self):
+        """
+        GIVEN a description with no HTML
+        WHEN saved
+        THEN the description is stored as-is.
+        """
+        motorcycle = MotorcycleFactory(description='A clean description with no markup.')
+        motorcycle.refresh_from_db()
+        assert motorcycle.description == 'A clean description with no markup.'
+
+    def test_none_description_is_unchanged(self):
+        """
+        GIVEN a motorcycle with no description (None)
+        WHEN saved
+        THEN description remains None and no error is raised.
+        """
+        motorcycle = MotorcycleFactory(description=None)
+        motorcycle.refresh_from_db()
+        assert motorcycle.description is None
