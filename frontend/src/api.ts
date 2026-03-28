@@ -368,6 +368,37 @@ export async function getHireBikes(): Promise<Bike[]> {
     return handleResponse(response);
 }
 
+export async function checkHireAvailability(motorcycleId: number, startDate: string, endDate: string): Promise<{ available: boolean }> {
+    const params = new URLSearchParams({ motorcycle_id: String(motorcycleId), start_date: startDate, end_date: endDate });
+    const response = await fetch(`/api/hire/availability/?${params.toString()}`);
+    return handleResponse(response);
+}
+
+export async function createHireBooking(data: {
+    motorcycle: number;
+    hire_start: string;
+    hire_end: string;
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+}): Promise<{
+    booking_reference: string;
+    motorcycle_name: string;
+    hire_start: string;
+    hire_end: string;
+    num_days: number;
+    effective_daily_rate: string;
+    total_hire_amount: string;
+    bond_amount: string;
+}> {
+    const response = await fetch('/api/hire/bookings/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
 
 export async function adminGetHireSettings(): Promise<HireSettings> {
     const response = await authedFetch('/api/hire/admin/settings/');

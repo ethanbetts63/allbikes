@@ -45,6 +45,8 @@ const AdminHireDashboardPage = lazy(() => import('./pages/admin/AdminHireDashboa
 const AdminHireDetailPage = lazy(() => import('./pages/admin/AdminHireDetailPage'));
 const AdminHireSettingsPage = lazy(() => import('./pages/admin/AdminHireSettingsPage'));
 const HireListPage = lazy(() => import('./pages/HireListPage'));
+const HireBookingPage = lazy(() => import('./pages/HireBookingPage'));
+const HireConfirmationPage = lazy(() => import('./pages/HireConfirmationPage'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -79,6 +81,8 @@ function App() {
                 <Route path="/escooters" element={<EScooterListPage />} />
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
                 <Route path="/hire" element={<HireListPage />} />
+                <Route path="/hire/confirmation" element={<HireConfirmationPage />} />
+                <Route path="/hire/:slug/book" element={<HireBookingPage />} />
                 <Route path="/refunds" element={<RefundsPage />} />
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 <Route path="/checkout/error" element={<CheckoutErrorPage />} />
