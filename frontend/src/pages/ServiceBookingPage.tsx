@@ -102,7 +102,7 @@ const BookingPage = () => {
             <Seo
                 title="Book a Motorcycle or Scooter Service | ScooterShop Perth"
                 description="Schedule your motorcycle or scooter service online with Allbikes. Our expert technicians are ready to help you with maintenance, repairs, and more."
-                canonicalPath="/booking"
+                canonicalPath="/service-booking"
             />
             <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
                 <div className="container mx-auto px-4 py-8 max-w-2xl">
