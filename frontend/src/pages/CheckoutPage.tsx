@@ -6,7 +6,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { getProductById, getBikeById, getDepositSettings, createOrder, createPaymentIntent, getLatestTermsAndConditions } from '@/api';
+import { getProductById, getBikeById, getDepositSettings, createOrder, createPaymentIntent } from '@/api';
 import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
 
@@ -48,7 +48,6 @@ const CheckoutPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [termsUrl, setTermsUrl] = useState<string | null>(null);
 
   const productId = slug ? Number(slug.split('-').pop()) : null;
 
@@ -56,10 +55,6 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    getLatestTermsAndConditions('purchase')
-      .then(terms => setTermsUrl(`/terms?type=purchase`))
-      .catch(() => {});
 
     if (checkoutType === 'deposit') {
       if (!slug) { navigate('/inventory/motorcycles/new'); return; }
