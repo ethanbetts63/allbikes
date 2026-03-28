@@ -387,6 +387,7 @@ export async function createHireBooking(data: {
     customer_email: string;
     customer_phone: string;
 }): Promise<{
+    booking_id: number;
     booking_reference: string;
     motorcycle_name: string;
     hire_start: string;
@@ -401,6 +402,30 @@ export async function createHireBooking(data: {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
+    return handleResponse(response);
+}
+
+export async function createHirePaymentIntent(bookingId: number): Promise<{ clientSecret: string }> {
+    const response = await fetch('/api/hire/create-payment-intent/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ booking_id: bookingId }),
+    });
+    return handleResponse(response);
+}
+
+export async function getHireBookingByReference(reference: string): Promise<{
+    booking_reference: string;
+    motorcycle_name: string;
+    hire_start: string;
+    hire_end: string;
+    num_days: number;
+    effective_daily_rate: string;
+    total_hire_amount: string;
+    bond_amount: string;
+    status: string;
+}> {
+    const response = await fetch(`/api/hire/bookings/${reference}/`);
     return handleResponse(response);
 }
 

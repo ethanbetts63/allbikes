@@ -1,14 +1,20 @@
+import stripe
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 
+from django.conf import settings as django_settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from inventory.models import Motorcycle
+from payments.models import Payment
 from ..models import HireBooking, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
-from notifications.utils.email import send_hire_confirmation, send_admin_new_hire
+
+stripe.api_key = django_settings.STRIPE_SECRET_KEY
+
+STRIPE_MINIMUM = Decimal('0.50')
 
 
 class PublicHireSettingsView(APIView):
@@ -73,17 +79,17 @@ class HireBookingCreateView(APIView):
         except ValueError:
             return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
 
-        settings = HireSettings.get()
+        hire_settings = HireSettings.get()
         today = date.today()
 
-        if hire_start < today + timedelta(days=settings.advance_min_days):
+        if hire_start < today + timedelta(days=hire_settings.advance_min_days):
             return Response(
-                {'error': f'Hire must start at least {settings.advance_min_days} day(s) from today.'},
+                {'error': f'Hire must start at least {hire_settings.advance_min_days} day(s) from today.'},
                 status=400,
             )
-        if hire_start > today + timedelta(days=settings.advance_max_days):
+        if hire_start > today + timedelta(days=hire_settings.advance_max_days):
             return Response(
-                {'error': f'Hire cannot start more than {settings.advance_max_days} days in advance.'},
+                {'error': f'Hire cannot start more than {hire_settings.advance_max_days} days in advance.'},
                 status=400,
             )
         if hire_end < hire_start:
@@ -131,11 +137,10 @@ class HireBookingCreateView(APIView):
             hire_end=hire_end,
             effective_daily_rate=round(effective_daily_rate, 2),
             total_hire_amount=round(total_hire_amount, 2),
-            bond_amount=settings.bond_amount,
+            bond_amount=hire_settings.bond_amount,
             customer_name=customer_name,
             customer_email=customer_email,
             customer_phone=customer_phone,
-            status='confirmed',
         )
 
         motorcycle_name = (
@@ -144,11 +149,9 @@ class HireBookingCreateView(APIView):
             else f"{motorcycle.make} {motorcycle.model}"
         ).strip()
 
-        send_hire_confirmation(booking)
-        send_admin_new_hire(booking)
-
         return Response(
             {
+                'booking_id': booking.id,
                 'booking_reference': booking.booking_reference,
                 'motorcycle_name': motorcycle_name,
                 'hire_start': str(hire_start),
@@ -156,7 +159,91 @@ class HireBookingCreateView(APIView):
                 'num_days': num_days,
                 'effective_daily_rate': str(round(effective_daily_rate, 2)),
                 'total_hire_amount': str(round(total_hire_amount, 2)),
-                'bond_amount': str(settings.bond_amount),
+                'bond_amount': str(hire_settings.bond_amount),
             },
             status=201,
         )
+
+
+class HireCreatePaymentIntentView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        booking_id = request.data.get('booking_id')
+        if not booking_id:
+            return Response({'detail': 'booking_id is required.'}, status=400)
+
+        try:
+            booking = HireBooking.objects.get(pk=booking_id)
+        except HireBooking.DoesNotExist:
+            return Response({'detail': 'Booking not found.'}, status=404)
+
+        if booking.status != 'pending_payment':
+            return Response({'detail': 'Booking is not awaiting payment.'}, status=400)
+
+        amount = max(booking.total_hire_amount + booking.bond_amount, STRIPE_MINIMUM)
+        amount_cents = int(amount * 100)
+
+        # Idempotency: reuse existing pending Payment if amount matches
+        existing = Payment.objects.filter(hire_booking=booking, status='pending').first()
+        if existing:
+            if existing.amount == amount:
+                intent = stripe.PaymentIntent.retrieve(existing.stripe_payment_intent_id)
+                return Response({'clientSecret': intent.client_secret})
+            else:
+                stripe.PaymentIntent.cancel(existing.stripe_payment_intent_id)
+                existing.delete()
+
+        intent = stripe.PaymentIntent.create(
+            amount=amount_cents,
+            currency='aud',
+            automatic_payment_methods={'enabled': True},
+            metadata={
+                'hire_booking_id': booking.id,
+                'hire_booking_reference': booking.booking_reference,
+            },
+        )
+
+        Payment.objects.create(
+            hire_booking=booking,
+            stripe_payment_intent_id=intent.id,
+            amount=amount,
+            status='pending',
+        )
+
+        return Response({'clientSecret': intent.client_secret})
+
+
+class HireBookingRetrieveView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def get(self, request, booking_reference):
+        try:
+            booking = HireBooking.objects.select_related('motorcycle').get(
+                booking_reference=booking_reference
+            )
+        except HireBooking.DoesNotExist:
+            return Response({'detail': 'Booking not found.'}, status=404)
+
+        motorcycle = booking.motorcycle
+        motorcycle_name = (
+            f"{motorcycle.year} {motorcycle.make} {motorcycle.model}"
+            if motorcycle.year
+            else f"{motorcycle.make} {motorcycle.model}"
+        ).strip()
+
+        num_days = (booking.hire_end - booking.hire_start).days + 1
+
+        return Response({
+            'booking_reference': booking.booking_reference,
+            'motorcycle_name': motorcycle_name,
+            'hire_start': str(booking.hire_start),
+            'hire_end': str(booking.hire_end),
+            'num_days': num_days,
+            'effective_daily_rate': str(booking.effective_daily_rate),
+            'total_hire_amount': str(booking.total_hire_amount),
+            'bond_amount': str(booking.bond_amount),
+            'status': booking.status,
+        })

@@ -175,29 +175,26 @@ class TestHireBookingCreateView:
             monthly_rate=None,
         )
 
-    def test_creates_booking_and_returns_201(self, api_client, hire_bike, mocker):
+    def test_creates_booking_and_returns_201(self, api_client, hire_bike):
         """
         GIVEN a valid hire bike and payload
         WHEN POST /api/hire/bookings/
-        THEN 201 is returned with booking_reference.
+        THEN 201 is returned with booking_reference and booking_id.
         """
-        mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
         response = api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
         assert response.status_code == status.HTTP_201_CREATED
         assert 'booking_reference' in response.data
+        assert 'booking_id' in response.data
 
-    def test_booking_is_saved_as_confirmed(self, api_client, hire_bike, mocker):
+    def test_booking_is_saved_as_pending_payment(self, api_client, hire_bike):
         """
         GIVEN a valid payload
         WHEN POST /api/hire/bookings/
-        THEN the saved booking has status='confirmed'.
+        THEN the saved booking has status='pending_payment' (awaiting Stripe payment).
         """
-        mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
         api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
         booking = HireBooking.objects.first()
-        assert booking.status == 'confirmed'
+        assert booking.status == 'pending_payment'
 
     def test_returns_400_when_start_date_too_soon(self, api_client, hire_bike):
         """
@@ -255,7 +252,7 @@ class TestHireBookingCreateView:
         response = api_client.post(self.URL, _booking_payload(bike.id), format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_returns_400_when_dates_overlap_existing_booking(self, api_client, hire_bike, mocker):
+    def test_returns_400_when_dates_overlap_existing_booking(self, api_client, hire_bike):
         """
         GIVEN an existing confirmed booking for days 5–10
         WHEN a new booking for overlapping days 7–12 is submitted
@@ -298,14 +295,12 @@ class TestHireBookingCreateView:
         response = api_client.post(self.URL, payload, format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_effective_rate_uses_daily_when_set(self, api_client, mocker):
+    def test_effective_rate_uses_daily_when_set(self, api_client):
         """
         GIVEN a bike with daily_rate=80.00
         WHEN a booking is created
         THEN effective_daily_rate is 80.00.
         """
-        mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
         bike = MotorcycleFactory(
             is_hire=True, status='for_sale',
             daily_rate='80.00', weekly_rate=None, monthly_rate=None,
@@ -314,14 +309,12 @@ class TestHireBookingCreateView:
         booking = HireBooking.objects.first()
         assert float(booking.effective_daily_rate) == 80.00
 
-    def test_effective_rate_uses_weekly_when_no_daily(self, api_client, mocker):
+    def test_effective_rate_uses_weekly_when_no_daily(self, api_client):
         """
         GIVEN a bike with weekly_rate=350.00 (= $50/day) and no daily_rate
         WHEN a booking is created
         THEN effective_daily_rate is 50.00.
         """
-        mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
         bike = MotorcycleFactory(
             is_hire=True, status='for_sale',
             daily_rate=None, weekly_rate='350.00', monthly_rate=None,
@@ -330,14 +323,12 @@ class TestHireBookingCreateView:
         booking = HireBooking.objects.first()
         assert float(booking.effective_daily_rate) == pytest.approx(50.0, rel=1e-2)
 
-    def test_uses_cheapest_effective_daily_rate(self, api_client, mocker):
+    def test_uses_cheapest_effective_daily_rate(self, api_client):
         """
         GIVEN daily_rate=100, weekly_rate=350 (=$50/day)
         WHEN a booking is created
         THEN effective_daily_rate uses the weekly rate (cheaper per day).
         """
-        mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
         bike = MotorcycleFactory(
             is_hire=True, status='for_sale',
             daily_rate='100.00', weekly_rate='350.00', monthly_rate=None,
@@ -346,14 +337,12 @@ class TestHireBookingCreateView:
         booking = HireBooking.objects.first()
         assert float(booking.effective_daily_rate) < 100.00
 
-    def test_total_hire_amount_is_rate_times_days(self, api_client, mocker):
+    def test_total_hire_amount_is_rate_times_days(self, api_client):
         """
         GIVEN a bike at $80/day and a 3-day booking (days 3, 4, 5)
         WHEN the booking is created
         THEN total_hire_amount = 80 * 3 = 240.
         """
-        mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
         bike = MotorcycleFactory(
             is_hire=True, status='for_sale',
             daily_rate='80.00', weekly_rate=None, monthly_rate=None,
@@ -363,26 +352,23 @@ class TestHireBookingCreateView:
         booking = HireBooking.objects.first()
         assert float(booking.total_hire_amount) == pytest.approx(240.00, rel=1e-2)
 
-    def test_bond_snapshotted_from_hire_settings(self, api_client, hire_bike, mocker):
+    def test_bond_snapshotted_from_hire_settings(self, api_client, hire_bike):
         """
         GIVEN HireSettings.bond_amount = 500.00
         WHEN a booking is created
         THEN booking.bond_amount = 500.00.
         """
-        mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
         api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
         booking = HireBooking.objects.first()
         assert float(booking.bond_amount) == 500.00
 
-    def test_sends_notifications_on_success(self, api_client, hire_bike, mocker):
+    def test_response_includes_booking_id_for_payment_intent_creation(self, api_client, hire_bike):
         """
         GIVEN a valid booking payload
         WHEN the booking is created
-        THEN both notification functions are called once.
+        THEN booking_id is included in the response so the client can create a payment intent.
         """
-        mock_customer = mocker.patch('hire.views.public_hire_views.send_hire_confirmation')
-        mock_admin = mocker.patch('hire.views.public_hire_views.send_admin_new_hire')
-        api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
-        mock_customer.assert_called_once()
-        mock_admin.assert_called_once()
+        response = api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
+        assert response.status_code == status.HTTP_201_CREATED
+        booking = HireBooking.objects.first()
+        assert response.data['booking_id'] == booking.id

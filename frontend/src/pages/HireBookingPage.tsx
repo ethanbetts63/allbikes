@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarDays } from 'lucide-react';
-import { getBikeById, createHireBooking } from '@/api';
+import { getBikeById, createHireBooking, createHirePaymentIntent } from '@/api';
 import type { Bike } from '@/types/Bike';
 
 interface BookingFormData {
@@ -90,7 +90,7 @@ const HireBookingPage = () => {
         setSubmitError(null);
         setIsSubmitting(true);
         try {
-            const result = await createHireBooking({
+            const booking = await createHireBooking({
                 motorcycle: bike.id,
                 hire_start: startDate,
                 hire_end: endDate,
@@ -98,7 +98,21 @@ const HireBookingPage = () => {
                 customer_email: formData.customer_email,
                 customer_phone: formData.customer_phone,
             });
-            navigate('/hire/confirmation', { state: result });
+            const { clientSecret } = await createHirePaymentIntent(booking.booking_id);
+            navigate(`/hire/${slug}/book/payment`, {
+                state: {
+                    clientSecret,
+                    bookingReference: booking.booking_reference,
+                    bookingSummary: {
+                        motorcycleName: booking.motorcycle_name,
+                        hireStart: booking.hire_start,
+                        hireEnd: booking.hire_end,
+                        numDays: booking.num_days,
+                        totalHireAmount: booking.total_hire_amount,
+                        bondAmount: booking.bond_amount,
+                    },
+                },
+            });
         } catch (err: any) {
             setSubmitError(err.message || 'Failed to create booking. Please try again.');
         } finally {
@@ -238,7 +252,7 @@ const HireBookingPage = () => {
                                     )}
 
                                     <Button type="submit" disabled={isSubmitting} className="w-full">
-                                        {isSubmitting ? 'Confirming...' : 'Confirm Booking'}
+                                        {isSubmitting ? 'Please wait...' : 'Proceed to Payment'}
                                     </Button>
                                 </form>
                             </CardContent>

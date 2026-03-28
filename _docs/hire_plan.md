@@ -209,8 +209,7 @@ Items to address once the core flow is working:
 
 - **Hire T&Cs page** — `/hire/terms` linked from the booking form
 - **Add hire pages to sitemap** — update `StaticViewSitemap` in `sitemaps.py`
-- **Add `/hire` to `robots.txt`**
-- **Return reminder email** — `send_hire_return_reminder(hire_booking)` triggered X days before `hire_end` (via management command)
+- evaluate robots.txt
 - **Admin calendar view** — visual calendar of active/upcoming hire bookings (nice to have)
 - **Cancellation flow** — admin can cancel a booking; bond refund manual via Stripe dashboard
 - Any edge cases or gaps discovered during Stages 1–4

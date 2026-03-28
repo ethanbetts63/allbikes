@@ -9,7 +9,12 @@ class Payment(models.Model):
         ('failed', 'Failed'),
     ]
 
-    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment')
+    order = models.OneToOneField(
+        Order, null=True, blank=True, on_delete=models.CASCADE, related_name='payment'
+    )
+    hire_booking = models.OneToOneField(
+        'hire.HireBooking', null=True, blank=True, on_delete=models.CASCADE, related_name='payment'
+    )
     stripe_payment_intent_id = models.CharField(max_length=255, unique=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')

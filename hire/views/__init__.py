@@ -5,7 +5,13 @@ from .admin_hire_booking_views import (
     AdminHireBookingStatusView,
 )
 from .hire_bike_views import HireBikeListView
-from .public_hire_views import PublicHireSettingsView, HireAvailabilityView, HireBookingCreateView
+from .public_hire_views import (
+    PublicHireSettingsView,
+    HireAvailabilityView,
+    HireBookingCreateView,
+    HireCreatePaymentIntentView,
+    HireBookingRetrieveView,
+)
 
 __all__ = [
     'AdminHireSettingsView',
@@ -16,4 +22,6 @@ __all__ = [
     'PublicHireSettingsView',
     'HireAvailabilityView',
     'HireBookingCreateView',
+    'HireCreatePaymentIntentView',
+    'HireBookingRetrieveView',
 ]
