@@ -24,13 +24,11 @@ const HireListPage = () => {
   const [minStartDate, setMinStartDate] = useState('');
   const [maxStartDate, setMaxStartDate] = useState('');
   const [checkedDates, setCheckedDates] = useState<{ start: string; end: string } | null>(null);
-  const [isChecking, setIsChecking] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    Promise.all([getHireBikes(), getPublicHireSettings()])
-      .then(([bikes, settings]) => {
-        setBikes(bikes);
+    getPublicHireSettings()
+      .then((settings) => {
         const min = new Date();
         min.setDate(min.getDate() + settings.advance_min_days);
         setMinStartDate(min.toISOString().split('T')[0]);
@@ -38,21 +36,23 @@ const HireListPage = () => {
         max.setDate(max.getDate() + settings.advance_max_days);
         setMaxStartDate(max.toISOString().split('T')[0]);
       })
-      .catch(() => setError('Failed to load hire bikes.'))
-      .finally(() => setIsLoading(false));
+      .catch(() => setError('Failed to load hire settings.'));
   }, []);
 
-  const handleCheckAvailability = () => {
-    if (!startDate || !endDate) return;
-    setIsChecking(true);
-    getHireBikes(startDate, endDate)
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    const fetch = startDate && endDate
+      ? getHireBikes(startDate, endDate)
+      : getHireBikes();
+    fetch
       .then((results) => {
         setBikes(results);
-        setCheckedDates({ start: startDate, end: endDate });
+        setCheckedDates(startDate && endDate ? { start: startDate, end: endDate } : null);
       })
-      .catch(() => setError('Failed to check availability.'))
-      .finally(() => setIsChecking(false));
-  };
+      .catch(() => setError('Failed to load hire bikes.'))
+      .finally(() => setIsLoading(false));
+  }, [startDate, endDate]);
 
   const handleBook = (bike: Bike) => {
     navigate(`/hire/book?bike=${bike.id}&start=${startDate}&end=${endDate}`);
@@ -76,7 +76,7 @@ const HireListPage = () => {
 
           {/* Date filter bar */}
           <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg p-4 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <Label htmlFor="start_date">Pick-up Date</Label>
                 <Input
@@ -102,13 +102,6 @@ const HireListPage = () => {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
-              <Button
-                disabled={!startDate || !endDate || isChecking}
-                onClick={handleCheckAvailability}
-                className="w-full"
-              >
-                {isChecking ? 'Checking...' : 'Check Availability'}
-              </Button>
             </div>
           </div>
 
