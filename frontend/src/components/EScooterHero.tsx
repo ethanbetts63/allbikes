@@ -9,7 +9,7 @@ const EScooterHero = () => {
     <div className="w-full flex flex-col lg:flex-row">
 
       {/* Text panel */}
-      <div className="order-1 lg:order-1 lg:w-[45%] bg-[var(--bg-dark-primary)] flex flex-col justify-center px-8 py-12 md:px-14 md:py-16">
+      <div className="order-1 lg:order-1 lg:w-[45%] bg-[var(--bg-dark-primary)] flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-8 py-12 md:px-14 md:py-16">
         <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">
           Scooter Shop · Australia-Wide
         </p>

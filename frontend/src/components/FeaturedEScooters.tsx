@@ -12,7 +12,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
 
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-3 justify-center sm:justify-start">
             <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em]">
               Buy Online
             </p>
@@ -21,8 +21,8 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
               <img src={stripeLogo} alt="Stripe" className="h-4 w-auto" />
             </div>
           </div>
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[var(--text-light-primary)] text-3xl md:text-4xl font-black uppercase italic leading-none">
+          <div className="flex items-end justify-center sm:justify-between gap-4">
+            <h2 className="text-[var(--text-light-primary)] text-3xl md:text-4xl font-black uppercase italic leading-none text-center sm:text-left">
               Best Selling<br />E-Scooters
             </h2>
             <Link
@@ -35,7 +35,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
         </div>
 
         {/* Banners */}
-        <div className="flex flex-wrap gap-3 mb-6">
+        <div className="flex flex-wrap gap-3 mb-6 justify-center sm:justify-start">
           <div className="flex items-center gap-3 bg-[var(--bg-dark-secondary)] px-5 py-3 w-fit">
             <Truck className="h-5 w-5 text-[var(--highlight)] shrink-0" />
             <span className="text-[var(--text-light-primary)] text-sm font-bold uppercase tracking-widest">Free Delivery Australia-Wide</span>

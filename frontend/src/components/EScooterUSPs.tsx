@@ -39,7 +39,7 @@ const EScooterUSPs = () => {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {usps.map(({ icon: Icon, title, description, iconColor }) => (
-            <div key={title} className="flex flex-col items-start gap-3">
+            <div key={title} className="flex flex-col items-center sm:items-start text-center sm:text-left gap-3">
               <div className="bg-[var(--bg-light-secondary)] p-3 rounded-lg">
                 <Icon className={`h-5 w-5 ${iconColor}`} />
               </div>

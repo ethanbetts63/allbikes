@@ -22,7 +22,7 @@ const EScooterWhyBuySection = ({ buttonLink, buttonText }: EScooterWhyBuySection
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
           {/* Left — bold typographic block */}
-          <div>
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em] mb-6">
               Allbikes &amp; Scooters · Dianella, Perth
             </p>
