@@ -16,7 +16,10 @@
       "Bash(pytest:*)",
       "Bash(xargs sed:*)",
       "Bash(python:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(for d:*)",
+      "Bash(do touch:*)",
+      "Bash(done)"
     ]
   }
 }
