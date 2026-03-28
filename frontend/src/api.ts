@@ -368,8 +368,12 @@ export async function getPublicHireSettings(): Promise<Pick<HireSettings, 'bond_
     return handleResponse(response);
 }
 
-export async function getHireBikes(): Promise<Bike[]> {
-    const response = await fetch('/api/hire/bikes/');
+export async function getHireBikes(startDate?: string, endDate?: string): Promise<Bike[]> {
+    const params = new URLSearchParams();
+    if (startDate) params.append('start_date', startDate);
+    if (endDate) params.append('end_date', endDate);
+    const qs = params.toString();
+    const response = await fetch(`/api/hire/bikes/${qs ? `?${qs}` : ''}`);
     return handleResponse(response);
 }
 

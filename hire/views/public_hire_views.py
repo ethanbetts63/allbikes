@@ -11,6 +11,7 @@ from inventory.models import Motorcycle
 from payments.models import Payment
 from ..models import HireBooking, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
+from ..utils.availability import is_motorcycle_available
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
 
@@ -47,13 +48,7 @@ class HireAvailabilityView(APIView):
         except ValueError:
             return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
 
-        overlapping = HireBooking.objects.filter(
-            motorcycle_id=motorcycle_id,
-            hire_start__lte=end_date,
-            hire_end__gte=start_date,
-        ).exclude(status='cancelled').exists()
-
-        return Response({'available': not overlapping})
+        return Response({'available': is_motorcycle_available(motorcycle_id, start_date, end_date)})
 
 
 class HireBookingCreateView(APIView):
@@ -103,13 +98,7 @@ class HireBookingCreateView(APIView):
         if motorcycle.status == 'on_hire':
             return Response({'error': 'This motorcycle is currently on hire.'}, status=400)
 
-        overlapping = HireBooking.objects.filter(
-            motorcycle=motorcycle,
-            hire_start__lte=hire_end,
-            hire_end__gte=hire_start,
-        ).exclude(status='cancelled').exists()
-
-        if overlapping:
+        if not is_motorcycle_available(motorcycle.id, hire_start, hire_end):
             return Response(
                 {'error': 'This motorcycle is not available for the selected dates.'},
                 status=400,

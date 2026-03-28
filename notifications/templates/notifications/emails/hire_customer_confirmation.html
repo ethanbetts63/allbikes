@@ -39,11 +39,23 @@
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Cost Summary</p>
             <p style="margin: 0 0 4px 0;">Daily rate: ${{ booking.effective_daily_rate }}</p>
-            <p style="margin: 0 0 4px 0;">Duration: {{ num_days }} {{ num_days|pluralize:"day,days" }}</p>
-            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 8px 0 0 0;">Hire total: ${{ booking.total_hire_amount }}</p>
-            {% if booking.bond_amount and booking.bond_amount != "0.00" %}
-            <p style="color: #78716c; font-size: 13px; margin: 4px 0 0 0;">Bond (refundable): ${{ booking.bond_amount }}</p>
-            {% endif %}
+            <p style="margin: 0 0 12px 0;">Duration: {{ num_days }} {{ num_days|pluralize:"day,days" }}</p>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #e7e5e4; padding-top: 8px;">
+                <tr>
+                    <td style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c;">Hire</td>
+                    <td align="right" style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #1c1917;">${{ booking.total_hire_amount }}</td>
+                </tr>
+                {% if booking.bond_amount and booking.bond_amount != "0.00" %}
+                <tr>
+                    <td style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c;">Bond (refundable)</td>
+                    <td align="right" style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #1c1917;">${{ booking.bond_amount }}</td>
+                </tr>
+                {% endif %}
+                <tr style="border-top: 1px solid #e7e5e4;">
+                    <td style="padding: 8px 0 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: bold; color: #1c1917;">Total charged</td>
+                    <td align="right" style="padding: 8px 0 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: bold; color: #1c1917;">${{ total_charged }}</td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>

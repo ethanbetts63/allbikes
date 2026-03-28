@@ -77,18 +77,24 @@ const HireConfirmationPage = () => {
                                 {state.num_days} {state.num_days === 1 ? 'day' : 'days'}
                             </span>
                         </div>
-                        <div className="flex justify-between font-bold text-base border-t border-[var(--border-light)] pt-3">
-                            <span className="text-[var(--text-dark-primary)]">Hire total</span>
+                        <div className="flex justify-between border-t border-[var(--border-light)] pt-3">
+                            <span className="text-[var(--text-dark-secondary)]">Hire</span>
                             <span className="text-[var(--text-dark-primary)]">
                                 ${parseFloat(state.total_hire_amount).toFixed(2)}
                             </span>
                         </div>
                         {bondAmount > 0 && (
-                            <div className="flex justify-between text-[var(--text-dark-secondary)]">
-                                <span>Bond (refundable)</span>
-                                <span>${bondAmount.toFixed(2)}</span>
+                            <div className="flex justify-between">
+                                <span className="text-[var(--text-dark-secondary)]">Bond (refundable)</span>
+                                <span className="text-[var(--text-dark-primary)]">${bondAmount.toFixed(2)}</span>
                             </div>
                         )}
+                        <div className="flex justify-between font-bold text-base border-t border-[var(--border-light)] pt-3">
+                            <span className="text-[var(--text-dark-primary)]">Total charged</span>
+                            <span className="text-[var(--text-dark-primary)]">
+                                ${(parseFloat(state.total_hire_amount) + bondAmount).toFixed(2)}
+                            </span>
+                        </div>
                     </div>
 
                     <Button className="w-full mt-6" onClick={() => navigate('/hire')}>

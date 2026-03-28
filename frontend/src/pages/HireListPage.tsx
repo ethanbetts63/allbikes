@@ -30,6 +30,8 @@ const HireListPage = () => {
   const [endDate, setEndDate] = useState('');
   const [minStartDate, setMinStartDate] = useState('');
   const [maxStartDate, setMaxStartDate] = useState('');
+  const [checkedDates, setCheckedDates] = useState<{ start: string; end: string } | null>(null);
+  const [isChecking, setIsChecking] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -46,6 +48,18 @@ const HireListPage = () => {
       .catch(() => setError('Failed to load hire bikes.'))
       .finally(() => setIsLoading(false));
   }, []);
+
+  const handleCheckAvailability = () => {
+    if (!startDate || !endDate) return;
+    setIsChecking(true);
+    getHireBikes(startDate, endDate)
+      .then((results) => {
+        setBikes(results);
+        setCheckedDates({ start: startDate, end: endDate });
+      })
+      .catch(() => setError('Failed to check availability.'))
+      .finally(() => setIsChecking(false));
+  };
 
   const handleBook = (bike: Bike) => {
     navigate(`/hire/${bike.slug}/book`, {
@@ -98,11 +112,11 @@ const HireListPage = () => {
                 />
               </div>
               <Button
-                disabled={!startDate || !endDate}
-                onClick={() => {/* availability filtering — Stage 2 */}}
+                disabled={!startDate || !endDate || isChecking}
+                onClick={handleCheckAvailability}
                 className="w-full"
               >
-                Check Availability
+                {isChecking ? 'Checking...' : 'Check Availability'}
               </Button>
             </div>
           </div>
@@ -115,6 +129,12 @@ const HireListPage = () => {
           )}
 
           {error && <p className="text-destructive text-center">{error}</p>}
+
+          {!isLoading && !error && checkedDates && (
+            <p className="text-sm text-[var(--text-dark-secondary)] mb-4">
+              Showing bikes available from <strong>{checkedDates.start}</strong> to <strong>{checkedDates.end}</strong>
+            </p>
+          )}
 
           {!isLoading && !error && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -193,7 +213,9 @@ const HireListPage = () => {
                 })
               ) : (
                 <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">
-                  No hire bikes are currently available. Check back soon.
+                  {checkedDates
+                    ? 'No bikes are available for those dates. Try different dates.'
+                    : 'No hire bikes are currently available. Check back soon.'}
                 </p>
               )}
             </div>
