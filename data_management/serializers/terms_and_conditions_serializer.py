@@ -4,4 +4,4 @@ from data_management.models import TermsAndConditions
 class TermsAndConditionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TermsAndConditions
-        fields = ['version', 'content', 'published_at']
+        fields = ['term_type', 'content', 'published_at']

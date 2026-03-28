@@ -11,17 +11,17 @@ class TermsAndConditionsSerializerTest(TestCase):
         """
         now = timezone.now()
         terms = TermsAndConditions.objects.create(
-            version="1.5",
+            term_type='purchase',
             content="<p>Test content here.</p>",
             published_at=now
         )
         serializer = TermsAndConditionsSerializer(instance=terms)
         data = serializer.data
 
-        expected_fields = ['version', 'content', 'published_at']
+        expected_fields = ['term_type', 'content', 'published_at']
         self.assertEqual(set(data.keys()), set(expected_fields))
 
-        self.assertEqual(data['version'], "1.5")
+        self.assertEqual(data['term_type'], 'purchase')
         self.assertEqual(data['content'], "<p>Test content here.</p>")
         # Compare in local time — DRF serializes using the configured TIME_ZONE
         self.assertEqual(data['published_at'][:19], timezone.localtime(now).isoformat()[:19])

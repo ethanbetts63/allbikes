@@ -21,11 +21,6 @@ class TermsAndConditions(models.Model):
         default='purchase',
         help_text="The type of terms (hire, service, purchase).",
     )
-    version = models.CharField(
-        max_length=20,
-        blank=True,
-        help_text="Optional version label, e.g. '2026-03'.",
-    )
     content = models.TextField(help_text="The full HTML content of the terms and conditions.")
     published_at = models.DateTimeField(default=timezone.now, help_text="The date and time these terms were last published.")
 

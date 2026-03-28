@@ -55,7 +55,7 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
             />
             <Label htmlFor="terms_accepted">
                 I have read and accept the
-                <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                <Link to="/terms?type=service" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                   Service Terms and Conditions.
                 </Link>
             </Label>
