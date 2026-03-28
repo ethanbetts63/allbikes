@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
@@ -20,12 +20,6 @@ interface BookingFormData {
     customer_phone: string;
 }
 
-interface LocationState {
-    bikeId?: number;
-    startDate?: string;
-    endDate?: string;
-}
-
 const formatDate = (dateStr: string) =>
     new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', {
         day: 'numeric',
@@ -35,12 +29,11 @@ const formatDate = (dateStr: string) =>
 
 const HireBookingPage = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const state = location.state as LocationState | null;
+    const [searchParams] = useSearchParams();
 
-    const bikeId = state?.bikeId;
-    const startDate = state?.startDate || '';
-    const endDate = state?.endDate || '';
+    const bikeId = searchParams.get('bike');
+    const startDate = searchParams.get('start') || '';
+    const endDate = searchParams.get('end') || '';
 
     const [bike, setBike] = useState<Bike | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +51,7 @@ const HireBookingPage = () => {
             return;
         }
 
-        getBikeById(String(bikeId))
+        getBikeById(bikeId)
             .then(data => {
                 if (!data.is_hire || data.status === 'on_hire') {
                     navigate('/hire');
