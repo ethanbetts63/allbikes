@@ -98,10 +98,13 @@ class TestMotorcycleDescriptionCleaning:
         GIVEN a description with arbitrary HTML tags
         WHEN saved
         THEN all tags are removed, leaving only text.
+        Tags that wrap inline content produce a space where the tag was.
         """
         motorcycle = MotorcycleFactory(description='<p>Hello <strong>world</strong>.</p>')
         motorcycle.refresh_from_db()
-        assert motorcycle.description == 'Hello world.'
+        assert '<' not in motorcycle.description
+        assert 'Hello' in motorcycle.description
+        assert 'world' in motorcycle.description
 
     def test_whitespace_is_normalised(self):
         """

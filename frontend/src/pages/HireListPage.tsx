@@ -46,8 +46,6 @@ const HireListPage = () => {
   const [endDate, setEndDate] = useState('');
   const [minStartDate, setMinStartDate] = useState('');
   const [maxStartDate, setMaxStartDate] = useState('');
-  const [checkedDates, setCheckedDates] = useState<{ start: string; end: string } | null>(null);
-
   useEffect(() => {
     window.scrollTo(0, 0);
     getPublicHireSettings()
@@ -71,7 +69,6 @@ const HireListPage = () => {
     fetch
       .then((results) => {
         setBikes(results);
-        setCheckedDates(startDate && endDate ? { start: startDate, end: endDate } : null);
       })
       .catch(() => setError('Failed to load hire bikes.'))
       .finally(() => setIsLoading(false));
@@ -84,8 +81,8 @@ const HireListPage = () => {
   return (
     <>
       <Seo
-        title="Hire a Motorcycle | ScooterShop"
-        description="Hire a motorcycle from ScooterShop in Perth. Choose from our range of well-maintained bikes available for daily, weekly, or monthly hire."
+        title="Motorcycle Hire Perth | Daily, Weekly & Monthly | ScooterShop"
+        description="Hire a motorcycle in Perth from Allbikes & Scooters, Dianella. Flexible daily, weekly, and monthly rates. Book online — refundable bond, maintained fleet."
         canonicalPath="/hire"
       />
 
@@ -155,9 +152,9 @@ const HireListPage = () => {
 
           {error && <p className="text-destructive text-center">{error}</p>}
 
-          {!isLoading && !error && checkedDates && (
+          {!isLoading && !error && startDate && endDate && (
             <p className="text-sm text-[var(--text-dark-secondary)] mb-4">
-              Showing bikes available from <strong>{checkedDates.start}</strong> to <strong>{checkedDates.end}</strong>
+              Showing bikes available from <strong>{startDate}</strong> to <strong>{endDate}</strong>
             </p>
           )}
 
@@ -236,7 +233,7 @@ const HireListPage = () => {
                 })
               ) : (
                 <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">
-                  {checkedDates
+                  {startDate && endDate
                     ? 'No bikes are available for those dates. Try different dates.'
                     : 'No hire bikes are currently available. Check back soon.'}
                 </p>
