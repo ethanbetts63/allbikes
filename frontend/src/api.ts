@@ -80,6 +80,7 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
         condition,
         page = 1,
         is_featured,
+        is_hire,
         ordering,
         min_price,
         max_price,
@@ -95,6 +96,7 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
 
     if (condition) params.append('condition', condition);
     if (is_featured) params.append('is_featured', 'true');
+    if (is_hire) params.append('is_hire', 'true');
     if (ordering) params.append('ordering', ordering);
     if (min_price) params.append('min_price', String(min_price));
     if (max_price) params.append('max_price', String(max_price));
@@ -360,6 +362,12 @@ export async function adminDeleteBookingLog(id: number): Promise<void> {
 }
 
 // --- Hire ---
+
+export async function getHireBikes(): Promise<Bike[]> {
+    const response = await fetch('/api/hire/bikes/');
+    return handleResponse(response);
+}
+
 
 export async function adminGetHireSettings(): Promise<HireSettings> {
     const response = await authedFetch('/api/hire/admin/settings/');

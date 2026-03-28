@@ -18,7 +18,6 @@ export interface HireBooking {
 }
 
 export interface HireSettings {
-  enable_hire: boolean;
   bond_amount: string;
   advance_min_days: number;
   advance_max_days: number;

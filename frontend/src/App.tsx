@@ -44,6 +44,7 @@ const AdminServiceBookingDetailPage = lazy(() => import('./pages/admin/AdminServ
 const AdminHireDashboardPage = lazy(() => import('./pages/admin/AdminHireDashboardPage'));
 const AdminHireDetailPage = lazy(() => import('./pages/admin/AdminHireDetailPage'));
 const AdminHireSettingsPage = lazy(() => import('./pages/admin/AdminHireSettingsPage'));
+const HireListPage = lazy(() => import('./pages/HireListPage'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-screen">
@@ -77,6 +78,7 @@ function App() {
                 <Route path="/electric-scooters" element={<ElectricScootersLandingPage />} />
                 <Route path="/escooters" element={<EScooterListPage />} />
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
+                <Route path="/hire" element={<HireListPage />} />
                 <Route path="/refunds" element={<RefundsPage />} />
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 <Route path="/checkout/error" element={<CheckoutErrorPage />} />

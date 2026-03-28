@@ -4,10 +4,12 @@ from .admin_hire_booking_views import (
     AdminHireBookingDetailView,
     AdminHireBookingStatusView,
 )
+from .hire_bike_views import HireBikeListView
 
 __all__ = [
     'AdminHireSettingsView',
     'AdminHireBookingListView',
     'AdminHireBookingDetailView',
     'AdminHireBookingStatusView',
+    'HireBikeListView',
 ]

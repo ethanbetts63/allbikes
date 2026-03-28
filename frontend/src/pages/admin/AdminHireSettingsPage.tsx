@@ -4,7 +4,6 @@ import type { HireSettings } from '@/types/HireBooking';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
@@ -64,15 +63,6 @@ const AdminHireSettingsPage = () => {
           <CardTitle>Global Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-
-          <div className="flex items-center gap-3">
-            <Switch
-              id="enable_hire"
-              checked={settings.enable_hire}
-              onCheckedChange={(checked) => setSettings({ ...settings, enable_hire: checked })}
-            />
-            <Label htmlFor="enable_hire">Enable hire system on public site</Label>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">

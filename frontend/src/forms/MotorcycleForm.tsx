@@ -102,8 +102,8 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                         <div className="space-y-2"><Label htmlFor="seats">Seats</Label><Input id="seats" type="number" {...register('seats', { valueAsNumber: true })} /></div>
                     </div>
 
-                    {/* Status, Condition, Transmission, and Featured/Popular Switches */}
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                    {/* Status, Condition, Transmission, and Boolean Switches */}
+                    <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
                         <div className="space-y-2">
                             <Label>Status</Label>
                             <Controller name="status" control={control} render={({ field }) => (
@@ -158,6 +158,12 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                             )} />
                             <Label htmlFor="popular">Popular?</Label>
                         </div>
+                        <div className="flex items-center space-x-2 pt-6">
+                            <Controller name="is_hire" control={control} render={({ field }) => (
+                                <Switch id="is_hire" checked={!!field.value} onCheckedChange={field.onChange} />
+                            )} />
+                            <Label htmlFor="is_hire">For Hire?</Label>
+                        </div>
                     </div>
 
                     {/* Description */}
@@ -173,36 +179,28 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                     </div>
 
 
-                    {/* Hire */}
-                    <div className="space-y-4">
-                        <div className="flex items-center space-x-2">
-                            <Controller name="is_hire" control={control} render={({ field }) => (
-                                <Switch id="is_hire" checked={!!field.value} onCheckedChange={field.onChange} />
-                            )} />
-                            <Label htmlFor="is_hire">Available for Hire</Label>
-                        </div>
-                        <Controller name="is_hire" control={control} render={({ field: isHireField }) => (
-                            isHireField.value ? (
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-1">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="daily_rate">Daily Rate (AUD)</Label>
-                                        <Input id="daily_rate" type="number" step="0.01" placeholder="e.g. 85.00" {...register('daily_rate', { setValueAs: (v) => v === '' ? null : v })} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="weekly_rate">Weekly Rate (AUD)</Label>
-                                        <Input id="weekly_rate" type="number" step="0.01" placeholder="e.g. 490.00" {...register('weekly_rate', { setValueAs: (v) => v === '' ? null : v })} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="monthly_rate">Monthly Rate (AUD)</Label>
-                                        <Input id="monthly_rate" type="number" step="0.01" placeholder="e.g. 1500.00" {...register('monthly_rate', { setValueAs: (v) => v === '' ? null : v })} />
-                                    </div>
-                                    <p className="col-span-full text-sm text-[var(--text-dark-secondary)]">
-                                        At least one rate is required. Priority order: daily → weekly ÷ 7 → monthly ÷ 30.
-                                    </p>
+                    {/* Hire rates — shown only when is_hire is on */}
+                    <Controller name="is_hire" control={control} render={({ field: isHireField }) => (
+                        isHireField.value ? (
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="daily_rate">Daily Rate (AUD)</Label>
+                                    <Input id="daily_rate" type="number" step="0.01" placeholder="e.g. 85.00" {...register('daily_rate', { setValueAs: (v) => v === '' ? null : v })} />
                                 </div>
-                            ) : <></>
-                        )} />
-                    </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="weekly_rate">Weekly Rate (AUD)</Label>
+                                    <Input id="weekly_rate" type="number" step="0.01" placeholder="e.g. 490.00" {...register('weekly_rate', { setValueAs: (v) => v === '' ? null : v })} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="monthly_rate">Monthly Rate (AUD)</Label>
+                                    <Input id="monthly_rate" type="number" step="0.01" placeholder="e.g. 1500.00" {...register('monthly_rate', { setValueAs: (v) => v === '' ? null : v })} />
+                                </div>
+                                <p className="col-span-full text-sm text-[var(--text-dark-secondary)]">
+                                    Priority order: daily → weekly ÷ 7 → monthly ÷ 30.
+                                </p>
+                            </div>
+                        ) : <></>
+                    )} />
 
                     {/* Image Upload */}
                     <div className="space-y-2">

@@ -5,5 +5,5 @@ from ..models import HireSettings
 class HireSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = HireSettings
-        fields = ['enable_hire', 'bond_amount', 'advance_min_days', 'advance_max_days', 'updated_at']
+        fields = ['bond_amount', 'advance_min_days', 'advance_max_days', 'updated_at']
         read_only_fields = ['updated_at']

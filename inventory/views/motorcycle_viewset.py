@@ -42,6 +42,11 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
         if is_featured and is_featured.lower() == 'true':
             queryset = queryset.filter(is_featured=True)
 
+        # Filtering by hire availability
+        is_hire = self.request.query_params.get('is_hire')
+        if is_hire and is_hire.lower() == 'true':
+            queryset = queryset.filter(is_hire=True)
+
         # Range filtering
         for param, lookup in [
             ('min_price', 'price__gte'),

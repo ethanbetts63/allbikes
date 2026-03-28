@@ -43,7 +43,7 @@ const InventoryTable = () => {
     pageSize: 12,
   });
   const [pageCount, setPageCount] = useState(0);
-  const [conditionFilter, setConditionFilter] = useState<'new' | 'used' | null>(null);
+  const [conditionFilter, setConditionFilter] = useState<'new' | 'used' | 'hire' | null>(null);
 
   const pagination = useMemo(
     () => ({
@@ -59,7 +59,9 @@ const InventoryTable = () => {
     const fetchBikes = async () => {
       try {
         // Tanstack table is 0-indexed, API is 1-indexed
-        const response = await getBikes({ condition: conditionFilter || undefined, page: pageIndex + 1 });
+        const isHire = conditionFilter === 'hire';
+        const condition = isHire ? undefined : (conditionFilter || undefined);
+        const response = await getBikes({ condition, is_hire: isHire || undefined, page: pageIndex + 1 });
         setData(response.results);
         setPageCount(Math.ceil(response.count / pageSize));
       } catch (error) {
@@ -75,8 +77,9 @@ const InventoryTable = () => {
     if (window.confirm("Are you sure you want to delete this motorcycle?")) {
       try {
         await deleteMotorcycle(id);
-        // Refetch the current page to show the updated data
-        const response = await getBikes({ condition: conditionFilter || undefined, page: pageIndex + 1 });
+        const isHire = conditionFilter === 'hire';
+        const condition = isHire ? undefined : (conditionFilter || undefined);
+        const response = await getBikes({ condition, is_hire: isHire || undefined, page: pageIndex + 1 });
         setData(response.results);
         setPageCount(Math.ceil(response.count / pageSize));
         setNotification({ message: "Motorcycle deleted successfully", type: 'success' });
@@ -91,7 +94,7 @@ const InventoryTable = () => {
     navigate(`/dashboard/edit-motorcycle/${id}`);
   };
   
-  const handleFilterChange = (filter: 'new' | 'used' | null) => {
+  const handleFilterChange = (filter: 'new' | 'used' | 'hire' | null) => {
     setPagination({ pageIndex: 0, pageSize });
     setConditionFilter(filter);
   };
@@ -183,12 +186,19 @@ const InventoryTable = () => {
         >
           New
         </Button>
-        <Button 
+        <Button
           variant="outline"
-          onClick={() => handleFilterChange('used')} 
+          onClick={() => handleFilterChange('used')}
           className={conditionFilter === 'used' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           Used
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => handleFilterChange('hire')}
+          className={conditionFilter === 'hire' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+        >
+          Hire
         </Button>
       </div>
       <div className="rounded-md border border-border-light overflow-x-auto">

@@ -4,10 +4,6 @@ from django.db import models
 class HireSettings(models.Model):
     """Singleton model. Only one row should ever exist."""
 
-    enable_hire = models.BooleanField(
-        default=False,
-        help_text="Enable the hire system on the public site.",
-    )
     bond_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
