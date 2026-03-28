@@ -35,11 +35,10 @@ const formatDate = (dateStr: string) =>
 
 interface PaymentFormProps {
     bookingReference: string;
-    slug: string;
     initialError?: string;
 }
 
-const PaymentForm = ({ bookingReference, slug, initialError }: PaymentFormProps) => {
+const PaymentForm = ({ bookingReference, initialError }: PaymentFormProps) => {
     const stripe = useStripe();
     const elements = useElements();
     const navigate = useNavigate();
@@ -56,7 +55,7 @@ const PaymentForm = ({ bookingReference, slug, initialError }: PaymentFormProps)
         const { error, paymentIntent } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: `${window.location.origin}/hire/processing?ref=${bookingReference}&slug=${slug}`,
+                return_url: `${window.location.origin}/hire/processing?ref=${bookingReference}`,
             },
             redirect: 'if_required',
         });
@@ -102,7 +101,7 @@ const PaymentForm = ({ bookingReference, slug, initialError }: PaymentFormProps)
 // --- Page wrapper ---
 
 const HirePaymentPage = () => {
-    const { slug } = useParams<{ slug: string }>();
+    const { bookingReference: urlBookingReference } = useParams<{ bookingReference: string }>();
     const location = useLocation();
     const navigate = useNavigate();
     const state = location.state as LocationState | null;
@@ -172,7 +171,6 @@ const HirePaymentPage = () => {
                     <Elements stripe={stripePromise} options={elementsOptions}>
                         <PaymentForm
                             bookingReference={state.bookingReference}
-                            slug={slug!}
                             initialError={state.error}
                         />
                     </Elements>

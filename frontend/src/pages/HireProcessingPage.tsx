@@ -19,7 +19,6 @@ const ProcessingInner = () => {
 
     const clientSecret = searchParams.get('payment_intent_client_secret');
     const ref = searchParams.get('ref');
-    const slug = searchParams.get('slug');
 
     const startPolling = () => {
         let count = 0;
@@ -35,7 +34,7 @@ const ProcessingInner = () => {
             }
             count += 1;
             if (count >= MAX_POLLS) {
-                navigate(`/hire/${slug ?? ''}`);
+                navigate('/hire');
             } else {
                 setTimeout(poll, POLL_INTERVAL_MS);
             }
@@ -58,7 +57,7 @@ const ProcessingInner = () => {
 
         stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
             if (!paymentIntent || paymentIntent.status === 'requires_payment_method') {
-                navigate(`/hire/${slug}/book/payment`, {
+                navigate(`/hire/book/${ref}/payment`, {
                     state: { clientSecret, bookingReference: ref, error: 'Payment failed. Please try again.' },
                 });
                 return;

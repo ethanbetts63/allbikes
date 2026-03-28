@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
@@ -21,6 +21,7 @@ interface BookingFormData {
 }
 
 interface LocationState {
+    bikeId?: number;
     startDate?: string;
     endDate?: string;
 }
@@ -33,11 +34,11 @@ const formatDate = (dateStr: string) =>
     });
 
 const HireBookingPage = () => {
-    const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as LocationState | null;
 
+    const bikeId = state?.bikeId;
     const startDate = state?.startDate || '';
     const endDate = state?.endDate || '';
 
@@ -52,14 +53,12 @@ const HireBookingPage = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (!slug || !startDate || !endDate) {
+        if (!bikeId || !startDate || !endDate) {
             navigate('/hire');
             return;
         }
-        const id = slug.split('-').pop();
-        if (!id) { navigate('/hire'); return; }
 
-        getBikeById(id)
+        getBikeById(String(bikeId))
             .then(data => {
                 if (!data.is_hire || data.status === 'on_hire') {
                     navigate('/hire');
@@ -69,7 +68,7 @@ const HireBookingPage = () => {
             })
             .catch(() => setError('Failed to load bike details.'))
             .finally(() => setIsLoading(false));
-    }, [slug, startDate, endDate, navigate]);
+    }, [bikeId, startDate, endDate, navigate]);
 
     const numDays = startDate && endDate
         ? Math.round((new Date(endDate + 'T00:00:00').getTime() - new Date(startDate + 'T00:00:00').getTime()) / 86400000) + 1
@@ -102,7 +101,7 @@ const HireBookingPage = () => {
                 terms_accepted: true,
             });
             const { clientSecret } = await createHirePaymentIntent(booking.booking_id);
-            navigate(`/hire/${slug}/book/payment`, {
+            navigate(`/hire/book/${booking.booking_reference}/payment`, {
                 state: {
                     clientSecret,
                     bookingReference: booking.booking_reference,
@@ -149,7 +148,7 @@ const HireBookingPage = () => {
             <Seo
                 title={`Book ${bikeName} | Allbikes Hire`}
                 description={`Hire the ${bikeName} from Allbikes.`}
-                canonicalPath={`/hire/${slug}/book`}
+                canonicalPath="/hire/book"
             />
             <div className="bg-[var(--card)]">
                 <div className="container mx-auto px-4 lg:px-8 py-12">

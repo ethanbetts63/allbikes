@@ -62,8 +62,8 @@ const HireListPage = () => {
   };
 
   const handleBook = (bike: Bike) => {
-    navigate(`/hire/${bike.slug}/book`, {
-      state: { startDate, endDate },
+    navigate('/hire/book', {
+      state: { bikeId: bike.id, startDate, endDate },
     });
   };
 

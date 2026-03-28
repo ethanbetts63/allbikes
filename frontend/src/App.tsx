@@ -85,8 +85,8 @@ function App() {
                 <Route path="/hire" element={<HireListPage />} />
                 <Route path="/hire/confirmation" element={<HireConfirmationPage />} />
                 <Route path="/hire/processing" element={<HireProcessingPage />} />
-                <Route path="/hire/:slug/book" element={<HireBookingPage />} />
-                <Route path="/hire/:slug/book/payment" element={<HirePaymentPage />} />
+                <Route path="/hire/book" element={<HireBookingPage />} />
+                <Route path="/hire/book/:bookingReference/payment" element={<HirePaymentPage />} />
                 <Route path="/refunds" element={<RefundsPage />} />
                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 <Route path="/checkout/error" element={<CheckoutErrorPage />} />

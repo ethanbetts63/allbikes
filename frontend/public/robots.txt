@@ -7,8 +7,7 @@ Disallow: /login
 Disallow: /booking/success
 Disallow: /hire/confirmation
 Disallow: /hire/processing
-Disallow: /hire/*/book
-Disallow: /hire/*/book/payment
+Disallow: /hire/book
 Disallow: /terms
 Disallow: /refunds
 Disallow: /service/booking-terms/
