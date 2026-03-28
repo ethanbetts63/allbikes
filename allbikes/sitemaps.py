@@ -51,6 +51,7 @@ class StaticViewSitemap(Sitemap):
             '/escooters',
             '/electric-scooters',
             '/tyre-fitting',
+            '/hire',
         ]
 
     def location(self, item):

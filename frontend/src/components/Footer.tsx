@@ -53,7 +53,9 @@ const Footer = () => {
             <li><Link to="/tyre-fitting" className={LINK_CLASS}>Tyre Fitting</Link></li>
             <li><Link to="/contact" className={LINK_CLASS}>Contact Us</Link></li>
             <li><Link to="/refunds" className={LINK_CLASS}>Returns &amp; Refunds</Link></li>
-            <li><Link to="/terms" className={LINK_CLASS}>Terms and Conditions</Link></li>
+            <li><Link to="/terms?type=purchase" className={LINK_CLASS}>Sales &amp; Deposit Terms</Link></li>
+            {siteSettings.show_hire && <li><Link to="/terms?type=hire" className={LINK_CLASS}>Hire Terms</Link></li>}
+            <li><Link to="/terms?type=service" className={LINK_CLASS}>Service Terms</Link></li>
             <li><Link to="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
             <li><Link to="/security" className={LINK_CLASS}>Security Policy</Link></li>
             {user ? (

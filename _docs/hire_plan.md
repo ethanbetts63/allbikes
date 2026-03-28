@@ -222,5 +222,4 @@ Items to address once the core flow is working:
 - Age verification or licence validation
 - Customer accounts
 - Automated refunds
-- SMS notifications
 - Online availability for bikes not flagged `is_hire`
