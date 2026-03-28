@@ -4,6 +4,7 @@ import { ArrowRight, CalendarDays, MousePointerClick, KeyRound, Bike } from 'luc
 import Seo from '@/components/Seo';
 import { FaqSection } from '@/components/FaqSection';
 import HireConfidenceSection from '@/components/HireConfidenceSection';
+import HireAreasSection from '@/components/HireAreasSection';
 import PayLaterSection from '@/components/PayLaterSection';
 import { getHireBikes } from '@/api';
 import type { Bike as BikeType } from '@/types/Bike';
@@ -74,19 +75,38 @@ const structuredData = {
             ]
         },
         {
-            "@type": "LocalBusiness",
-            "name": "Allbikes & Scooters",
-            "url": "https://www.scootershop.com.au",
-            "telephone": siteSettings.phone_number,
-            "address": {
-                "@type": "PostalAddress",
-                "streetAddress": siteSettings.street_address,
-                "addressLocality": siteSettings.address_locality,
-                "addressRegion": siteSettings.address_region,
-                "postalCode": siteSettings.postal_code,
+            "@type": "Service",
+            "serviceType": "Motorcycle hire",
+            "provider": {
+                "@type": "LocalBusiness",
+                "name": "Allbikes & Scooters",
+                "url": "https://www.scootershop.com.au",
+                "telephone": siteSettings.phone_number,
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": siteSettings.street_address,
+                    "addressLocality": siteSettings.address_locality,
+                    "addressRegion": siteSettings.address_region,
+                    "postalCode": siteSettings.postal_code,
+                    "addressCountry": "AU"
+                }
+            },
+            "areaServed": {
+                "@type": "City",
+                "name": "Perth",
+                "addressRegion": "WA",
                 "addressCountry": "AU"
             },
-            "description": "Motorcycle hire in Perth from Allbikes & Scooters, Dianella. Daily, weekly, and monthly rates available."
+            "description": "Motorcycle hire in Perth from Allbikes & Scooters, Dianella. Flexible daily, weekly, and monthly rates. Refundable bond, maintained fleet, pick up from our workshop.",
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Hire Rates",
+                "itemListElement": [
+                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Daily motorcycle hire" } },
+                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Weekly motorcycle hire" } },
+                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Monthly motorcycle hire" } }
+                ]
+            }
         }
     ]
 };
@@ -238,6 +258,8 @@ const HireLandingPage = () => {
             )}
 
             <HireConfidenceSection />
+
+            <HireAreasSection />
 
             <PayLaterSection />
 
