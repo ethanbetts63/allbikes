@@ -99,9 +99,7 @@ const BookingConfirmationPage = () => {
 
                 </div>
 
-                <div className="container mx-auto px-4 pb-12 max-w-4xl">
-                    <MotorcycleMovers />
-                </div>
+                <MotorcycleMovers />
             </div>
         </>
     );
