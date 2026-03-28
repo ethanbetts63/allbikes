@@ -7,6 +7,16 @@ from rest_framework.permissions import AllowAny
 
 from inventory.models import Motorcycle
 from ..models import HireBooking, HireSettings
+from ..serializers.hire_settings_serializer import HireSettingsSerializer
+
+
+class PublicHireSettingsView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        settings = HireSettings.get()
+        return Response(HireSettingsSerializer(settings).data)
 
 
 class HireAvailabilityView(APIView):

@@ -5,6 +5,7 @@ from .views import (
     AdminHireBookingDetailView,
     AdminHireBookingStatusView,
     HireBikeListView,
+    PublicHireSettingsView,
     HireAvailabilityView,
     HireBookingCreateView,
 )
@@ -13,6 +14,7 @@ app_name = 'hire'
 
 urlpatterns = [
     path('bikes/', HireBikeListView.as_view(), name='hire-bike-list'),
+    path('settings/', PublicHireSettingsView.as_view(), name='hire-settings-public'),
     path('availability/', HireAvailabilityView.as_view(), name='hire-availability'),
     path('bookings/', HireBookingCreateView.as_view(), name='hire-booking-create'),
     path('admin/settings/', AdminHireSettingsView.as_view(), name='admin-hire-settings'),

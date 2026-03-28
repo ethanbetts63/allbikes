@@ -363,6 +363,11 @@ export async function adminDeleteBookingLog(id: number): Promise<void> {
 
 // --- Hire ---
 
+export async function getPublicHireSettings(): Promise<Pick<HireSettings, 'bond_amount' | 'advance_min_days' | 'advance_max_days'>> {
+    const response = await fetch('/api/hire/settings/');
+    return handleResponse(response);
+}
+
 export async function getHireBikes(): Promise<Bike[]> {
     const response = await fetch('/api/hire/bikes/');
     return handleResponse(response);

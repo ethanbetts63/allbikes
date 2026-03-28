@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Gauge, Wrench, Cog } from 'lucide-react';
-import { getHireBikes } from '@/api';
+import { getHireBikes, getPublicHireSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
 import HeroImage from '@/assets/sym_22.webp';
 
@@ -28,16 +28,24 @@ const HireListPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [minStartDate, setMinStartDate] = useState('');
+  const [maxStartDate, setMaxStartDate] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    getHireBikes()
-      .then(setBikes)
+    Promise.all([getHireBikes(), getPublicHireSettings()])
+      .then(([bikes, settings]) => {
+        setBikes(bikes);
+        const min = new Date();
+        min.setDate(min.getDate() + settings.advance_min_days);
+        setMinStartDate(min.toISOString().split('T')[0]);
+        const max = new Date();
+        max.setDate(max.getDate() + settings.advance_max_days);
+        setMaxStartDate(max.toISOString().split('T')[0]);
+      })
       .catch(() => setError('Failed to load hire bikes.'))
       .finally(() => setIsLoading(false));
   }, []);
-
-  const today = new Date().toISOString().split('T')[0];
 
   const handleBook = (bike: Bike) => {
     navigate(`/hire/${bike.slug}/book`, {
@@ -69,7 +77,8 @@ const HireListPage = () => {
                 <Input
                   id="start_date"
                   type="date"
-                  min={today}
+                  min={minStartDate}
+                  max={maxStartDate}
                   value={startDate}
                   onChange={(e) => {
                     setStartDate(e.target.value);
@@ -82,7 +91,8 @@ const HireListPage = () => {
                 <Input
                   id="end_date"
                   type="date"
-                  min={startDate || today}
+                  min={startDate || minStartDate}
+                  max={maxStartDate}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
@@ -160,16 +170,22 @@ const HireListPage = () => {
                           )}
                         </div>
 
-                        <div className="mt-auto pt-3 border-t border-[var(--border-light)] flex items-center justify-between gap-3">
-                          <span className="text-[var(--text-dark-primary)] font-black text-xl">
-                            {formatRate(bike)}
-                          </span>
-                          <Button
-                            size="sm"
-                            onClick={() => handleBook(bike)}
-                          >
-                            Book Now
-                          </Button>
+                        <div className="mt-auto pt-3 border-t border-[var(--border-light)] space-y-2">
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="text-[var(--text-dark-primary)] font-black text-xl">
+                              {formatRate(bike)}
+                            </span>
+                            <Button
+                              size="sm"
+                              disabled={!startDate || !endDate}
+                              onClick={() => handleBook(bike)}
+                            >
+                              Book Now
+                            </Button>
+                          </div>
+                          {(!startDate || !endDate) && (
+                            <p className="text-xs text-[var(--text-dark-secondary)]">Select dates above to book</p>
+                          )}
                         </div>
                       </div>
                     </div>
