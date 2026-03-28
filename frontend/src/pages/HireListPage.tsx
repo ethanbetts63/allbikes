@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Seo from '@/components/Seo';
-import Hero from '@/components/Hero';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,10 +8,34 @@ import { Button } from '@/components/ui/button';
 import { Gauge, Wrench, Cog } from 'lucide-react';
 import { FaqSection } from '@/components/FaqSection';
 import HireConfidenceSection from '@/components/HireConfidenceSection';
+import HireAreasSection from '@/components/HireAreasSection';
+import PayLaterSection from '@/components/PayLaterSection';
 import { getHireBikes, getPublicHireSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
-import HeroImage from '@/assets/sym_22.webp';
-import { formatRate, hireFaqData } from '@/lib/hire';
+import { formatRate } from '@/lib/hire';
+
+const hireFaqData = [
+  {
+    question: 'Do I need a motorcycle licence to hire a bike?',
+    answer: 'No. You only need a motorcycle licence to ride bikes larger than 50cc. We have a range of scooters and small bikes that can be hired with a car licence. Please check the specific requirements for each bike on our hire page.',
+  },
+  {
+    question: 'How does the bond work?',
+    answer: 'A refundable bond is charged at the time of payment along with your hire total. It is returned in full once the bike is back with us in good condition.',
+  },
+  {
+    question: 'What is included in the hire?',
+    answer: 'The hire fee covers the use of the motorcycle for your chosen period. The bike comes serviced and ready to ride. Fuel is not included — you return the bike with the same amount of fuel as when you collected it.',
+  },
+  {
+    question: 'Can I extend my hire period?',
+    answer: "Extensions are subject to availability. Contact us as early as possible if you need to extend and we'll do our best to accommodate you.",
+  },
+  {
+    question: 'What happens if I damage the bike?',
+    answer: 'Any damage beyond normal wear and tear will be assessed and deducted from your bond. Significant damage may incur additional costs. Our hire terms and conditions cover this in detail.',
+  },
+];
 
 const HireListPage = () => {
   const navigate = useNavigate();
@@ -65,20 +88,25 @@ const HireListPage = () => {
         description="Hire a motorcycle from ScooterShop in Perth. Choose from our range of well-maintained bikes available for daily, weekly, or monthly hire."
         canonicalPath="/hire"
       />
-      <Hero
-        title="Hire a Motorcycle"
-        description="Choose from our range of well-maintained bikes available for daily, weekly, or monthly hire. Pick your dates and book online."
-        imageUrl={HeroImage}
-      />
 
-      <div className="bg-[var(--card)]">
-        <div className="container mx-auto px-4 lg:px-8 py-8">
+      {/* Hero with date picker */}
+      <section className="bg-[var(--bg-dark-primary)] py-16 px-6">
+        <div className="max-w-2xl mx-auto flex flex-col items-center text-center gap-8">
+          <div>
+            <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+              Allbikes &amp; Scooters · Dianella, Perth
+            </p>
+            <h1 className="text-4xl sm:text-5xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
+              Hire a Motorcycle
+            </h1>
+          </div>
 
-          {/* Date filter bar */}
-          <div className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg p-4 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1">
-                <Label htmlFor="start_date">Pick-up Date</Label>
+          <div className="w-full bg-white/5 border border-white/10 rounded-lg p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1.5 text-left">
+                <Label htmlFor="start_date" className="text-[var(--text-light-secondary)] text-xs uppercase tracking-widest">
+                  Pick-up Date
+                </Label>
                 <Input
                   id="start_date"
                   type="date"
@@ -89,10 +117,13 @@ const HireListPage = () => {
                     setStartDate(e.target.value);
                     if (endDate && e.target.value > endDate) setEndDate('');
                   }}
+                  className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
                 />
               </div>
-              <div className="flex flex-col gap-1">
-                <Label htmlFor="end_date">Return Date</Label>
+              <div className="flex flex-col gap-1.5 text-left">
+                <Label htmlFor="end_date" className="text-[var(--text-light-secondary)] text-xs uppercase tracking-widest">
+                  Return Date
+                </Label>
                 <Input
                   id="end_date"
                   type="date"
@@ -100,12 +131,22 @@ const HireListPage = () => {
                   max={maxStartDate}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
+                  className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
                 />
               </div>
             </div>
+            {(!startDate || !endDate) && (
+              <p className="text-[var(--text-light-secondary)] text-xs mt-3 text-center">
+                Select dates to check availability
+              </p>
+            )}
           </div>
+        </div>
+      </section>
 
-          {/* Bike grid */}
+      <div className="bg-[var(--card)]">
+        <div className="container mx-auto px-4 lg:px-8 py-8">
+
           {isLoading && (
             <div className="flex justify-center items-center h-64">
               <Spinner className="h-12 w-12" />
@@ -130,7 +171,6 @@ const HireListPage = () => {
 
                   return (
                     <div key={bike.id} className="bg-[var(--card)] border border-[var(--border-light)] flex flex-col h-full">
-                      {/* Image */}
                       <div className="relative aspect-[4/3] overflow-hidden shrink-0">
                         <img
                           src={imageUrl}
@@ -143,7 +183,6 @@ const HireListPage = () => {
                         </span>
                       </div>
 
-                      {/* Body */}
                       <div className="px-4 py-4 flex flex-col gap-2.5 flex-1">
                         <div>
                           <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{bike.make}</p>
@@ -209,6 +248,10 @@ const HireListPage = () => {
       </div>
 
       <HireConfidenceSection />
+
+      <PayLaterSection />
+
+      <HireAreasSection />
 
       <FaqSection title="Hire FAQs" faqData={hireFaqData} />
     </>
