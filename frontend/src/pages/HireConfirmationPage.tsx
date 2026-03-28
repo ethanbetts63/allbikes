@@ -124,6 +124,27 @@ const HireConfirmationPage = () => {
                         </div>
                     </div>
 
+                    {/* Pickup & drop-off instructions */}
+                    <div className="bg-[var(--bg-light-primary)] border border-[var(--border-light)] rounded-lg p-5 mb-8">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">Pick-up &amp; Drop-off</p>
+                        <div className="space-y-3 text-sm text-[var(--text-dark-secondary)]">
+                            <p>
+                                <span className="font-semibold text-[var(--text-dark-primary)]">Pick-up — </span>
+                                Collect your bike any time we are open on <span className="font-semibold text-[var(--text-dark-primary)]">{formatDate(booking.hire_start)}</span>.
+                            </p>
+                            <p>
+                                <span className="font-semibold text-[var(--text-dark-primary)]">Drop-off — </span>
+                                Return the bike by close of business on <span className="font-semibold text-[var(--text-dark-primary)]">{formatDate(booking.hire_end)}</span>. You have the bike for the full day.
+                            </p>
+                            <div className="pt-2 border-t border-[var(--border-light)]">
+                                <p className="font-semibold text-[var(--text-dark-primary)] mb-1">Unit 5 / 6 Cleveland Street, Dianella WA 6059</p>
+                                <p>Mon – Fri: 9:00 AM – 5:00 PM</p>
+                                <p>Sat: 10:00 AM – 1:00 PM</p>
+                                <p>Sun: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <Link
                         to="/hire"
                         className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"
