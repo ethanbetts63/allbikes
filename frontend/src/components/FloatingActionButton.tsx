@@ -4,7 +4,7 @@ import { Wrench } from 'lucide-react';
 export const FloatingActionButton = () => {
   return (
     <Link
-      to="/booking"
+      to="/service-booking"
       className="fixed bottom-8 right-8 z-50
                  bg-emerald-800 text-[var(--text-light-primary)]
                  rounded-full shadow-md

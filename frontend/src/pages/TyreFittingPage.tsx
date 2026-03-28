@@ -125,7 +125,7 @@ const TyreFittingPage = () => {
                         ))}
                     </div>
                     <div className="text-center mt-10">
-                        <Link to="/booking">
+                        <Link to="/service-booking">
                             <Button className="bg-highlight1 text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg hover:bg-highlight1/90 inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>

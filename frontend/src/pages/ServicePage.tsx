@@ -122,7 +122,7 @@ const ServicePage = () => {
                         ))}
                     </div>
                     <div className="text-center mt-10">
-                        <Link to="/booking">
+                        <Link to="/service-booking">
                             <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-dark-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>

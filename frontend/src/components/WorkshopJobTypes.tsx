@@ -23,7 +23,7 @@ const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, button
         <p className="text-lg text-[var(--text-light-secondary)] leading-relaxed max-w-prose mb-10">
           {paragraph}
         </p>
-        <Link to="/booking">
+        <Link to="/service-booking">
           <Button className="bg-highlight1 text-[var(--text-light-primary)] font-bold px-8 py-5 text-xl hover:bg-highlight1/80 flex items-center gap-2">
             {buttonText} <ArrowRight className="h-5" />
           </Button>

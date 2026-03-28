@@ -28,7 +28,7 @@ const ServiceCTAV2 = () => {
                         <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
                             Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes.
                         </p>
-                        <Link to="/booking">
+                        <Link to="/service-booking">
                             <Button
                                 size="lg"
                                 className="bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold px-8 text-base group"

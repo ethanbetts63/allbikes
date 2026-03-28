@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createBooking } from '@/services/bookingService';
 import Seo from '@/components/Seo';
-import BookingDetailsForm from '@/forms/BookingDetailsForm';
-import BikeDetailsForm from '@/forms/BikeDetailsForm';
-import PersonalDetailsForm from '@/forms/PersonalDetailsForm';
+import BookingDetailsForm from '@/forms/ServiceBookingDetailsForm';
+import BikeDetailsForm from '@/forms/ServiceBikeDetailsForm';
+import PersonalDetailsForm from '@/forms/ServicePersonalDetailsForm';
 
 const LOCAL_STORAGE_KEY = 'bookingFormProgress';
 
@@ -62,7 +62,7 @@ const BookingPage = () => {
         try {
             await createBooking(formData);
             localStorage.removeItem(LOCAL_STORAGE_KEY);
-            navigate('/booking/confirmation', {
+            navigate('/service-booking/confirmation', {
                 state: {
                     first_name: formData.first_name,
                     last_name: formData.last_name,
