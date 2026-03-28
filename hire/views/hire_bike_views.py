@@ -18,4 +18,4 @@ class HireBikeListView(APIView):
             .prefetch_related('images')
             .order_by('make', 'model')
         )
-        return Response(MotorcycleSerializer(bikes, many=True).data)
+        return Response(MotorcycleSerializer(bikes, many=True, context={'request': request}).data)

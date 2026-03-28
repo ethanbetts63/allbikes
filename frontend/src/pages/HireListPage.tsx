@@ -12,16 +12,13 @@ import type { Bike } from '@/types/Bike';
 import HeroImage from '@/assets/sym_22.webp';
 
 const formatRate = (bike: Bike): string => {
-  if (bike.daily_rate && parseFloat(bike.daily_rate) > 0) {
-    return `$${parseFloat(bike.daily_rate).toFixed(0)}/day`;
-  }
-  if (bike.weekly_rate && parseFloat(bike.weekly_rate) > 0) {
-    return `$${parseFloat(bike.weekly_rate).toFixed(0)}/week`;
-  }
-  if (bike.monthly_rate && parseFloat(bike.monthly_rate) > 0) {
-    return `$${parseFloat(bike.monthly_rate).toFixed(0)}/month`;
-  }
-  return 'Contact for rates';
+  const candidates: number[] = [];
+  if (bike.daily_rate && parseFloat(bike.daily_rate) > 0) candidates.push(parseFloat(bike.daily_rate));
+  if (bike.weekly_rate && parseFloat(bike.weekly_rate) > 0) candidates.push(parseFloat(bike.weekly_rate) / 7);
+  if (bike.monthly_rate && parseFloat(bike.monthly_rate) > 0) candidates.push(parseFloat(bike.monthly_rate) / 30);
+  if (candidates.length === 0) return 'Contact for rates';
+  const cheapest = Math.min(...candidates);
+  return `From $${cheapest.toFixed(0)}/day`;
 };
 
 const HireListPage = () => {
