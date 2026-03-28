@@ -12,7 +12,6 @@ export interface HireBooking {
   customer_email: string;
   customer_phone: string;
   status: 'pending_payment' | 'confirmed' | 'active' | 'returned' | 'cancelled';
-  notes: string;
   created_at: string;
   updated_at: string;
 }

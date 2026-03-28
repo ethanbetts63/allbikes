@@ -21,7 +21,6 @@ class HireBookingSerializer(serializers.ModelSerializer):
             'customer_email',
             'customer_phone',
             'status',
-            'notes',
             'created_at',
             'updated_at',
         ]
@@ -48,4 +47,4 @@ class HireBookingCreateSerializer(serializers.Serializer):
 class HireBookingStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = HireBooking
-        fields = ['status', 'notes']
+        fields = ['status']

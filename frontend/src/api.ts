@@ -468,11 +468,11 @@ export async function adminDeleteHireBooking(id: number): Promise<void> {
     if (!response.ok) throw new Error('Failed to delete booking.');
 }
 
-export async function adminUpdateHireBookingStatus(id: number, status: string, notes?: string): Promise<HireBooking> {
+export async function adminUpdateHireBookingStatus(id: number, status: string): Promise<HireBooking> {
     const response = await authedFetch(`/api/hire/admin/bookings/${id}/status/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status, ...(notes !== undefined && { notes }) }),
+        body: JSON.stringify({ status }),
     });
     return handleResponse(response);
 }

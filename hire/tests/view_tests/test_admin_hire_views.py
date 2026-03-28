@@ -217,18 +217,6 @@ class TestAdminHireBookingStatusView:
         booking.refresh_from_db()
         assert booking.status == 'active'
 
-    def test_admin_can_update_notes(self, admin_client):
-        """
-        GIVEN a booking with no notes
-        WHEN admin PATCH with notes
-        THEN notes are saved.
-        """
-        booking = HireBookingFactory(notes='')
-        url = reverse('hire:admin-hire-booking-status', kwargs={'pk': booking.pk})
-        admin_client.patch(url, {'notes': 'Customer called to confirm.'}, format='json')
-        booking.refresh_from_db()
-        assert booking.notes == 'Customer called to confirm.'
-
     def test_returns_404_for_unknown_booking(self, admin_client):
         """
         GIVEN no booking with pk=9999

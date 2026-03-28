@@ -37,7 +37,6 @@ const AdminHireDetailPage = () => {
   const [booking, setBooking] = useState<HireBooking | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [notes, setNotes] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -48,7 +47,6 @@ const AdminHireDetailPage = () => {
       .then(data => {
         setBooking(data);
         setSelectedStatus(data.status);
-        setNotes(data.notes);
       })
       .catch(() => setNotification({ message: 'Failed to load booking.', type: 'error' }))
       .finally(() => setIsLoading(false));
@@ -70,7 +68,7 @@ const AdminHireDetailPage = () => {
     if (!booking) return;
     setIsSaving(true);
     try {
-      const updated = await adminUpdateHireBookingStatus(booking.id, selectedStatus, notes);
+      const updated = await adminUpdateHireBookingStatus(booking.id, selectedStatus);
       setBooking(updated);
       setNotification({ message: 'Booking updated.', type: 'success' });
     } catch {
@@ -153,18 +151,6 @@ const AdminHireDetailPage = () => {
           <Row label="Name" value={booking.customer_name} />
           <Row label="Email" value={booking.customer_email} />
           <Row label="Phone" value={booking.customer_phone} />
-        </div>
-
-        {/* Notes */}
-        <div className="mb-6">
-          <h2 className="font-bold mb-2">Internal Notes</h2>
-          <textarea
-            value={notes}
-            onChange={e => setNotes(e.target.value)}
-            rows={4}
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
-            placeholder="Add notes visible only to admin..."
-          />
         </div>
 
         <Link to="/dashboard/hire" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
