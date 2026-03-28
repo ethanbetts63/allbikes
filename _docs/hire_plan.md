@@ -184,7 +184,7 @@ Add Stripe payment between the booking form and confirmation.
 
 **Webhook handler**
 - New branch for hire PaymentIntents (identified by metadata on the intent)
-- On `payment_intent.succeeded`: mark booking `confirmed`, flip `motorcycle.status = 'on_hire'`, trigger notifications (moved from Stage 3)
+- On `payment_intent.succeeded`: mark booking `confirmed`, flip `motorcycle.status = 'on_hire'`, trigger notifications (move `send_hire_confirmation` and `send_admin_new_hire` calls here from `HireBookingCreateView` — currently they fire at booking creation time, but once payment is required they should fire only after payment succeeds)
 
 **Payment model / tracking**
 - Either extend the existing `Payment` model to optionally FK to `HireBooking`, or create a `HirePayment` model. TBD based on how clean the extension looks.

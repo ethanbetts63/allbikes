@@ -88,6 +88,76 @@ def send_customer_confirmation(order):
         _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'failed', str(e))
 
 
+def send_hire_confirmation(booking):
+    to = booking.customer_email
+    motorcycle_name = (
+        f"{booking.motorcycle.year} {booking.motorcycle.make} {booking.motorcycle.model}"
+        if booking.motorcycle.year
+        else f"{booking.motorcycle.make} {booking.motorcycle.model}"
+    ).strip()
+    num_days = (booking.hire_end - booking.hire_start).days + 1
+    subject = f"Hire booking confirmed — {booking.booking_reference}"
+    text_body = (
+        f"Hi {booking.customer_name},\n\n"
+        f"Your hire booking has been confirmed.\n\n"
+        f"Booking reference: {booking.booking_reference}\n"
+        f"Motorcycle: {motorcycle_name}\n"
+        f"Pick-up: {booking.hire_start.strftime('%d %b %Y')}\n"
+        f"Return: {booking.hire_end.strftime('%d %b %Y')}\n"
+        f"Duration: {num_days} {'day' if num_days == 1 else 'days'}\n"
+        f"Hire total: ${booking.total_hire_amount}\n\n"
+        f"We'll be in touch to confirm pickup details.\n\n"
+        f"Questions? Contact us at admin@scootershop.com.au"
+    )
+    context = {'booking': booking, 'motorcycle_name': motorcycle_name, 'num_days': num_days}
+    html_body = render_to_string('notifications/emails/hire_customer_confirmation.html', context)
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(booking, 'hire_confirmation', to, subject, text_body, html_body, 'sent')
+    except Exception as e:
+        logger.error("Failed to send hire confirmation for booking %s: %s", booking.booking_reference, e)
+        _record(booking, 'hire_confirmation', to, subject, text_body, html_body, 'failed', str(e))
+
+
+def send_admin_new_hire(booking):
+    admin_email = getattr(settings, 'ADMIN_EMAIL', None)
+    if not admin_email:
+        logger.warning(
+            "ADMIN_EMAIL not configured — skipping admin new hire notification for %s",
+            booking.booking_reference,
+        )
+        return
+    motorcycle_name = (
+        f"{booking.motorcycle.year} {booking.motorcycle.make} {booking.motorcycle.model}"
+        if booking.motorcycle.year
+        else f"{booking.motorcycle.make} {booking.motorcycle.model}"
+    ).strip()
+    num_days = (booking.hire_end - booking.hire_start).days + 1
+    to = admin_email
+    subject = f"New hire booking — {booking.booking_reference}"
+    text_body = (
+        f"New hire booking: {booking.booking_reference}\n"
+        f"Date: {timezone.localtime(booking.created_at).strftime('%d %b %Y, %I:%M %p')} AWST\n\n"
+        f"Motorcycle: {motorcycle_name}\n"
+        f"Pick-up: {booking.hire_start.strftime('%d %b %Y')}\n"
+        f"Return: {booking.hire_end.strftime('%d %b %Y')}\n"
+        f"Duration: {num_days} {'day' if num_days == 1 else 'days'}\n"
+        f"Hire total: ${booking.total_hire_amount}\n\n"
+        f"Customer: {booking.customer_name}\n"
+        f"Phone: {booking.customer_phone}\n"
+        f"Email: {booking.customer_email}\n\n"
+        f"Contact the customer to confirm pickup details.\n"
+    )
+    context = {'booking': booking, 'motorcycle_name': motorcycle_name, 'num_days': num_days}
+    html_body = render_to_string('notifications/emails/hire_admin_new_booking.html', context)
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'sent')
+    except Exception as e:
+        logger.error("Failed to send admin new hire notification for booking %s: %s", booking.booking_reference, e)
+        _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'failed', str(e))
+
+
 def send_admin_new_order(order):
     admin_email = getattr(settings, 'ADMIN_EMAIL', None)
     if not admin_email:

@@ -1,0 +1,68 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}Hire booking confirmed — {{ booking.booking_reference }}{% endblock %}
+
+{% block preheader %}Your hire booking for {{ motorcycle_name }} is confirmed. We'll be in touch to organise pickup.{% endblock %}
+
+{% block content %}
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Hire Booking Confirmed</h1>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0 0 24px 0; line-height: 26px;">
+    Hi {{ booking.customer_name }}, your hire booking has been confirmed. We'll be in touch to confirm pickup details.
+</p>
+
+<!-- Booking reference -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1c1917; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td align="center" style="padding: 16px 24px;">
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.2em; margin: 0 0 6px 0;">Booking Reference</p>
+            <p style="font-family: 'Courier New', Courier, monospace; font-size: 22px; font-weight: bold; color: #ffffff; letter-spacing: 0.1em; margin: 0;">{{ booking.booking_reference }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Motorcycle & dates -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Motorcycle</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 12px 0;">{{ motorcycle_name }}</p>
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Hire Period</p>
+            <p style="margin: 0 0 4px 0;">{{ booking.hire_start|date:"j N Y" }} &mdash; {{ booking.hire_end|date:"j N Y" }}</p>
+            <p style="color: #78716c; margin: 0;">{{ num_days }} {{ num_days|pluralize:"day,days" }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Cost breakdown -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Cost Summary</p>
+            <p style="margin: 0 0 4px 0;">Daily rate: ${{ booking.effective_daily_rate }}</p>
+            <p style="margin: 0 0 4px 0;">Duration: {{ num_days }} {{ num_days|pluralize:"day,days" }}</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 8px 0 0 0;">Hire total: ${{ booking.total_hire_amount }}</p>
+            {% if booking.bond_amount and booking.bond_amount != "0.00" %}
+            <p style="color: #78716c; font-size: 13px; margin: 4px 0 0 0;">Bond (refundable): ${{ booking.bond_amount }}</p>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<!-- Contact -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 28px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Your Contact Details</p>
+            <p style="margin: 0;">{{ booking.customer_email }}{% if booking.customer_phone %}<br>{{ booking.customer_phone }}{% endif %}</p>
+        </td>
+    </tr>
+</table>
+
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c; margin: 0; line-height: 24px;">
+    Questions? Contact us at <a href="mailto:admin@scootershop.com.au" style="color: #1c1917;">admin@scootershop.com.au</a>.
+</p>
+{% endblock %}
+
+{% block unsubscribe %}
+&nbsp;&middot;&nbsp;<a href="%unsubscribe_url%" style="color: #78716c; text-decoration: none;">Unsubscribe</a>
+{% endblock %}

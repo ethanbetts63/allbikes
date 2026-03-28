@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from inventory.models import Motorcycle
 from ..models import HireBooking, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
+from notifications.utils.email import send_hire_confirmation, send_admin_new_hire
 
 
 class PublicHireSettingsView(APIView):
@@ -142,6 +143,9 @@ class HireBookingCreateView(APIView):
             if motorcycle.year
             else f"{motorcycle.make} {motorcycle.model}"
         ).strip()
+
+        send_hire_confirmation(booking)
+        send_admin_new_hire(booking)
 
         return Response(
             {
