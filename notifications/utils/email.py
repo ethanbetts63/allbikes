@@ -90,13 +90,9 @@ def send_customer_confirmation(order):
 
 def send_hire_confirmation(booking):
     to = booking.customer_email
-    motorcycle_name = (
-        f"{booking.motorcycle.year} {booking.motorcycle.make} {booking.motorcycle.model}"
-        if booking.motorcycle.year
-        else f"{booking.motorcycle.make} {booking.motorcycle.model}"
-    ).strip()
-    num_days = (booking.hire_end - booking.hire_start).days + 1
-    total_charged = booking.total_hire_amount + booking.bond_amount
+    motorcycle_name = str(booking.motorcycle)
+    num_days = booking.num_days
+    total_charged = booking.total_charged
     subject = f"Hire booking confirmed — {booking.booking_reference}"
     text_body = (
         f"Hi {booking.customer_name},\n\n"
@@ -135,12 +131,8 @@ def send_admin_new_hire(booking):
             booking.booking_reference,
         )
         return
-    motorcycle_name = (
-        f"{booking.motorcycle.year} {booking.motorcycle.make} {booking.motorcycle.model}"
-        if booking.motorcycle.year
-        else f"{booking.motorcycle.make} {booking.motorcycle.model}"
-    ).strip()
-    num_days = (booking.hire_end - booking.hire_start).days + 1
+    motorcycle_name = str(booking.motorcycle)
+    num_days = booking.num_days
     to = admin_email
     subject = f"New hire booking — {booking.booking_reference}"
     text_body = (

@@ -1,4 +1,5 @@
 import secrets
+from decimal import Decimal
 from django.db import models
 
 
@@ -42,6 +43,14 @@ class HireBooking(models.Model):
     notes = models.TextField(blank=True, help_text="Internal admin notes.")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def num_days(self):
+        return (self.hire_end - self.hire_start).days + 1
+
+    @property
+    def total_charged(self):
+        return Decimal(str(self.total_hire_amount)) + Decimal(str(self.bond_amount))
 
     def __str__(self):
         return self.booking_reference

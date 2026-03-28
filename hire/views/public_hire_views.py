@@ -11,6 +11,7 @@ from inventory.models import Motorcycle
 from payments.models import Payment
 from ..models import HireBooking, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
+from ..serializers.hire_booking_serializer import HireBookingCreateSerializer
 from ..utils.availability import is_motorcycle_available
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
@@ -56,26 +57,17 @@ class HireBookingCreateView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        data = request.data
+        serializer = HireBookingCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
 
-        if not data.get('terms_accepted'):
-            return Response({'error': 'You must accept the terms and conditions.'}, status=400)
-
-        motorcycle_id = data.get('motorcycle')
-        hire_start_str = data.get('hire_start')
-        hire_end_str = data.get('hire_end')
-        customer_name = (data.get('customer_name') or '').strip()
-        customer_email = (data.get('customer_email') or '').strip()
-        customer_phone = (data.get('customer_phone') or '').strip()
-
-        if not all([motorcycle_id, hire_start_str, hire_end_str, customer_name, customer_email, customer_phone]):
-            return Response({'error': 'All fields are required.'}, status=400)
-
-        try:
-            hire_start = datetime.strptime(hire_start_str, '%Y-%m-%d').date()
-            hire_end = datetime.strptime(hire_end_str, '%Y-%m-%d').date()
-        except ValueError:
-            return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
+        data = serializer.validated_data
+        motorcycle_id = data['motorcycle']
+        hire_start = data['hire_start']
+        hire_end = data['hire_end']
+        customer_name = data['customer_name'].strip()
+        customer_email = data['customer_email'].strip()
+        customer_phone = data['customer_phone'].strip()
 
         hire_settings = HireSettings.get()
         today = date.today()
@@ -136,23 +128,17 @@ class HireBookingCreateView(APIView):
             terms_accepted=True,
         )
 
-        motorcycle_name = (
-            f"{motorcycle.year} {motorcycle.make} {motorcycle.model}"
-            if motorcycle.year
-            else f"{motorcycle.make} {motorcycle.model}"
-        ).strip()
-
         return Response(
             {
                 'booking_id': booking.id,
                 'booking_reference': booking.booking_reference,
-                'motorcycle_name': motorcycle_name,
+                'motorcycle_name': str(motorcycle),
                 'hire_start': str(hire_start),
                 'hire_end': str(hire_end),
-                'num_days': num_days,
-                'effective_daily_rate': str(round(effective_daily_rate, 2)),
-                'total_hire_amount': str(round(total_hire_amount, 2)),
-                'bond_amount': str(hire_settings.bond_amount),
+                'num_days': booking.num_days,
+                'effective_daily_rate': str(booking.effective_daily_rate),
+                'total_hire_amount': str(booking.total_hire_amount),
+                'bond_amount': str(booking.bond_amount),
             },
             status=201,
         )
@@ -175,7 +161,7 @@ class HireCreatePaymentIntentView(APIView):
         if booking.status != 'pending_payment':
             return Response({'detail': 'Booking is not awaiting payment.'}, status=400)
 
-        amount = max(booking.total_hire_amount + booking.bond_amount, STRIPE_MINIMUM)
+        amount = max(booking.total_charged, STRIPE_MINIMUM)
         amount_cents = int(amount * 100)
 
         # Idempotency: reuse existing pending Payment if amount matches
@@ -220,21 +206,12 @@ class HireBookingRetrieveView(APIView):
         except HireBooking.DoesNotExist:
             return Response({'detail': 'Booking not found.'}, status=404)
 
-        motorcycle = booking.motorcycle
-        motorcycle_name = (
-            f"{motorcycle.year} {motorcycle.make} {motorcycle.model}"
-            if motorcycle.year
-            else f"{motorcycle.make} {motorcycle.model}"
-        ).strip()
-
-        num_days = (booking.hire_end - booking.hire_start).days + 1
-
         return Response({
             'booking_reference': booking.booking_reference,
-            'motorcycle_name': motorcycle_name,
+            'motorcycle_name': str(booking.motorcycle),
             'hire_start': str(booking.hire_start),
             'hire_end': str(booking.hire_end),
-            'num_days': num_days,
+            'num_days': booking.num_days,
             'effective_daily_rate': str(booking.effective_daily_rate),
             'total_hire_amount': str(booking.total_hire_amount),
             'bond_amount': str(booking.bond_amount),

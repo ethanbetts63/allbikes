@@ -27,9 +27,22 @@ class HireBookingSerializer(serializers.ModelSerializer):
         ]
 
     def get_motorcycle_name(self, obj):
-        m = obj.motorcycle
-        name = f"{m.year} {m.make} {m.model}" if m.year else f"{m.make} {m.model}"
-        return name.strip()
+        return str(obj.motorcycle)
+
+
+class HireBookingCreateSerializer(serializers.Serializer):
+    motorcycle = serializers.IntegerField()
+    hire_start = serializers.DateField()
+    hire_end = serializers.DateField()
+    customer_name = serializers.CharField(max_length=200)
+    customer_email = serializers.EmailField()
+    customer_phone = serializers.CharField(max_length=50)
+    terms_accepted = serializers.BooleanField()
+
+    def validate_terms_accepted(self, value):
+        if not value:
+            raise serializers.ValidationError('You must accept the terms and conditions.')
+        return value
 
 
 class HireBookingStatusSerializer(serializers.ModelSerializer):

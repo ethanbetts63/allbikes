@@ -1,5 +1,4 @@
 import factory
-from decimal import Decimal
 from factory.django import DjangoModelFactory
 
 from payments.models import Payment
@@ -31,6 +30,6 @@ class HirePaymentFactory(DjangoModelFactory):
     )
     stripe_payment_intent_id = factory.Sequence(lambda n: f'pi_hire_{n:010d}')
     amount = factory.LazyAttribute(
-        lambda obj: Decimal(str(obj.hire_booking.total_hire_amount)) + Decimal(str(obj.hire_booking.bond_amount))
+        lambda obj: obj.hire_booking.total_charged
     )
     status = 'pending'
