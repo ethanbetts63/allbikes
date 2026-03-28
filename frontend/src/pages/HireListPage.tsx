@@ -152,10 +152,16 @@ const HireListPage = () => {
 
           {error && <p className="text-destructive text-center">{error}</p>}
 
-          {!isLoading && !error && startDate && endDate && (
-            <p className="text-sm text-[var(--text-dark-secondary)] mb-4">
-              Showing bikes available from <strong>{startDate}</strong> to <strong>{endDate}</strong>
-            </p>
+          {!isLoading && !error && (
+            <div className="flex items-baseline justify-between gap-4 mb-6">
+              <h2 className="text-lg font-black uppercase italic text-[var(--text-dark-primary)]">
+                {startDate && endDate ? 'Available Bikes' : 'Our Hire Fleet'}
+              </h2>
+              <span className="text-sm text-[var(--text-dark-secondary)] shrink-0">
+                {bikes.length} {bikes.length === 1 ? 'bike' : 'bikes'}
+                {startDate && endDate ? ' available' : ''}
+              </span>
+            </div>
           )}
 
           {!isLoading && !error && (

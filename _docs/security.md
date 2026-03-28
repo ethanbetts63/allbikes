@@ -142,14 +142,15 @@ DRF's `DEFAULT_PERMISSION_CLASSES` is set to `IsAuthenticated`. Every endpoint r
 
 ## Rate Limiting
 
-DRF throttling is configured globally:
+DRF throttling is configured globally, with a tighter burst limit on the login endpoint:
 
-| Client type | Limit |
-|---|---|
-| Anonymous | 250 requests/day |
-| Authenticated | 10,000 requests/day |
+| Scope | Limit | Applied to |
+|---|---|---|
+| Anonymous | 250 requests/day | All public endpoints |
+| Authenticated | 10,000 requests/day | All authenticated endpoints |
+| Login | 5 requests/minute | `POST /api/token/` only |
 
-This applies to all API endpoints including `/api/token/` (login attempts) and `/api/payments/orders/{ref}/` (order lookup).
+The `login` scope uses a custom `LoginRateThrottle` (`data_management/throttling.py`) that extends `AnonRateThrottle`. The per-minute limit prevents burst brute-force attempts against the admin login endpoint while leaving all other endpoints unaffected.
 
 ---
 

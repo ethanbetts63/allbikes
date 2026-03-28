@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from data_management.authentication import CookieJWTAuthentication
+from data_management.throttling import LoginRateThrottle
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 
@@ -38,6 +39,7 @@ def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
 class CookieTokenObtainPairView(APIView):
     authentication_classes = []
     permission_classes = [AllowAny]
+    throttle_classes = [LoginRateThrottle]
 
     def post(self, request, *args, **kwargs):
         serializer = TokenObtainPairSerializer(data=request.data, context={'request': request})
