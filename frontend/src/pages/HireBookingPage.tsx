@@ -11,19 +11,13 @@ import { CalendarDays } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getBikeById, createHireBooking, createHirePaymentIntent, getPublicHireSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
+import { formatDate } from '@/lib/hire';
 
 interface BookingFormData {
     customer_name: string;
     customer_email: string;
     customer_phone: string;
 }
-
-const formatDate = (dateStr: string) =>
-    new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
 
 const HireBookingPage = () => {
     const navigate = useNavigate();

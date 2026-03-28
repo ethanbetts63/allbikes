@@ -4,6 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
 import { CalendarDays } from 'lucide-react';
+import { formatDate } from '@/lib/hire';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -22,13 +23,6 @@ interface LocationState {
     bookingSummary?: BookingSummary;
     error?: string;
 }
-
-const formatDate = (dateStr: string) =>
-    new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
 
 // --- Inner form rendered inside <Elements> ---
 

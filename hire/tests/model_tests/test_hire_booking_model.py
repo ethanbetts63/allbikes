@@ -1,5 +1,6 @@
 import re
 import pytest
+from datetime import date
 from decimal import Decimal
 
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
@@ -74,3 +75,27 @@ class TestHireBookingModel:
         """
         booking = HireBookingFactory(total_hire_amount='123.45', bond_amount='250.00')
         assert booking.total_charged == Decimal('373.45')
+
+    def test_num_days_is_inclusive(self):
+        """
+        GIVEN a booking with hire_start and hire_end on different dates
+        WHEN num_days is accessed
+        THEN it returns (end - start).days + 1 (both endpoints inclusive).
+        """
+        booking = HireBookingFactory(
+            hire_start=date(2026, 1, 1),
+            hire_end=date(2026, 1, 3),
+        )
+        assert booking.num_days == 3
+
+    def test_num_days_same_day_is_one(self):
+        """
+        GIVEN a booking where hire_start == hire_end
+        WHEN num_days is accessed
+        THEN it returns 1 (a single-day hire counts as one day).
+        """
+        booking = HireBookingFactory(
+            hire_start=date(2026, 6, 15),
+            hire_end=date(2026, 6, 15),
+        )
+        assert booking.num_days == 1

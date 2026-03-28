@@ -86,6 +86,7 @@ interface SlotState { a: string; b: string; active: 'a' | 'b'; }
 const HireLandingPage = () => {
     const [featuredBikes, setFeaturedBikes] = useState<BikeType[]>([]);
     const [slots, setSlots] = useState<SlotState | null>(null);
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
     const indexRef = useRef(0);
     const urlsRef = useRef<string[]>([]);
 
@@ -100,6 +101,7 @@ const HireLandingPage = () => {
                 });
                 if (urls.length > 0) {
                     urlsRef.current = urls;
+                    setImageUrls(urls);
                     setSlots({ a: urls[0], b: urls[0], active: 'a' });
                 }
             })
@@ -107,7 +109,7 @@ const HireLandingPage = () => {
     }, []);
 
     useEffect(() => {
-        if (!slots || urlsRef.current.length <= 1) return;
+        if (imageUrls.length <= 1) return;
         const interval = setInterval(() => {
             const next = (indexRef.current + 1) % urlsRef.current.length;
             indexRef.current = next;
@@ -120,7 +122,7 @@ const HireLandingPage = () => {
             });
         }, 5000);
         return () => clearInterval(interval);
-    }, [slots]);
+    }, [imageUrls]);
 
     return (
         <div>
@@ -286,7 +288,7 @@ const HireLandingPage = () => {
 
             <PayLaterSection />
 
-            <FaqSection title="Hire FAQs" faqData={faqData} />
+            <FaqSection title="Hire FAQs" faqData={hireFaqData} />
         </div>
     );
 };

@@ -4,6 +4,7 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle } from 'lucide-react';
 import { getHireBookingByReference } from '@/api';
+import { formatDate } from '@/lib/hire';
 
 interface BookingDetails {
     booking_reference: string;
@@ -15,13 +16,6 @@ interface BookingDetails {
     total_hire_amount: string;
     bond_amount: string;
 }
-
-const formatDate = (dateStr: string) =>
-    new Date(dateStr + 'T00:00:00').toLocaleDateString('en-AU', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
 
 const HireConfirmationPage = () => {
     const { bookingReference } = useParams<{ bookingReference: string }>();

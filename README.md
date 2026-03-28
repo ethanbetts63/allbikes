@@ -16,8 +16,6 @@ Allbikes & Scooters is a full-stack web platform for a Perth-based motorcycle an
 
 ## Core Project Concepts
 
-The project is organised into several Django applications, each with a dedicated `README.md` for more detailed information.
-
 *   `inventory`: Manages the motorcycle and scooter inventory, including vehicle details and images.
 *   `product`: Manages the e-scooter product catalogue for online sale, including stock levels, pricing, images, and discount pricing.
 *   `payments`: Handles the Stripe checkout flow, order creation, payment intent management, and order status tracking.
