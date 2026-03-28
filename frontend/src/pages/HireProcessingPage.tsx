@@ -26,7 +26,7 @@ const ProcessingInner = () => {
             try {
                 const booking = await getHireBookingByReference(ref!);
                 if (booking.status === 'confirmed') {
-                    navigate('/hire/confirmation', { state: booking });
+                    navigate(`/hire/confirmation/${ref}`, { state: booking });
                     return;
                 }
             } catch {

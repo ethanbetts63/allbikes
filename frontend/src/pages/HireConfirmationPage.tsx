@@ -1,9 +1,12 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import Seo from '@/components/Seo';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle2 } from 'lucide-react';
+import { getHireBookingByReference } from '@/api';
 
-interface ConfirmationState {
+interface BookingDetails {
     booking_reference: string;
     motorcycle_name: string;
     hire_start: string;
@@ -22,27 +25,48 @@ const formatDate = (dateStr: string) =>
     });
 
 const HireConfirmationPage = () => {
+    const { bookingReference } = useParams<{ bookingReference: string }>();
     const location = useLocation();
     const navigate = useNavigate();
-    const state = location.state as ConfirmationState | null;
 
-    if (!state?.booking_reference) {
+    const stateBooking = location.state as BookingDetails | null;
+    const [booking, setBooking] = useState<BookingDetails | null>(stateBooking);
+    const [isLoading, setIsLoading] = useState(!stateBooking);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (stateBooking || !bookingReference) return;
+        getHireBookingByReference(bookingReference)
+            .then(setBooking)
+            .catch(() => setError('Booking not found.'))
+            .finally(() => setIsLoading(false));
+    }, [bookingReference]);
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <Spinner className="h-12 w-12" />
+            </div>
+        );
+    }
+
+    if (error || !booking) {
         return (
             <div className="container mx-auto px-4 py-16 text-center">
-                <p className="text-[var(--text-dark-secondary)]">No booking found.</p>
+                <p className="text-[var(--text-dark-secondary)]">{error || 'No booking found.'}</p>
                 <Button className="mt-4" onClick={() => navigate('/hire')}>Browse Hire Bikes</Button>
             </div>
         );
     }
 
-    const bondAmount = parseFloat(state.bond_amount);
+    const bondAmount = parseFloat(booking.bond_amount);
 
     return (
         <>
             <Seo
                 title="Booking Confirmed | Allbikes Hire"
                 description="Your motorcycle hire booking has been confirmed."
-                canonicalPath="/hire/confirmation"
+                noindex={true}
             />
             <div className="bg-[var(--card)]">
                 <div className="container mx-auto px-4 lg:px-8 py-16 max-w-lg">
@@ -57,30 +81,30 @@ const HireConfirmationPage = () => {
                     <div className="border border-[var(--border-light)] rounded-lg p-6 space-y-3 text-sm">
                         <div className="flex justify-between">
                             <span className="text-[var(--text-dark-secondary)]">Booking reference</span>
-                            <span className="font-bold text-[var(--text-dark-primary)]">{state.booking_reference}</span>
+                            <span className="font-bold text-[var(--text-dark-primary)]">{booking.booking_reference}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-[var(--text-dark-secondary)]">Motorcycle</span>
-                            <span className="text-[var(--text-dark-primary)]">{state.motorcycle_name}</span>
+                            <span className="text-[var(--text-dark-primary)]">{booking.motorcycle_name}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-[var(--text-dark-secondary)]">Pick-up date</span>
-                            <span className="text-[var(--text-dark-primary)]">{formatDate(state.hire_start)}</span>
+                            <span className="text-[var(--text-dark-primary)]">{formatDate(booking.hire_start)}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-[var(--text-dark-secondary)]">Return date</span>
-                            <span className="text-[var(--text-dark-primary)]">{formatDate(state.hire_end)}</span>
+                            <span className="text-[var(--text-dark-primary)]">{formatDate(booking.hire_end)}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-[var(--text-dark-secondary)]">Duration</span>
                             <span className="text-[var(--text-dark-primary)]">
-                                {state.num_days} {state.num_days === 1 ? 'day' : 'days'}
+                                {booking.num_days} {booking.num_days === 1 ? 'day' : 'days'}
                             </span>
                         </div>
                         <div className="flex justify-between border-t border-[var(--border-light)] pt-3">
                             <span className="text-[var(--text-dark-secondary)]">Hire</span>
                             <span className="text-[var(--text-dark-primary)]">
-                                ${parseFloat(state.total_hire_amount).toFixed(2)}
+                                ${parseFloat(booking.total_hire_amount).toFixed(2)}
                             </span>
                         </div>
                         {bondAmount > 0 && (
@@ -92,7 +116,7 @@ const HireConfirmationPage = () => {
                         <div className="flex justify-between font-bold text-base border-t border-[var(--border-light)] pt-3">
                             <span className="text-[var(--text-dark-primary)]">Total charged</span>
                             <span className="text-[var(--text-dark-primary)]">
-                                ${(parseFloat(state.total_hire_amount) + bondAmount).toFixed(2)}
+                                ${(parseFloat(booking.total_hire_amount) + bondAmount).toFixed(2)}
                             </span>
                         </div>
                     </div>

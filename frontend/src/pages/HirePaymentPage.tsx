@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
@@ -101,7 +101,6 @@ const PaymentForm = ({ bookingReference, initialError }: PaymentFormProps) => {
 // --- Page wrapper ---
 
 const HirePaymentPage = () => {
-    const { bookingReference: urlBookingReference } = useParams<{ bookingReference: string }>();
     const location = useLocation();
     const navigate = useNavigate();
     const state = location.state as LocationState | null;

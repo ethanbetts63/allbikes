@@ -83,7 +83,7 @@ function App() {
                 <Route path="/escooters" element={<EScooterListPage />} />
                 <Route path="/escooters/:slug" element={<EScooterDetailPage />} />
                 <Route path="/hire" element={<HireListPage />} />
-                <Route path="/hire/confirmation" element={<HireConfirmationPage />} />
+                <Route path="/hire/confirmation/:bookingReference" element={<HireConfirmationPage />} />
                 <Route path="/hire/processing" element={<HireProcessingPage />} />
                 <Route path="/hire/book" element={<HireBookingPage />} />
                 <Route path="/hire/book/:bookingReference/payment" element={<HirePaymentPage />} />
