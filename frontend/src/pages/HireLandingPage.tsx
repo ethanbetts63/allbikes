@@ -63,7 +63,7 @@ const usps = [
 const faqData = [
     {
         question: 'Do I need a motorcycle licence to hire a bike?',
-        answer: 'Yes. You must hold a valid motorcycle licence appropriate for the bike you are hiring. We will verify your licence at pickup.',
+        answer: 'No. You only need a motorcycle licence to ride bikes larger than 50cc. We have a range of scooters and small bikes that can be hired with a car licence. Please check the specific requirements for each bike on our hire page.',
     },
     {
         question: 'How does the bond work?',
@@ -80,11 +80,7 @@ const faqData = [
     {
         question: 'What happens if I damage the bike?',
         answer: 'Any damage beyond normal wear and tear will be assessed and deducted from your bond. Significant damage may incur additional costs. Our hire terms and conditions cover this in detail.',
-    },
-    {
-        question: 'What is your cancellation policy?',
-        answer: 'Please refer to our Hire Terms and Conditions for full details on cancellations and refunds.',
-    },
+    }
 ];
 
 const structuredData = {
