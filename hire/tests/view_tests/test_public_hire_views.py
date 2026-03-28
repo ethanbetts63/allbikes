@@ -373,3 +373,35 @@ class TestHireBookingCreateView:
         assert response.status_code == status.HTTP_201_CREATED
         booking = HireBooking.objects.first()
         assert response.data['booking_id'] == booking.id
+
+    def test_returns_400_when_terms_not_accepted(self, api_client, hire_bike):
+        """
+        GIVEN a payload missing terms_accepted
+        WHEN POST /api/hire/bookings/
+        THEN 400 is returned.
+        """
+        payload = _booking_payload(hire_bike.id)
+        del payload['terms_accepted']
+        response = api_client.post(self.URL, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_returns_400_when_terms_explicitly_false(self, api_client, hire_bike):
+        """
+        GIVEN a payload with terms_accepted=False
+        WHEN POST /api/hire/bookings/
+        THEN 400 is returned.
+        """
+        payload = _booking_payload(hire_bike.id)
+        payload['terms_accepted'] = False
+        response = api_client.post(self.URL, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_terms_accepted_is_saved_on_booking(self, api_client, hire_bike):
+        """
+        GIVEN a valid payload with terms_accepted=True
+        WHEN the booking is created
+        THEN booking.terms_accepted is True in the database.
+        """
+        api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
+        booking = HireBooking.objects.first()
+        assert booking.terms_accepted is True

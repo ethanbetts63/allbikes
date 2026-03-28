@@ -91,6 +91,44 @@ class TestOrderCreateView:
         response = api_client.post(url, {'product': 999}, format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
+    def test_returns_400_when_terms_not_accepted(self, api_client):
+        """
+        GIVEN a product order payload missing terms_accepted
+        WHEN posted
+        THEN 400 Bad Request is returned.
+        """
+        product = ProductFactory(stock_quantity=5)
+        url = reverse('payments:order-create')
+        payload = _order_payload(product.id)
+        del payload['terms_accepted']
+        response = api_client.post(url, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_returns_400_when_terms_explicitly_false(self, api_client):
+        """
+        GIVEN a product order payload with terms_accepted=False
+        WHEN posted
+        THEN 400 Bad Request is returned.
+        """
+        product = ProductFactory(stock_quantity=5)
+        url = reverse('payments:order-create')
+        payload = _order_payload(product.id)
+        payload['terms_accepted'] = False
+        response = api_client.post(url, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_terms_accepted_is_saved_on_order(self, api_client):
+        """
+        GIVEN a valid product order payload with terms_accepted=True
+        WHEN the order is created
+        THEN order.terms_accepted is True in the database.
+        """
+        product = ProductFactory(stock_quantity=5)
+        url = reverse('payments:order-create')
+        api_client.post(url, _order_payload(product.id), format='json')
+        order = Order.objects.first()
+        assert order.terms_accepted is True
+
 
 @pytest.mark.django_db
 class TestOrderRetrieveView:
@@ -204,3 +242,41 @@ class TestDepositOrderCreateView:
         payload['customer_phone'] = ''
         response = api_client.post(url, payload, format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_returns_400_when_terms_not_accepted(self, api_client):
+        """
+        GIVEN a deposit payload missing terms_accepted
+        WHEN posted
+        THEN 400 Bad Request is returned.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        url = reverse('payments:order-create')
+        payload = _deposit_payload(motorcycle.id)
+        del payload['terms_accepted']
+        response = api_client.post(url, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_returns_400_when_terms_explicitly_false(self, api_client):
+        """
+        GIVEN a deposit payload with terms_accepted=False
+        WHEN posted
+        THEN 400 Bad Request is returned.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        url = reverse('payments:order-create')
+        payload = _deposit_payload(motorcycle.id)
+        payload['terms_accepted'] = False
+        response = api_client.post(url, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_terms_accepted_is_saved_on_order(self, api_client):
+        """
+        GIVEN a valid deposit payload with terms_accepted=True
+        WHEN the order is created
+        THEN order.terms_accepted is True in the database.
+        """
+        motorcycle = MotorcycleFactory(condition='new', status='for_sale')
+        url = reverse('payments:order-create')
+        api_client.post(url, _deposit_payload(motorcycle.id), format='json')
+        order = Order.objects.get(motorcycle=motorcycle)
+        assert order.terms_accepted is True

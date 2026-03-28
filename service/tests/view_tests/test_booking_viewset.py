@@ -58,6 +58,37 @@ class TestBookingViewSet:
         assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
         assert 'error' in response.data
 
+    def test_returns_400_when_terms_not_accepted(self, api_client):
+        """
+        GIVEN a valid booking payload with no terms_accepted field
+        WHEN POST /api/service/create-booking/
+        THEN 400 is returned.
+        """
+        url = reverse('service_api:create-booking')
+        data = {
+            "first_name": "Test", "last_name": "User", "phone": "123456", "email": "test@example.com",
+            "registration_number": "TEST1", "make": "Honda", "model": "CBR",
+            "drop_off_time": "25/12/2025 10:00", "job_type_names": ["Annual Service"],
+        }
+        response = api_client.post(url, data, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_returns_400_when_terms_explicitly_false(self, api_client):
+        """
+        GIVEN a valid booking payload with terms_accepted=False
+        WHEN POST /api/service/create-booking/
+        THEN 400 is returned.
+        """
+        url = reverse('service_api:create-booking')
+        data = {
+            "first_name": "Test", "last_name": "User", "phone": "123456", "email": "test@example.com",
+            "registration_number": "TEST1", "make": "Honda", "model": "CBR",
+            "drop_off_time": "25/12/2025 10:00", "job_type_names": ["Annual Service"],
+            "terms_accepted": False,
+        }
+        response = api_client.post(url, data, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
     def test_fetch_service_config(self, api_client):
         """
         GIVEN service settings exist

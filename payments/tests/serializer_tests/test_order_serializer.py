@@ -101,6 +101,32 @@ class TestOrderCreateSerializer:
         assert not serializer.is_valid()
         assert 'customer_phone' in serializer.errors
 
+    def test_missing_terms_accepted_is_invalid(self):
+        """
+        GIVEN a payload with no terms_accepted field
+        WHEN validated
+        THEN the serializer is invalid.
+        """
+        product = ProductFactory()
+        data = self._valid_payload(product.id)
+        del data['terms_accepted']
+        serializer = OrderCreateSerializer(data=data)
+        assert not serializer.is_valid()
+        assert 'terms_accepted' in serializer.errors
+
+    def test_terms_accepted_false_is_invalid(self):
+        """
+        GIVEN a payload with terms_accepted=False
+        WHEN validated
+        THEN the serializer is invalid.
+        """
+        product = ProductFactory()
+        data = self._valid_payload(product.id)
+        data['terms_accepted'] = False
+        serializer = OrderCreateSerializer(data=data)
+        assert not serializer.is_valid()
+        assert 'terms_accepted' in serializer.errors
+
     def test_deposit_order_does_not_require_address(self):
         """
         GIVEN a deposit order payload with no address fields
