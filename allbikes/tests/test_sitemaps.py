@@ -37,6 +37,7 @@ class TestStaticViewSitemap:
             '/escooters',
             '/electric-scooters',
             '/tyre-fitting',
+            '/hire',
         ]
         assert items == expected
 
