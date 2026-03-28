@@ -54,6 +54,18 @@ const AdminHireDetailPage = () => {
       .finally(() => setIsLoading(false));
   }, [id]);
 
+  const handleDelete = async () => {
+    if (!booking || !window.confirm(`Delete booking ${booking.booking_reference}? This cannot be undone.`)) return;
+    setIsDeleting(true);
+    try {
+      await adminDeleteHireBooking(booking.id);
+      navigate('/dashboard/hire');
+    } catch {
+      setNotification({ message: 'Failed to delete booking.', type: 'error' });
+      setIsDeleting(false);
+    }
+  };
+
   const handleStatusUpdate = async () => {
     if (!booking) return;
     setIsSaving(true);
@@ -115,6 +127,9 @@ const AdminHireDetailPage = () => {
             </select>
             <Button onClick={handleStatusUpdate} disabled={isSaving}>
               {isSaving ? 'Saving...' : 'Update'}
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </Button>
           </div>
         </div>

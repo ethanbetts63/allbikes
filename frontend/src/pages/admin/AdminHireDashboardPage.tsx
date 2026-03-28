@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminGetHireBookings } from '@/api';
+import { adminGetHireBookings, adminDeleteHireBooking } from '@/api';
 import type { HireBooking } from '@/types/HireBooking';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All' },
@@ -69,6 +70,7 @@ const AdminHireDashboardPage = () => {
                   <th className="text-left px-4 py-3 font-semibold">Customer</th>
                   <th className="text-left px-4 py-3 font-semibold">Dates</th>
                   <th className="text-left px-4 py-3 font-semibold">Status</th>
+                  <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -90,6 +92,20 @@ const AdminHireDashboardPage = () => {
                       <Badge variant="outline" className={`text-xs ${STATUS_BADGE[booking.status] ?? ''}`}>
                         {booking.status.replace('_', ' ')}
                       </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (!window.confirm(`Delete booking ${booking.booking_reference}? This cannot be undone.`)) return;
+                          await adminDeleteHireBooking(booking.id);
+                          setData(prev => prev ? { ...prev, results: prev.results.filter(b => b.id !== booking.id) } : prev);
+                        }}
+                      >
+                        Delete
+                      </Button>
                     </td>
                   </tr>
                 ))}
