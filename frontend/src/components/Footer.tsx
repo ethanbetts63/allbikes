@@ -49,6 +49,7 @@ const Footer = () => {
             {!siteSettings.hide_escooters && <li><Link to="/electric-scooters" className={LINK_CLASS}>Buy E-Scooters Online</Link></li>}
             {siteSettings.show_workshop_clearance && <li><Link to="/inventory/motorcycles/parts" className={LINK_CLASS}>Workshop Clearance</Link></li>}
             {siteSettings.show_hire && <li><Link to="/hire" className={LINK_CLASS}>Hire a Motorcycle</Link></li>}
+            {siteSettings.show_hire && <li><Link to="/motorcycle-hire" className={LINK_CLASS}>Motorcycle Hire Perth</Link></li>}
             <li><Link to="/service" className={LINK_CLASS}>Servicing</Link></li>
             <li><Link to="/tyre-fitting" className={LINK_CLASS}>Tyre Fitting</Link></li>
             <li><Link to="/contact" className={LINK_CLASS}>Contact Us</Link></li>
