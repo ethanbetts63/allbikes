@@ -27,7 +27,7 @@ const EScooterWhyBuySection = ({ buttonLink, buttonText }: EScooterWhyBuySection
               Allbikes &amp; Scooters · Dianella, Perth
             </p>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
-              Buy With<br />Confidence.
+              Shop With<br />Confidence.
             </h2>
             <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
               We're not a faceless warehouse. We're a real workshop in Perth that has been looking after riders for decades — online sales are an extension of that same service.
