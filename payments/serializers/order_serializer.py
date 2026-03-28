@@ -17,9 +17,13 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'suburb',
             'state',
             'postcode',
+            'terms_accepted',
         ]
 
     def validate(self, data):
+        if not data.get('terms_accepted'):
+            raise serializers.ValidationError({'terms_accepted': 'You must accept the terms and conditions.'})
+
         has_product = bool(data.get('product'))
         has_motorcycle = bool(data.get('motorcycle'))
         if not has_product and not has_motorcycle:

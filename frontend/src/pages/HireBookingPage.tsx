@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarDays } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { getBikeById, createHireBooking, createHirePaymentIntent } from '@/api';
 import type { Bike } from '@/types/Bike';
 
@@ -45,6 +46,7 @@ const HireBookingPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [termsAccepted, setTermsAccepted] = useState(false);
 
     const { register, handleSubmit, formState: { errors } } = useForm<BookingFormData>();
 
@@ -97,6 +99,7 @@ const HireBookingPage = () => {
                 customer_name: formData.customer_name,
                 customer_email: formData.customer_email,
                 customer_phone: formData.customer_phone,
+                terms_accepted: true,
             });
             const { clientSecret } = await createHirePaymentIntent(booking.booking_id);
             navigate(`/hire/${slug}/book/payment`, {
@@ -251,7 +254,23 @@ const HireBookingPage = () => {
                                         <p className="text-destructive text-sm">{submitError}</p>
                                     )}
 
-                                    <Button type="submit" disabled={isSubmitting} className="w-full">
+                                    <div className="flex items-start gap-3 pt-1">
+                                        <Checkbox
+                                            id="hire_terms_accepted"
+                                            checked={termsAccepted}
+                                            onCheckedChange={(checked) => setTermsAccepted(!!checked)}
+                                            className="mt-0.5"
+                                        />
+                                        <Label htmlFor="hire_terms_accepted" className="text-sm leading-snug cursor-pointer">
+                                            I have read and agree to the{' '}
+                                            <a href="/terms?type=hire" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">
+                                                Hire Terms and Conditions
+                                            </a>
+                                            .
+                                        </Label>
+                                    </div>
+
+                                    <Button type="submit" disabled={isSubmitting || !termsAccepted} className="w-full">
                                         {isSubmitting ? 'Please wait...' : 'Proceed to Payment'}
                                     </Button>
                                 </form>

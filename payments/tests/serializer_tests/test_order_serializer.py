@@ -21,6 +21,7 @@ class TestOrderCreateSerializer:
             'suburb': 'Perth',
             'state': 'WA',
             'postcode': '6000',
+            'terms_accepted': True,
         }
 
     def test_valid_payload_is_valid(self):
@@ -94,6 +95,7 @@ class TestOrderCreateSerializer:
             'customer_name': 'Jane Smith',
             'customer_email': 'jane@example.com',
             'customer_phone': '',
+            'terms_accepted': True,
         }
         serializer = OrderCreateSerializer(data=data)
         assert not serializer.is_valid()
@@ -111,6 +113,7 @@ class TestOrderCreateSerializer:
             'customer_name': 'Jane Smith',
             'customer_email': 'jane@example.com',
             'customer_phone': '0400000000',
+            'terms_accepted': True,
         }
         serializer = OrderCreateSerializer(data=data)
         assert serializer.is_valid(), serializer.errors

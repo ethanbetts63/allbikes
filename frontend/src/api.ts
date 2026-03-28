@@ -172,8 +172,9 @@ export async function manageMotorcycleImages(motorcycleId: number, images: Pick<
 
 // --- Legal Endpoints ---
 
-export async function getLatestTermsAndConditions(): Promise<TermsAndConditions> {
-    const response = await fetch(`${API_BASE_URL}/terms/latest/`);
+export async function getLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase'): Promise<TermsAndConditions> {
+    const url = type ? `${API_BASE_URL}/terms/latest/?type=${type}` : `${API_BASE_URL}/terms/latest/`;
+    const response = await fetch(url);
     return handleResponse(response);
 }
 
@@ -261,6 +262,7 @@ interface CreateOrderData {
     suburb: string;
     state: string;
     postcode: string;
+    terms_accepted: boolean;
 }
 
 export async function createOrder(data: CreateOrderData): Promise<{ order_id: number; order_reference: string }> {
@@ -390,6 +392,7 @@ export async function createHireBooking(data: {
     customer_name: string;
     customer_email: string;
     customer_phone: string;
+    terms_accepted: boolean;
 }): Promise<{
     booking_id: number;
     booking_reference: string;

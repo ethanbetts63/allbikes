@@ -23,6 +23,9 @@ class BookingViewSet(viewsets.ViewSet):
         Validates incoming data, sends it to MechanicsDesk, and logs the transaction.
         Maps to POST /api/service/booking/
         """
+        if not request.data.get('terms_accepted'):
+            return Response({'error': 'You must accept the terms and conditions.'}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = BookingSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

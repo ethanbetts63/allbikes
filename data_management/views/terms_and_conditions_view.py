@@ -12,9 +12,16 @@ class LatestTermsAndConditionsView(APIView):
     permission_classes = [AllowAny]
     
     def get(self, request, *args, **kwargs):
-        latest_terms = TermsAndConditions.objects.order_by('-published_at').first()
-        if not latest_terms:
+        term_type = request.query_params.get('type')
+        qs = TermsAndConditions.objects.all()
+        if term_type:
+            qs = qs.filter(term_type=term_type)
+        else:
+            qs = qs.order_by('-published_at')
+
+        terms = qs.first()
+        if not terms:
             return Response({"detail": "No Terms and Conditions found."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = TermsAndConditionsSerializer(latest_terms)
+        serializer = TermsAndConditionsSerializer(terms)
         return Response(serializer.data)

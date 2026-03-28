@@ -25,6 +25,7 @@ def _order_payload(product_id):
         'suburb': 'Perth',
         'state': 'WA',
         'postcode': '6000',
+        'terms_accepted': True,
     }
 
 
@@ -136,6 +137,7 @@ def _deposit_payload(motorcycle_id):
         'customer_name': 'Jane Smith',
         'customer_email': 'jane@example.com',
         'customer_phone': '0400000000',
+        'terms_accepted': True,
     }
 
 

@@ -5,7 +5,8 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { getProductById, getBikeById, getDepositSettings, createOrder, createPaymentIntent } from '@/api';
+import { Checkbox } from '@/components/ui/checkbox';
+import { getProductById, getBikeById, getDepositSettings, createOrder, createPaymentIntent, getLatestTermsAndConditions } from '@/api';
 import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
 
@@ -46,6 +47,8 @@ const CheckoutPage = () => {
   const [isLoadingItem, setIsLoadingItem] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsUrl, setTermsUrl] = useState<string | null>(null);
 
   const productId = slug ? Number(slug.split('-').pop()) : null;
 
@@ -53,6 +56,10 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    getLatestTermsAndConditions('purchase')
+      .then(terms => setTermsUrl(`/terms?type=purchase`))
+      .catch(() => {});
 
     if (checkoutType === 'deposit') {
       if (!slug) { navigate('/inventory/motorcycles/new'); return; }
@@ -112,8 +119,8 @@ const CheckoutPage = () => {
     try {
       const orderPayload =
         checkoutType === 'deposit' && bike
-          ? { motorcycle: bike.id, payment_type: 'deposit' as const, ...formData }
-          : { product: product!.id, ...formData };
+          ? { motorcycle: bike.id, payment_type: 'deposit' as const, ...formData, terms_accepted: true }
+          : { product: product!.id, ...formData, terms_accepted: true };
 
       const order = await createOrder(orderPayload);
       const { clientSecret } = await createPaymentIntent(order.order_id);
@@ -287,10 +294,26 @@ const CheckoutPage = () => {
               </div>
             )}
 
+            <div className="flex items-start gap-3 pt-1">
+              <Checkbox
+                id="terms_accepted"
+                checked={termsAccepted}
+                onCheckedChange={(checked) => setTermsAccepted(!!checked)}
+                className="mt-0.5"
+              />
+              <Label htmlFor="terms_accepted" className="text-sm leading-snug cursor-pointer">
+                I have read and agree to the{' '}
+                <a href="/terms?type=purchase" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">
+                  Terms and Conditions
+                </a>
+                .
+              </Label>
+            </div>
+
             <div className="pt-2 space-y-3">
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !termsAccepted}
                 className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
               >
                 {isSubmitting ? 'Please wait...' : 'Continue to Payment'}

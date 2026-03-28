@@ -26,14 +26,15 @@ class TestBookingViewSet:
         data = {
             "first_name": "Test", "last_name": "User", "phone": "123456", "email": "test@example.com",
             "registration_number": "TEST1", "make": "Honda", "model": "CBR",
-            "drop_off_time": "25/12/2025 10:00", "job_type_names": ["Annual Service"]
+            "drop_off_time": "25/12/2025 10:00", "job_type_names": ["Annual Service"],
+            "terms_accepted": True,
         }
-        
+
         response = api_client.post(url, data, format='json')
 
         assert response.status_code == status.HTTP_201_CREATED
         mock_service_instance.create_booking.assert_called_once()
-    
+
     @patch('service.views.booking_viewset.MechanicsDeskService')
     def test_create_booking_failure(self, mock_mechanics_desk_service, api_client):
         """
@@ -48,7 +49,8 @@ class TestBookingViewSet:
         data = {
             "first_name": "Test", "last_name": "User", "phone": "123456", "email": "test@example.com",
             "registration_number": "TEST1", "make": "Honda", "model": "CBR",
-            "drop_off_time": "25/12/2025 10:00", "job_type_names": ["Annual Service"]
+            "drop_off_time": "25/12/2025 10:00", "job_type_names": ["Annual Service"],
+            "terms_accepted": True,
         }
 
         response = api_client.post(url, data, format='json')

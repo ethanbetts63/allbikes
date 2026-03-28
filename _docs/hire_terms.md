@@ -1,0 +1,83 @@
+Motor Vehicle Rental Terms and Conditions
+FEPS (WA) PTY LTD
+ABN 46 157 594 161 | DL MD28276
+5/6 Cleveland St, Dianella WA 6059
+T: 08 9433 4613 | E: admin@scootershop.com.au
+W: https://www.scootershop.com.au/
+These Terms and Conditions apply to all vehicle rentals supplied by FEPS (WA) PTY LTD. By signing the Rental Summary or taking possession of a Vehicle, you agree to these Terms and Conditions.
+
+1. Rental Agreement
+The Rental Summary, Vehicle Condition Report, and these Terms and Conditions form the entire agreement between you and us. By signing the Rental Summary or taking possession of the Vehicle, you confirm that you accept all terms.
+
+2. Rental Period
+We rent vehicles for flexible periods including days, weeks, and months. The rental period begins and ends at the times specified in the Rental Summary unless extended by agreement with us. Any extension must be requested before the end of the rental period and is subject to availability. If an extension is approved before expiry, no late fee will apply to the approved extension period.
+
+3. Rental Summary
+The Rental Summary sets out the Vehicle, rental period, price, bond, any extras, and special conditions. By signing it, you confirm all details are correct.
+
+4. Payment and Bond
+All rental fees and the bond must be paid in full upfront unless otherwise agreed in writing. A security deposit (bond) is required for all rentals and will be refunded once the Vehicle is returned in accordance with this Agreement and all amounts owing are paid.
+We may deduct from the bond or charge your payment method for any amounts owed under this Agreement, including damage, fuel, late return fees, fines, tolls, lost keys, cleaning, repossession, and any other reasonable costs incurred.
+
+5. Cancellation and Refunds
+If you cancel 5 or more days before the rental start date, you will receive a full refund of rental fees paid. If you cancel less than 5 days before the start date, no refund will be provided. Failure to collect the Vehicle is treated as a cancellation with no refund. The bond is not a rental fee and will be refunded separately in accordance with this Agreement.
+
+6. Inclusions and Extras
+The rental includes the Vehicle and any standard equipment listed in the Rental Summary. Optional extras such as helmets, jackets, and phone holders may be available for an additional charge.
+
+7. Exclusions
+Unless specifically stated, the rental does not include insurance, fuel beyond what is provided at pickup, tolls, parking charges, fines, additional drivers, or any loss resulting from a breach of this Agreement.
+
+8. Vehicle Condition and Inspection
+We inspect the Vehicle before and after each rental. You must inspect the Vehicle before departure and notify us immediately of any damage or issues. You are encouraged to take time-stamped photos before and after use.
+
+9. Fuel
+The Vehicle must be returned with the same fuel level as at pickup. If not, refuelling charges will apply.
+
+10. Cleaning
+The Vehicle must be returned in a reasonable state of cleanliness. A cleaning fee may apply if the Vehicle is returned in an excessively dirty or unacceptable condition.
+
+11. Drivers
+Only the approved driver may operate the Vehicle unless we provide written approval otherwise. All drivers must meet the age requirements specified at the time of booking or checkout, hold a valid driver’s licence, and hold the correct licence class for the Vehicle. A motorcycle licence is required for vehicles over 50cc. If a licence is not in English, a certified translation may be required.
+
+12. Use of the Vehicle
+You must use the Vehicle responsibly, lawfully, and with due care. Commercial use of the Vehicle is permitted. However, you must not operate the Vehicle recklessly, under the influence of drugs or alcohol, for illegal purposes, or in a way that may cause damage. Smoking and transporting pets in the Vehicle are prohibited. You must not allow unauthorised drivers to use the Vehicle or use it in unsafe conditions. We may terminate the rental immediately if the Vehicle is used improperly.
+
+13. Tracking
+The Vehicle may be fitted with GPS or telematics systems. You agree that we may track and record its location, speed, and usage during the rental period.
+
+14. Charges and Fees
+You are responsible for all charges incurred during the rental period, including fines, tolls, parking charges, fuel, cleaning, lost keys, late return fees, and repossession costs. If the Vehicle is returned late, a fee of up to five times the daily rental rate may be charged for each late period.
+
+15. Lost Keys
+If keys are lost, damaged, or not returned, you must pay all replacement and recovery costs.
+
+16. Return of the Vehicle
+You must return the Vehicle on time, to the agreed location, and in the required condition. If the Vehicle is not returned as agreed, we may take steps to recover it without notice at your expense. Early returns do not entitle you to a refund unless agreed.
+
+17. Accidents and Reporting
+You must report any accident, damage, theft, or loss as soon as possible. You must provide all relevant details and cooperate with any investigation. You must not admit fault or settle claims on our behalf.
+
+18. Liability for Damage to the Vehicle
+You are responsible for all loss or damage to the Vehicle during the rental period. Your liability for damage to the Vehicle is limited to a maximum of $5,000 per incident, unless the Vehicle is used in breach of this Agreement, in which case you may be liable for the full cost of all damage and associated losses.
+
+19. Third-Party Liability and Insurance
+We do not provide insurance for damage, loss, or injury caused to third parties. You are solely responsible for any damage, loss, or injury caused to other vehicles, property, or persons during the rental period.
+You agree to indemnify and hold us harmless from any claims, demands, or liabilities arising from your use of the Vehicle. Any insurance you obtain separately does not affect your obligations to us unless agreed in writing.
+
+20. Mechanical Issues
+If the Vehicle develops a fault, you must stop using it as soon as it is safe and contact us immediately. You must not arrange repairs without our approval.
+
+21. Termination and Repossession
+We may terminate the rental immediately if you breach this Agreement, fail to pay, misuse the Vehicle, or fail to return it on time. If the Vehicle is not returned, we may recover or repossess it without notice at your expense.
+
+22. Our Liability
+We provide the Vehicle in reasonable working condition but are not responsible for any indirect or consequential loss, except where required by law.
+
+23. Personal Property
+We are not responsible for any personal belongings left in the Vehicle.
+
+24. General
+If any part of this Agreement is unenforceable, the remaining terms continue to apply. We may update these Terms from time to time, and the version in force at the time of booking will apply.
+
+

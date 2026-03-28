@@ -58,6 +58,9 @@ class HireBookingCreateView(APIView):
     def post(self, request):
         data = request.data
 
+        if not data.get('terms_accepted'):
+            return Response({'error': 'You must accept the terms and conditions.'}, status=400)
+
         motorcycle_id = data.get('motorcycle')
         hire_start_str = data.get('hire_start')
         hire_end_str = data.get('hire_end')
@@ -130,6 +133,7 @@ class HireBookingCreateView(APIView):
             customer_name=customer_name,
             customer_email=customer_email,
             customer_phone=customer_phone,
+            terms_accepted=True,
         )
 
         motorcycle_name = (

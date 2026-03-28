@@ -46,6 +46,7 @@ class Order(models.Model):
     state = models.CharField(max_length=10, blank=True)
     postcode = models.CharField(max_length=10, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending_payment')
+    terms_accepted = models.BooleanField(default=False, help_text="Customer accepted terms and conditions at order time.")
     amount_paid = models.DecimalField(
         max_digits=10,
         decimal_places=2,

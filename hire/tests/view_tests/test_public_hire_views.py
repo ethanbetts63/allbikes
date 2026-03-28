@@ -27,6 +27,7 @@ def _booking_payload(motorcycle_id, start_offset=3, end_offset=5):
         'customer_name': 'Jane Rider',
         'customer_email': 'jane@example.com',
         'customer_phone': '0400000000',
+        'terms_accepted': True,
     }
 
 

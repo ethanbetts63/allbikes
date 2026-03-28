@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getLatestTermsAndConditions } from '@/api';
 import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 
 const TermsAndConditionsPage = () => {
+    const [searchParams] = useSearchParams();
+    const termType = searchParams.get('type') as 'hire' | 'service' | 'purchase' | null;
+
     const [terms, setTerms] = useState<TermsAndConditions | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -13,7 +17,7 @@ const TermsAndConditionsPage = () => {
         const fetchTerms = async () => {
             try {
                 setIsLoading(true);
-                const data = await getLatestTermsAndConditions();
+                const data = await getLatestTermsAndConditions(termType ?? undefined);
                 setTerms(data);
             } catch (err: any) {
                 setError(err.message || 'Failed to load terms and conditions.');
@@ -23,7 +27,7 @@ const TermsAndConditionsPage = () => {
         };
 
         fetchTerms();
-    }, []);
+    }, [termType]);
 
     const renderContent = () => {
         if (isLoading) {
