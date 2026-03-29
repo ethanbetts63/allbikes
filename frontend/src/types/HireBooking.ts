@@ -20,9 +20,11 @@ export interface HireBooking {
   motorcycle_name: string;
   hire_start: string;
   hire_end: string;
+  num_days: number;
   effective_daily_rate: string;
   total_hire_amount: string;
   bond_amount: string;
+  total_charged: string;
   customer_name: string;
   customer_email: string;
   customer_phone: string;

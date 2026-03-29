@@ -11,14 +11,9 @@ import { CalendarDays } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getBikeById, createHireBooking, createHirePaymentIntent, getPublicHireSettings, getHireExtras } from '@/api';
 import type { HireExtra } from '@/types/HireBooking';
+import type { HireHireBookingFormData } from '@/types/HireHireBookingFormData';
 import type { Bike } from '@/types/Bike';
 import { formatDate } from '@/lib/hire';
-
-interface BookingFormData {
-    customer_name: string;
-    customer_email: string;
-    customer_phone: string;
-}
 
 const HireBookingPage = () => {
     const navigate = useNavigate();
@@ -40,7 +35,7 @@ const HireBookingPage = () => {
     const [isOfAge, setIsOfAge] = useState(false);
     const [minimumAge, setMinimumAge] = useState(21);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<BookingFormData>();
+    const { register, handleSubmit, formState: { errors } } = useForm<HireBookingFormData>();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -84,7 +79,7 @@ const HireBookingPage = () => {
         .filter(e => selectedExtras[e.id])
         .reduce((sum, e) => sum + parseFloat(e.price_per_day) * numDays, 0);
 
-    const onSubmit = async (formData: BookingFormData) => {
+    const onSubmit = async (formData: HireBookingFormData) => {
         if (!bike) return;
         setSubmitError(null);
         setIsSubmitting(true);

@@ -5,24 +5,14 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import Seo from '@/components/Seo';
 import { CalendarDays } from 'lucide-react';
 import { formatDate } from '@/lib/hire';
+import type { HireBookingSummary } from '@/types/HireBookingSummary';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-
-interface BookingSummary {
-    motorcycleName: string;
-    hireStart: string;
-    hireEnd: string;
-    numDays: number;
-    totalHireAmount: string;
-    bondAmount: string;
-    extrasTotal: string;
-    totalCharged: string;
-}
 
 interface LocationState {
     clientSecret: string;
     bookingReference: string;
-    bookingSummary?: BookingSummary;
+    bookingSummary?: HireBookingSummary;
     error?: string;
 }
 
@@ -109,7 +99,7 @@ const HirePaymentPage = () => {
 
     if (!state?.clientSecret) return null;
 
-    const summary = state.bookingSummary;
+    const summary: HireBookingSummary | undefined = state.bookingSummary;
     const bondAmount = summary ? parseFloat(summary.bondAmount) : 0;
     const extrasTotal = summary ? parseFloat(summary.extrasTotal ?? '0') : 0;
     const totalCharge = summary?.totalCharged ?? null;

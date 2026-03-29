@@ -9,27 +9,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { getProductById, getBikeById, getDepositSettings, createOrder, createPaymentIntent } from '@/api';
 import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
-
-interface CheckoutFormData {
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string;
-  address_line1: string;
-  address_line2: string;
-  suburb: string;
-  state: string;
-  postcode: string;
-}
+import type { CheckoutFormData } from '@/types/CheckoutFormData';
+import type { CheckoutCheckoutItemSummary } from '@/types/CheckoutCheckoutItemSummary';
 
 interface LocationState {
   checkoutType?: 'product' | 'deposit';
-}
-
-interface ItemSummary {
-  name: string;
-  imageUrl: string | null;
-  priceLabel: string;
-  isDeposit: boolean;
 }
 
 const AU_STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'];
@@ -83,7 +67,7 @@ const CheckoutPage = () => {
     }
   }, []);
 
-  const buildItemSummary = (): ItemSummary => {
+  const buildCheckoutItemSummary = (): CheckoutItemSummary => {
     if (checkoutType === 'deposit' && bike && depositAmount) {
       const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
       return {
@@ -124,7 +108,7 @@ const CheckoutPage = () => {
         state: {
           clientSecret,
           orderReference: order.order_reference,
-          itemSummary: buildItemSummary(),
+          itemSummary: buildCheckoutItemSummary(),
         },
       });
     } catch (err: any) {
@@ -153,7 +137,7 @@ const CheckoutPage = () => {
   if (checkoutType === 'deposit' && !bike) return null;
   if (checkoutType === 'product' && !product) return null;
 
-  const summary = buildItemSummary();
+  const summary = buildCheckoutItemSummary();
 
   return (
     <>

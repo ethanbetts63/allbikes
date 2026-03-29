@@ -2,24 +2,11 @@ import { useLocation, Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import Seo from '@/components/Seo';
 import MotorcycleMovers from '@/components/MotorcycleMovers';
-
-interface ConfirmationState {
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone: string;
-    make: string;
-    model: string;
-    year?: string;
-    registration_number: string;
-    drop_off_time: string;
-    job_type_names: string[];
-    note?: string;
-}
+import type { ServiceBookingServiceBookingConfirmationState } from '@/types/ServiceBookingServiceBookingConfirmationState';
 
 const BookingConfirmationPage = () => {
     const location = useLocation();
-    const state = location.state as ConfirmationState | null;
+    const state = location.state as ServiceBookingConfirmationState | null;
 
     return (
         <>

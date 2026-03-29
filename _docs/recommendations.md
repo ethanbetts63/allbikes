@@ -66,3 +66,10 @@ A few things worth looking at before you go live:
   After 30 seconds of polling without getting paid, the page redirects to success anyway. If a webhook is genuinely slow, the customer sees "$0
   deposit paid". Unlikely in production but possible. You could show an error/contact page instead of forcing through to success — worth
   considering.
+
+
+
+  1. N+1 query risk on total_charged
+  total_charged is a Python property that calls self.extras.all(). Now that it's exposed via the serializer, any list endpoint that returns multiple
+   bookings (e.g. the admin hire dashboard) will fire a separate DB query per booking. The fix is prefetch_related('extras') on list views — worth
+  checking which views don't have it yet.

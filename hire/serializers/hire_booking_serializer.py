@@ -17,6 +17,7 @@ class HireBookingSerializer(serializers.ModelSerializer):
             'motorcycle_name',
             'hire_start',
             'hire_end',
+            'num_days',
             'effective_daily_rate',
             'total_hire_amount',
             'bond_amount',

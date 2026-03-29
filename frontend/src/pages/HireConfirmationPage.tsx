@@ -5,35 +5,15 @@ import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle } from 'lucide-react';
 import { getHireBookingByReference } from '@/api';
 import { formatDate } from '@/lib/hire';
-
-interface BookingExtra {
-    id: number;
-    name: string;
-    quantity: number;
-    price_per_day_snapshot: string;
-    total_amount: string;
-}
-
-interface BookingDetails {
-    booking_reference: string;
-    motorcycle_name: string;
-    hire_start: string;
-    hire_end: string;
-    num_days: number;
-    effective_daily_rate: string;
-    total_hire_amount: string;
-    bond_amount: string;
-    extras: BookingExtra[];
-    total_charged: string;
-}
+import type { HireBooking } from '@/types/HireBooking';
 
 const HireConfirmationPage = () => {
     const { bookingReference } = useParams<{ bookingReference: string }>();
     const location = useLocation();
     const navigate = useNavigate();
 
-    const stateBooking = location.state as BookingDetails | null;
-    const [booking, setBooking] = useState<BookingDetails | null>(stateBooking);
+    const stateBooking = location.state as HireBooking | null;
+    const [booking, setBooking] = useState<HireBooking | null>(stateBooking);
     const [isLoading, setIsLoading] = useState(!stateBooking);
     const [error, setError] = useState<string | null>(null);
 

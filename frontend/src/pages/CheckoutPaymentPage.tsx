@@ -6,20 +6,14 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
+import type { CheckoutCheckoutItemSummary } from '@/types/CheckoutCheckoutItemSummary';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-
-interface ItemSummary {
-  name: string;
-  imageUrl: string | null;
-  priceLabel: string;
-  isDeposit: boolean;
-}
 
 interface LocationState {
   clientSecret: string;
   orderReference: string;
-  itemSummary?: ItemSummary;
+  itemSummary?: CheckoutCheckoutItemSummary;
   error?: string;
 }
 
@@ -99,7 +93,7 @@ const CheckoutPaymentPage = () => {
   const navigate = useNavigate();
   const state = location.state as LocationState | null;
 
-  const [itemSummary, setItemSummary] = useState<ItemSummary | null>(state?.itemSummary ?? null);
+  const [itemSummary, setCheckoutItemSummary] = useState<CheckoutItemSummary | null>(state?.itemSummary ?? null);
   const [isLoadingSummary, setIsLoadingSummary] = useState(!state?.itemSummary);
 
   useEffect(() => {
@@ -112,7 +106,7 @@ const CheckoutPaymentPage = () => {
     if (!state.itemSummary && state.orderReference) {
       getOrderByReference(state.orderReference)
         .then((order: Order) => {
-          setItemSummary({
+          setCheckoutItemSummary({
             name: order.motorcycle_name ?? order.product_name ?? '',
             imageUrl: null,
             priceLabel: order.payment_type === 'deposit'
