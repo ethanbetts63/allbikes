@@ -155,7 +155,7 @@ const HireListPage = () => {
           </div>
 
           <div className="w-full text-center">
-            <p className="text-[var(--text-light-secondary)] text-[10px] leading-snug">* Free cancellation up to 5 days before booking commencement. &nbsp;** Roadside assistance is a courtesy service between 7am–9pm, subject to availability.</p>
+            <p className="text-[var(--text-light-secondary)] text-[10px] leading-snug">* up to 5 days before booking commencement. &nbsp;** between 7am–9pm, subject to availability.</p>
           </div>
         </div>
       </section>
