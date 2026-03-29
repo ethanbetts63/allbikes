@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
@@ -39,11 +39,12 @@ const hireFaqData = [
 
 const HireListPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(() => searchParams.get('start') ?? '');
+  const [endDate, setEndDate] = useState(() => searchParams.get('end') ?? '');
   const [minStartDate, setMinStartDate] = useState('');
   const [maxStartDate, setMaxStartDate] = useState('');
   useEffect(() => {

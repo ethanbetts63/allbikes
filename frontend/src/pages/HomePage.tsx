@@ -13,6 +13,7 @@ import { FloatingActionButton } from '@/components/FloatingActionButton';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import FeaturedEScooters from '@/components/FeaturedEScooters';
 import PayLaterSection from '@/components/PayLaterSection';
+import HireCTASection from '@/components/HireCTASection';
 
 const HomePage = () => {
   const [newBikes, setNewBikes] = useState<Bike[]>([]);
@@ -157,6 +158,9 @@ const HomePage = () => {
           linkTo="/inventory/motorcycles/new"
           linkText="All New Bikes"
         />
+        
+        {siteSettings.show_hire && <HireCTASection />}
+        
         <FeaturedBikes
           title={<>Featured <span className="hidden md:inline">Used Motorcycles & Scooters</span><span className="md:hidden">Used Bikes</span></>}
           bikes={usedBikes}
@@ -166,6 +170,8 @@ const HomePage = () => {
         />
 
         <ServiceCTAV2 />
+
+
 
         <PayLaterSection />
 
