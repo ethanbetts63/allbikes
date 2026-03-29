@@ -2,7 +2,7 @@
 
 {% block title %}Hire booking confirmed — {{ booking.booking_reference }}{% endblock %}
 
-{% block preheader %}Your hire booking for {{ motorcycle_name }} is confirmed. We'll be in touch to organise pickup.{% endblock %}
+{% block preheader %}Your hire booking for {{ booking.motorcycle }} is confirmed. We'll be in touch to organise pickup.{% endblock %}
 
 {% block content %}
 <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Hire Booking Confirmed</h1>
@@ -25,10 +25,10 @@
     <tr>
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Motorcycle</p>
-            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 12px 0;">{{ motorcycle_name }}</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 12px 0;">{{ booking.motorcycle }}</p>
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Hire Period</p>
             <p style="margin: 0 0 4px 0;">{{ booking.hire_start|date:"j N Y" }} &mdash; {{ booking.hire_end|date:"j N Y" }}</p>
-            <p style="color: #78716c; margin: 0;">{{ num_days }} {{ num_days|pluralize:"day,days" }}</p>
+            <p style="color: #78716c; margin: 0;">{{ booking.num_days }} {{ booking.num_days|pluralize:"day,days" }}</p>
         </td>
     </tr>
 </table>
@@ -39,7 +39,7 @@
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Cost Summary</p>
             <p style="margin: 0 0 4px 0;">Daily rate: ${{ booking.effective_daily_rate }}</p>
-            <p style="margin: 0 0 12px 0;">Duration: {{ num_days }} {{ num_days|pluralize:"day,days" }}</p>
+            <p style="margin: 0 0 12px 0;">Duration: {{ booking.num_days }} {{ booking.num_days|pluralize:"day,days" }}</p>
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #e7e5e4; padding-top: 8px;">
                 <tr>
                     <td style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c;">Hire</td>
@@ -59,7 +59,7 @@
                 {% endfor %}
                 <tr style="border-top: 1px solid #e7e5e4;">
                     <td style="padding: 8px 0 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: bold; color: #1c1917;">Total charged</td>
-                    <td align="right" style="padding: 8px 0 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: bold; color: #1c1917;">${{ total_charged }}</td>
+                    <td align="right" style="padding: 8px 0 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: bold; color: #1c1917;">${{ booking.total_charged }}</td>
                 </tr>
             </table>
         </td>

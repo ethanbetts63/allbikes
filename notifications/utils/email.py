@@ -90,21 +90,18 @@ def send_customer_confirmation(order):
 
 def send_hire_confirmation(booking):
     to = booking.customer_email
-    motorcycle_name = str(booking.motorcycle)
-    num_days = booking.num_days
-    total_charged = booking.total_charged
     subject = f"Hire booking confirmed — {booking.booking_reference}"
     text_body = (
         f"Hi {booking.customer_name},\n\n"
         f"Your hire booking has been confirmed.\n\n"
         f"Booking reference: {booking.booking_reference}\n"
-        f"Motorcycle: {motorcycle_name}\n"
+        f"Motorcycle: {booking.motorcycle}\n"
         f"Pick-up: {booking.hire_start.strftime('%d %b %Y')}\n"
         f"Return: {booking.hire_end.strftime('%d %b %Y')}\n"
-        f"Duration: {num_days} {'day' if num_days == 1 else 'days'}\n"
+        f"Duration: {booking.num_days} {'day' if booking.num_days == 1 else 'days'}\n"
         f"Hire: ${booking.total_hire_amount}\n"
         + (f"Bond (refundable): ${booking.bond_amount}\n" if booking.bond_amount else "")
-        + f"Total charged: ${total_charged}\n\n"
+        + f"Total charged: ${booking.total_charged}\n\n"
         f"PICK-UP & DROP-OFF\n"
         f"Pick-up: Collect your bike any time we are open on {booking.hire_start.strftime('%d %b %Y')}.\n"
         f"Drop-off: Return the bike at least 2 hours before closing time on {booking.hire_end.strftime('%d %b %Y')}.\n\n"
@@ -112,12 +109,7 @@ def send_hire_confirmation(booking):
         f"Mon-Fri: 9:00 AM - 5:00 PM | Sat: 10:00 AM - 1:00 PM | Sun: Closed\n\n"
         f"Questions? Contact us at admin@scootershop.com.au"
     )
-    context = {
-        'booking': booking,
-        'motorcycle_name': motorcycle_name,
-        'num_days': num_days,
-        'total_charged': total_charged,
-    }
+    context = {'booking': booking}
     html_body = render_to_string('notifications/emails/hire_customer_confirmation.html', context)
     try:
         _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
@@ -135,24 +127,22 @@ def send_admin_new_hire(booking):
             booking.booking_reference,
         )
         return
-    motorcycle_name = str(booking.motorcycle)
-    num_days = booking.num_days
     to = admin_email
     subject = f"New hire booking — {booking.booking_reference}"
     text_body = (
         f"New hire booking: {booking.booking_reference}\n"
         f"Date: {timezone.localtime(booking.created_at).strftime('%d %b %Y, %I:%M %p')} AWST\n\n"
-        f"Motorcycle: {motorcycle_name}\n"
+        f"Motorcycle: {booking.motorcycle}\n"
         f"Pick-up: {booking.hire_start.strftime('%d %b %Y')}\n"
         f"Return: {booking.hire_end.strftime('%d %b %Y')}\n"
-        f"Duration: {num_days} {'day' if num_days == 1 else 'days'}\n"
+        f"Duration: {booking.num_days} {'day' if booking.num_days == 1 else 'days'}\n"
         f"Hire total: ${booking.total_hire_amount}\n\n"
         f"Customer: {booking.customer_name}\n"
         f"Phone: {booking.customer_phone}\n"
         f"Email: {booking.customer_email}\n\n"
         f"Contact the customer to confirm pickup details.\n"
     )
-    context = {'booking': booking, 'motorcycle_name': motorcycle_name, 'num_days': num_days}
+    context = {'booking': booking}
     html_body = render_to_string('notifications/emails/hire_admin_new_booking.html', context)
     try:
         _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)

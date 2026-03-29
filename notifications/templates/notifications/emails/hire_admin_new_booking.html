@@ -3,7 +3,7 @@
 
 {% block title %}New hire booking — {{ booking.booking_reference }}{% endblock %}
 
-{% block preheader %}New hire: {{ booking.booking_reference }} — {{ booking.customer_name }}, {{ motorcycle_name }}.{% endblock %}
+{% block preheader %}New hire: {{ booking.booking_reference }} — {{ booking.customer_name }}, {{ booking.motorcycle }}.{% endblock %}
 
 {% block content %}
 <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 24px 0; line-height: 1.1;">New Hire Booking</h1>
@@ -24,10 +24,10 @@
     <tr>
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Motorcycle</p>
-            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 12px 0;">{{ motorcycle_name }}</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 12px 0;">{{ booking.motorcycle }}</p>
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Hire Period</p>
             <p style="margin: 0 0 4px 0;">{{ booking.hire_start|date:"j N Y" }} &mdash; {{ booking.hire_end|date:"j N Y" }}</p>
-            <p style="color: #78716c; margin: 0 0 12px 0;">{{ num_days }} {{ num_days|pluralize:"day,days" }}</p>
+            <p style="color: #78716c; margin: 0 0 12px 0;">{{ booking.num_days }} {{ booking.num_days|pluralize:"day,days" }}</p>
             <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">Hire total: ${{ booking.total_hire_amount }}</p>
             {% if booking.bond_amount and booking.bond_amount != "0.00" %}
             <p style="color: #78716c; font-size: 13px; margin: 0;">Bond: ${{ booking.bond_amount }}</p>
