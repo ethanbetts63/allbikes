@@ -101,27 +101,14 @@ const HireListPage = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full">
             {[
-              {
-                icon: '🛟',
-                label: 'FREE ROADSIDE ASSIST',
-                footnote: '** Courtesy service between 7am–9pm, subject to availability',
-                marker: '**',
-              },
-              {
-                icon: '✕',
-                label: 'FREE CANCELLATION',
-                footnote: '* Up to 5 days before booking commencement',
-                marker: '*',
-              },
-            ].map(({ icon, label, footnote, marker }) => (
+              { icon: <span className="text-[var(--highlight)]">✕</span>, label: 'FREE CANCELLATION',   marker: '*'  },
+              { icon: '🔧',                                                label: 'FREE ROADSIDE ASSIST', marker: '**' },
+            ].map(({ icon, label, marker }) => (
               <div key={label} className="flex-1 flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3">
-                <span className="text-2xl animate-bounce">{icon}</span>
-                <div className="text-left">
-                  <p className="text-[var(--text-light-primary)] font-bold text-sm tracking-wide">
-                    {label}<span className="text-[var(--highlight)] text-xs align-super ml-0.5">{marker}</span>
-                  </p>
-                  <p className="text-[var(--text-light-secondary)] text-[10px] leading-snug mt-0.5">{footnote}</p>
-                </div>
+                <span className="text-2xl">{icon}</span>
+                <p className="text-[var(--text-light-primary)] font-bold text-sm tracking-wide text-left">
+                  {label}<sup className="text-xs ml-0.5">{marker}</sup>
+                </p>
               </div>
             ))}
           </div>
@@ -165,6 +152,10 @@ const HireListPage = () => {
                 Select dates to check availability
               </p>
             )}
+          </div>
+
+          <div className="w-full text-center">
+            <p className="text-[var(--text-light-secondary)] text-[10px] leading-snug">* Free cancellation up to 5 days before booking commencement. &nbsp;** Roadside assistance is a courtesy service between 7am–9pm, subject to availability.</p>
           </div>
         </div>
       </section>
