@@ -7,15 +7,11 @@ End-to-end flow for hiring a motorcycle — from browsing to confirmation — an
 ## User Flow
 
 ```
-/motorcycle-hire  (HireLandingPage)
-  ├─ SEO landing page — hero, how it works, featured fleet, areas, FAQs
-  └─ "Check Availability" CTA → /hire
-       │
-       ▼
-  /hire  (HireListPage / Home Page CTA)
-       ├─ Date picker: Pick-up Date + Return Date
-       ├─ "Check Availability" button → re-fetches bikes for those dates
-       └─ Bike grid (all hire bikes shown until dates are selected)
+  /hire  (HireListPage)
+       ├─ Dark hero with embedded date picker (Pick-up Date + Return Date)
+       │    └─ Dates carry over from the home page HireCTASection if pre-selected
+       ├─ Bike grid (all hire bikes shown; filtered reactively when both dates are set)
+       └─ Sections below grid: HireConfidenceSection, HireAreasSection, FAQs
             ├─ Image, make/model/year, daily rate
             ├─ "Book Now" button (disabled until dates selected)
             └─ Click "Book Now" → /hire/book?bike=<id>&start=<date>&end=<date>
@@ -35,7 +31,8 @@ End-to-end flow for hiring a motorcycle — from browsing to confirmation — an
                  │    ├─ Full Name *
                  │    ├─ Email Address *
                  │    ├─ Phone Number *
-                 │    └─ Terms and Conditions checkbox (required)
+                 │    ├─ Terms and Conditions checkbox (required)
+                 │    └─ Age confirmation checkbox (required) — "I confirm I am {minimum_age} years or older"
                  │
                  └─ "Continue to Payment" button
                       │
@@ -133,8 +130,6 @@ End-to-end flow for hiring a motorcycle — from browsing to confirmation — an
        │    ├─ Email
        │    └─ Phone
        │
-       ├─ Notes (editable via status update)
-       │
        └─ ← Back to Hire Bookings  [bottom left]
 ```
 
@@ -180,7 +175,7 @@ Bond refunds are not automated. Once the booking is `returned` and inspection is
 | `customer_phone` | CharField | |
 | `status` | CharField | See status lifecycle above |
 | `terms_accepted` | BooleanField | Must be `True` at creation |
-| `notes` | TextField | Admin-only, internal use |
+| `is_of_age` | BooleanField | Must be `True` at creation — customer confirmed they meet the minimum age |
 | `created_at`, `updated_at` | DateTimeField | auto |
 
 **Properties:**
@@ -196,6 +191,8 @@ Singleton (always `pk=1`). Accessed via `HireSettings.get()`.
 | `bond_amount` | DecimalField | Snapshotted onto each booking at creation time |
 | `advance_min_days` | IntegerField | Minimum days ahead a booking can start |
 | `advance_max_days` | IntegerField | Maximum days ahead a booking can start |
+| `minimum_age` | IntegerField | Minimum hire age displayed in the booking form (default 21) |
+| `booking_gap_days` | IntegerField | Days required between a bike being returned and going out again (default 1) |
 
 ---
 
@@ -219,7 +216,9 @@ This rate is snapshotted onto the booking — changes to the motorcycle's rates 
 
 ## Availability Logic
 
-A bike is considered **unavailable** for a date range if it has an existing booking with status `confirmed`, `active`, or `returned` that overlaps those dates.
+A bike is considered **unavailable** for a date range if it has an existing booking with status `confirmed`, `active`, or `returned` that overlaps those dates — including a configurable gap buffer on either side.
+
+**Gap buffer (`booking_gap_days`):** After a bike is returned, it cannot go out again until `booking_gap_days` days have passed (to allow for safety inspection). This is enforced symmetrically — if a new booking ends on day N, any existing booking starting before day N + gap is also blocked. The gap is read from `HireSettings` and applied in `hire/utils/availability.py`.
 
 Bookings with status `pending_payment` or `cancelled` do **not** block availability. This means multiple customers can reach the payment step for the same bike at the same time — only the first to successfully pay gets the confirmed booking.
 
@@ -229,8 +228,7 @@ Bookings with status `pending_payment` or `cancelled` do **not** block availabil
 
 | Page | Route | File |
 |---|---|---|
-| Hire landing | `/motorcycle-hire` | `src/pages/HireLandingPage.tsx` |
-| Hire list | `/hire` | `src/pages/HireListPage.tsx` |
+| Hire list / landing | `/hire` | `src/pages/HireListPage.tsx` |
 | Booking details | `/hire/book` | `src/pages/HireBookingPage.tsx` |
 | Payment | `/hire/book/:ref/payment` | `src/pages/HirePaymentPage.tsx` |
 | Processing (3DS) | `/hire/processing` | `src/pages/HireProcessingPage.tsx` |
