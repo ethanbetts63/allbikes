@@ -10,10 +10,10 @@ import { FaqSection } from '@/components/FaqSection';
 import HireConfidenceSection from '@/components/HireConfidenceSection';
 import HireAreasSection from '@/components/HireAreasSection';
 import PayLaterSection from '@/components/PayLaterSection';
-import { getHireBikes, getPublicHireSettings, getHireBlockedDates } from '@/api';
+import { getHireBikes } from '@/api';
 import type { Bike } from '@/types/Bike';
-import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import { formatRate } from '@/lib/hire';
+import useHireDateConstraints from '@/hooks/useHireDateConstraints';
 
 const hireFaqData = [
   {
@@ -46,28 +46,16 @@ const HireListPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [startDate, setStartDate] = useState(() => searchParams.get('start') ?? '');
   const [endDate, setEndDate] = useState(() => searchParams.get('end') ?? '');
-  const [minStartDate, setMinStartDate] = useState('');
-  const [maxStartDate, setMaxStartDate] = useState('');
-  const [blockedDates, setBlockedDates] = useState<HireBlockedDate[]>([]);
   const [blockedDateError, setBlockedDateError] = useState<string | null>(null);
+  const { minStartDate, maxStartDate, isRangeBlocked, error: settingsError } = useHireDateConstraints();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    Promise.all([getPublicHireSettings(), getHireBlockedDates()])
-      .then(([settings, blocked]) => {
-        const min = new Date();
-        min.setDate(min.getDate() + settings.advance_min_days);
-        setMinStartDate(min.toISOString().split('T')[0]);
-        const max = new Date();
-        max.setDate(max.getDate() + settings.advance_max_days);
-        setMaxStartDate(max.toISOString().split('T')[0]);
-        setBlockedDates(blocked);
-      })
-      .catch(() => setError('Failed to load hire settings.'));
   }, []);
 
-  const isRangeBlocked = (start: string, end: string) =>
-    blockedDates.some(b => b.date_from <= end && b.date_to >= start);
+  useEffect(() => {
+    if (settingsError) setError(settingsError);
+  }, [settingsError]);
 
   useEffect(() => {
     if (startDate && endDate && isRangeBlocked(startDate, endDate)) {

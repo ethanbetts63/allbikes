@@ -1,36 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { getPublicHireSettings, getHireBlockedDates } from '@/api';
-import type { HireBlockedDate } from '@/types/HireBlockedDate';
+import useHireDateConstraints from '@/hooks/useHireDateConstraints';
 
 const HireCTASection = () => {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [minStartDate, setMinStartDate] = useState('');
-  const [maxStartDate, setMaxStartDate] = useState('');
-  const [blockedDates, setBlockedDates] = useState<HireBlockedDate[]>([]);
   const [blockedDateError, setBlockedDateError] = useState<string | null>(null);
-
-  useEffect(() => {
-    Promise.all([getPublicHireSettings(), getHireBlockedDates()])
-      .then(([settings, blocked]) => {
-        const min = new Date();
-        min.setDate(min.getDate() + settings.advance_min_days);
-        setMinStartDate(min.toISOString().split('T')[0]);
-        const max = new Date();
-        max.setDate(max.getDate() + settings.advance_max_days);
-        setMaxStartDate(max.toISOString().split('T')[0]);
-        setBlockedDates(blocked);
-      })
-      .catch(() => {});
-  }, []);
-
-  const isRangeBlocked = (start: string, end: string) =>
-    blockedDates.some(b => b.date_from <= end && b.date_to >= start);
+  const { minStartDate, maxStartDate, isRangeBlocked } = useHireDateConstraints();
 
   const handleSearch = () => {
     const params = new URLSearchParams();
