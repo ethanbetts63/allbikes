@@ -51,11 +51,7 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
           className="mt-0.5"
         />
         <Label htmlFor="terms_accepted" className="text-sm leading-snug cursor-pointer">
-          I have read and agree to the{' '}
-          <Link to="/terms?type=service" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">
-            Service Terms and Conditions
-          </Link>
-          .
+          <span>I have read and agree to the <Link to="/terms?type=service" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">Service Terms and Conditions</Link>.</span>
         </Label>
       </div>
 

@@ -267,11 +267,7 @@ const HireBookingPage = () => {
                                         className="mt-0.5"
                                     />
                                     <Label htmlFor="hire_terms_accepted" className="text-sm leading-snug cursor-pointer">
-                                        I have read and agree to the{' '}
-                                        <a href="/terms?type=hire" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">
-                                            Hire Terms and Conditions
-                                        </a>
-                                        .
+                                        <span>I have read and agree to the <a href="/terms?type=hire" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">Hire Terms and Conditions</a>.</span>
                                     </Label>
                                 </div>
 
@@ -283,7 +279,7 @@ const HireBookingPage = () => {
                                         className="mt-0.5"
                                     />
                                     <Label htmlFor="hire_is_of_age" className="text-sm leading-snug cursor-pointer">
-                                        I confirm that I am {minimumAge} years of age or older.
+                                        <span>I confirm that I am {minimumAge} years of age or older.</span>
                                     </Label>
                                 </div>
 

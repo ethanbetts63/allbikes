@@ -297,11 +297,7 @@ const CheckoutPage = () => {
                 className="mt-0.5"
               />
               <Label htmlFor="terms_accepted" className="text-sm leading-snug cursor-pointer">
-                I have read and agree to the{' '}
-                <a href="/terms?type=purchase" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">
-                  Terms and Conditions
-                </a>
-                .
+                <span>I have read and agree to the <a href="/terms?type=purchase" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">Terms and Conditions</a>.</span>
               </Label>
             </div>
 
