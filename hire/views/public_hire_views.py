@@ -3,15 +3,17 @@ from datetime import date, datetime, timedelta
 from decimal import Decimal
 
 from django.conf import settings as django_settings
+from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from inventory.models import Motorcycle
 from payments.models import Payment
-from ..models import HireBooking, HireSettings
+from ..models import HireBooking, HireBookingExtra, HireExtra, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
 from ..serializers.hire_booking_serializer import HireBookingCreateSerializer
+from ..serializers.hire_extra_serializer import HireExtraSerializer
 from ..utils.availability import is_motorcycle_available
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
@@ -26,6 +28,15 @@ class PublicHireSettingsView(APIView):
     def get(self, request):
         settings = HireSettings.get()
         return Response(HireSettingsSerializer(settings).data)
+
+
+class HireExtrasListView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        extras = HireExtra.objects.filter(is_active=True)
+        return Response(HireExtraSerializer(extras, many=True).data)
 
 
 class HireAvailabilityView(APIView):
@@ -73,6 +84,7 @@ class HireBookingCreateView(APIView):
         customer_name = data['customer_name'].strip()
         customer_email = data['customer_email'].strip()
         customer_phone = data['customer_phone'].strip()
+        extras_input = data.get('extras', [])
 
         hire_settings = HireSettings.get()
         today = date.today()
@@ -104,6 +116,15 @@ class HireBookingCreateView(APIView):
                 status=400,
             )
 
+        # Validate extras exist and are active
+        extra_ids = [e['extra_id'] for e in extras_input]
+        if extra_ids:
+            active_extras = {ex.id: ex for ex in HireExtra.objects.filter(id__in=extra_ids, is_active=True)}
+            if len(active_extras) != len(set(extra_ids)):
+                return Response({'error': 'One or more selected extras are unavailable.'}, status=400)
+        else:
+            active_extras = {}
+
         # Calculate effective daily rate (cheapest option)
         candidates = []
         if motorcycle.daily_rate and motorcycle.daily_rate > 0:
@@ -120,19 +141,37 @@ class HireBookingCreateView(APIView):
         num_days = (hire_end - hire_start).days + 1
         total_hire_amount = effective_daily_rate * num_days
 
-        booking = HireBooking.objects.create(
-            motorcycle=motorcycle,
-            hire_start=hire_start,
-            hire_end=hire_end,
-            effective_daily_rate=round(effective_daily_rate, 2),
-            total_hire_amount=round(total_hire_amount, 2),
-            bond_amount=hire_settings.bond_amount,
-            customer_name=customer_name,
-            customer_email=customer_email,
-            customer_phone=customer_phone,
-            terms_accepted=True,
-            is_of_age=True,
-        )
+        with transaction.atomic():
+            booking = HireBooking.objects.create(
+                motorcycle=motorcycle,
+                hire_start=hire_start,
+                hire_end=hire_end,
+                effective_daily_rate=round(effective_daily_rate, 2),
+                total_hire_amount=round(total_hire_amount, 2),
+                bond_amount=hire_settings.bond_amount,
+                customer_name=customer_name,
+                customer_email=customer_email,
+                customer_phone=customer_phone,
+                terms_accepted=True,
+                is_of_age=True,
+            )
+
+            booking_extras = []
+            for item in extras_input:
+                extra = active_extras[item['extra_id']]
+                quantity = item['quantity']
+                total_amount = round(extra.price_per_day * quantity * num_days, 2)
+                booking_extras.append(HireBookingExtra(
+                    booking=booking,
+                    extra=extra,
+                    quantity=quantity,
+                    price_per_day_snapshot=extra.price_per_day,
+                    total_amount=total_amount,
+                ))
+            if booking_extras:
+                HireBookingExtra.objects.bulk_create(booking_extras)
+
+        extras_total = sum(e.total_amount for e in booking_extras)
 
         return Response(
             {
@@ -145,6 +184,7 @@ class HireBookingCreateView(APIView):
                 'effective_daily_rate': str(booking.effective_daily_rate),
                 'total_hire_amount': str(booking.total_hire_amount),
                 'bond_amount': str(booking.bond_amount),
+                'extras_total': str(extras_total),
             },
             status=201,
         )
@@ -206,9 +246,9 @@ class HireBookingRetrieveView(APIView):
 
     def get(self, request, booking_reference):
         try:
-            booking = HireBooking.objects.select_related('motorcycle').get(
-                booking_reference=booking_reference
-            )
+            booking = HireBooking.objects.select_related('motorcycle').prefetch_related(
+                'extras__extra'
+            ).get(booking_reference=booking_reference)
         except HireBooking.DoesNotExist:
             return Response({'detail': 'Booking not found.'}, status=404)
 
@@ -221,5 +261,14 @@ class HireBookingRetrieveView(APIView):
             'effective_daily_rate': str(booking.effective_daily_rate),
             'total_hire_amount': str(booking.total_hire_amount),
             'bond_amount': str(booking.bond_amount),
+            'extras': [
+                {
+                    'name': e.extra.name,
+                    'quantity': e.quantity,
+                    'price_per_day_snapshot': str(e.price_per_day_snapshot),
+                    'total_amount': str(e.total_amount),
+                }
+                for e in booking.extras.all()
+            ],
             'status': booking.status,
         })

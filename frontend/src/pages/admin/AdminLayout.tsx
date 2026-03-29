@@ -145,6 +145,10 @@ const AdminLayout = () => {
               <Settings className="h-4 w-4 shrink-0" />
               Hire Settings
             </NavLink>
+            <NavLink to="/dashboard/hire-extras" className={subNavItem}>
+              <Tag className="h-3.5 w-3.5 shrink-0" />
+              Extras
+            </NavLink>
 
             <SectionLabel>Comms</SectionLabel>
             <NavLink to="/dashboard/messages" className={navItem}>

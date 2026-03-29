@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CalendarDays } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { getBikeById, createHireBooking, createHirePaymentIntent, getPublicHireSettings } from '@/api';
+import { getBikeById, createHireBooking, createHirePaymentIntent, getPublicHireSettings, getHireExtras } from '@/api';
+import type { HireExtra } from '@/types/HireBooking';
 import type { Bike } from '@/types/Bike';
 import { formatDate } from '@/lib/hire';
 
@@ -34,6 +35,8 @@ const HireBookingPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [extras, setExtras] = useState<HireExtra[]>([]);
+    const [selectedExtras, setSelectedExtras] = useState<Record<number, boolean>>({});
     const [isOfAge, setIsOfAge] = useState(false);
     const [minimumAge, setMinimumAge] = useState(21);
 
@@ -46,8 +49,8 @@ const HireBookingPage = () => {
             return;
         }
 
-        Promise.all([getBikeById(bikeId), getPublicHireSettings()])
-            .then(([bikeData, settings]) => {
+        Promise.all([getBikeById(bikeId), getPublicHireSettings(), getHireExtras()])
+            .then(([bikeData, settings, extrasData]) => {
                 if (!bikeData.is_hire || bikeData.status === 'on_hire') {
                     navigate('/hire');
                     return;
@@ -55,6 +58,7 @@ const HireBookingPage = () => {
                 setBike(bikeData);
                 setBondAmount(parseFloat(settings.bond_amount));
                 setMinimumAge(settings.minimum_age);
+                setExtras(extrasData);
             })
             .catch(() => setError('Failed to load bike details.'))
             .finally(() => setIsLoading(false));
@@ -76,6 +80,10 @@ const HireBookingPage = () => {
 
     const totalHireAmount = effectiveDailyRate !== null ? effectiveDailyRate * numDays : null;
 
+    const extrasTotal = extras
+        .filter(e => selectedExtras[e.id])
+        .reduce((sum, e) => sum + parseFloat(e.price_per_day) * numDays, 0);
+
     const onSubmit = async (formData: BookingFormData) => {
         if (!bike) return;
         setSubmitError(null);
@@ -90,6 +98,9 @@ const HireBookingPage = () => {
                 customer_phone: formData.customer_phone,
                 terms_accepted: true,
                 is_of_age: true,
+                extras: extras
+                    .filter(e => selectedExtras[e.id])
+                    .map(e => ({ extra_id: e.id, quantity: 1 })),
             });
             const { clientSecret } = await createHirePaymentIntent(booking.booking_id);
             navigate(`/hire/book/${booking.booking_reference}/payment`, {
@@ -103,6 +114,7 @@ const HireBookingPage = () => {
                         numDays: booking.num_days,
                         totalHireAmount: booking.total_hire_amount,
                         bondAmount: booking.bond_amount,
+                        extrasTotal: booking.extras_total,
                     },
                 },
             });
@@ -194,11 +206,17 @@ const HireBookingPage = () => {
                                         <span>${bondAmount.toFixed(2)}</span>
                                     </div>
                                 )}
+                                {extrasTotal > 0 && (
+                                    <div className="flex justify-between">
+                                        <span className="text-[var(--text-dark-secondary)]">Extras</span>
+                                        <span>${extrasTotal.toFixed(2)}</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between font-bold text-base border-t border-[var(--border-light)] pt-2">
                                     <span>Total charged today</span>
                                     <span>
                                         {totalHireAmount !== null && bondAmount !== null
-                                            ? `$${(totalHireAmount + bondAmount).toFixed(2)}`
+                                            ? `$${(totalHireAmount + bondAmount + extrasTotal).toFixed(2)}`
                                             : '—'}
                                     </span>
                                 </div>
@@ -207,6 +225,33 @@ const HireBookingPage = () => {
 
                         {/* Form */}
                         <div>
+                            {extras.length > 0 && (
+                                <div className="mb-6">
+                                    <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
+                                        Add Extras
+                                    </h2>
+                                    <div className="space-y-2">
+                                        {extras.map(extra => (
+                                            <label
+                                                key={extra.id}
+                                                className="flex items-center justify-between gap-3 bg-[var(--bg-light-secondary)] border border-[var(--border-light)] rounded-lg px-4 py-3 cursor-pointer hover:border-[var(--text-dark-secondary)] transition-colors"
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <Checkbox
+                                                        checked={!!selectedExtras[extra.id]}
+                                                        onCheckedChange={(checked) =>
+                                                            setSelectedExtras(prev => ({ ...prev, [extra.id]: !!checked }))
+                                                        }
+                                                    />
+                                                    <span className="text-sm font-medium text-[var(--text-dark-primary)]">{extra.name}</span>
+                                                </div>
+                                                <span className="text-sm text-[var(--text-dark-secondary)] shrink-0">${parseFloat(extra.price_per_day).toFixed(2)}/day</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-4">
                                 Your Details
                             </h2>

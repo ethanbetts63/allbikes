@@ -385,6 +385,11 @@ export async function checkHireAvailability(motorcycleId: number, startDate: str
     return handleResponse(response);
 }
 
+export async function getHireExtras(): Promise<import('@/types/HireBooking').HireExtra[]> {
+    const response = await fetch('/api/hire/extras/');
+    return handleResponse(response);
+}
+
 export async function createHireBooking(data: {
     motorcycle: number;
     hire_start: string;
@@ -394,6 +399,7 @@ export async function createHireBooking(data: {
     customer_phone: string;
     terms_accepted: boolean;
     is_of_age: boolean;
+    extras: { extra_id: number; quantity: number }[];
 }): Promise<{
     booking_id: number;
     booking_reference: string;
@@ -404,6 +410,7 @@ export async function createHireBooking(data: {
     effective_daily_rate: string;
     total_hire_amount: string;
     bond_amount: string;
+    extras_total: string;
 }> {
     const response = await fetch('/api/hire/bookings/', {
         method: 'POST',
@@ -475,5 +482,33 @@ export async function adminUpdateHireBookingStatus(id: number, status: string): 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
     });
+    return handleResponse(response);
+}
+
+export async function adminGetHireExtras(): Promise<import('@/types/HireBooking').HireExtra[]> {
+    const response = await authedFetch('/api/hire/admin/extras/');
+    return handleResponse(response);
+}
+
+export async function adminCreateHireExtra(data: { name: string; price_per_day: string; is_active: boolean }): Promise<import('@/types/HireBooking').HireExtra> {
+    const response = await authedFetch('/api/hire/admin/extras/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function adminUpdateHireExtra(id: number, data: Partial<{ name: string; price_per_day: string; is_active: boolean }>): Promise<import('@/types/HireBooking').HireExtra> {
+    const response = await authedFetch(`/api/hire/admin/extras/${id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function adminDeleteHireExtra(id: number): Promise<void> {
+    const response = await authedFetch(`/api/hire/admin/extras/${id}/`, { method: 'DELETE' });
     return handleResponse(response);
 }

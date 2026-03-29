@@ -1,3 +1,18 @@
+export interface HireExtra {
+  id: number;
+  name: string;
+  price_per_day: string;
+  is_active: boolean;
+}
+
+export interface HireBookingExtra {
+  id: number;
+  name: string;
+  quantity: number;
+  price_per_day_snapshot: string;
+  total_amount: string;
+}
+
 export interface HireBooking {
   id: number;
   booking_reference: string;
@@ -13,6 +28,7 @@ export interface HireBooking {
   customer_phone: string;
   status: 'pending_payment' | 'confirmed' | 'active' | 'returned' | 'cancelled';
   is_of_age: boolean;
+  extras: HireBookingExtra[];
   created_at: string;
   updated_at: string;
 }
@@ -22,5 +38,6 @@ export interface HireSettings {
   advance_min_days: number;
   advance_max_days: number;
   minimum_age: number;
+  booking_gap_days: number;
   updated_at: string;
 }

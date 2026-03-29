@@ -93,6 +93,24 @@ const AdminHireSettingsPage = () => {
                 onChange={(e) => setSettings({ ...settings, advance_max_days: parseInt(e.target.value) })}
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="minimum_age">Minimum Hire Age</Label>
+              <Input
+                id="minimum_age"
+                type="number"
+                value={settings.minimum_age}
+                onChange={(e) => setSettings({ ...settings, minimum_age: parseInt(e.target.value) })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="booking_gap_days">Booking Gap Days</Label>
+              <Input
+                id="booking_gap_days"
+                type="number"
+                value={settings.booking_gap_days}
+                onChange={(e) => setSettings({ ...settings, booking_gap_days: parseInt(e.target.value) })}
+              />
+            </div>
           </div>
 
         </CardContent>

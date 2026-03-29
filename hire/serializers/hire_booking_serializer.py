@@ -1,9 +1,11 @@
 from rest_framework import serializers
 from ..models import HireBooking
+from .hire_extra_serializer import HireBookingExtraSerializer
 
 
 class HireBookingSerializer(serializers.ModelSerializer):
     motorcycle_name = serializers.SerializerMethodField()
+    extras = HireBookingExtraSerializer(many=True, read_only=True)
 
     class Meta:
         model = HireBooking
@@ -17,16 +19,23 @@ class HireBookingSerializer(serializers.ModelSerializer):
             'effective_daily_rate',
             'total_hire_amount',
             'bond_amount',
+            'extras',
             'customer_name',
             'customer_email',
             'customer_phone',
             'status',
+            'is_of_age',
             'created_at',
             'updated_at',
         ]
 
     def get_motorcycle_name(self, obj):
         return str(obj.motorcycle)
+
+
+class HireBookingExtraInputSerializer(serializers.Serializer):
+    extra_id = serializers.IntegerField()
+    quantity = serializers.IntegerField(min_value=1, default=1)
 
 
 class HireBookingCreateSerializer(serializers.Serializer):
@@ -38,6 +47,7 @@ class HireBookingCreateSerializer(serializers.Serializer):
     customer_phone = serializers.CharField(max_length=50)
     terms_accepted = serializers.BooleanField()
     is_of_age = serializers.BooleanField()
+    extras = HireBookingExtraInputSerializer(many=True, required=False, default=list)
 
     def validate_terms_accepted(self, value):
         if not value:

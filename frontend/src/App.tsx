@@ -45,6 +45,7 @@ const AdminServiceBookingDetailPage = lazy(() => import('./pages/admin/AdminServ
 const AdminHireDashboardPage = lazy(() => import('./pages/admin/AdminHireDashboardPage'));
 const AdminHireDetailPage = lazy(() => import('./pages/admin/AdminHireDetailPage'));
 const AdminHireSettingsPage = lazy(() => import('./pages/admin/AdminHireSettingsPage'));
+const AdminHireExtrasPage = lazy(() => import('./pages/admin/AdminHireExtrasPage'));
 const HireListPage = lazy(() => import('./pages/HireListPage'));
 const HireBookingPage = lazy(() => import('./pages/HireBookingPage'));
 const HirePaymentPage = lazy(() => import('./pages/HirePaymentPage'));
@@ -117,6 +118,7 @@ function App() {
                   <Route path="hire" element={<AdminHireDashboardPage />} />
                   <Route path="hire/:id" element={<AdminHireDetailPage />} />
                   <Route path="hire-settings" element={<AdminHireSettingsPage />} />
+                  <Route path="hire-extras" element={<AdminHireExtrasPage />} />
                 </Route>
 
               </Routes>
