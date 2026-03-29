@@ -15,6 +15,8 @@ interface BookingSummary {
     numDays: number;
     totalHireAmount: string;
     bondAmount: string;
+    extrasTotal: string;
+    totalCharged: string;
 }
 
 interface LocationState {
@@ -109,9 +111,8 @@ const HirePaymentPage = () => {
 
     const summary = state.bookingSummary;
     const bondAmount = summary ? parseFloat(summary.bondAmount) : 0;
-    const totalCharge = summary
-        ? (parseFloat(summary.totalHireAmount) + bondAmount).toFixed(2)
-        : null;
+    const extrasTotal = summary ? parseFloat(summary.extrasTotal ?? '0') : 0;
+    const totalCharge = summary?.totalCharged ?? null;
 
     const elementsOptions = {
         clientSecret: state.clientSecret,
@@ -144,6 +145,12 @@ const HirePaymentPage = () => {
                                     <div className="flex justify-between text-[var(--text-dark-secondary)]">
                                         <span>Bond (refundable)</span>
                                         <span>${bondAmount.toFixed(2)}</span>
+                                    </div>
+                                )}
+                                {extrasTotal > 0 && (
+                                    <div className="flex justify-between text-[var(--text-dark-secondary)]">
+                                        <span>Extras</span>
+                                        <span>${extrasTotal.toFixed(2)}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between font-bold text-[var(--text-dark-primary)] border-t border-[var(--border-light)] pt-2">

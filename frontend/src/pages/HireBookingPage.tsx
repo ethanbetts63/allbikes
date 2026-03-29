@@ -115,6 +115,7 @@ const HireBookingPage = () => {
                         totalHireAmount: booking.total_hire_amount,
                         bondAmount: booking.bond_amount,
                         extrasTotal: booking.extras_total,
+                        totalCharged: booking.total_charged,
                     },
                 },
             });

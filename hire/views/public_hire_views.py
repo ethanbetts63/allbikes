@@ -185,6 +185,7 @@ class HireBookingCreateView(APIView):
                 'total_hire_amount': str(booking.total_hire_amount),
                 'bond_amount': str(booking.bond_amount),
                 'extras_total': str(extras_total),
+                'total_charged': str(booking.total_charged),
             },
             status=201,
         )

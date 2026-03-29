@@ -411,6 +411,7 @@ export async function createHireBooking(data: {
     total_hire_amount: string;
     bond_amount: string;
     extras_total: string;
+    total_charged: string;
 }> {
     const response = await fetch('/api/hire/bookings/', {
         method: 'POST',

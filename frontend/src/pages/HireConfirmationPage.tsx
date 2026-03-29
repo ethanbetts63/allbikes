@@ -6,6 +6,14 @@ import { CheckCircle } from 'lucide-react';
 import { getHireBookingByReference } from '@/api';
 import { formatDate } from '@/lib/hire';
 
+interface BookingExtra {
+    id: number;
+    name: string;
+    quantity: number;
+    price_per_day_snapshot: string;
+    total_amount: string;
+}
+
 interface BookingDetails {
     booking_reference: string;
     motorcycle_name: string;
@@ -15,6 +23,8 @@ interface BookingDetails {
     effective_daily_rate: string;
     total_hire_amount: string;
     bond_amount: string;
+    extras: BookingExtra[];
+    total_charged: string;
 }
 
 const HireConfirmationPage = () => {
@@ -58,7 +68,7 @@ const HireConfirmationPage = () => {
     }
 
     const bondAmount = parseFloat(booking.bond_amount);
-    const totalCharged = parseFloat(booking.total_hire_amount) + bondAmount;
+    const totalCharged = parseFloat(booking.total_charged);
 
     return (
         <>
@@ -116,6 +126,12 @@ const HireConfirmationPage = () => {
                                         <span>${bondAmount.toFixed(2)}</span>
                                     </div>
                                 )}
+                                {(booking.extras ?? []).map((extra) => (
+                                    <div key={extra.id} className="flex justify-between text-[var(--text-dark-secondary)]">
+                                        <span>{extra.name} ×{extra.quantity}</span>
+                                        <span>${parseFloat(extra.total_amount).toFixed(2)}</span>
+                                    </div>
+                                ))}
                                 <div className="flex justify-between font-bold text-[var(--text-dark-primary)] pt-1 border-t border-[var(--border-light)]">
                                     <span>Total charged</span>
                                     <span>${totalCharged.toFixed(2)}</span>

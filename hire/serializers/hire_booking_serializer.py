@@ -6,6 +6,7 @@ from .hire_extra_serializer import HireBookingExtraSerializer
 class HireBookingSerializer(serializers.ModelSerializer):
     motorcycle_name = serializers.SerializerMethodField()
     extras = HireBookingExtraSerializer(many=True, read_only=True)
+    total_charged = serializers.ReadOnlyField()
 
     class Meta:
         model = HireBooking
@@ -20,6 +21,7 @@ class HireBookingSerializer(serializers.ModelSerializer):
             'total_hire_amount',
             'bond_amount',
             'extras',
+            'total_charged',
             'customer_name',
             'customer_email',
             'customer_phone',
