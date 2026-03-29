@@ -1,15 +1,17 @@
-import { ShieldCheck, Clock, Bike, MapPin } from 'lucide-react';
+import { ShieldCheck, Clock, Bike, MapPin, XCircle, Wrench } from 'lucide-react';
 
 const usps = [
-    { icon: Clock, title: 'Flexible Durations', description: 'Daily, weekly, and monthly rates available. Only pay for the time you need.' },
-    { icon: ShieldCheck, title: 'Refundable Bond', description: 'A bond is held at time of payment and refunded in full when the bike is returned in good condition.' },
-    { icon: Bike, title: 'Maintained Fleet', description: 'Every bike in our hire fleet is serviced and maintained by our in-house workshop team.' },
-    { icon: MapPin, title: 'Easy Pickup', description: 'Collect and return from our workshop in Dianella — Unit 5 / 6 Cleveland Street.' },
+    { icon: Clock, title: 'Flexible Durations', description: 'Daily, weekly, and monthly rates. Only pay for the time you need.' },
+    { icon: ShieldCheck, title: 'Refundable Bond', description: 'Bond held at payment and refunded in full when the bike is returned in good condition.' },
+    { icon: Bike, title: 'Maintained Fleet', description: 'Every hire bike is serviced and maintained by our in-house workshop team.' },
+    { icon: MapPin, title: 'Easy Pickup', description: 'Collect and return from our Dianella workshop — Unit 5 / 6 Cleveland Street.' },
+    { icon: XCircle, title: 'Free Cancellation', description: 'Cancel for free up to 5 days before your booking starts. No questions asked.' },
+    { icon: Wrench, title: 'Roadside Assist', description: 'Courtesy roadside assistance available between 7am–9pm. Subject to availability.' },
 ];
 
 const HireConfidenceSection = () => (
     <section className="bg-[var(--bg-dark-primary)] py-16 px-6">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
             <div className="text-center mb-10">
                 <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
                     Why Hire From Us
@@ -18,7 +20,7 @@ const HireConfidenceSection = () => (
                     Hire With Confidence
                 </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
                 {usps.map(({ icon: Icon, title, description }) => (
                     <div key={title} className="flex flex-col items-center text-center gap-3">
                         <div className="bg-[var(--bg-dark-secondary)] p-3 rounded-lg">
