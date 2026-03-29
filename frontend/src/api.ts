@@ -430,17 +430,7 @@ export async function createHirePaymentIntent(bookingId: number): Promise<{ clie
     return handleResponse(response);
 }
 
-export async function getHireBookingByReference(reference: string): Promise<{
-    booking_reference: string;
-    motorcycle_name: string;
-    hire_start: string;
-    hire_end: string;
-    num_days: number;
-    effective_daily_rate: string;
-    total_hire_amount: string;
-    bond_amount: string;
-    status: string;
-}> {
+export async function getHireBookingByReference(reference: string): Promise<HireBooking> {
     const response = await fetch(`/api/hire/bookings/${reference}/`);
     return handleResponse(response);
 }

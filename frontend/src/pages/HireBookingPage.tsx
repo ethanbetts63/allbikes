@@ -11,7 +11,7 @@ import { CalendarDays } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getBikeById, createHireBooking, createHirePaymentIntent, getPublicHireSettings, getHireExtras } from '@/api';
 import type { HireExtra } from '@/types/HireBooking';
-import type { HireHireBookingFormData } from '@/types/HireHireBookingFormData';
+import type { HireBookingFormData } from '@/types/HireBookingFormData';
 import type { Bike } from '@/types/Bike';
 import { formatDate } from '@/lib/hire';
 

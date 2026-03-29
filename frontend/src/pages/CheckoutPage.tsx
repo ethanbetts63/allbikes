@@ -10,7 +10,7 @@ import { getProductById, getBikeById, getDepositSettings, createOrder, createPay
 import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
 import type { CheckoutFormData } from '@/types/CheckoutFormData';
-import type { CheckoutCheckoutItemSummary } from '@/types/CheckoutCheckoutItemSummary';
+import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
 
 interface LocationState {
   checkoutType?: 'product' | 'deposit';
@@ -67,7 +67,7 @@ const CheckoutPage = () => {
     }
   }, []);
 
-  const buildCheckoutItemSummary = (): CheckoutItemSummary => {
+  const buildItemSummary = (): CheckoutItemSummary => {
     if (checkoutType === 'deposit' && bike && depositAmount) {
       const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
       return {
@@ -108,7 +108,7 @@ const CheckoutPage = () => {
         state: {
           clientSecret,
           orderReference: order.order_reference,
-          itemSummary: buildCheckoutItemSummary(),
+          itemSummary: buildItemSummary(),
         },
       });
     } catch (err: any) {
@@ -137,7 +137,7 @@ const CheckoutPage = () => {
   if (checkoutType === 'deposit' && !bike) return null;
   if (checkoutType === 'product' && !product) return null;
 
-  const summary = buildCheckoutItemSummary();
+  const summary = buildItemSummary();
 
   return (
     <>

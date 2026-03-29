@@ -6,14 +6,14 @@ import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
-import type { CheckoutCheckoutItemSummary } from '@/types/CheckoutCheckoutItemSummary';
+import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface LocationState {
   clientSecret: string;
   orderReference: string;
-  itemSummary?: CheckoutCheckoutItemSummary;
+  itemSummary?: CheckoutItemSummary;
   error?: string;
 }
 

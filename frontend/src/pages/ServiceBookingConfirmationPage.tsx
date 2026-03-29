@@ -2,7 +2,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import Seo from '@/components/Seo';
 import MotorcycleMovers from '@/components/MotorcycleMovers';
-import type { ServiceBookingServiceBookingConfirmationState } from '@/types/ServiceBookingServiceBookingConfirmationState';
+import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConfirmationState';
 
 const BookingConfirmationPage = () => {
     const location = useLocation();
