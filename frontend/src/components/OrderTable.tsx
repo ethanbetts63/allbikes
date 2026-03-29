@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useMemo } from 'react';
 import { formatDate } from '@/utils/formatting';
 import { useNavigate } from 'react-router-dom';

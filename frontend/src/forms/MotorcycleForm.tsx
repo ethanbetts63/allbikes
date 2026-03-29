@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, type ChangeEvent } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
