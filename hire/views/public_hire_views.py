@@ -14,7 +14,7 @@ from ..models import HireBooking, HireBookingExtra, HireExtra, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
 from ..serializers.hire_booking_serializer import HireBookingCreateSerializer
 from ..serializers.hire_extra_serializer import HireExtraSerializer
-from ..utils.availability import is_motorcycle_available
+from ..utils.availability import is_motorcycle_available, is_globally_blocked
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
 
@@ -101,6 +101,9 @@ class HireBookingCreateView(APIView):
             )
         if hire_end < hire_start:
             return Response({'error': 'Return date must be on or after the start date.'}, status=400)
+
+        if is_globally_blocked(hire_start, hire_end):
+            return Response({'error': 'The selected dates include a period when the shop is closed. Please choose different dates.'}, status=400)
 
         try:
             motorcycle = Motorcycle.objects.get(pk=motorcycle_id, is_hire=True)

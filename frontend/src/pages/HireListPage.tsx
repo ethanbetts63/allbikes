@@ -10,8 +10,9 @@ import { FaqSection } from '@/components/FaqSection';
 import HireConfidenceSection from '@/components/HireConfidenceSection';
 import HireAreasSection from '@/components/HireAreasSection';
 import PayLaterSection from '@/components/PayLaterSection';
-import { getHireBikes, getPublicHireSettings } from '@/api';
+import { getHireBikes, getPublicHireSettings, getHireBlockedDates } from '@/api';
 import type { Bike } from '@/types/Bike';
+import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import { formatRate } from '@/lib/hire';
 
 const hireFaqData = [
@@ -47,21 +48,33 @@ const HireListPage = () => {
   const [endDate, setEndDate] = useState(() => searchParams.get('end') ?? '');
   const [minStartDate, setMinStartDate] = useState('');
   const [maxStartDate, setMaxStartDate] = useState('');
+  const [blockedDates, setBlockedDates] = useState<HireBlockedDate[]>([]);
+  const [blockedDateError, setBlockedDateError] = useState<string | null>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    getPublicHireSettings()
-      .then((settings) => {
+    Promise.all([getPublicHireSettings(), getHireBlockedDates()])
+      .then(([settings, blocked]) => {
         const min = new Date();
         min.setDate(min.getDate() + settings.advance_min_days);
         setMinStartDate(min.toISOString().split('T')[0]);
         const max = new Date();
         max.setDate(max.getDate() + settings.advance_max_days);
         setMaxStartDate(max.toISOString().split('T')[0]);
+        setBlockedDates(blocked);
       })
       .catch(() => setError('Failed to load hire settings.'));
   }, []);
 
+  const isRangeBlocked = (start: string, end: string) =>
+    blockedDates.some(b => b.date_from <= end && b.date_to >= start);
+
   useEffect(() => {
+    if (startDate && endDate && isRangeBlocked(startDate, endDate)) {
+      setBikes([]);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError(null);
     const fetch = startDate && endDate
@@ -126,8 +139,10 @@ const HireListPage = () => {
                   max={maxStartDate}
                   value={startDate}
                   onChange={(e) => {
-                    setStartDate(e.target.value);
-                    if (endDate && e.target.value > endDate) setEndDate('');
+                    const val = e.target.value;
+                    setStartDate(val);
+                    if (endDate && val > endDate) setEndDate('');
+                    setBlockedDateError(endDate && val ? (isRangeBlocked(val, endDate) ? 'These dates include a period when the shop is closed. Please choose different dates.' : null) : null);
                   }}
                   className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
                 />
@@ -142,12 +157,18 @@ const HireListPage = () => {
                   min={startDate || minStartDate}
                   max={maxStartDate}
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setEndDate(val);
+                    setBlockedDateError(startDate && val ? (isRangeBlocked(startDate, val) ? 'These dates include a period when the shop is closed. Please choose different dates.' : null) : null);
+                  }}
                   className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
                 />
               </div>
             </div>
-            {(!startDate || !endDate) && (
+            {blockedDateError ? (
+              <p className="text-red-400 text-xs mt-3 text-center">{blockedDateError}</p>
+            ) : (!startDate || !endDate) && (
               <p className="text-[var(--text-light-secondary)] text-xs mt-3 text-center">
                 Select dates to check availability
               </p>

@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { getPublicHireSettings } from '@/api';
+import { getPublicHireSettings, getHireBlockedDates } from '@/api';
+import type { HireBlockedDate } from '@/types/HireBlockedDate';
 
 const HireCTASection = () => {
   const navigate = useNavigate();
@@ -11,19 +12,25 @@ const HireCTASection = () => {
   const [endDate, setEndDate] = useState('');
   const [minStartDate, setMinStartDate] = useState('');
   const [maxStartDate, setMaxStartDate] = useState('');
+  const [blockedDates, setBlockedDates] = useState<HireBlockedDate[]>([]);
+  const [blockedDateError, setBlockedDateError] = useState<string | null>(null);
 
   useEffect(() => {
-    getPublicHireSettings()
-      .then((settings) => {
+    Promise.all([getPublicHireSettings(), getHireBlockedDates()])
+      .then(([settings, blocked]) => {
         const min = new Date();
         min.setDate(min.getDate() + settings.advance_min_days);
         setMinStartDate(min.toISOString().split('T')[0]);
         const max = new Date();
         max.setDate(max.getDate() + settings.advance_max_days);
         setMaxStartDate(max.toISOString().split('T')[0]);
+        setBlockedDates(blocked);
       })
       .catch(() => {});
   }, []);
+
+  const isRangeBlocked = (start: string, end: string) =>
+    blockedDates.some(b => b.date_from <= end && b.date_to >= start);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -33,6 +40,7 @@ const HireCTASection = () => {
   };
 
   const bothSelected = startDate && endDate;
+  const isBlocked = bothSelected ? isRangeBlocked(startDate, endDate) : false;
 
   return (
     <section className="bg-[var(--bg-dark-primary)] py-16 px-6">
@@ -62,8 +70,10 @@ const HireCTASection = () => {
                 max={maxStartDate}
                 value={startDate}
                 onChange={(e) => {
-                  setStartDate(e.target.value);
-                  if (endDate && e.target.value > endDate) setEndDate('');
+                  const val = e.target.value;
+                  setStartDate(val);
+                  if (endDate && val > endDate) setEndDate('');
+                  setBlockedDateError(endDate && val ? (isRangeBlocked(val, endDate) ? 'These dates include a period when the shop is closed.' : null) : null);
                 }}
                 className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
               />
@@ -78,14 +88,21 @@ const HireCTASection = () => {
                 min={startDate || minStartDate}
                 max={maxStartDate}
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setEndDate(val);
+                  setBlockedDateError(startDate && val ? (isRangeBlocked(startDate, val) ? 'These dates include a period when the shop is closed.' : null) : null);
+                }}
                 className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
               />
             </div>
           </div>
+          {blockedDateError && (
+            <p className="text-red-400 text-xs text-center mb-2">{blockedDateError}</p>
+          )}
           <Button
             onClick={handleSearch}
-            disabled={!bothSelected}
+            disabled={!bothSelected || isBlocked}
             className="w-full bg-[var(--highlight)] text-[var(--bg-dark-primary)] hover:bg-[var(--highlight)] hover:opacity-90"
           >
             {bothSelected ? 'Find Available Bikes' : 'Select dates to check availability'}

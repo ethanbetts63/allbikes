@@ -149,6 +149,10 @@ const AdminLayout = () => {
               <Tag className="h-4 w-4 shrink-0" />
               Extras
             </NavLink>
+            <NavLink to="/dashboard/hire-blocked-dates" className={navItem}>
+              <CalendarCheck className="h-4 w-4 shrink-0" />
+              Blocked Dates
+            </NavLink>
 
             <SectionLabel>Comms</SectionLabel>
             <NavLink to="/dashboard/messages" className={navItem}>

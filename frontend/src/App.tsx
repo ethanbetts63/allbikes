@@ -46,6 +46,7 @@ const AdminHireDashboardPage = lazy(() => import('./pages/admin/AdminHireDashboa
 const AdminHireDetailPage = lazy(() => import('./pages/admin/AdminHireDetailPage'));
 const AdminHireSettingsPage = lazy(() => import('./pages/admin/AdminHireSettingsPage'));
 const AdminHireExtrasPage = lazy(() => import('./pages/admin/AdminHireExtrasPage'));
+const AdminHireBlockedDatesPage = lazy(() => import('./pages/admin/AdminHireBlockedDatesPage'));
 const HireListPage = lazy(() => import('./pages/HireListPage'));
 const HireBookingPage = lazy(() => import('./pages/HireBookingPage'));
 const HirePaymentPage = lazy(() => import('./pages/HirePaymentPage'));
@@ -119,6 +120,7 @@ function App() {
                   <Route path="hire/:id" element={<AdminHireDetailPage />} />
                   <Route path="hire-settings" element={<AdminHireSettingsPage />} />
                   <Route path="hire-extras" element={<AdminHireExtrasPage />} />
+                  <Route path="hire-blocked-dates" element={<AdminHireBlockedDatesPage />} />
                 </Route>
 
               </Routes>

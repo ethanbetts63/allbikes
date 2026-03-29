@@ -6,6 +6,8 @@ from .views import (
     AdminHireBookingStatusView,
     AdminHireExtraListView,
     AdminHireExtraDetailView,
+    AdminHireBlockedDateListView,
+    AdminHireBlockedDateDetailView,
     HireBikeListView,
     PublicHireSettingsView,
     HireExtrasListView,
@@ -13,6 +15,7 @@ from .views import (
     HireBookingCreateView,
     HireCreatePaymentIntentView,
     HireBookingRetrieveView,
+    HireBlockedDatesPublicView,
 )
 
 app_name = 'hire'
@@ -31,4 +34,7 @@ urlpatterns = [
     path('admin/bookings/<int:pk>/status/', AdminHireBookingStatusView.as_view(), name='admin-hire-booking-status'),
     path('admin/extras/', AdminHireExtraListView.as_view(), name='admin-hire-extras-list'),
     path('admin/extras/<int:pk>/', AdminHireExtraDetailView.as_view(), name='admin-hire-extras-detail'),
+    path('blocked-dates/', HireBlockedDatesPublicView.as_view(), name='hire-blocked-dates-public'),
+    path('admin/blocked-dates/', AdminHireBlockedDateListView.as_view(), name='admin-hire-blocked-dates-list'),
+    path('admin/blocked-dates/<int:pk>/', AdminHireBlockedDateDetailView.as_view(), name='admin-hire-blocked-dates-detail'),
 ]

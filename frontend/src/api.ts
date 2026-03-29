@@ -503,3 +503,27 @@ export async function adminDeleteHireExtra(id: number): Promise<void> {
     const response = await authedFetch(`/api/hire/admin/extras/${id}/`, { method: 'DELETE' });
     return handleResponse(response);
 }
+
+export async function getHireBlockedDates(): Promise<import('@/types/HireBlockedDate').HireBlockedDate[]> {
+    const response = await fetch('/api/hire/blocked-dates/');
+    return handleResponse(response);
+}
+
+export async function adminGetHireBlockedDates(): Promise<import('@/types/HireBlockedDate').HireBlockedDate[]> {
+    const response = await authedFetch('/api/hire/admin/blocked-dates/');
+    return handleResponse(response);
+}
+
+export async function adminCreateHireBlockedDate(data: { date_from: string; date_to: string; reason?: string; motorcycle?: number | null }): Promise<import('@/types/HireBlockedDate').HireBlockedDate> {
+    const response = await authedFetch('/api/hire/admin/blocked-dates/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function adminDeleteHireBlockedDate(id: number): Promise<void> {
+    const response = await authedFetch(`/api/hire/admin/blocked-dates/${id}/`, { method: 'DELETE' });
+    return handleResponse(response);
+}
