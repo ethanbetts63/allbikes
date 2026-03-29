@@ -1,8 +1,9 @@
 import pytest
 from datetime import date, timedelta
 
-from hire.utils.availability import get_unavailable_motorcycle_ids, is_motorcycle_available
+from hire.utils.availability import get_unavailable_motorcycle_ids, is_motorcycle_available, is_globally_blocked
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
+from hire.tests.factories.hire_blocked_date_factory import HireBlockedDateFactory
 from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 
 
@@ -181,3 +182,68 @@ class TestIsMotorcycleAvailable:
         """
         booking = HireBookingFactory(hire_start=_date(5), hire_end=_date(10), status='confirmed')
         assert is_motorcycle_available(booking.motorcycle.id, _date(12), _date(14), gap_days=1) is True
+
+    def test_returns_false_when_global_closure_overlaps(self):
+        """
+        GIVEN a global blocked date range of days 5–7
+        WHEN a motorcycle is checked for days 6–8
+        THEN False is returned regardless of booking status.
+        """
+        bike = MotorcycleFactory(is_hire=True, status='for_sale')
+        HireBlockedDateFactory(date_from=_date(5), date_to=_date(7), motorcycle=None)
+        assert is_motorcycle_available(bike.id, _date(6), _date(8)) is False
+
+    def test_returns_false_when_bike_specific_block_overlaps(self):
+        """
+        GIVEN a bike-specific blocked date range of days 5–7 on bike A
+        WHEN bike A is checked for days 6–8
+        THEN False is returned.
+        """
+        bike = MotorcycleFactory(is_hire=True, status='for_sale')
+        HireBlockedDateFactory(date_from=_date(5), date_to=_date(7), motorcycle=bike)
+        assert is_motorcycle_available(bike.id, _date(6), _date(8)) is False
+
+    def test_bike_specific_block_does_not_affect_other_bike(self):
+        """
+        GIVEN a bike-specific block on bike A for days 5–7
+        WHEN bike B is checked for the same dates
+        THEN True is returned.
+        """
+        bike_a = MotorcycleFactory(is_hire=True, status='for_sale')
+        bike_b = MotorcycleFactory(is_hire=True, status='for_sale')
+        HireBlockedDateFactory(date_from=_date(5), date_to=_date(7), motorcycle=bike_a)
+        assert is_motorcycle_available(bike_b.id, _date(5), _date(7)) is True
+
+
+@pytest.mark.django_db
+class TestIsGloballyBlocked:
+
+    def test_returns_true_when_range_overlaps_global_block(self):
+        """
+        GIVEN a global block for days 5–7
+        WHEN checked for days 6–8
+        THEN True is returned.
+        """
+        HireBlockedDateFactory(date_from=_date(5), date_to=_date(7), motorcycle=None)
+        assert is_globally_blocked(_date(6), _date(8)) is True
+
+    def test_returns_true_when_range_is_entirely_within_block(self):
+        HireBlockedDateFactory(date_from=_date(3), date_to=_date(10), motorcycle=None)
+        assert is_globally_blocked(_date(5), _date(7)) is True
+
+    def test_returns_false_when_no_overlap(self):
+        HireBlockedDateFactory(date_from=_date(10), date_to=_date(12), motorcycle=None)
+        assert is_globally_blocked(_date(3), _date(7)) is False
+
+    def test_returns_false_when_no_blocked_dates_exist(self):
+        assert is_globally_blocked(_date(3), _date(7)) is False
+
+    def test_bike_specific_block_does_not_trigger_global_check(self):
+        """
+        GIVEN only a bike-specific block (not global) for the range
+        WHEN is_globally_blocked is called
+        THEN False is returned.
+        """
+        bike = MotorcycleFactory(is_hire=True, status='for_sale')
+        HireBlockedDateFactory(date_from=_date(5), date_to=_date(7), motorcycle=bike)
+        assert is_globally_blocked(_date(5), _date(7)) is False
