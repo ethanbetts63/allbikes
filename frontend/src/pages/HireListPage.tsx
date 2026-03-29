@@ -99,6 +99,33 @@ const HireListPage = () => {
             </h1>
           </div>
 
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            {[
+              {
+                icon: '🛟',
+                label: 'FREE ROADSIDE ASSIST',
+                footnote: '** Courtesy service between 7am–9pm, subject to availability',
+                marker: '**',
+              },
+              {
+                icon: '✕',
+                label: 'FREE CANCELLATION',
+                footnote: '* Up to 5 days before booking commencement',
+                marker: '*',
+              },
+            ].map(({ icon, label, footnote, marker }) => (
+              <div key={label} className="flex-1 flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3">
+                <span className="text-2xl animate-bounce">{icon}</span>
+                <div className="text-left">
+                  <p className="text-[var(--text-light-primary)] font-bold text-sm tracking-wide">
+                    {label}<span className="text-[var(--highlight)] text-xs align-super ml-0.5">{marker}</span>
+                  </p>
+                  <p className="text-[var(--text-light-secondary)] text-[10px] leading-snug mt-0.5">{footnote}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="w-full bg-white/5 border border-white/10 rounded-lg p-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5 text-left">
