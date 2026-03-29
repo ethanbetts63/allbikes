@@ -22,6 +22,10 @@ class HireSettings(models.Model):
         default=21,
         help_text="Minimum age required to hire a motorcycle (displayed in the booking form).",
     )
+    booking_gap_days = models.IntegerField(
+        default=1,
+        help_text="Number of days required between a bike being returned and going out again (for inspection).",
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

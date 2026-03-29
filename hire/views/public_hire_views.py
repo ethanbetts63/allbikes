@@ -49,7 +49,8 @@ class HireAvailabilityView(APIView):
         except ValueError:
             return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
 
-        return Response({'available': is_motorcycle_available(motorcycle_id, start_date, end_date)})
+        gap_days = HireSettings.get().booking_gap_days
+        return Response({'available': is_motorcycle_available(motorcycle_id, start_date, end_date, gap_days)})
 
 
 class HireBookingCreateView(APIView):
@@ -93,7 +94,7 @@ class HireBookingCreateView(APIView):
         if motorcycle.status == 'on_hire':
             return Response({'error': 'This motorcycle is currently on hire.'}, status=400)
 
-        if not is_motorcycle_available(motorcycle.id, hire_start, hire_end):
+        if not is_motorcycle_available(motorcycle.id, hire_start, hire_end, hire_settings.booking_gap_days):
             return Response(
                 {'error': 'This motorcycle is not available for the selected dates.'},
                 status=400,

@@ -12,7 +12,7 @@ End-to-end flow for hiring a motorcycle — from browsing to confirmation — an
   └─ "Check Availability" CTA → /hire
        │
        ▼
-  /hire  (HireListPage)
+  /hire  (HireListPage / Home Page CTA)
        ├─ Date picker: Pick-up Date + Return Date
        ├─ "Check Availability" button → re-fetches bikes for those dates
        └─ Bike grid (all hire bikes shown until dates are selected)

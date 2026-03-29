@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 
 from inventory.models import Motorcycle
 from inventory.serializers.motorcycle_serializer import MotorcycleSerializer
+from ..models import HireSettings
 from ..utils.availability import get_unavailable_motorcycle_ids
 
 
@@ -32,6 +33,7 @@ class HireBikeListView(APIView):
             except ValueError:
                 return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
 
-            bikes = bikes.exclude(id__in=get_unavailable_motorcycle_ids(start_date, end_date))
+            gap_days = HireSettings.get().booking_gap_days
+            bikes = bikes.exclude(id__in=get_unavailable_motorcycle_ids(start_date, end_date, gap_days))
 
         return Response(MotorcycleSerializer(bikes, many=True, context={'request': request}).data)
