@@ -18,6 +18,10 @@ class HireSettings(models.Model):
         default=90,
         help_text="Maximum number of days in advance a hire booking can start.",
     )
+    minimum_age = models.IntegerField(
+        default=21,
+        help_text="Minimum age required to hire a motorcycle (displayed in the booking form).",
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

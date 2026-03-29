@@ -12,6 +12,7 @@ export interface HireBooking {
   customer_email: string;
   customer_phone: string;
   status: 'pending_payment' | 'confirmed' | 'active' | 'returned' | 'cancelled';
+  is_of_age: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -20,5 +21,6 @@ export interface HireSettings {
   bond_amount: string;
   advance_min_days: number;
   advance_max_days: number;
+  minimum_age: number;
   updated_at: string;
 }

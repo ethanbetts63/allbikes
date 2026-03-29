@@ -37,10 +37,16 @@ class HireBookingCreateSerializer(serializers.Serializer):
     customer_email = serializers.EmailField()
     customer_phone = serializers.CharField(max_length=50)
     terms_accepted = serializers.BooleanField()
+    is_of_age = serializers.BooleanField()
 
     def validate_terms_accepted(self, value):
         if not value:
             raise serializers.ValidationError('You must accept the terms and conditions.')
+        return value
+
+    def validate_is_of_age(self, value):
+        if not value:
+            raise serializers.ValidationError('You must meet the minimum age requirement to hire a motorcycle.')
         return value
 
 

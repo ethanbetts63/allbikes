@@ -86,7 +86,7 @@ const HireCTASection = () => {
           <Button
             onClick={handleSearch}
             disabled={!bothSelected}
-            className={`w-full ${!bothSelected ? 'bg-[var(--highlight)] text-[var(--bg-dark-primary)] hover:bg-[var(--highlight)] opacity-100 cursor-default' : ''}`}
+            className="w-full bg-[var(--highlight)] text-[var(--bg-dark-primary)] hover:bg-[var(--highlight)] hover:opacity-90"
           >
             {bothSelected ? 'Find Available Bikes' : 'Select dates to check availability'}
           </Button>

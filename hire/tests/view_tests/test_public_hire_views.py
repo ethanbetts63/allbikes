@@ -28,6 +28,7 @@ def _booking_payload(motorcycle_id, start_offset=3, end_offset=5):
         'customer_email': 'jane@example.com',
         'customer_phone': '0400000000',
         'terms_accepted': True,
+        'is_of_age': True,
     }
 
 
@@ -405,3 +406,35 @@ class TestHireBookingCreateView:
         api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
         booking = HireBooking.objects.first()
         assert booking.terms_accepted is True
+
+    def test_returns_400_when_is_of_age_missing(self, api_client, hire_bike):
+        """
+        GIVEN a payload missing is_of_age
+        WHEN POST /api/hire/bookings/
+        THEN 400 is returned.
+        """
+        payload = _booking_payload(hire_bike.id)
+        del payload['is_of_age']
+        response = api_client.post(self.URL, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_returns_400_when_is_of_age_false(self, api_client, hire_bike):
+        """
+        GIVEN a payload with is_of_age=False
+        WHEN POST /api/hire/bookings/
+        THEN 400 is returned.
+        """
+        payload = _booking_payload(hire_bike.id)
+        payload['is_of_age'] = False
+        response = api_client.post(self.URL, payload, format='json')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_is_of_age_is_saved_on_booking(self, api_client, hire_bike):
+        """
+        GIVEN a valid payload with is_of_age=True
+        WHEN the booking is created
+        THEN booking.is_of_age is True in the database.
+        """
+        api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
+        booking = HireBooking.objects.first()
+        assert booking.is_of_age is True

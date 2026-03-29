@@ -34,6 +34,8 @@ const HireBookingPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [isOfAge, setIsOfAge] = useState(false);
+    const [minimumAge, setMinimumAge] = useState(21);
 
     const { register, handleSubmit, formState: { errors } } = useForm<BookingFormData>();
 
@@ -52,6 +54,7 @@ const HireBookingPage = () => {
                 }
                 setBike(bikeData);
                 setBondAmount(parseFloat(settings.bond_amount));
+                setMinimumAge(settings.minimum_age);
             })
             .catch(() => setError('Failed to load bike details.'))
             .finally(() => setIsLoading(false));
@@ -86,6 +89,7 @@ const HireBookingPage = () => {
                 customer_email: formData.customer_email,
                 customer_phone: formData.customer_phone,
                 terms_accepted: true,
+                is_of_age: true,
             });
             const { clientSecret } = await createHirePaymentIntent(booking.booking_id);
             navigate(`/hire/book/${booking.booking_reference}/payment`, {
@@ -271,10 +275,22 @@ const HireBookingPage = () => {
                                     </Label>
                                 </div>
 
+                                <div className="flex items-start gap-3">
+                                    <Checkbox
+                                        id="hire_is_of_age"
+                                        checked={isOfAge}
+                                        onCheckedChange={(checked) => setIsOfAge(!!checked)}
+                                        className="mt-0.5"
+                                    />
+                                    <Label htmlFor="hire_is_of_age" className="text-sm leading-snug cursor-pointer">
+                                        I confirm that I am {minimumAge} years of age or older.
+                                    </Label>
+                                </div>
+
                                 <div className="pt-2 space-y-3">
                                     <button
                                         type="submit"
-                                        disabled={isSubmitting || !termsAccepted}
+                                        disabled={isSubmitting || !termsAccepted || !isOfAge}
                                         className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
                                     >
                                         {isSubmitting ? 'Please wait...' : 'Continue to Payment'}

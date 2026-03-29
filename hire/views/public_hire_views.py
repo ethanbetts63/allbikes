@@ -126,6 +126,7 @@ class HireBookingCreateView(APIView):
             customer_email=customer_email,
             customer_phone=customer_phone,
             terms_accepted=True,
+            is_of_age=True,
         )
 
         return Response(

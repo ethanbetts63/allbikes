@@ -393,6 +393,7 @@ export async function createHireBooking(data: {
     customer_email: string;
     customer_phone: string;
     terms_accepted: boolean;
+    is_of_age: boolean;
 }): Promise<{
     booking_id: number;
     booking_reference: string;
