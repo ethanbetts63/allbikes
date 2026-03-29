@@ -125,11 +125,11 @@ class TestHireAvailabilityView:
         assert response.status_code == status.HTTP_200_OK
         assert response.data['available'] is True
 
-    def test_adjacent_booking_does_not_block(self, api_client):
+    def test_booking_within_gap_blocks_availability(self, api_client):
         """
-        GIVEN a confirmed booking for days 5–7
-        WHEN checking days 8–10 (no overlap)
-        THEN available=True is returned.
+        GIVEN a confirmed booking for days 5–7 and the default gap of 1 day
+        WHEN checking days 8–10 (within the gap)
+        THEN available=False is returned.
         """
         booking = HireBookingFactory(
             hire_start=date.today() + timedelta(days=5),
@@ -140,6 +140,25 @@ class TestHireAvailabilityView:
             'motorcycle_id': booking.motorcycle.id,
             'start_date': _future(8),
             'end_date': _future(10),
+        })
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['available'] is False
+
+    def test_booking_outside_gap_does_not_block(self, api_client):
+        """
+        GIVEN a confirmed booking for days 5–7 and the default gap of 1 day
+        WHEN checking days 9–11 (outside the gap)
+        THEN available=True is returned.
+        """
+        booking = HireBookingFactory(
+            hire_start=date.today() + timedelta(days=5),
+            hire_end=date.today() + timedelta(days=7),
+            status='confirmed',
+        )
+        response = api_client.get(self.URL, {
+            'motorcycle_id': booking.motorcycle.id,
+            'start_date': _future(9),
+            'end_date': _future(11),
         })
         assert response.status_code == status.HTTP_200_OK
         assert response.data['available'] is True

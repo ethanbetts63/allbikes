@@ -34,6 +34,10 @@ class HireAvailabilityView(APIView):
 
     def get(self, request):
         motorcycle_id = request.query_params.get('motorcycle_id')
+        try:
+            motorcycle_id = int(motorcycle_id) if motorcycle_id else None
+        except (ValueError, TypeError):
+            return Response({'error': 'Invalid motorcycle_id.'}, status=400)
         start_date_str = request.query_params.get('start_date')
         end_date_str = request.query_params.get('end_date')
 

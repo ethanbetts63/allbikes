@@ -115,11 +115,11 @@ class TestHireBikeListView:
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
 
-    def test_adjacent_booking_does_not_exclude_bike(self, api_client):
+    def test_booking_within_gap_excludes_bike(self, api_client):
         """
-        GIVEN a bike booked for days 5–7
-        WHEN requesting dates 8–10 (no overlap)
-        THEN the bike is returned.
+        GIVEN a bike booked for days 5–7 and the default gap of 1 day
+        WHEN requesting dates 8–10 (within the gap)
+        THEN the bike is excluded.
         """
         bike = MotorcycleFactory(is_hire=True, status='for_sale')
         HireBookingFactory(
@@ -129,6 +129,23 @@ class TestHireBikeListView:
             status='confirmed',
         )
         response = api_client.get(self.URL, {'start_date': _future(8), 'end_date': _future(10)})
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 0
+
+    def test_booking_outside_gap_does_not_exclude_bike(self, api_client):
+        """
+        GIVEN a bike booked for days 5–7 and the default gap of 1 day
+        WHEN requesting dates 9–11 (outside the gap)
+        THEN the bike is returned.
+        """
+        bike = MotorcycleFactory(is_hire=True, status='for_sale')
+        HireBookingFactory(
+            motorcycle=bike,
+            hire_start=date.today() + timedelta(days=5),
+            hire_end=date.today() + timedelta(days=7),
+            status='confirmed',
+        )
+        response = api_client.get(self.URL, {'start_date': _future(9), 'end_date': _future(11)})
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
 
