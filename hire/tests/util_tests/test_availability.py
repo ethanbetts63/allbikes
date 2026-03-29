@@ -65,6 +65,36 @@ class TestGetUnavailableMotorycleIds:
         ids = list(get_unavailable_motorcycle_ids(_date(1), _date(5)))
         assert len(ids) == 0
 
+    def test_gap_blocks_booking_starting_too_soon_after_return(self):
+        """
+        GIVEN a confirmed booking ending on day 10 and gap_days=1
+        WHEN queried for days 11–13 (within the gap)
+        THEN the motorcycle ID is returned as unavailable.
+        """
+        booking = HireBookingFactory(hire_start=_date(5), hire_end=_date(10), status='confirmed')
+        ids = list(get_unavailable_motorcycle_ids(_date(11), _date(13), gap_days=1))
+        assert booking.motorcycle.id in ids
+
+    def test_gap_allows_booking_outside_gap_window(self):
+        """
+        GIVEN a confirmed booking ending on day 10 and gap_days=1
+        WHEN queried for days 12–14 (outside the gap)
+        THEN no IDs are returned.
+        """
+        HireBookingFactory(hire_start=_date(5), hire_end=_date(10), status='confirmed')
+        ids = list(get_unavailable_motorcycle_ids(_date(12), _date(14), gap_days=1))
+        assert len(ids) == 0
+
+    def test_gap_blocks_booking_ending_too_close_to_next(self):
+        """
+        GIVEN a confirmed booking starting on day 10 and gap_days=1
+        WHEN queried for days 7–9 (return is only 1 day before next booking starts)
+        THEN the motorcycle ID is returned as unavailable.
+        """
+        booking = HireBookingFactory(hire_start=_date(10), hire_end=_date(15), status='confirmed')
+        ids = list(get_unavailable_motorcycle_ids(_date(7), _date(9), gap_days=1))
+        assert booking.motorcycle.id in ids
+
 
 @pytest.mark.django_db
 class TestIsMotorcycleAvailable:
@@ -133,3 +163,21 @@ class TestIsMotorcycleAvailable:
         )
         other_bike = MotorcycleFactory(is_hire=True, status='for_sale')
         assert is_motorcycle_available(other_bike.id, _date(5), _date(10)) is True
+
+    def test_gap_returns_false_when_start_is_within_gap(self):
+        """
+        GIVEN a confirmed booking ending on day 10 and gap_days=1
+        WHEN checked for days 11–13
+        THEN False is returned.
+        """
+        booking = HireBookingFactory(hire_start=_date(5), hire_end=_date(10), status='confirmed')
+        assert is_motorcycle_available(booking.motorcycle.id, _date(11), _date(13), gap_days=1) is False
+
+    def test_gap_returns_true_when_start_is_outside_gap(self):
+        """
+        GIVEN a confirmed booking ending on day 10 and gap_days=1
+        WHEN checked for days 12–14
+        THEN True is returned.
+        """
+        booking = HireBookingFactory(hire_start=_date(5), hire_end=_date(10), status='confirmed')
+        assert is_motorcycle_available(booking.motorcycle.id, _date(12), _date(14), gap_days=1) is True
