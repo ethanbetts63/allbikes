@@ -110,9 +110,6 @@ class HireBookingCreateView(APIView):
         except Motorcycle.DoesNotExist:
             return Response({'error': 'Motorcycle not available for hire.'}, status=400)
 
-        if motorcycle.status == 'on_hire':
-            return Response({'error': 'This motorcycle is currently on hire.'}, status=400)
-
         if not is_motorcycle_available(motorcycle.id, hire_start, hire_end, hire_settings.booking_gap_days):
             return Response(
                 {'error': 'This motorcycle is not available for the selected dates.'},

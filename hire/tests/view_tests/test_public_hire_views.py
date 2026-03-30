@@ -263,16 +263,6 @@ class TestHireBookingCreateView:
         response = api_client.post(self.URL, _booking_payload(bike.id), format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_returns_400_when_bike_is_on_hire(self, api_client):
-        """
-        GIVEN a motorcycle with status='on_hire'
-        WHEN POST /api/hire/bookings/
-        THEN 400 is returned.
-        """
-        bike = MotorcycleFactory(is_hire=True, status='on_hire', daily_rate='100.00')
-        response = api_client.post(self.URL, _booking_payload(bike.id), format='json')
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-
     def test_returns_400_when_dates_overlap_existing_booking(self, api_client, hire_bike):
         """
         GIVEN an existing confirmed booking for days 5–10

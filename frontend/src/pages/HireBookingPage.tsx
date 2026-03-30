@@ -44,7 +44,7 @@ const HireBookingPage = () => {
 
         Promise.all([getBikeById(bikeId), getPublicHireSettings(), getHireExtras()])
             .then(([bikeData, settings, extrasData]) => {
-                if (!bikeData.is_hire || bikeData.status === 'on_hire') {
+                if (!bikeData.is_hire) {
                     navigate('/hire');
                     return;
                 }

@@ -9,7 +9,6 @@ class Motorcycle(models.Model):
         ("available_soon", "Available Soon"),
         ("sold", "Sold"),
         ("reserved", "Reserved"),
-        ("on_hire", "On Hire"),
         ("unavailable", "Unavailable"),
     ]
 

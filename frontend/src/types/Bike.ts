@@ -9,7 +9,7 @@ export type Bike = {
   price: string;
   discount_price?: string;
   condition: 'new' | 'used' | 'demo';
-  status: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'on_hire' | 'unavailable';
+  status: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'unavailable';
   is_featured?: boolean;
   popular?: boolean;
   odometer: number;

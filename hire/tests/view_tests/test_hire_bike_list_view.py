@@ -38,18 +38,6 @@ class TestHireBikeListView:
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
 
-    def test_excludes_on_hire_bikes(self, api_client):
-        """
-        GIVEN a hire bike with status='on_hire'
-        WHEN GET /api/hire/bikes/
-        THEN it is excluded from results.
-        """
-        MotorcycleFactory(is_hire=True, status='on_hire')
-        MotorcycleFactory(is_hire=True, status='for_sale')
-        response = api_client.get(self.URL)
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-
     def test_returns_all_hire_bikes_when_no_dates_given(self, api_client):
         """
         GIVEN 3 hire bikes with no date params

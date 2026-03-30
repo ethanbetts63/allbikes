@@ -21,7 +21,6 @@ class HireBikeListView(APIView):
         bikes = (
             Motorcycle.objects
             .filter(is_hire=True)
-            .exclude(status='on_hire')
             .prefetch_related('images')
             .order_by('make', 'model')
         )
