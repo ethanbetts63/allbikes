@@ -5,7 +5,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Gauge, Wrench, Cog } from 'lucide-react';
+import { Wrench, Cog } from 'lucide-react';
 import { FaqSection } from '@/components/FaqSection';
 import HireConfidenceSection from '@/components/HireConfidenceSection';
 import HireAreasSection from '@/components/HireAreasSection';
@@ -224,12 +224,6 @@ const HireListPage = () => {
                         </div>
 
                         <div className="flex items-center gap-3 text-sm text-[var(--text-dark-secondary)]">
-                          {bike.odometer > 0 && (
-                            <span className="flex items-center gap-1">
-                              <Gauge className="h-3.5 w-3.5" />
-                              {bike.odometer.toLocaleString()} km
-                            </span>
-                          )}
                           {bike.engine_size && (
                             <span className="flex items-center gap-1">
                               <Wrench className="h-3.5 w-3.5" />
