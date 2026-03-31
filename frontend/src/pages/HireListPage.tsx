@@ -107,9 +107,6 @@ const HireListPage = () => {
           </div>
 
           <div className="w-full bg-white/5 border border-white/10 rounded-lg p-5">
-            <p className="text-[var(--text-light-secondary)] text-xs font-bold uppercase tracking-widest mb-4 text-left">
-              Step 1 &mdash; Select your dates
-            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5 text-left">
                 <Label htmlFor="start_date" className="text-[var(--text-light-secondary)] text-xs uppercase tracking-widest">
@@ -158,23 +155,6 @@ const HireListPage = () => {
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full">
-            {[
-              { icon: <span className="text-[var(--highlight)]">✕</span>, label: 'FREE CANCELLATION',   marker: '*'  },
-              { icon: '🔧',                                                label: 'FREE ROADSIDE ASSIST', marker: '**' },
-            ].map(({ icon, label, marker }) => (
-              <div key={label} className="flex-1 flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3">
-                <span className="text-2xl">{icon}</span>
-                <p className="text-[var(--text-light-primary)] font-bold text-sm tracking-wide text-left">
-                  {label}<sup className="text-xs ml-0.5">{marker}</sup>
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="w-full text-center">
-            <p className="text-[var(--text-light-secondary)] text-[10px] leading-snug">* up to 5 days before booking commencement. &nbsp;** between 7am–9pm, subject to availability.</p>
-          </div>
         </div>
       </section>
 
