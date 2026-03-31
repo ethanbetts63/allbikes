@@ -230,13 +230,13 @@ const HireListPage = () => {
                         <div className="mt-auto pt-3 border-t border-[var(--border-light)] space-y-2">
                           <div className="flex items-center justify-between gap-3">
                             <span className="text-[var(--text-dark-primary)] font-black text-xl">
-                              {formatRate(bike)}
+                              {formatRate(bike, monthlyDiscountPercent)}
                             </span>
                             <Button
                               size="sm"
                               onClick={() => handleBook(bike)}
                             >
-                              Book Now
+                              {startDate && endDate ? 'Book Now' : 'Choose Dates'}
                             </Button>
                           </div>
                         </div>
