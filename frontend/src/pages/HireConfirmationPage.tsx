@@ -48,7 +48,7 @@ const HireConfirmationPage = () => {
     }
 
     const bondAmount = parseFloat(booking.bond_amount);
-    const totalCharged = parseFloat(booking.total_charged);
+    const totalCharged = parseFloat(booking.total_charged); // hire + extras only, bond not included
 
     return (
         <>
@@ -100,12 +100,6 @@ const HireConfirmationPage = () => {
                                     <span>Hire</span>
                                     <span>${parseFloat(booking.total_hire_amount).toFixed(2)}</span>
                                 </div>
-                                {bondAmount > 0 && (
-                                    <div className="flex justify-between text-[var(--text-dark-secondary)]">
-                                        <span>Bond (refundable)</span>
-                                        <span>${bondAmount.toFixed(2)}</span>
-                                    </div>
-                                )}
                                 {(booking.extras ?? []).map((extra) => (
                                     <div key={extra.id} className="flex justify-between text-[var(--text-dark-secondary)]">
                                         <span>{extra.name} ×{extra.quantity}</span>
@@ -113,12 +107,26 @@ const HireConfirmationPage = () => {
                                     </div>
                                 ))}
                                 <div className="flex justify-between font-bold text-[var(--text-dark-primary)] pt-1 border-t border-[var(--border-light)]">
-                                    <span>Total charged</span>
+                                    <span>Total charged today</span>
                                     <span>${totalCharged.toFixed(2)}</span>
                                 </div>
+                                {bondAmount > 0 && (
+                                    <div className="flex justify-between text-[var(--text-dark-secondary)] text-xs pt-1">
+                                        <span>Bond due at pickup (in-store)</span>
+                                        <span>${bondAmount.toFixed(2)}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
+
+                    {/* Bond notice */}
+                    {bondAmount > 0 && (
+                        <div className="border border-[var(--highlight)] rounded-lg p-4 mb-6 text-sm">
+                            <p className="font-bold text-[var(--text-dark-primary)] mb-1">Bond required at pickup — ${bondAmount.toFixed(2)}</p>
+                            <p className="text-[var(--text-dark-secondary)]">A refundable bond will be collected in-store when you pick up the bike. Please bring a card or cash. It will be returned in full when the bike is back with us in good condition.</p>
+                        </div>
+                    )}
 
                     {/* Pickup & drop-off instructions */}
                     <div className="bg-[var(--bg-light-primary)] border border-[var(--border-light)] rounded-lg p-5 mb-8">

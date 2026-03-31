@@ -21,7 +21,7 @@ const HireConfidenceSection = ({ weeklyDiscountPercent, monthlyDiscountPercent }
             title: 'Monthly Discount',
             description: `${monthlyLabel} for 30+ day bookings. Best value.`,
         },
-        { icon: ShieldCheck, title: 'Refundable Bond', description: 'Held at booking, refunded in full on return.' },
+        { icon: ShieldCheck, title: 'Refundable Bond', description: 'Collected in-store at pickup, refunded in full on return.' },
         { icon: MapPin, title: 'Easy Pickup', description: 'Collect and return at our Dianella workshop.' },
         { icon: XCircle, title: 'Free Cancellation', description: 'Cancel free up to 5 days before pickup.' },
         { icon: Wrench, title: 'Roadside Assist', description: '7am–9pm courtesy assistance. Subject to availability.' },

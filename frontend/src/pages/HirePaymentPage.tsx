@@ -102,7 +102,9 @@ const HirePaymentPage = () => {
     const summary: HireBookingSummary | undefined = state.bookingSummary;
     const bondAmount = summary ? parseFloat(summary.bondAmount) : 0;
     const extrasTotal = summary ? parseFloat(summary.extrasTotal ?? '0') : 0;
-    const totalCharge = summary?.totalCharged ?? null;
+    const totalCharge = summary
+        ? (parseFloat(summary.totalHireAmount) + extrasTotal).toFixed(2)
+        : null;
 
     const elementsOptions = {
         clientSecret: state.clientSecret,
@@ -131,12 +133,6 @@ const HirePaymentPage = () => {
                                     <span>Hire total ({summary.numDays} {summary.numDays === 1 ? 'day' : 'days'})</span>
                                     <span>${parseFloat(summary.totalHireAmount).toFixed(2)}</span>
                                 </div>
-                                {bondAmount > 0 && (
-                                    <div className="flex justify-between text-[var(--text-dark-secondary)]">
-                                        <span>Bond (refundable)</span>
-                                        <span>${bondAmount.toFixed(2)}</span>
-                                    </div>
-                                )}
                                 {extrasTotal > 0 && (
                                     <div className="flex justify-between text-[var(--text-dark-secondary)]">
                                         <span>Extras</span>
@@ -147,6 +143,12 @@ const HirePaymentPage = () => {
                                     <span>Total charged today</span>
                                     <span>${totalCharge}</span>
                                 </div>
+                                {bondAmount > 0 && (
+                                    <div className="flex justify-between text-[var(--text-dark-secondary)] text-xs pt-1">
+                                        <span>Bond due at pickup (in-store)</span>
+                                        <span>${bondAmount.toFixed(2)}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}

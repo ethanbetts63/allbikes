@@ -51,7 +51,7 @@ class HireBooking(models.Model):
     @property
     def total_charged(self):
         extras_total = sum(e.total_amount for e in self.extras.all())
-        return Decimal(str(self.total_hire_amount)) + Decimal(str(self.bond_amount)) + extras_total
+        return Decimal(str(self.total_hire_amount)) + extras_total
 
     def __str__(self):
         return self.booking_reference

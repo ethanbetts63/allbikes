@@ -201,12 +201,6 @@ const HireBookingPage = () => {
                                     <span>Hire total</span>
                                     <span>{totalHireAmount !== null ? `$${totalHireAmount.toFixed(2)}` : '—'}</span>
                                 </div>
-                                {bondAmount !== null && bondAmount > 0 && (
-                                    <div className="flex justify-between">
-                                        <span className="text-[var(--text-dark-secondary)]">Bond (refundable)</span>
-                                        <span>${bondAmount.toFixed(2)}</span>
-                                    </div>
-                                )}
                                 {extrasTotal > 0 && (
                                     <div className="flex justify-between">
                                         <span className="text-[var(--text-dark-secondary)]">Extras</span>
@@ -216,11 +210,17 @@ const HireBookingPage = () => {
                                 <div className="flex justify-between font-bold text-base border-t border-[var(--border-light)] pt-2">
                                     <span>Total charged today</span>
                                     <span>
-                                        {totalHireAmount !== null && bondAmount !== null
-                                            ? `$${(totalHireAmount + bondAmount + extrasTotal).toFixed(2)}`
+                                        {totalHireAmount !== null
+                                            ? `$${(totalHireAmount + extrasTotal).toFixed(2)}`
                                             : '—'}
                                     </span>
                                 </div>
+                                {bondAmount !== null && bondAmount > 0 && (
+                                    <div className="flex justify-between text-[var(--text-dark-secondary)] text-xs pt-1">
+                                        <span>Bond due at pickup (in-store)</span>
+                                        <span>${bondAmount.toFixed(2)}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

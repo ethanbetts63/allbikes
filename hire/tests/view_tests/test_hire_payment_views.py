@@ -92,11 +92,11 @@ class TestHireCreatePaymentIntentView:
         payment = Payment.objects.get(hire_booking=booking)
         assert payment.status == 'pending'
 
-    def test_amount_is_hire_total_plus_bond(self, api_client):
+    def test_amount_is_hire_total_only(self, api_client):
         """
         GIVEN a booking with total_hire_amount=400 and bond_amount=500
         WHEN payment intent is created
-        THEN Stripe is called with 900.00 * 100 = 90000 cents.
+        THEN Stripe is called with 400.00 * 100 = 40000 cents — bond is not charged online.
         """
         booking = HireBookingFactory(
             status='pending_payment',
@@ -108,7 +108,7 @@ class TestHireCreatePaymentIntentView:
             api_client.post(self.URL, {'booking_id': booking.id}, format='json')
 
         called_amount = mock_create.call_args[1]['amount']
-        assert called_amount == 90000  # 900.00 * 100
+        assert called_amount == 40000  # 400.00 * 100, bond excluded
 
     def test_metadata_includes_hire_booking_id_and_reference(self, api_client):
         """
@@ -139,7 +139,7 @@ class TestHireCreatePaymentIntentView:
         HirePaymentFactory(
             hire_booking=booking,
             stripe_payment_intent_id='pi_existing_hire',
-            amount='900.00',
+            amount='400.00',  # hire only — bond is not charged online
             status='pending',
         )
         existing_intent = _mock_intent(client_secret='cs_existing_hire', intent_id='pi_existing_hire')

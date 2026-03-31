@@ -23,7 +23,7 @@ const hireFaqData = [
   },
   {
     question: 'How does the bond work?',
-    answer: 'A refundable bond is charged at the time of payment along with your hire total. It is returned in full once the bike is back with us in good condition.',
+    answer: 'A refundable bond is collected in-store when you pick up the bike. It is returned in full once the bike is back with us in good condition.',
   },
   {
     question: 'What is included in the hire?',

@@ -58,23 +58,23 @@ class TestHireBookingModel:
         booking.refresh_from_db()
         assert booking.booking_reference == original_ref
 
-    def test_total_charged_is_sum_of_hire_amount_and_bond(self):
+    def test_total_charged_is_hire_amount_only(self):
         """
         GIVEN a booking with total_hire_amount=300.00 and bond_amount=500.00
         WHEN total_charged is accessed
-        THEN it returns Decimal('800.00'), not a string concatenation.
+        THEN it returns Decimal('300.00') — bond is collected in-store, not online.
         """
         booking = HireBookingFactory(total_hire_amount='300.00', bond_amount='500.00')
-        assert booking.total_charged == Decimal('800.00')
+        assert booking.total_charged == Decimal('300.00')
 
     def test_total_charged_with_decimal_values(self):
         """
-        GIVEN a booking with fractional amounts
+        GIVEN a booking with fractional hire amount
         WHEN total_charged is accessed
-        THEN decimal arithmetic is used, not string concatenation.
+        THEN it returns only the hire amount, not including bond.
         """
         booking = HireBookingFactory(total_hire_amount='123.45', bond_amount='250.00')
-        assert booking.total_charged == Decimal('373.45')
+        assert booking.total_charged == Decimal('123.45')
 
     def test_num_days_is_inclusive(self):
         """
