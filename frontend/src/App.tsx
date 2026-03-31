@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { siteSettings } from './config/siteSettings';
 import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from 'sonner';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -62,6 +63,7 @@ const LoadingFallback = () => (
 function App() {
   return (
     <HelmetProvider>
+        <Toaster position="top-center" richColors />
         <div className="min-h-screen flex flex-col">
           <NavBar />
           <main className="flex-grow">

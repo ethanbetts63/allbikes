@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
@@ -77,6 +78,11 @@ const HireListPage = () => {
   }, [startDate, endDate]);
 
   const handleBook = (bike: Bike) => {
+    if (!startDate || !endDate) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      toast.warning('Please select your pick-up and return dates first.');
+      return;
+    }
     navigate(`/hire/book?bike=${bike.id}&start=${startDate}&end=${endDate}`);
   };
 
@@ -96,25 +102,14 @@ const HireListPage = () => {
               Allbikes &amp; Scooters · Dianella, Perth
             </p>
             <h1 className="text-4xl sm:text-5xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
-              Hire a Bike
+              Select Your Hire Dates
             </h1>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full">
-            {[
-              { icon: <span className="text-[var(--highlight)]">✕</span>, label: 'FREE CANCELLATION',   marker: '*'  },
-              { icon: '🔧',                                                label: 'FREE ROADSIDE ASSIST', marker: '**' },
-            ].map(({ icon, label, marker }) => (
-              <div key={label} className="flex-1 flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3">
-                <span className="text-2xl">{icon}</span>
-                <p className="text-[var(--text-light-primary)] font-bold text-sm tracking-wide text-left">
-                  {label}<sup className="text-xs ml-0.5">{marker}</sup>
-                </p>
-              </div>
-            ))}
-          </div>
-
           <div className="w-full bg-white/5 border border-white/10 rounded-lg p-5">
+            <p className="text-[var(--text-light-secondary)] text-xs font-bold uppercase tracking-widest mb-4 text-left">
+              Step 1 &mdash; Select your dates
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5 text-left">
                 <Label htmlFor="start_date" className="text-[var(--text-light-secondary)] text-xs uppercase tracking-widest">
@@ -161,6 +156,20 @@ const HireListPage = () => {
                 Select dates to check availability
               </p>
             )}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            {[
+              { icon: <span className="text-[var(--highlight)]">✕</span>, label: 'FREE CANCELLATION',   marker: '*'  },
+              { icon: '🔧',                                                label: 'FREE ROADSIDE ASSIST', marker: '**' },
+            ].map(({ icon, label, marker }) => (
+              <div key={label} className="flex-1 flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3">
+                <span className="text-2xl">{icon}</span>
+                <p className="text-[var(--text-light-primary)] font-bold text-sm tracking-wide text-left">
+                  {label}<sup className="text-xs ml-0.5">{marker}</sup>
+                </p>
+              </div>
+            ))}
           </div>
 
           <div className="w-full text-center">
@@ -245,15 +254,11 @@ const HireListPage = () => {
                             </span>
                             <Button
                               size="sm"
-                              disabled={!startDate || !endDate}
                               onClick={() => handleBook(bike)}
                             >
                               Book Now
                             </Button>
                           </div>
-                          {(!startDate || !endDate) && (
-                            <p className="text-xs text-[var(--text-dark-secondary)]">Select dates above to book</p>
-                          )}
                         </div>
                       </div>
                     </div>
