@@ -41,5 +41,7 @@ export interface HireSettings {
   advance_max_days: number;
   minimum_age: number;
   booking_gap_days: number;
+  weekly_discount_percent: number;
+  monthly_discount_percent: number;
   updated_at: string;
 }

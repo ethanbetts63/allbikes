@@ -30,7 +30,7 @@ const HireCTASection = () => {
             Allbikes &amp; Scooters · Dianella, Perth
           </p>
           <h2 className="text-3xl sm:text-4xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
-            Hire a Motorcycle
+            Hire a Bike
           </h2>
           <p className="text-[var(--text-light-secondary)] text-sm mt-4">
             Daily, weekly &amp; monthly rates. Book online in minutes.

@@ -26,6 +26,14 @@ class HireSettings(models.Model):
         default=1,
         help_text="Number of days required between a bike being returned and going out again (for inspection).",
     )
+    weekly_discount_percent = models.IntegerField(
+        default=15,
+        help_text="Percentage discount applied to the daily rate for bookings of 7 or more days.",
+    )
+    monthly_discount_percent = models.IntegerField(
+        default=25,
+        help_text="Percentage discount applied to the daily rate for bookings of 30 or more days.",
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

@@ -18,8 +18,6 @@ class HireBookingFactory(DjangoModelFactory):
         is_hire=True,
         status='for_sale',
         daily_rate='100.00',
-        weekly_rate=None,
-        monthly_rate=None,
     )
     hire_start = factory.LazyFunction(lambda: date.today() + timedelta(days=5))
     hire_end = factory.LazyFunction(lambda: date.today() + timedelta(days=7))

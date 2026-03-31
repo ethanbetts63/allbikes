@@ -28,6 +28,4 @@ export type Bike = {
   date_posted: string;
   is_hire?: boolean;
   daily_rate?: string | null;
-  weekly_rate?: string | null;
-  monthly_rate?: string | null;
 };

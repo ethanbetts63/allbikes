@@ -154,21 +154,7 @@ class Motorcycle(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Daily hire rate (AUD). Used first when calculating hire cost.",
-    )
-    weekly_rate = models.DecimalField(
-        max_digits=8,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Weekly hire rate (AUD). Used as daily_rate / 7 if daily_rate is not set.",
-    )
-    monthly_rate = models.DecimalField(
-        max_digits=8,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Monthly hire rate (AUD). Used as monthly_rate / 30 if daily and weekly rates are not set.",
+        help_text="Daily hire rate (AUD). Weekly and monthly discounts are applied globally via Hire Settings.",
     )
 
     def __str__(self):

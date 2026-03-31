@@ -1,3 +1,4 @@
+import math
 import pytest
 from datetime import date, timedelta
 from django.urls import reverse
@@ -39,7 +40,8 @@ class TestPublicHireSettingsView:
         """
         GIVEN HireSettings exists
         WHEN GET /api/hire/settings/
-        THEN 200 is returned with bond_amount, advance_min_days, advance_max_days.
+        THEN 200 is returned with bond_amount, advance_min_days, advance_max_days,
+             weekly_discount_percent, monthly_discount_percent.
         """
         HireSettingsFactory(bond_amount='500.00', advance_min_days=2, advance_max_days=60)
         url = reverse('hire:hire-settings-public')
@@ -48,6 +50,8 @@ class TestPublicHireSettingsView:
         assert response.data['bond_amount'] == '500.00'
         assert response.data['advance_min_days'] == 2
         assert response.data['advance_max_days'] == 60
+        assert 'weekly_discount_percent' in response.data
+        assert 'monthly_discount_percent' in response.data
 
     def test_creates_default_settings_if_none_exist(self, api_client):
         """
@@ -184,7 +188,13 @@ class TestHireBookingCreateView:
 
     @pytest.fixture(autouse=True)
     def default_settings(self):
-        HireSettingsFactory(advance_min_days=1, advance_max_days=90, bond_amount='500.00')
+        HireSettingsFactory(
+            advance_min_days=1,
+            advance_max_days=90,
+            bond_amount='500.00',
+            weekly_discount_percent=15,
+            monthly_discount_percent=25,
+        )
 
     @pytest.fixture
     def hire_bike(self):
@@ -192,8 +202,6 @@ class TestHireBookingCreateView:
             is_hire=True,
             status='for_sale',
             daily_rate='100.00',
-            weekly_rate=None,
-            monthly_rate=None,
         )
 
     def test_creates_booking_and_returns_201(self, api_client, hire_bike):
@@ -281,17 +289,11 @@ class TestHireBookingCreateView:
 
     def test_returns_400_when_no_rates_configured(self, api_client):
         """
-        GIVEN a hire bike with no rates set
+        GIVEN a hire bike with no daily_rate set
         WHEN POST /api/hire/bookings/
         THEN 400 is returned.
         """
-        bike = MotorcycleFactory(
-            is_hire=True,
-            status='for_sale',
-            daily_rate=None,
-            weekly_rate=None,
-            monthly_rate=None,
-        )
+        bike = MotorcycleFactory(is_hire=True, status='for_sale', daily_rate=None)
         response = api_client.post(self.URL, _booking_payload(bike.id), format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -306,58 +308,60 @@ class TestHireBookingCreateView:
         response = api_client.post(self.URL, payload, format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_effective_rate_uses_daily_when_set(self, api_client):
+    def test_effective_rate_uses_daily_for_short_booking(self, api_client):
         """
-        GIVEN a bike with daily_rate=80.00
+        GIVEN a bike with daily_rate=80.00 and a 3-day booking (under 7 days)
         WHEN a booking is created
-        THEN effective_daily_rate is 80.00.
+        THEN effective_daily_rate is 80.00 (no discount applied).
         """
-        bike = MotorcycleFactory(
-            is_hire=True, status='for_sale',
-            daily_rate='80.00', weekly_rate=None, monthly_rate=None,
-        )
-        api_client.post(self.URL, _booking_payload(bike.id), format='json')
+        bike = MotorcycleFactory(is_hire=True, status='for_sale', daily_rate='80.00')
+        api_client.post(self.URL, _booking_payload(bike.id, start_offset=3, end_offset=5), format='json')
         booking = HireBooking.objects.first()
         assert float(booking.effective_daily_rate) == 80.00
 
-    def test_effective_rate_uses_weekly_when_no_daily(self, api_client):
+    def test_weekly_discount_applied_for_7_day_booking(self, api_client):
         """
-        GIVEN a bike with weekly_rate=350.00 (= $50/day) and no daily_rate
-        WHEN a booking is created
-        THEN effective_daily_rate is 50.00.
+        GIVEN a bike at $100/day and weekly_discount_percent=15
+        WHEN a 7-day booking is created
+        THEN effective_daily_rate = ceil(100 * 0.85) = 85.
         """
-        bike = MotorcycleFactory(
-            is_hire=True, status='for_sale',
-            daily_rate=None, weekly_rate='350.00', monthly_rate=None,
-        )
-        api_client.post(self.URL, _booking_payload(bike.id), format='json')
+        bike = MotorcycleFactory(is_hire=True, status='for_sale', daily_rate='100.00')
+        payload = _booking_payload(bike.id, start_offset=3, end_offset=9)  # 7 days inclusive
+        api_client.post(self.URL, payload, format='json')
         booking = HireBooking.objects.first()
-        assert float(booking.effective_daily_rate) == pytest.approx(50.0, rel=1e-2)
+        assert float(booking.effective_daily_rate) == math.ceil(100 * 0.85)
 
-    def test_uses_cheapest_effective_daily_rate(self, api_client):
+    def test_monthly_discount_applied_for_30_day_booking(self, api_client):
         """
-        GIVEN daily_rate=100, weekly_rate=350 (=$50/day)
-        WHEN a booking is created
-        THEN effective_daily_rate uses the weekly rate (cheaper per day).
+        GIVEN a bike at $100/day and monthly_discount_percent=25
+        WHEN a 30-day booking is created
+        THEN effective_daily_rate = ceil(100 * 0.75) = 75.
         """
-        bike = MotorcycleFactory(
-            is_hire=True, status='for_sale',
-            daily_rate='100.00', weekly_rate='350.00', monthly_rate=None,
-        )
-        api_client.post(self.URL, _booking_payload(bike.id), format='json')
+        bike = MotorcycleFactory(is_hire=True, status='for_sale', daily_rate='100.00')
+        payload = _booking_payload(bike.id, start_offset=3, end_offset=32)  # 30 days inclusive
+        api_client.post(self.URL, payload, format='json')
         booking = HireBooking.objects.first()
-        assert float(booking.effective_daily_rate) < 100.00
+        assert float(booking.effective_daily_rate) == math.ceil(100 * 0.75)
+
+    def test_effective_rate_rounds_up_to_nearest_dollar(self, api_client):
+        """
+        GIVEN a bike at $85/day and weekly_discount_percent=15 (85 * 0.85 = 72.25)
+        WHEN a 7-day booking is created
+        THEN effective_daily_rate is rounded up to 73.
+        """
+        bike = MotorcycleFactory(is_hire=True, status='for_sale', daily_rate='85.00')
+        payload = _booking_payload(bike.id, start_offset=3, end_offset=9)  # 7 days inclusive
+        api_client.post(self.URL, payload, format='json')
+        booking = HireBooking.objects.first()
+        assert float(booking.effective_daily_rate) == math.ceil(85 * 0.85)
 
     def test_total_hire_amount_is_rate_times_days(self, api_client):
         """
-        GIVEN a bike at $80/day and a 3-day booking (days 3, 4, 5)
+        GIVEN a bike at $80/day and a 3-day booking
         WHEN the booking is created
         THEN total_hire_amount = 80 * 3 = 240.
         """
-        bike = MotorcycleFactory(
-            is_hire=True, status='for_sale',
-            daily_rate='80.00', weekly_rate=None, monthly_rate=None,
-        )
+        bike = MotorcycleFactory(is_hire=True, status='for_sale', daily_rate='80.00')
         payload = _booking_payload(bike.id, start_offset=3, end_offset=5)  # 3 days inclusive
         api_client.post(self.URL, payload, format='json')
         booking = HireBooking.objects.first()

@@ -51,6 +51,7 @@ const HireBookingPage = () => {
                 setBike(bikeData);
                 setBondAmount(parseFloat(settings.bond_amount));
                 setMinimumAge(settings.minimum_age);
+                setHireSettings({ weekly_discount_percent: settings.weekly_discount_percent, monthly_discount_percent: settings.monthly_discount_percent });
                 setExtras(extrasData);
             })
             .catch(() => setError('Failed to load bike details.'))
@@ -61,13 +62,19 @@ const HireBookingPage = () => {
         ? Math.round((new Date(endDate + 'T00:00:00').getTime() - new Date(startDate + 'T00:00:00').getTime()) / 86400000) + 1
         : 0;
 
-    const effectiveDailyRate = bike
+    const [hireSettings, setHireSettings] = useState<{ weekly_discount_percent: number; monthly_discount_percent: number } | null>(null);
+
+    const effectiveDailyRate = bike && hireSettings
         ? (() => {
-            const candidates: number[] = [];
-            if (bike.daily_rate && parseFloat(bike.daily_rate) > 0) candidates.push(parseFloat(bike.daily_rate));
-            if (bike.weekly_rate && parseFloat(bike.weekly_rate) > 0) candidates.push(parseFloat(bike.weekly_rate) / 7);
-            if (bike.monthly_rate && parseFloat(bike.monthly_rate) > 0) candidates.push(parseFloat(bike.monthly_rate) / 30);
-            return candidates.length > 0 ? Math.min(...candidates) : null;
+            if (!bike.daily_rate || parseFloat(bike.daily_rate) <= 0) return null;
+            const daily = parseFloat(bike.daily_rate);
+            if (numDays >= 30 && hireSettings.monthly_discount_percent > 0) {
+                return Math.ceil(daily * (1 - hireSettings.monthly_discount_percent / 100));
+            }
+            if (numDays >= 7 && hireSettings.weekly_discount_percent > 0) {
+                return Math.ceil(daily * (1 - hireSettings.weekly_discount_percent / 100));
+            }
+            return daily;
         })()
         : null;
 

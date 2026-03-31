@@ -176,7 +176,7 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                     </div>
 
 
-                    {/* Hire rates — shown only when is_hire is on */}
+                    {/* Hire rate — shown only when is_hire is on */}
                     <Controller name="is_hire" control={control} render={({ field: isHireField }) => (
                         isHireField.value ? (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -184,16 +184,8 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                                     <Label htmlFor="daily_rate">Daily Rate (AUD)</Label>
                                     <Input id="daily_rate" type="number" step="0.01" placeholder="e.g. 85.00" {...register('daily_rate', { setValueAs: (v) => v === '' ? null : v })} />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="weekly_rate">Weekly Rate (AUD)</Label>
-                                    <Input id="weekly_rate" type="number" step="0.01" placeholder="e.g. 490.00" {...register('weekly_rate', { setValueAs: (v) => v === '' ? null : v })} />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="monthly_rate">Monthly Rate (AUD)</Label>
-                                    <Input id="monthly_rate" type="number" step="0.01" placeholder="e.g. 1500.00" {...register('monthly_rate', { setValueAs: (v) => v === '' ? null : v })} />
-                                </div>
                                 <p className="col-span-full text-sm text-[var(--text-dark-secondary)]">
-                                    Priority order: daily → weekly ÷ 7 → monthly ÷ 30.
+                                    Weekly and monthly discounts are applied automatically via Hire Settings.
                                 </p>
                             </div>
                         ) : <></>

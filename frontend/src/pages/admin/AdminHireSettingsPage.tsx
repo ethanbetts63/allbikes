@@ -111,6 +111,24 @@ const AdminHireSettingsPage = () => {
                 onChange={(e) => setSettings({ ...settings, booking_gap_days: parseInt(e.target.value) })}
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="weekly_discount_percent">Weekly Discount (%)</Label>
+              <Input
+                id="weekly_discount_percent"
+                type="number"
+                value={settings.weekly_discount_percent}
+                onChange={(e) => setSettings({ ...settings, weekly_discount_percent: parseInt(e.target.value) })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="monthly_discount_percent">Monthly Discount (%)</Label>
+              <Input
+                id="monthly_discount_percent"
+                type="number"
+                value={settings.monthly_discount_percent}
+                onChange={(e) => setSettings({ ...settings, monthly_discount_percent: parseInt(e.target.value) })}
+              />
+            </div>
           </div>
 
         </CardContent>

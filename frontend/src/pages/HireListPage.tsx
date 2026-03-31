@@ -96,7 +96,7 @@ const HireListPage = () => {
               Allbikes &amp; Scooters · Dianella, Perth
             </p>
             <h1 className="text-4xl sm:text-5xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
-              Hire a Motorcycle
+              Hire a Bike
             </h1>
           </div>
 

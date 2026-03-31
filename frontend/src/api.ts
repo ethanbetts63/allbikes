@@ -365,7 +365,7 @@ export async function adminDeleteBookingLog(id: number): Promise<void> {
 
 // --- Hire ---
 
-export async function getPublicHireSettings(): Promise<Pick<HireSettings, 'bond_amount' | 'advance_min_days' | 'advance_max_days' | 'minimum_age'>> {
+export async function getPublicHireSettings(): Promise<Pick<HireSettings, 'bond_amount' | 'advance_min_days' | 'advance_max_days' | 'minimum_age' | 'weekly_discount_percent' | 'monthly_discount_percent'>> {
     const response = await fetch('/api/hire/settings/');
     return handleResponse(response);
 }

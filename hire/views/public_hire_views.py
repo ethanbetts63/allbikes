@@ -1,3 +1,4 @@
+import math
 import stripe
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -125,20 +126,21 @@ class HireBookingCreateView(APIView):
         else:
             active_extras = {}
 
-        # Calculate effective daily rate (cheapest option)
-        candidates = []
-        if motorcycle.daily_rate and motorcycle.daily_rate > 0:
-            candidates.append(motorcycle.daily_rate)
-        if motorcycle.weekly_rate and motorcycle.weekly_rate > 0:
-            candidates.append(motorcycle.weekly_rate / Decimal('7'))
-        if motorcycle.monthly_rate and motorcycle.monthly_rate > 0:
-            candidates.append(motorcycle.monthly_rate / Decimal('30'))
-
-        if not candidates:
+        # Calculate effective daily rate with global discount tiers
+        if not motorcycle.daily_rate or motorcycle.daily_rate <= 0:
             return Response({'error': 'No hire rates configured for this motorcycle.'}, status=400)
 
-        effective_daily_rate = min(candidates)
         num_days = (hire_end - hire_start).days + 1
+        daily = motorcycle.daily_rate
+
+        if num_days >= 30 and hire_settings.monthly_discount_percent > 0:
+            discount = Decimal(str(hire_settings.monthly_discount_percent)) / Decimal('100')
+            effective_daily_rate = Decimal(math.ceil(float(daily * (1 - discount))))
+        elif num_days >= 7 and hire_settings.weekly_discount_percent > 0:
+            discount = Decimal(str(hire_settings.weekly_discount_percent)) / Decimal('100')
+            effective_daily_rate = Decimal(math.ceil(float(daily * (1 - discount))))
+        else:
+            effective_daily_rate = daily
         total_hire_amount = effective_daily_rate * num_days
 
         with transaction.atomic():
