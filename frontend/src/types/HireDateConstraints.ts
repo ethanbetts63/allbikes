@@ -5,5 +5,7 @@ export interface HireDateConstraints {
   maxStartDate: string;
   blockedDates: HireBlockedDate[];
   isRangeBlocked: (start: string, end: string) => boolean;
+  weeklyDiscountPercent: number | null;
+  monthlyDiscountPercent: number | null;
   error: string | null;
 }

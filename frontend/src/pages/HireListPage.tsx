@@ -48,7 +48,7 @@ const HireListPage = () => {
   const [startDate, setStartDate] = useState(() => searchParams.get('start') ?? '');
   const [endDate, setEndDate] = useState(() => searchParams.get('end') ?? '');
   const [blockedDateError, setBlockedDateError] = useState<string | null>(null);
-  const { minStartDate, maxStartDate, isRangeBlocked, error: settingsError } = useHireDateConstraints();
+  const { minStartDate, maxStartDate, isRangeBlocked, weeklyDiscountPercent, monthlyDiscountPercent, error: settingsError } = useHireDateConstraints();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -257,7 +257,7 @@ const HireListPage = () => {
         </div>
       </div>
 
-      <HireConfidenceSection />
+      <HireConfidenceSection weeklyDiscountPercent={weeklyDiscountPercent} monthlyDiscountPercent={monthlyDiscountPercent} />
 
       <PayLaterSection />
 

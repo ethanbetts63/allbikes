@@ -7,6 +7,8 @@ const useHireDateConstraints = (): HireDateConstraints => {
   const [minStartDate, setMinStartDate] = useState('');
   const [maxStartDate, setMaxStartDate] = useState('');
   const [blockedDates, setBlockedDates] = useState<HireBlockedDate[]>([]);
+  const [weeklyDiscountPercent, setWeeklyDiscountPercent] = useState<number | null>(null);
+  const [monthlyDiscountPercent, setMonthlyDiscountPercent] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,6 +21,8 @@ const useHireDateConstraints = (): HireDateConstraints => {
         max.setDate(max.getDate() + settings.advance_max_days);
         setMaxStartDate(max.toISOString().split('T')[0]);
         setBlockedDates(blocked);
+        setWeeklyDiscountPercent(settings.weekly_discount_percent);
+        setMonthlyDiscountPercent(settings.monthly_discount_percent);
       })
       .catch(() => setError('Failed to load hire settings.'));
   }, []);
@@ -26,7 +30,7 @@ const useHireDateConstraints = (): HireDateConstraints => {
   const isRangeBlocked = (start: string, end: string) =>
     blockedDates.some(b => b.date_from <= end && b.date_to >= start);
 
-  return { minStartDate, maxStartDate, blockedDates, isRangeBlocked, error };
+  return { minStartDate, maxStartDate, blockedDates, isRangeBlocked, weeklyDiscountPercent, monthlyDiscountPercent, error };
 };
 
 export default useHireDateConstraints;
