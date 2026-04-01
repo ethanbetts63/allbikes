@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 15mm 18mm 15mm;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 8.5pt;
+      color: #111;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── Page break between summary and terms ── */
+    .page-break { page-break-after: always; }
+
+    /* ── Business header ── */
+    .biz-header {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6pt;
+    }
+    .biz-header td { vertical-align: top; padding: 0; }
+    .biz-header .title { font-size: 13pt; font-weight: bold; }
+    .biz-header .right { text-align: right; font-size: 7.5pt; line-height: 1.5; }
+
+    .intro { font-size: 7.5pt; margin: 4pt 0 8pt; }
+
+    /* ── Section headings ── */
+    .section-heading {
+      font-size: 7.5pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      background: #222;
+      color: #fff;
+      padding: 2.5pt 5pt;
+      margin: 8pt 0 4pt;
+    }
+
+    /* ── Info grid ── */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2pt;
+    }
+    .info-table td {
+      padding: 2.5pt 4pt;
+      vertical-align: bottom;
+      font-size: 8pt;
+    }
+    .lbl { color: #555; white-space: nowrap; width: 70pt; }
+    .val {
+      font-weight: bold;
+      border-bottom: 0.5pt solid #888;
+      min-width: 80pt;
+    }
+    .blank {
+      border-bottom: 0.5pt solid #888;
+      min-width: 80pt;
+    }
+
+    /* ── Fees table ── */
+    .fees-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2pt;
+    }
+    .fees-table thead tr {
+      background: #444;
+      color: #fff;
+    }
+    .fees-table th {
+      font-size: 7.5pt;
+      padding: 3pt 5pt;
+      text-align: left;
+      font-weight: bold;
+    }
+    .fees-table th.r { text-align: right; }
+    .fees-table td {
+      padding: 3pt 5pt;
+      font-size: 8pt;
+      border-bottom: 0.3pt solid #ddd;
+      vertical-align: top;
+    }
+    .fees-table td.r { text-align: right; font-weight: bold; white-space: nowrap; }
+    .fees-table .bond-row { background: #f5f5f5; font-weight: bold; }
+
+    /* ── Customer statement ── */
+    .statement-item { margin: 4pt 0 4pt 2pt; font-size: 8pt; }
+
+    /* ── Signature fields ── */
+    .sig-table { width: 100%; border-collapse: collapse; margin-top: 8pt; }
+
+    /* ── Terms section ── */
+    .terms-wrap {
+      font-size: 8pt;
+      line-height: 1.45;
+      color: #111;
+    }
+    .terms-wrap h1 {
+      font-size: 11pt;
+      margin: 0 0 6pt;
+    }
+    .terms-wrap p:first-of-type {
+      font-size: 7.5pt;
+      margin: 0 0 8pt;
+      color: #444;
+    }
+    .terms-wrap h2 {
+      font-size: 8.5pt;
+      font-weight: bold;
+      margin: 8pt 0 2pt;
+    }
+    .terms-wrap p {
+      margin: 2pt 0 4pt;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 1 — RENTAL SUMMARY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break">
+
+  <!-- Business header -->
+  <table class="biz-header">
+    <tr>
+      <td class="title">Motor Vehicle Rental Contract</td>
+      <td class="right">
+        <strong>FEPS (WA) PTY LTD</strong><br>
+        ABN 46 157 594 161 | DL MD28276<br>
+        Unit 5/6 Cleveland Street, Dianella WA 6059<br>
+        T: 08 9433 4613 | E: admin@scootershop.com.au
+      </td>
+    </tr>
+  </table>
+
+  <p class="intro">
+    The rental agreement is contained in this Rental Summary, the Rental Terms and Conditions and the Vehicle
+    Condition Report (<strong>Agreement</strong>).
+  </p>
+
+  <!-- ── CUSTOMER INFORMATION ── -->
+  <div class="section-heading">Customer Information</div>
+  <table class="info-table">
+    <tr>
+      <td class="lbl">Full Name</td>
+      <td class="val">{{ booking.customer_name }}</td>
+      <td style="width:10pt"></td>
+      <td class="lbl">Booking Ref.</td>
+      <td class="val">{{ booking.booking_reference }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Address</td>
+      <td class="blank" colspan="4">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="lbl">Email</td>
+      <td class="val">{{ booking.customer_email }}</td>
+      <td></td>
+      <td class="lbl">DOB</td>
+      <td class="blank">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="lbl">Phone</td>
+      <td class="val">{{ booking.customer_phone }}</td>
+      <td></td>
+      <td class="lbl">Licence No.</td>
+      <td class="blank">&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="lbl">Mobile</td>
+      <td class="blank">&nbsp;</td>
+      <td></td>
+      <td class="lbl">Licence Expiry</td>
+      <td class="blank">&nbsp;</td>
+    </tr>
+  </table>
+
+  <!-- ── VEHICLE INFORMATION ── -->
+  <div class="section-heading">Vehicle Information</div>
+  <table class="info-table">
+    <tr>
+      <td class="lbl">Make</td>
+      <td class="val">{{ booking.motorcycle.make }}</td>
+      <td style="width:10pt"></td>
+      <td class="lbl">Model</td>
+      <td class="val">{{ booking.motorcycle.model }}</td>
+      <td style="width:10pt"></td>
+      <td class="lbl">Year</td>
+      <td class="val">{{ booking.motorcycle.year|default:"" }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Transmission</td>
+      <td class="val">{{ booking.motorcycle.get_transmission_display }}</td>
+      <td></td>
+      <td class="lbl">Rego No.</td>
+      <td class="val">{{ booking.motorcycle.rego|default:"" }}</td>
+      <td></td>
+      <td class="lbl">Stock No.</td>
+      <td class="val">{{ booking.motorcycle.stock_number|default:"" }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Odometer</td>
+      <td class="blank">&nbsp;</td>
+      <td></td>
+      <td colspan="4"></td>
+    </tr>
+  </table>
+
+  <!-- ── PICKUP AND RETURN ── -->
+  <div class="section-heading">Pickup and Return Information</div>
+  <table class="info-table">
+    <tr>
+      <td class="lbl" style="width:80pt">Pickup Location</td>
+      <td class="val">Unit 5/6 Cleveland Street, Dianella WA 6059</td>
+      <td style="width:10pt"></td>
+      <td class="lbl" style="width:85pt">Return Location</td>
+      <td class="val">Unit 5/6 Cleveland Street, Dianella WA 6059</td>
+    </tr>
+    <tr>
+      <td class="lbl">Pickup Date</td>
+      <td class="val">{{ booking.hire_start|date:"d/m/Y" }}</td>
+      <td></td>
+      <td class="lbl">Return Date</td>
+      <td class="val">{{ booking.hire_end|date:"d/m/Y" }}</td>
+    </tr>
+  </table>
+
+  <!-- ── PAYMENT SUMMARY ── -->
+  <div class="section-heading">Payment Summary</div>
+  <table class="fees-table">
+    <thead>
+      <tr>
+        <th style="width:28%">Description</th>
+        <th>Detail</th>
+        <th class="r" style="width:60pt">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hire Fee <em style="font-size:7pt;font-weight:normal">(paid online)</em></td>
+        <td>{{ booking.num_days }} day{{ booking.num_days|pluralize }} &times; ${{ booking.effective_daily_rate|floatformat:2 }}/day</td>
+        <td class="r">${{ booking.total_hire_amount|floatformat:2 }}</td>
+      </tr>
+      {% for item in booking.extras.all %}
+      <tr>
+        <td>{{ item.extra.name }}</td>
+        <td>Qty {{ item.quantity }} &times; ${{ item.price_per_day_snapshot|floatformat:2 }}/day</td>
+        <td class="r">${{ item.total_amount|floatformat:2 }}</td>
+      </tr>
+      {% endfor %}
+      <tr class="bond-row">
+        <td>Security Bond</td>
+        <td>Refundable on return, subject to final vehicle inspection. Collected in-store at pickup.</td>
+        <td class="r">${{ booking.bond_amount|floatformat:2 }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:7.5pt; margin: 6pt 0 0; color:#444;">
+    <strong>Not included in charges:</strong> Parking and traffic fines; private parking charges; road tolls.
+    Any notices for these will be forwarded to you as set out in the Rental Terms and Conditions. Additional charges apply.
+  </p>
+
+  <!-- ── CUSTOMER STATEMENT ── -->
+  <div class="section-heading">Customer Statement</div>
+  <div style="padding: 4pt 6pt; font-size:8pt;">
+    By signing this document I confirm that I have read and approved this Rental Summary 
+    and the Rental Terms and Conditions, and I agree to be bound by them.
+  </div>
+
+  <table class="sig-table info-table">
+    <tr>
+      <td class="lbl">Print Name</td>
+      <td class="blank">&nbsp;</td>
+      <td style="width:10pt"></td>
+      <td class="lbl">Customer Signature</td>
+      <td class="blank">&nbsp;</td>
+      <td style="width:10pt"></td>
+      <td class="lbl">Date</td>
+      <td class="blank">&nbsp;</td>
+    </tr>
+  </table>
+
+</div><!-- end page 1 -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGES 2+ — TERMS & CONDITIONS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="terms-wrap">
+  {{ terms_html|safe }}
+</div>
+
+</body>
+</html>

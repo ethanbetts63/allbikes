@@ -3,6 +3,7 @@ from .admin_hire_booking_views import (
     AdminHireBookingListView,
     AdminHireBookingDetailView,
     AdminHireBookingStatusView,
+    AdminHireBookingContractView,
 )
 from .admin_hire_extra_views import AdminHireExtraListView, AdminHireExtraDetailView
 from .admin_hire_blocked_date_views import AdminHireBlockedDateListView, AdminHireBlockedDateDetailView
@@ -25,6 +26,7 @@ __all__ = [
     'AdminHireBookingListView',
     'AdminHireBookingDetailView',
     'AdminHireBookingStatusView',
+    'AdminHireBookingContractView',
     'AdminHireExtraListView',
     'AdminHireExtraDetailView',
     'HireBikeListView',

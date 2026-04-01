@@ -13,3 +13,4 @@ factory-boy
 Faker
 django-imagekit
 stripe
+xhtml2pdf

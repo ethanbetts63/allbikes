@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { adminGetHireBooking, adminUpdateHireBookingStatus, adminDeleteHireBooking } from '@/api';
+import { adminGetHireBooking, adminUpdateHireBookingStatus, adminDeleteHireBooking, adminDownloadHireContract } from '@/api';
 import type { HireBooking } from '@/types/HireBooking';
 import { formatDate } from '@/utils/formatting';
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Download } from 'lucide-react';
 
 const STATUS_OPTIONS = [
   { value: 'pending_payment', label: 'Pending Payment' },
@@ -39,6 +40,7 @@ const AdminHireDetailPage = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
@@ -61,6 +63,26 @@ const AdminHireDetailPage = () => {
     } catch {
       setNotification({ message: 'Failed to delete booking.', type: 'error' });
       setIsDeleting(false);
+    }
+  };
+
+  const handleDownloadContract = async () => {
+    if (!booking) return;
+    setIsDownloading(true);
+    try {
+      const blob = await adminDownloadHireContract(booking.id);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${booking.booking_reference}_contract.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      setNotification({ message: 'Failed to download contract.', type: 'error' });
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -125,6 +147,9 @@ const AdminHireDetailPage = () => {
             </select>
             <Button onClick={handleStatusUpdate} disabled={isSaving}>
               {isSaving ? 'Saving...' : 'Update'}
+            </Button>
+            <Button onClick={handleDownloadContract} disabled={isDownloading} aria-label="Download contract">
+              <Download className="h-4 w-4" />
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
               {isDeleting ? 'Deleting...' : 'Delete'}

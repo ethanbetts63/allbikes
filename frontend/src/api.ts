@@ -467,6 +467,12 @@ export async function adminDeleteHireBooking(id: number): Promise<void> {
     if (!response.ok) throw new Error('Failed to delete booking.');
 }
 
+export async function adminDownloadHireContract(id: number): Promise<Blob> {
+    const response = await authedFetch(`/api/hire/admin/bookings/${id}/contract/`);
+    if (!response.ok) throw new Error('Failed to generate contract.');
+    return response.blob();
+}
+
 export async function adminUpdateHireBookingStatus(id: number, status: string): Promise<HireBooking> {
     const response = await authedFetch(`/api/hire/admin/bookings/${id}/status/`, {
         method: 'PATCH',
