@@ -273,5 +273,6 @@ class HireBookingRetrieveView(APIView):
                 }
                 for e in booking.extras.all()
             ],
+            'total_charged': str(booking.total_charged),
             'status': booking.status,
         })
