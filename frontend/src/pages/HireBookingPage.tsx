@@ -337,9 +337,6 @@ const HireBookingPage = () => {
                                     >
                                         {isSubmitting ? 'Please wait...' : 'Continue to Payment'}
                                     </button>
-                                    <p className="text-sm text-[var(--text-dark-secondary)]">
-                                        ✓ Booking confirmation sent to your email
-                                    </p>
                                 </div>
                             </form>
                         </div>
