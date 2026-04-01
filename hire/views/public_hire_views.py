@@ -230,6 +230,8 @@ class HireCreatePaymentIntentView(APIView):
             metadata={
                 'hire_booking_id': booking.id,
                 'hire_booking_reference': booking.booking_reference,
+                'customer_name': booking.customer_name,
+                'customer_email': booking.customer_email,
             },
         )
 
