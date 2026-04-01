@@ -32,6 +32,7 @@ const HireBookingPage = () => {
     const [selectedExtras, setSelectedExtras] = useState<Record<number, boolean>>({});
     const [isOfAge, setIsOfAge] = useState(false);
     const [minimumAge, setMinimumAge] = useState(21);
+    const [bondAcknowledged, setBondAcknowledged] = useState(false);
 
     const { register, handleSubmit, formState: { errors } } = useForm<HireBookingFormData>();
 
@@ -329,10 +330,24 @@ const HireBookingPage = () => {
                                     </Label>
                                 </div>
 
+                                {bondAmount !== null && bondAmount > 0 && (
+                                    <div className="flex items-start gap-3">
+                                        <Checkbox
+                                            id="hire_bond_acknowledged"
+                                            checked={bondAcknowledged}
+                                            onCheckedChange={(checked) => setBondAcknowledged(!!checked)}
+                                            className="mt-0.5"
+                                        />
+                                        <Label htmlFor="hire_bond_acknowledged" className="text-sm leading-snug cursor-pointer">
+                                            I acknowledge a ${bondAmount.toFixed(2)} refundable bond is payable at pickup.
+                                        </Label>
+                                    </div>
+                                )}
+
                                 <div className="pt-2 space-y-3">
                                     <button
                                         type="submit"
-                                        disabled={isSubmitting || !termsAccepted || !isOfAge}
+                                        disabled={isSubmitting || !termsAccepted || !isOfAge || (bondAmount !== null && bondAmount > 0 && !bondAcknowledged)}
                                         className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
                                     >
                                         {isSubmitting ? 'Please wait...' : 'Continue to Payment'}
