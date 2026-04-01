@@ -60,11 +60,11 @@
     .val {
       font-weight: bold;
       border-bottom: 0.5pt solid #888;
-      min-width: 80pt;
+      width: 90pt;
     }
     .blank {
       border-bottom: 0.5pt solid #888;
-      min-width: 80pt;
+      width: 90pt;
     }
 
     /* ── Fees table ── */
@@ -189,24 +189,14 @@
   <!-- ── VEHICLE INFORMATION ── -->
   <div class="section-heading">Vehicle Information</div>
   <table class="info-table">
-    <colgroup>
-      <col style="width:55pt"/>
-      <col style="width:100pt"/>
-      <col style="width:8pt"/>
-      <col style="width:55pt"/>
-      <col style="width:100pt"/>
-      <col style="width:8pt"/>
-      <col style="width:55pt"/>
-      <col/>
-    </colgroup>
     <tr>
-      <td class="lbl">Make</td>
-      <td class="val">{{ booking.motorcycle.make }}</td>
-      <td></td>
-      <td class="lbl">Model</td>
-      <td class="val">{{ booking.motorcycle.model }}</td>
-      <td></td>
-      <td class="lbl">Year</td>
+      <td class="lbl" style="width:55pt">Make</td>
+      <td class="val" style="width:100pt">{{ booking.motorcycle.make }}</td>
+      <td style="width:8pt"></td>
+      <td class="lbl" style="width:55pt">Model</td>
+      <td class="val" style="width:100pt">{{ booking.motorcycle.model }}</td>
+      <td style="width:8pt"></td>
+      <td class="lbl" style="width:55pt">Year</td>
       <td class="val">{{ booking.motorcycle.year|default:"" }}</td>
     </tr>
     <tr>
