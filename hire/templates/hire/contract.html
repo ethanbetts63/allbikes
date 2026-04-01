@@ -189,13 +189,23 @@
   <!-- ── VEHICLE INFORMATION ── -->
   <div class="section-heading">Vehicle Information</div>
   <table class="info-table">
+    <colgroup>
+      <col style="width:55pt"/>
+      <col style="width:100pt"/>
+      <col style="width:8pt"/>
+      <col style="width:55pt"/>
+      <col style="width:100pt"/>
+      <col style="width:8pt"/>
+      <col style="width:55pt"/>
+      <col/>
+    </colgroup>
     <tr>
       <td class="lbl">Make</td>
       <td class="val">{{ booking.motorcycle.make }}</td>
-      <td style="width:10pt"></td>
+      <td></td>
       <td class="lbl">Model</td>
       <td class="val">{{ booking.motorcycle.model }}</td>
-      <td style="width:10pt"></td>
+      <td></td>
       <td class="lbl">Year</td>
       <td class="val">{{ booking.motorcycle.year|default:"" }}</td>
     </tr>
@@ -213,7 +223,7 @@
       <td class="lbl">Odometer</td>
       <td class="blank">&nbsp;</td>
       <td></td>
-      <td colspan="4"></td>
+      <td colspan="5"></td>
     </tr>
   </table>
 
