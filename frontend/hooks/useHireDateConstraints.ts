@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getPublicHireSettings, getHireBlockedDates } from '@/api';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { HireDateConstraints } from '@/types/HireDateConstraints';
@@ -27,8 +27,10 @@ const useHireDateConstraints = (): HireDateConstraints => {
       .catch(() => setError('Failed to load hire settings.'));
   }, []);
 
-  const isRangeBlocked = (start: string, end: string) =>
-    blockedDates.some(b => b.date_from <= end && b.date_to >= start);
+  const isRangeBlocked = useCallback(
+    (start: string, end: string) => blockedDates.some(b => b.date_from <= end && b.date_to >= start),
+    [blockedDates]
+  );
 
   return { minStartDate, maxStartDate, blockedDates, isRangeBlocked, weeklyDiscountPercent, monthlyDiscountPercent, error };
 };

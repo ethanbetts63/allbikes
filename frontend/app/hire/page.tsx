@@ -12,15 +12,16 @@ export const metadata = buildMetadata({
 });
 
 interface HirePageProps {
-  searchParams?: {
+  searchParams?: Promise<{
     start?: string;
     end?: string;
-  };
+  }>;
 }
 
 export default async function Page({ searchParams }: HirePageProps) {
-  const startDate = typeof searchParams?.start === 'string' ? searchParams.start : '';
-  const endDate = typeof searchParams?.end === 'string' ? searchParams.end : '';
+  const params = await searchParams;
+  const startDate = typeof params?.start === 'string' ? params.start : '';
+  const endDate = typeof params?.end === 'string' ? params.end : '';
   const bikes = await fetchInitialHireBikes(startDate, endDate);
 
   return (

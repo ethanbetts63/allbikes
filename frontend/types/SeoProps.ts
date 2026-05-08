@@ -6,4 +6,5 @@ export interface SeoProps {
   ogImage?: string;
   noindex?: boolean;
   structuredData?: object | object[];
+  dateModified?: string | Date;
 }
