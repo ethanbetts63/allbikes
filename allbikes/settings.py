@@ -27,18 +27,24 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['ethanbetts.pythonanywhere.com', 'www.scootershop.com.au', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    'ethanbetts.pythonanywhere.com',
+    'www.scootershop.com.au',
+    'allbikes.vercel.app',
+    '127.0.0.1',
+    'localhost',
+]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'https://www.scootershop.com.au',
-    # add Vercel deployment URL here once known
+    'https://allbikes.vercel.app',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://www.scootershop.com.au',
-    # add Vercel deployment URL here once known
+    'https://allbikes.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
