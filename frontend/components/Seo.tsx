@@ -1,7 +1,7 @@
 import { buildWebPageStructuredData } from '@/lib/seo';
 import type { SeoProps } from '@/types/SeoProps';
 
-const Seo = ({ title, description, canonicalPath, structuredData, dateModified }: SeoProps) => {
+const Seo = ({ structuredData, dateModified }: SeoProps) => {
   const pageStructuredData = dateModified
     ? buildWebPageStructuredData({ title, description, canonicalPath, dateModified })
     : null;

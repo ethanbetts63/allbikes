@@ -1,7 +1,6 @@
 "use client";
 
 import { LoginForm } from "@/forms/LoginForm";
-import Seo from '@/components/Seo';
 
 const LoginPage = () => {
   return (
