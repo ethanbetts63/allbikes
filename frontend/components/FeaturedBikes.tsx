@@ -8,10 +8,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description, linkTo, linkText }) => {
-  if (bikes.length === 0) {
-    return null;
-  }
-
   const scrollRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const positionRef = useRef(0);
@@ -19,6 +15,8 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
   const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (bikes.length === 0) return;
+
     const scroll = () => {
       if (scrollRef.current) {
         const halfwayPoint = scrollRef.current.scrollWidth / 2;
@@ -44,7 +42,11 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isHovering]);
+  }, [bikes.length, isHovering]);
+
+  if (bikes.length === 0) {
+    return null;
+  }
 
   return (
     <>

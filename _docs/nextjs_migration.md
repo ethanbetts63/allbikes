@@ -280,6 +280,19 @@ Status: complete.
 
 `LoginForm` now honors the `next` param when it points at a dashboard route, otherwise it falls back to `/dashboard/inventory`. `AdminLayout` still keeps its client-side staff check as a second layer, because the middleware only proves that an auth cookie exists; staff authorization still comes from `/api/data/me/`.
 
+### Targeted lint cleanup
+Status: started.
+
+Correctness-grade lint fixed:
+- Cleared all `react-hooks/rules-of-hooks` errors. The only hook-order violation was in `components/FeaturedBikes.tsx`, where an early `return null` ran before hooks. Hooks now run unconditionally and the scrolling effect exits early when there are no bikes.
+
+Still noisy:
+- `react-hooks/set-state-in-effect` warnings/errors from migrated Vite patterns.
+- `react-hooks/exhaustive-deps` warnings that need case-by-case review.
+- `@typescript-eslint/no-explicit-any` in older form/admin types.
+- `react/no-unescaped-entities` copy-only issues.
+- `@next/next/no-img-element` image optimization warnings.
+
 ### Phase 7 — Deploy to Vercel
 1. Push `frontend/` to a GitHub repo (or the root monorepo)
 2. Create a Vercel project pointed at `frontend/` as the root directory
