@@ -1,5 +1,3 @@
-"use client";
-
 import Link from 'next/link';
 import Seo from '@/components/Seo';
 import MotorcycleMovers from "@/components/MotorcycleMovers";

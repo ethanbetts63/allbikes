@@ -1,4 +1,7 @@
 import { buildMetadata } from '@/lib/seo';
+import { getServerProducts } from '@/lib/serverApi';
+import type { Product } from '@/types/Product';
+import ElectricScootersLandingPage from '@/pages_vite/ElectricScootersLandingPage';
 
 export const metadata = buildMetadata({
   title: 'Buy Electric Scooters Online | Free Delivery Australia-Wide | ScooterShop',
@@ -6,4 +9,22 @@ export const metadata = buildMetadata({
   canonicalPath: '/electric-scooters',
 });
 
-export { default } from '@/pages_vite/ElectricScootersLandingPage';
+export const revalidate = 300;
+
+export default async function Page() {
+  const featuredProducts = await fetchFeaturedProducts();
+
+  return <ElectricScootersLandingPage initialFeaturedProducts={featuredProducts} />;
+}
+
+async function fetchFeaturedProducts(): Promise<Product[]> {
+  const params = new URLSearchParams({ is_featured: 'true' });
+
+  try {
+    const response = await getServerProducts(params);
+    return response.results.slice(0, 2);
+  } catch (error) {
+    console.error('Failed to server-render featured e-scooters landing page products:', error);
+    return [];
+  }
+}

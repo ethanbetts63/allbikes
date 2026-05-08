@@ -1,6 +1,7 @@
 import type { Bike } from '@/types/Bike';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 import type { Product } from '@/types/Product';
+import type { TermsAndConditions } from '@/types/TermsAndConditions';
 
 const API_BASE_URL = process.env.DJANGO_API_URL ?? 'http://localhost:8000';
 const REVALIDATE_SECONDS = 300;
@@ -20,6 +21,19 @@ export async function getServerProducts(params: URLSearchParams): Promise<Pagina
 
 export async function getServerProductById(id: number): Promise<Product> {
   return fetchServerJson<Product>(`/api/product/products/${id}/`);
+}
+
+export async function getServerHireBikes(startDate?: string, endDate?: string): Promise<Bike[]> {
+  const params = new URLSearchParams();
+  if (startDate) params.append('start_date', startDate);
+  if (endDate) params.append('end_date', endDate);
+  const query = params.toString();
+  return fetchServerJson<Bike[]>(`/api/hire/bikes/${query ? `?${query}` : ''}`);
+}
+
+export async function getServerLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase'): Promise<TermsAndConditions> {
+  const path = type ? `/api/terms/latest/?type=${type}` : '/api/terms/latest/';
+  return fetchServerJson<TermsAndConditions>(path);
 }
 
 async function fetchServerJson<T>(path: string): Promise<T> {

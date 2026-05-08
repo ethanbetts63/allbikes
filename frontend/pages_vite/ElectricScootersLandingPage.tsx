@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
 import EScooterHero from '@/components/EScooterHero';
 import EScooterUSPs from '@/components/EScooterUSPs';
@@ -9,14 +6,13 @@ import EScooterWhyBuySection from '@/components/EScooterWhyBuySection';
 import EScooterMopedsSection from '@/components/EScooterMopedsSection';
 import PayLaterSection from '@/components/PayLaterSection';
 import { FaqSection } from '@/components/FaqSection';
-import { getProducts } from '@/api';
 import type { Product } from '@/types/Product';
 import { siteSettings } from '@/config/siteSettings';
 
 const faqData = [
   {
     question: 'Can I buy an electric scooter online and have it delivered anywhere in Australia?',
-    answer: 'Yes. We ship Australia-wide with free delivery on every order. Whether you\'re in Perth, Sydney, Melbourne, Brisbane, or a regional area — your e-scooter will be delivered to your door at no extra charge.',
+    answer: 'Yes. We ship Australia-wide with free delivery on every order. Whether you\'re in Perth, Sydney, Melbourne, Brisbane, or a regional area â€” your e-scooter will be delivered to your door at no extra charge.',
   },
   {
     question: 'Are your electric scooter prices inclusive of GST?',
@@ -40,7 +36,7 @@ const faqData = [
   },
   {
     question: 'What is the range of an electric scooter?',
-    answer: 'Range depends on the model, rider weight, terrain, and speed. Most of the e-scooters we carry offer a practical range of 25–60 km per charge. Check each product listing for specific range specifications.',
+    answer: 'Range depends on the model, rider weight, terrain, and speed. Most of the e-scooters we carry offer a practical range of 25â€“60 km per charge. Check each product listing for specific range specifications.',
   },
 ];
 
@@ -72,19 +68,17 @@ const structuredDataBase = {
   ]
 };
 
-const ElectricScootersLandingPage = () => {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+interface ElectricScootersLandingPageProps {
+  initialFeaturedProducts?: Product[];
+}
 
-  useEffect(() => {
-    getProducts({ is_featured: true })
-      .then(res => setFeaturedProducts(res.results.slice(0, 2)))
-      .catch(() => {/* silently fail — FeaturedEScooters renders nothing on empty */});
-  }, []);
+const ElectricScootersLandingPage = ({ initialFeaturedProducts }: ElectricScootersLandingPageProps) => {
+  const featuredProducts = initialFeaturedProducts ?? [];
 
   return (
     <div>
       <Seo
-        title="Buy Electric Scooters Online — Free Delivery Australia-Wide | ScooterShop"
+        title="Buy Electric Scooters Online â€” Free Delivery Australia-Wide | ScooterShop"
         description="Shop electric scooters online with free delivery Australia-wide. All prices include GST. Secure checkout via Stripe. 12-month warranty on every e-scooter."
         canonicalPath="/electric-scooters"
         structuredData={structuredDataBase}

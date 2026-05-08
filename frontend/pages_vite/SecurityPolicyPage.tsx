@@ -1,5 +1,3 @@
-"use client";
-
 import Seo from '@/components/Seo';
 
 const SecurityPolicyPage = () => {

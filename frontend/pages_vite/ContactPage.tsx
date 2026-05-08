@@ -1,5 +1,3 @@
-"use client";
-
 import Hero from '../components/Hero';
 import ContactDetails from '../components/ContactDetails';
 import SymImage from '@/assets/sym_22.webp';

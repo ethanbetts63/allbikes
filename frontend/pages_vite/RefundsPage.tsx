@@ -1,5 +1,3 @@
-"use client";
-
 import Link from 'next/link';
 import Hero from '@/components/Hero';
 import Seo from '@/components/Seo';

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
@@ -29,7 +29,7 @@ const hireFaqData = [
   },
   {
     question: 'What is included in the hire?',
-    answer: 'The hire fee covers the use of the motorcycle for your chosen period. The bike comes serviced and ready to ride. Fuel is not included — you return the bike with the same amount of fuel as when you collected it.',
+    answer: 'The hire fee covers the use of the motorcycle for your chosen period. The bike comes serviced and ready to ride. Fuel is not included â€” you return the bike with the same amount of fuel as when you collected it.',
   },
   {
     question: 'Can I extend my hire period?',
@@ -41,43 +41,51 @@ const hireFaqData = [
   },
 ];
 
-const HireListPage = () => {
+interface HireListPageProps {
+  initialBikes?: Bike[];
+  initialStartDate?: string;
+  initialEndDate?: string;
+}
+
+const HireListPage = ({ initialBikes, initialStartDate, initialEndDate }: HireListPageProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [bikes, setBikes] = useState<Bike[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const hasInitialBikes = initialBikes !== undefined;
+  const initialFetchHandledRef = useRef(false);
+  const [bikes, setBikes] = useState<Bike[]>(initialBikes ?? []);
+  const [isLoading, setIsLoading] = useState(!hasInitialBikes);
   const [error, setError] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState(() => searchParams.get('start') ?? '');
-  const [endDate, setEndDate] = useState(() => searchParams.get('end') ?? '');
+  const [startDate, setStartDate] = useState(() => initialStartDate ?? '');
+  const [endDate, setEndDate] = useState(() => initialEndDate ?? '');
   const [blockedDateError, setBlockedDateError] = useState<string | null>(null);
   const { minStartDate, maxStartDate, isRangeBlocked, weeklyDiscountPercent, monthlyDiscountPercent, error: settingsError } = useHireDateConstraints();
+  const displayError = error ?? settingsError;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    if (settingsError) setError(settingsError);
-  }, [settingsError]);
-
-  useEffect(() => {
-    if (startDate && endDate && isRangeBlocked(startDate, endDate)) {
-      setBikes([]);
-      setIsLoading(false);
-      return;
+    if (!initialFetchHandledRef.current) {
+      initialFetchHandledRef.current = true;
+      if (hasInitialBikes) return;
     }
-    setIsLoading(true);
-    setError(null);
-    const fetch = startDate && endDate
+
+    if (startDate && endDate && isRangeBlocked(startDate, endDate)) return;
+
+    queueMicrotask(() => {
+      setIsLoading(true);
+      setError(null);
+    });
+    const request = startDate && endDate
       ? getHireBikes(startDate, endDate)
       : getHireBikes();
-    fetch
+    request
       .then((results) => {
         setBikes(results);
       })
       .catch(() => setError('Failed to load hire bikes.'))
       .finally(() => setIsLoading(false));
-  }, [startDate, endDate]);
+  }, [startDate, endDate, hasInitialBikes, isRangeBlocked]);
 
   const handleBook = (bike: Bike) => {
     if (!startDate || !endDate) {
@@ -88,11 +96,13 @@ const HireListPage = () => {
     router.push(`/hire/book?bike=${bike.id}&start=${startDate}&end=${endDate}`);
   };
 
+  const isBlockedSelection = Boolean(startDate && endDate && isRangeBlocked(startDate, endDate));
+
   return (
     <>
       <Seo
         title="Motorcycle Hire Perth | Daily, Weekly & Monthly | ScooterShop"
-        description="Hire a motorcycle in Perth from Allbikes & Scooters, Dianella. Flexible daily, weekly, and monthly rates. Book online — refundable bond, maintained fleet."
+        description="Hire a motorcycle in Perth from Allbikes & Scooters, Dianella. Flexible daily, weekly, and monthly rates. Book online â€” refundable bond, maintained fleet."
         canonicalPath="/hire"
       />
 
@@ -101,7 +111,7 @@ const HireListPage = () => {
         <div className="max-w-2xl mx-auto flex flex-col items-center text-center gap-8">
           <div>
             <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-              Allbikes &amp; Scooters · Dianella, Perth
+              Allbikes &amp; Scooters Â· Dianella, Perth
             </p>
             <h1 className="text-4xl sm:text-5xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
               Select Your Hire Dates
@@ -169,9 +179,9 @@ const HireListPage = () => {
             </div>
           )}
 
-          {error && <p className="text-destructive text-center">{error}</p>}
+          {displayError && <p className="text-destructive text-center">{displayError}</p>}
 
-          {!isLoading && !error && (
+          {!isLoading && !displayError && !isBlockedSelection && (
             <div className="flex items-baseline justify-between gap-4 mb-6">
               <h2 className="text-lg font-black uppercase italic text-[var(--text-dark-primary)]">
                 {startDate && endDate ? 'Available Bikes' : 'Our Hire Fleet'}
@@ -183,7 +193,7 @@ const HireListPage = () => {
             </div>
           )}
 
-          {!isLoading && !error && (
+          {!isLoading && !displayError && !isBlockedSelection && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {bikes.length > 0 ? (
                 bikes.map((bike) => {
