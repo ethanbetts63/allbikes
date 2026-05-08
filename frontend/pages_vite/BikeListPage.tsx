@@ -201,7 +201,7 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
       <Hero 
         title={responsivePageTitle}
         description={description}
-        imageUrl={SymImage}
+        imageUrl={SymImage.src}
       />
 <div className="bg-[var(--card)]">
         <div className="container mx-auto px-4 lg:px-8 py-8">

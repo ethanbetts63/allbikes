@@ -120,7 +120,6 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                                 selected={selectedDate}
                                 onSelect={setSelectedDate}
                                 disabled={isDateDisabled}
-                                initialFocus
                             />
                         </PopoverContent>
                     </Popover>

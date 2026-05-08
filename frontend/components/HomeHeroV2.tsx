@@ -23,8 +23,10 @@ import defaultUsedImage768 from '@/assets/IMG_20250730_102056-768w.webp';
 import defaultUsedImage1024 from '@/assets/IMG_20250730_102056-1024w.webp';
 import defaultUsedImage1280 from '@/assets/IMG_20250730_102056-1280w.webp';
 
-const defaultNewSrcSet = `${defaultNewImage320} 320w, ${defaultNewImage640} 640w, ${defaultNewImage768} 768w, ${defaultNewImage1024} 1024w, ${defaultNewImage1280} 1280w`;
-const defaultUsedSrcSet = `${defaultUsedImage320} 320w, ${defaultUsedImage640} 640w, ${defaultUsedImage768} 768w, ${defaultUsedImage1024} 1024w, ${defaultUsedImage1280} 1280w`;
+const defaultNewImageSrc = defaultNewImage.src;
+const defaultUsedImageSrc = defaultUsedImage.src;
+const defaultNewSrcSet = `${defaultNewImage320.src} 320w, ${defaultNewImage640.src} 640w, ${defaultNewImage768.src} 768w, ${defaultNewImage1024.src} 1024w, ${defaultNewImage1280.src} 1280w`;
+const defaultUsedSrcSet = `${defaultUsedImage320.src} 320w, ${defaultUsedImage640.src} 640w, ${defaultUsedImage768.src} 768w, ${defaultUsedImage1024.src} 1024w, ${defaultUsedImage1280.src} 1280w`;
 
 interface SlotState {
   a: string;
@@ -33,14 +35,14 @@ interface SlotState {
 }
 
 const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, emailAddress }: HomeHeroProps) => {
-  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImage]);
-  const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([defaultUsedImage]);
+  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImageSrc]);
+  const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([defaultUsedImageSrc]);
   const currentNewIndexRef = useRef(0);
   const currentUsedIndexRef = useRef(0);
 
   // Two-slot crossfade state: one slot holds the outgoing image, one the incoming
-  const [newSlots, setNewSlots] = useState<SlotState>({ a: defaultNewImage, b: defaultNewImage, active: 'a' });
-  const [usedSlots, setUsedSlots] = useState<SlotState>({ a: defaultUsedImage, b: defaultUsedImage, active: 'a' });
+  const [newSlots, setNewSlots] = useState<SlotState>({ a: defaultNewImageSrc, b: defaultNewImageSrc, active: 'a' });
+  const [usedSlots, setUsedSlots] = useState<SlotState>({ a: defaultUsedImageSrc, b: defaultUsedImageSrc, active: 'a' });
 
   // Refs so interval callbacks always see latest URL arrays
   const newUrlsRef = useRef(newBikeImageUrls);
@@ -153,10 +155,10 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
     </>
   );
 
-  const newIsDefaultA = newSlots.a === defaultNewImage;
-  const newIsDefaultB = newSlots.b === defaultNewImage;
-  const usedIsDefaultA = usedSlots.a === defaultUsedImage;
-  const usedIsDefaultB = usedSlots.b === defaultUsedImage;
+  const newIsDefaultA = newSlots.a === defaultNewImageSrc;
+  const newIsDefaultB = newSlots.b === defaultNewImageSrc;
+  const usedIsDefaultA = usedSlots.a === defaultUsedImageSrc;
+  const usedIsDefaultB = usedSlots.b === defaultUsedImageSrc;
 
   return (
     <div className="w-full flex flex-col lg:flex-row min-h-[480px] md:min-h-[420px]">

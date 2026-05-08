@@ -122,7 +122,7 @@ const EScooterListPage = () => {
       <Hero
         title="Electric Scooters"
         description="Buy online with free delivery Australia-wide. All prices include GST and are processed securely via Stripe."
-        imageUrl={SymImage}
+        imageUrl={SymImage.src}
       />
 
 

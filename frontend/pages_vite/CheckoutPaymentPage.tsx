@@ -93,38 +93,21 @@ const CheckoutPaymentPage = () => {
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
   const router = useRouter();
-  const state: LocationState | null = null;
+  // state is always null in Next.js (no router state) — page redirects back to checkout
+  const clientSecret: string | null = null;
+  const orderReference: string | null = null;
 
-  const [itemSummary, setCheckoutItemSummary] = useState<CheckoutItemSummary | null>(state?.itemSummary ?? null);
-  const [isLoadingSummary, setIsLoadingSummary] = useState(!state?.itemSummary);
+  const [itemSummary, setCheckoutItemSummary] = useState<CheckoutItemSummary | null>(null);
+  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!state?.clientSecret || !state?.orderReference) {
+    if (!clientSecret || !orderReference) {
       router.push(`/checkout/${slug}`);
-      return;
-    }
-    // If itemSummary wasn't passed (e.g. 3DS recovery from processing page), fetch order to build it
-    if (!state.itemSummary && state.orderReference) {
-      getOrderByReference(state.orderReference)
-        .then((order: Order) => {
-          setCheckoutItemSummary({
-            name: order.motorcycle_name ?? order.product_name ?? '',
-            imageUrl: null,
-            priceLabel: order.payment_type === 'deposit'
-              ? `$${parseFloat(order.amount_paid ?? '0').toLocaleString()} deposit`
-              : `$${parseFloat(order.amount_paid ?? '0').toLocaleString()} incl. GST`,
-            isDeposit: order.payment_type === 'deposit',
-          });
-        })
-        .catch(() => {/* summary is optional, payment still works */})
-        .finally(() => setIsLoadingSummary(false));
-    } else {
-      setIsLoadingSummary(false);
     }
   }, []);
 
-  if (!state?.clientSecret) return null;
+  if (!clientSecret) return null;
 
   if (isLoadingSummary) {
     return (
@@ -135,7 +118,7 @@ const CheckoutPaymentPage = () => {
   }
 
   const elementsOptions = {
-    clientSecret: state.clientSecret,
+    clientSecret: clientSecret!,
     appearance: { theme: 'stripe' as const },
   };
 
@@ -164,11 +147,11 @@ const CheckoutPaymentPage = () => {
           <h1 className="text-2xl font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-6">Payment</h1>
           <p className="text-sm text-[var(--text-dark-secondary)] mb-6">
             {itemSummary?.isDeposit ? 'Deposit reference' : 'Order reference'}:{' '}
-            <span className="font-mono font-semibold text-[var(--text-dark-primary)]">{state.orderReference}</span>
+            <span className="font-mono font-semibold text-[var(--text-dark-primary)]">{orderReference}</span>
           </p>
 
           <Elements stripe={stripePromise} options={elementsOptions}>
-            <PaymentForm orderReference={state.orderReference} slug={slug!} initialError={state.error} />
+            <PaymentForm orderReference={orderReference!} slug={slug!} initialError={undefined} />
           </Elements>
 
         </div>

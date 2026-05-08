@@ -115,7 +115,7 @@ const CheckoutSuccessPage = () => {
           </div>
 
           <Link
-            to={isDeposit ? '/inventory/motorcycles/new' : '/escooters'}
+            href={isDeposit ? '/inventory/motorcycles/new' : '/escooters'}
             className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"
           >
             {isDeposit ? '← Back to New Motorcycles' : '← Back to E-Scooters'}

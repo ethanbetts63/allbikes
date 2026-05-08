@@ -306,7 +306,7 @@ const BikeDetailPage = () => {
                         {siteSettings.accept_online_payment && (bike.condition === 'new' || bike.condition === 'demo' || bike.condition === 'used') && bike.status === 'for_sale' && depositAmount && (
                             <div className="mb-6">
                                 <button
-                                    onClick={() => router.push(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}
+                                    onClick={() => router.push(`/checkout/${bike.slug}?type=deposit`)}
                                     className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
                                     <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />

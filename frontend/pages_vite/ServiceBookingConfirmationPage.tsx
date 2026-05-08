@@ -7,7 +7,7 @@ import MotorcycleMovers from '@/components/MotorcycleMovers';
 import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConfirmationState';
 
 const BookingConfirmationPage = () => {
-    const state: ServiceBookingConfirmationState | null = null;
+    const state = null as ServiceBookingConfirmationState | null;
 
     return (
         <>

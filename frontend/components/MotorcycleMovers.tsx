@@ -9,7 +9,7 @@ const MotorcycleMovers = () => {
             {/* Image */}
             <div className="relative min-h-[240px] md:min-h-0">
                 <img
-                    src={moverImage}
+                    src={moverImage.src}
                     alt="Motorcycle on a transport ramp"
                     className="absolute inset-0 w-full h-full object-cover"
                 />

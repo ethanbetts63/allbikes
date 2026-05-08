@@ -81,8 +81,8 @@ const NavBar = () => {
         {/* Logo */}
         <Link href="/" className="shrink-0 flex items-stretch">
           <img
-            src={logo1280}
-            srcSet={`${logo320} 320w, ${logo640} 640w, ${logo768} 768w, ${logo1024} 1024w, ${logo1280} 1280w`}
+            src={logo1280.src}
+            srcSet={`${logo320.src} 320w, ${logo640.src} 640w, ${logo768.src} 768w, ${logo1024.src} 1024w, ${logo1280.src} 1280w`}
             sizes="175px"
             width="1756"
             height="810"

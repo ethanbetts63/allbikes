@@ -34,6 +34,7 @@ const BookingPage = () => {
     const [step, setStep] = useState(1);
     const router = useRouter();
     const [formData, setFormData] = useState(() => {
+        if (typeof window === 'undefined') return initialFormData;
         try {
             const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
             return savedData ? JSON.parse(savedData) : initialFormData;

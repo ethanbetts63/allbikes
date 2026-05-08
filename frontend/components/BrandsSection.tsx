@@ -58,13 +58,13 @@ We've proudly partnered with them for years—mainly because it just makes sense
   const segwayText = `Best known for their self-balancing transporters, Segway has evolved into a serious player in the electric moped space. As the market changes, Segway stands out with the experience and quality that comes from being an early innovator.
 We've tested a lot of brands, but Segway's electric mopeds impressed us with their build quality, design, and performance. We're confident these are vehicles we can stand behind—and that you'll love riding.`;
 
-  const symSrcSet = `${symImage320} 320w, ${symImage640} 640w, ${symImage768} 768w, ${symImage1024} 1024w, ${symImage1280} 1280w`;
-  const segwaySrcSet = `${segwayImage320} 320w, ${segwayImage640} 640w, ${segwayImage768} 768w, ${segwayImage1024} 1024w, ${segwayImage1280} 1280w`;
+  const symSrcSet = `${symImage320.src} 320w, ${symImage640.src} 640w, ${symImage768.src} 768w, ${symImage1024.src} 1024w, ${symImage1280.src} 1280w`;
+  const segwaySrcSet = `${segwayImage320.src} 320w, ${segwayImage640.src} 640w, ${segwayImage768.src} 768w, ${segwayImage1024.src} 1024w, ${segwayImage1280.src} 1280w`;
 
   return (
     <section className="w-full">
       <BrandCard
-        image={symImage}
+        image={symImage.src}
         imageSrcSet={symSrcSet}
         alt="SYM scooter for sale at ScooterShop, Dianella Perth"
         title="SYM Scooters"
@@ -73,7 +73,7 @@ We've tested a lot of brands, but Segway's electric mopeds impressed us with the
         imageLeft={true}
       />
       <BrandCard
-        image={segwayImage}
+        image={segwayImage.src}
         imageSrcSet={segwaySrcSet}
         alt="Segway electric moped for sale at ScooterShop Perth"
         title="Segway Electric Mopeds"

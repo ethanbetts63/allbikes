@@ -89,26 +89,26 @@ const PaymentForm = ({ bookingReference, initialError }: PaymentFormProps) => {
 
 const HirePaymentPage = () => {
     const router = useRouter();
-    const state: LocationState | null = null;
+    // state is always null in Next.js (no router state) — page redirects to /hire
+    const clientSecret: string | null = null;
+    const bookingReference: string | null = null;
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (!state?.clientSecret || !state?.bookingReference) {
+        if (!clientSecret || !bookingReference) {
             router.push('/hire');
         }
     }, []);
 
-    if (!state?.clientSecret) return null;
+    if (!clientSecret) return null;
 
-    const summary: HireBookingSummary | undefined = state.bookingSummary;
-    const bondAmount = summary ? parseFloat(summary.bondAmount) : 0;
-    const extrasTotal = summary ? parseFloat(summary.extrasTotal ?? '0') : 0;
-    const totalCharge = summary
-        ? (parseFloat(summary.totalHireAmount) + extrasTotal).toFixed(2)
-        : null;
+    const summary = undefined as HireBookingSummary | undefined;
+    const bondAmount = 0;
+    const extrasTotal = 0;
+    const totalCharge = null;
 
     const elementsOptions = {
-        clientSecret: state.clientSecret,
+        clientSecret: clientSecret!,
         appearance: { theme: 'stripe' as const },
     };
 
@@ -157,13 +157,13 @@ const HirePaymentPage = () => {
                     <h1 className="text-2xl font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-2">Payment</h1>
                     <p className="text-sm text-[var(--text-dark-secondary)] mb-6">
                         Booking reference:{' '}
-                        <span className="font-mono font-semibold text-[var(--text-dark-primary)]">{state.bookingReference}</span>
+                        <span className="font-mono font-semibold text-[var(--text-dark-primary)]">{bookingReference}</span>
                     </p>
 
                     <Elements stripe={stripePromise} options={elementsOptions}>
                         <PaymentForm
-                            bookingReference={state.bookingReference}
-                            initialError={state.error}
+                            bookingReference={bookingReference!}
+                            initialError={undefined}
                         />
                     </Elements>
 

@@ -24,7 +24,7 @@ const RefundsPage = () => {
       <Hero
         title="Returns & Refunds"
         description="We want you to be happy with your purchase. Here is everything you need to know about our returns and refunds process."
-        imageUrl={SegwayImage}
+        imageUrl={SegwayImage.src}
       />
 
       <div className="container mx-auto px-4 py-10 max-w-3xl">

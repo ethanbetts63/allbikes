@@ -9,7 +9,7 @@ import segwayImage768 from '@/assets/segway_1-768w.webp';
 import segwayImage1024 from '@/assets/segway_1-1024w.webp';
 import segwayImage1280 from '@/assets/segway_1-1280w.webp';
 
-const segwaySrcSet = `${segwayImage320} 320w, ${segwayImage640} 640w, ${segwayImage768} 768w, ${segwayImage1024} 1024w, ${segwayImage1280} 1280w`;
+const segwaySrcSet = `${segwayImage320.src} 320w, ${segwayImage640.src} 640w, ${segwayImage768.src} 768w, ${segwayImage1024.src} 1024w, ${segwayImage1280.src} 1280w`;
 
 const EScooterMopedsSection = () => {
   return (
@@ -19,7 +19,7 @@ const EScooterMopedsSection = () => {
         {/* Image */}
         <div className="w-full md:w-1/2 overflow-hidden">
           <img
-            src={segwayImage}
+            src={segwayImage.src}
             srcSet={segwaySrcSet}
             sizes="(max-width: 768px) 100vw, 50vw"
             alt="Segway electric moped"

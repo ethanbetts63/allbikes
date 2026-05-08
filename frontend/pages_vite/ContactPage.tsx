@@ -7,27 +7,27 @@ import { siteSettings } from '@/config/siteSettings';
 import OtherSites from '../components/OtherSites';
 import Seo from '@/components/Seo';
 import ContactButtons from '@/components/ContactButtons';
-import splitcartLogo from "/src/assets/splitcart_logo.png";
-import futureReminderLogo from "/src/assets/futurereminder_logo.png";
-import foreverFlowerLogo from "/src/assets/foreverflower_logo.png";
+import splitcartLogo from "@/assets/splitcart_logo.png";
+import futureReminderLogo from "@/assets/futurereminder_logo.png";
+import foreverFlowerLogo from "@/assets/foreverflower_logo.png";
 import { FaqSection } from '@/components/FaqSection';
 
 const otherSitesData = [
     {
         name: "Splitcart",
-        logoSrc: splitcartLogo, 
+        logoSrc: splitcartLogo.src,
         description: "Compare grocery prices across major Australian supermarkets.",
-        url: "https://www.splitcart.com.au", 
+        url: "https://www.splitcart.com.au",
     },
     {
         name: "Future Reminder",
-        logoSrc: futureReminderLogo, 
+        logoSrc: futureReminderLogo.src,
         description: "Never miss an important event with our persistent reminder service.",
-        url: "https://www.futurereminder.app", 
+        url: "https://www.futurereminder.app",
     },
     {
         name: "FutureFlower",
-        logoSrc: foreverFlowerLogo, 
+        logoSrc: foreverFlowerLogo.src,
         description: "Flower delivery and subscription service.",
         url: "https://www.futureflower.app", 
     },
@@ -64,7 +64,7 @@ const ContactPage = () => {
             <Hero
                 title="Contact Us"
                 description={description}
-                imageUrl={SymImage}
+                imageUrl={SymImage.src}
             />
             {siteSettings && (
                 <ContactButtons

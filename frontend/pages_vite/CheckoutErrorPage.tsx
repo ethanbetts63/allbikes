@@ -48,7 +48,7 @@ const CheckoutErrorPage = () => {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
-              to="/contact"
+              href="/contact"
               className="flex-1 text-center py-3 px-6 rounded-lg font-bold uppercase tracking-widest text-sm bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] transition-colors"
             >
               Contact Us
