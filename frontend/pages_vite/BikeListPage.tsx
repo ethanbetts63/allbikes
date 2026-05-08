@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import Seo from '@/components/Seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
 import BikeCard from '@/components/BikeCard';
 import type { Bike } from '@/types/Bike';
 import type { GetBikesOptions } from '@/types/GetBikesOptions';
@@ -195,7 +195,7 @@ const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeLi
 
   return (
     <>
-      <Seo structuredData={structuredData} />
+      <StructuredDataScript structuredData={structuredData} />
       <Hero 
         title={responsivePageTitle}
         description={description}

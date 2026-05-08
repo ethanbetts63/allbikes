@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getProductById } from '@/api';
 import type { Product } from '@/types/Product';
-import Seo from '@/components/Seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import clickIcon from '@/assets/click.svg';
 import { siteSettings } from '@/config/siteSettings';
@@ -114,7 +114,7 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
 
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
-            <Seo structuredData={structuredData} />
+            <StructuredDataScript structuredData={structuredData} />
 
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 

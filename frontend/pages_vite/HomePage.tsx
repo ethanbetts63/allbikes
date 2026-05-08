@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Seo from '@/components/Seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
 import HomeHeroV2 from '@/components/HomeHeroV2';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
@@ -151,7 +151,7 @@ const HomePage = ({
 
   return (
     <div>
-      <Seo structuredData={structuredData} />
+      <StructuredDataScript structuredData={structuredData} />
         <HomeHeroV2
             newBikes={newBikes}
             usedBikes={usedBikes}

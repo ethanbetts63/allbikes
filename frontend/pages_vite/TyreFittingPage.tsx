@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import Seo from '@/components/Seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
@@ -102,7 +102,7 @@ const structuredData = {
 const TyreFittingPage = () => {
     return (
         <div>
-            <Seo structuredData={structuredData} />
+            <StructuredDataScript structuredData={structuredData} />
 
             <ServiceCTAV2 />
 

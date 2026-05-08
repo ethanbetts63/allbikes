@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getBikeById, getBikes, getDepositSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
-import Seo from '@/components/Seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
 import FeaturedBikes from "@/components/FeaturedBikes";
 import {
     Hash,
@@ -141,7 +141,7 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
 
     const breadcrumbItems: BreadcrumbItem[] = bike ? [
         { name: 'Home', href: '/' },
-        { name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes', href: `/bikes/${bike.condition}` },
+        { name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes', href: bike.condition === 'new' ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used' },
         { name: pageTitle, href: `/inventory/motorcycles/${bike.slug}` }
     ] : [];
 
@@ -246,7 +246,7 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
                 </div>
             </div>
 
-            <Seo structuredData={structuredData} />
+            <StructuredDataScript structuredData={structuredData} />
 
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 
@@ -388,7 +388,7 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
                         title="Featured Used & Demo Bikes"
                         bikes={usedBikes}
                         description="Great value pre-owned and demonstrator bikes."
-                        linkTo="/inventory/used"
+                        linkTo="/inventory/motorcycles/used"
                         linkText="View All Used"
                     />
                 )}

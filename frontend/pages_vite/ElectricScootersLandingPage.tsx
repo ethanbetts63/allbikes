@@ -1,4 +1,4 @@
-import Seo from '@/components/Seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
 import EScooterHero from '@/components/EScooterHero';
 import EScooterUSPs from '@/components/EScooterUSPs';
 import FeaturedEScooters from '@/components/FeaturedEScooters';
@@ -77,7 +77,7 @@ const ElectricScootersLandingPage = ({ initialFeaturedProducts }: ElectricScoote
 
   return (
     <div>
-      <Seo structuredData={structuredDataBase} />
+      <StructuredDataScript structuredData={structuredDataBase} />
 
       <EScooterHero />
 

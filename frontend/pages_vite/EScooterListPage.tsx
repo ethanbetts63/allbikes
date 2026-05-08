@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import Seo from '@/components/Seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
 import ProductCard from '@/components/ProductCard';
 import ProductFilterSort from '@/components/ProductFilterSort';
 import type { Product } from '@/types/Product';
@@ -120,7 +120,7 @@ const EScooterListPage = ({ initialProducts, initialTotalPages }: EScooterListPa
 
   return (
     <>
-      <Seo structuredData={structuredData} />
+      <StructuredDataScript structuredData={structuredData} />
 
       <Hero
         title="Electric Scooters"
