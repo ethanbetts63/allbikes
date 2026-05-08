@@ -95,6 +95,14 @@ export async function logoutUser(): Promise<void> {
 
 // --- User Profile Endpoint ---
 
+// Silent check used on initial page load — returns null on any failure without
+// triggering the refresh/auth-failure cascade.
+export async function checkSession(): Promise<UserProfile | null> {
+    const response = await fetch(`${API_BASE_URL}/me/`, { credentials: 'include' });
+    if (!response.ok) return null;
+    return response.json();
+}
+
 export async function getUserProfile(): Promise<UserProfile> {
     const response = await authedFetch(`${API_BASE_URL}/me/`, {
         method: 'GET',

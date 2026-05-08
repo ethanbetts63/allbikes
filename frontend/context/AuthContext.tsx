@@ -11,6 +11,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    api.checkSession()
+      .then(profile => setUser(profile ?? null))
+      .catch(() => {})
+      .finally(() => setIsLoading(false));
+  }, []);
+
   const loadUserProfile = useCallback(async () => {
     try {
       const fullProfile = await api.getUserProfile();
@@ -21,10 +28,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    loadUserProfile();
-  }, [loadUserProfile]);
 
   useEffect(() => {
     const handleAuthFailure = () => logout();

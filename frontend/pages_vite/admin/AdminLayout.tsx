@@ -42,8 +42,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
 
   useEffect(() => {
+    if (!user?.is_staff) return;
     adminGetDashboard().then(setDashboard).catch(() => {});
-  }, []);
+  }, [user?.is_staff]);
 
   useEffect(() => {
     if (!isAuthLoading && !user?.is_staff) {

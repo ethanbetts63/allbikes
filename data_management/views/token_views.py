@@ -14,6 +14,9 @@ def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
         get_token(request)  # ensure csrftoken cookie is issued with this response
 
     secure = not settings.DEBUG
+    # SameSite=None requires Secure=True; in dev the Next.js proxy makes requests
+    # same-origin so Lax is sufficient and browsers won't reject the cookie.
+    samesite = 'None' if secure else 'Lax'
     access_max_age = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds())
     refresh_max_age = int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds())
 
@@ -23,7 +26,7 @@ def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
         max_age=access_max_age,
         httponly=True,
         secure=secure,
-        samesite='None',
+        samesite=samesite,
     )
     if refresh_token is not None:
         response.set_cookie(
@@ -32,7 +35,7 @@ def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
             max_age=refresh_max_age,
             httponly=True,
             secure=secure,
-            samesite='None',
+            samesite=samesite,
         )
 
 

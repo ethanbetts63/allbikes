@@ -22,11 +22,12 @@ const AdminHomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!user) return;
     adminGetDashboard()
       .then(setDashboard)
       .catch(() => {})
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [user]);
 
   const allClear = dashboard &&
     dashboard.paid_orders.length === 0 &&
