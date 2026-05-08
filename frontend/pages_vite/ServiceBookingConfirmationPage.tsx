@@ -1,13 +1,27 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 import Seo from '@/components/Seo';
 import MotorcycleMovers from '@/components/MotorcycleMovers';
 import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConfirmationState';
 
+const CONFIRMATION_STORAGE_KEY = 'serviceBookingConfirmation';
+
 const BookingConfirmationPage = () => {
-    const state = null as ServiceBookingConfirmationState | null;
+    const [state, setState] = useState<ServiceBookingConfirmationState | null>(null);
+
+    useEffect(() => {
+        try {
+            const raw = sessionStorage.getItem(CONFIRMATION_STORAGE_KEY);
+            if (!raw) return;
+            setState(JSON.parse(raw) as ServiceBookingConfirmationState);
+            sessionStorage.removeItem(CONFIRMATION_STORAGE_KEY);
+        } catch (error) {
+            console.error('Error reading service booking confirmation data:', error);
+        }
+    }, []);
 
     return (
         <>

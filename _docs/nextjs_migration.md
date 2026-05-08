@@ -79,7 +79,7 @@ Every import of `react-router-dom` was replaced:
 - `useParams<{ id: string }>()` from Next.js returns `Record<string, string | string[]>` — cast with `as { id: string }` or access as `params.id`.
 - `router.push(path, { state: {...} })` — **state does not exist** in Next.js router. See "Lost state" section below.
 
-### Lost router state (payment flows — BROKEN)
+### Lost router state (payment flows)
 
 Several pages previously received data via `location.state` (react-router):
 - `CheckoutPaymentPage` — received `clientSecret`, `orderReference`, `itemSummary`
@@ -88,7 +88,13 @@ Several pages previously received data via `location.state` (react-router):
 - `HireProcessingPage` — received booking data
 - `ServiceBookingConfirmationPage` — received booking form data
 
-**Current behaviour:** These pages hardcode `state = null`, immediately redirect back to the start of the flow, and show no data. This means **the checkout and hire payment flows are non-functional end-to-end.**
+**Current behaviour:** Checkout, hire payment, and service confirmation have been moved off lost router state.
+
+**Checkout status: fixed in Phase 4.** `CheckoutPage` now creates the Django order, navigates to `/checkout/[slug]/payment?ref=SS-XXXXXXXX`, and `CheckoutPaymentPage` reloads the order by reference before creating/reusing the Stripe PaymentIntent. Processing/success/error pages already use `ref` query params, so checkout is now refresh/direct-open tolerant.
+
+**Hire payment status: fixed in Phase 4.** `HireBookingPage` now creates the Django hire booking and navigates to `/hire/book/[bookingReference]/payment`. `HirePaymentPage` reads `bookingReference` from the route, reloads the booking from Django, and creates/reuses the Stripe PaymentIntent from `booking.id`. Processing and confirmation already use the booking reference.
+
+**Service confirmation status: fixed in Phase 4.** The service booking flow has no public reference lookup endpoint because the canonical booking is created in MechanicDesk. `ServiceBookingPage` now stores the submitted form snapshot in `sessionStorage` immediately after a successful API response, clears the draft progress, and navigates to `/service-booking/confirmation`. `ServiceBookingConfirmationPage` reads and clears that snapshot for display. This is display-only; Django/MechanicDesk remain the source of truth.
 
 **What needs doing (Phase 4 of payment flow):** Persist the data another way before navigating:
 - `sessionStorage` (simplest — set before `router.push`, read on arrival)
@@ -226,11 +232,11 @@ const state = raw ? JSON.parse(raw) : null;
 sessionStorage.removeItem('checkoutState'); // clear after reading
 ```
 
-Pages that need this:
-- `CheckoutPage` → `CheckoutPaymentPage`
-- `HireBookingPage` → `HirePaymentPage`
-- `HireProcessingPage` → `HireConfirmationPage`
-- `ServiceBookingPage` → `ServiceBookingConfirmationPage`
+Phase 4 state bridge status:
+- `CheckoutPage` → `CheckoutPaymentPage`: fixed with order reference in URL.
+- `HireBookingPage` → `HirePaymentPage`: fixed with booking reference route param.
+- `HireProcessingPage` → `HireConfirmationPage`: already reference-based.
+- `ServiceBookingPage` → `ServiceBookingConfirmationPage`: fixed with display-only `sessionStorage` snapshot.
 
 ### Phase 5 — SEO server components + generateMetadata
 Convert the SEO-critical pages to async server components that fetch data server-side, and replace the `Seo` stub with `generateMetadata`:

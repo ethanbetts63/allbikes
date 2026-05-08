@@ -9,6 +9,7 @@ import BikeDetailsForm from '@/forms/ServiceBikeDetailsForm';
 import PersonalDetailsForm from '@/forms/ServicePersonalDetailsForm';
 
 const LOCAL_STORAGE_KEY = 'bookingFormProgress';
+const CONFIRMATION_STORAGE_KEY = 'serviceBookingConfirmation';
 
 const initialFormData = {
     // Personal
@@ -64,6 +65,7 @@ const BookingPage = () => {
         setError(null);
         try {
             await createBooking(formData);
+            sessionStorage.setItem(CONFIRMATION_STORAGE_KEY, JSON.stringify(formData));
             localStorage.removeItem(LOCAL_STORAGE_KEY);
             router.push('/service-booking/confirmation');
         } catch (error) {

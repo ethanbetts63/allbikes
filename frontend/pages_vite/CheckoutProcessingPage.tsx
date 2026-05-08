@@ -60,7 +60,7 @@ const ProcessingInner = () => {
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       if (!paymentIntent || paymentIntent.status === 'requires_payment_method') {
-        router.push(`/checkout/${slug}/payment`);
+        router.push(`/checkout/${slug}/payment?ref=${ref}`);
         return;
       }
       startPolling();

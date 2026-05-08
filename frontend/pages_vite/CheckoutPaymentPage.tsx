@@ -1,23 +1,16 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
-import { getOrderByReference } from '@/api';
+import { createPaymentIntent, getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
 import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-interface LocationState {
-  clientSecret: string;
-  orderReference: string;
-  itemSummary?: CheckoutItemSummary;
-  error?: string;
-}
 
 // --- Inner form rendered inside <Elements> ---
 
@@ -93,26 +86,59 @@ const CheckoutPaymentPage = () => {
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
   const router = useRouter();
-  // state is always null in Next.js (no router state) — page redirects back to checkout
-  const clientSecret: string | null = null;
-  const orderReference: string | null = null;
+  const searchParams = useSearchParams();
+  const orderReference = searchParams.get('ref');
 
   const [itemSummary, setCheckoutItemSummary] = useState<CheckoutItemSummary | null>(null);
-  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isLoadingSummary, setIsLoadingSummary] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!clientSecret || !orderReference) {
+    if (!orderReference) {
       router.push(`/checkout/${slug}`);
+      return;
     }
-  }, []);
 
-  if (!clientSecret) return null;
+    const loadPayment = async () => {
+      try {
+        const order: Order = await getOrderByReference(orderReference);
+        const paymentIntent = await createPaymentIntent(order.id);
+        setClientSecret(paymentIntent.clientSecret);
+        setCheckoutItemSummary(buildSummaryFromOrder(order));
+      } catch (err) {
+        console.error('Failed to prepare checkout payment:', err);
+        setLoadError('Unable to prepare payment. Please go back and try again.');
+      } finally {
+        setIsLoadingSummary(false);
+      }
+    };
+
+    loadPayment();
+  }, [orderReference, router, slug]);
 
   if (isLoadingSummary) {
     return (
       <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
         <Spinner className="h-12 w-12" />
+      </div>
+    );
+  }
+
+  if (loadError || !clientSecret || !orderReference) {
+    return (
+      <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
+        <div className="container mx-auto px-4 py-8 max-w-2xl">
+          <p className="text-destructive text-sm mb-4">{loadError || 'Payment could not be loaded.'}</p>
+          <button
+            type="button"
+            onClick={() => router.push(`/checkout/${slug}`)}
+            className="py-3 px-6 rounded-lg font-bold uppercase tracking-widest text-sm bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] transition-colors"
+          >
+            Back to Checkout
+          </button>
+        </div>
       </div>
     );
   }
@@ -159,5 +185,17 @@ const CheckoutPaymentPage = () => {
     </>
   );
 };
+
+function buildSummaryFromOrder(order: Order): CheckoutItemSummary {
+  const isDeposit = order.payment_type === 'deposit';
+  return {
+    name: isDeposit
+      ? order.motorcycle_name ?? 'Motorcycle deposit'
+      : order.product_name ?? 'E-scooter order',
+    imageUrl: null,
+    priceLabel: isDeposit ? 'Deposit reservation' : 'Secure online payment',
+    isDeposit,
+  };
+}
 
 export default CheckoutPaymentPage;

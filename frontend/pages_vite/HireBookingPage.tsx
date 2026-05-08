@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CalendarDays } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { getBikeById, createHireBooking, createHirePaymentIntent, getPublicHireSettings, getHireExtras } from '@/api';
+import { getBikeById, createHireBooking, getPublicHireSettings, getHireExtras } from '@/api';
 import type { HireExtra } from '@/types/HireBooking';
 import type { HireBookingFormData } from '@/types/HireBookingFormData';
 import type { Bike } from '@/types/Bike';
@@ -105,10 +105,9 @@ const HireBookingPage = () => {
                     .filter(e => selectedExtras[e.id])
                     .map(e => ({ extra_id: e.id, quantity: 1 })),
             });
-            const { clientSecret } = await createHirePaymentIntent(booking.booking_id);
             router.push(`/hire/book/${booking.booking_reference}/payment`);
-        } catch (err: any) {
-            setSubmitError(err.message || 'Failed to create booking. Please try again.');
+        } catch (err: unknown) {
+            setSubmitError(err instanceof Error ? err.message : 'Failed to create booking. Please try again.');
         } finally {
             setIsSubmitting(false);
         }

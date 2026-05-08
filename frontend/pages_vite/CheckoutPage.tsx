@@ -8,7 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { getProductById, getBikeById, getDepositSettings, createOrder, createPaymentIntent } from '@/api';
+import { getProductById, getBikeById, getDepositSettings, createOrder } from '@/api';
 import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
 import type { CheckoutFormData } from '@/types/CheckoutFormData';
@@ -100,11 +100,10 @@ const CheckoutPage = () => {
           : { product: product!.id, ...formData, terms_accepted: true };
 
       const order = await createOrder(orderPayload);
-      const { clientSecret } = await createPaymentIntent(order.order_id);
-
-      router.push(`/checkout/${slug}/payment`);
-    } catch (err: any) {
-      if (err?.status === 409) {
+      router.push(`/checkout/${slug}/payment?ref=${order.order_reference}`);
+    } catch (err: unknown) {
+      const status = err instanceof Error ? (err as Error & { status?: number }).status : undefined;
+      if (status === 409) {
         setSubmitError(
           checkoutType === 'deposit'
             ? 'Sorry, this motorcycle has just been reserved. Please contact us for availability.'

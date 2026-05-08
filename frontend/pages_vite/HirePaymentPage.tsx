@@ -1,22 +1,18 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
 import { CalendarDays } from 'lucide-react';
 import { formatDate } from '@/lib/hire';
 import type { HireBookingSummary } from '@/types/HireBookingSummary';
+import { createHirePaymentIntent, getHireBookingByReference } from '@/api';
+import { Spinner } from '@/components/ui/spinner';
+import type { HireBooking } from '@/types/HireBooking';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-interface LocationState {
-    clientSecret: string;
-    bookingReference: string;
-    bookingSummary?: HireBookingSummary;
-    error?: string;
-}
 
 // --- Inner form rendered inside <Elements> ---
 
@@ -89,23 +85,65 @@ const PaymentForm = ({ bookingReference, initialError }: PaymentFormProps) => {
 
 const HirePaymentPage = () => {
     const router = useRouter();
-    // state is always null in Next.js (no router state) — page redirects to /hire
-    const clientSecret: string | null = null;
-    const bookingReference: string | null = null;
+    const params = useParams<{ bookingReference: string }>();
+    const bookingReference = params.bookingReference;
+    const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [summary, setSummary] = useState<HireBookingSummary | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (!clientSecret || !bookingReference) {
+        if (!bookingReference) {
             router.push('/hire');
+            return;
         }
-    }, []);
 
-    if (!clientSecret) return null;
+        const loadPayment = async () => {
+            try {
+                const booking = await getHireBookingByReference(bookingReference);
+                const paymentIntent = await createHirePaymentIntent(booking.id);
+                setClientSecret(paymentIntent.clientSecret);
+                setSummary(buildSummaryFromBooking(booking));
+            } catch (err) {
+                console.error('Failed to prepare hire payment:', err);
+                setLoadError('Unable to prepare payment. Please go back and try again.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    const summary = undefined as HireBookingSummary | undefined;
-    const bondAmount = 0;
-    const extrasTotal = 0;
-    const totalCharge = null;
+        loadPayment();
+    }, [bookingReference, router]);
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
+                <Spinner className="h-12 w-12" />
+            </div>
+        );
+    }
+
+    if (loadError || !clientSecret || !bookingReference) {
+        return (
+            <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
+                <div className="container mx-auto px-4 py-8 max-w-2xl">
+                    <p className="text-destructive text-sm mb-4">{loadError || 'Payment could not be loaded.'}</p>
+                    <button
+                        type="button"
+                        onClick={() => router.push('/hire')}
+                        className="py-3 px-6 rounded-lg font-bold uppercase tracking-widest text-sm bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] transition-colors"
+                    >
+                        Back to Hire
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    const bondAmount = summary ? parseFloat(summary.bondAmount) : 0;
+    const extrasTotal = summary ? parseFloat(summary.extrasTotal) : 0;
+    const totalCharge = summary ? parseFloat(summary.totalCharged).toFixed(2) : '0.00';
 
     const elementsOptions = {
         clientSecret: clientSecret!,
@@ -172,5 +210,20 @@ const HirePaymentPage = () => {
         </>
     );
 };
+
+function buildSummaryFromBooking(booking: HireBooking): HireBookingSummary {
+    return {
+        motorcycleName: booking.motorcycle_name,
+        hireStart: booking.hire_start,
+        hireEnd: booking.hire_end,
+        numDays: booking.num_days,
+        totalHireAmount: booking.total_hire_amount,
+        bondAmount: booking.bond_amount,
+        extrasTotal: booking.extras
+            .reduce((total, extra) => total + parseFloat(extra.total_amount), 0)
+            .toFixed(2),
+        totalCharged: booking.total_charged,
+    };
+}
 
 export default HirePaymentPage;
