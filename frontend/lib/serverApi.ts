@@ -9,9 +9,17 @@ export async function getServerBikes(params: URLSearchParams): Promise<Paginated
   return fetchServerJson<PaginatedResponse<Bike>>(`/api/inventory/bikes/?${params.toString()}`);
 }
 
+export async function getServerBikeById(id: string): Promise<Bike> {
+  return fetchServerJson<Bike>(`/api/inventory/bikes/${id}/`);
+}
+
 export async function getServerProducts(params: URLSearchParams): Promise<PaginatedResponse<Product>> {
   const query = params.toString();
   return fetchServerJson<PaginatedResponse<Product>>(`/api/product/products/${query ? `?${query}` : ''}`);
+}
+
+export async function getServerProductById(id: number): Promise<Product> {
+  return fetchServerJson<Product>(`/api/product/products/${id}/`);
 }
 
 async function fetchServerJson<T>(path: string): Promise<T> {

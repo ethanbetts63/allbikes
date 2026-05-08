@@ -32,13 +32,17 @@ import { getYouTubeVideoId } from '@/utils/youtube';
 import PopularBadge from '@/components/PopularBadge';
 import { assetUrl } from '@/utils/assetUrl';
 
-const BikeDetailPage = () => {
+interface BikeDetailPageProps {
+    initialBike?: Bike | null;
+}
+
+const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
     const { slug } = useParams<{ slug: string }>();
     const router = useRouter();
-    const [bike, setBike] = useState<Bike | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [bike, setBike] = useState<Bike | null>(initialBike ?? null);
+    const [isLoading, setIsLoading] = useState(!initialBike);
     const [error, setError] = useState<string | null>(null);
-    const [selectedMedia, setSelectedMedia] = useState<string>('YOUTUBE');
+    const [selectedMedia, setSelectedMedia] = useState<string>(() => getInitialSelectedMedia(initialBike));
     const [newBikes, setNewBikes] = useState<Bike[]>([]);
     const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
     const [depositAmount, setDepositAmount] = useState<string | null>(null);
@@ -62,6 +66,15 @@ const BikeDetailPage = () => {
         }
 
         const fetchBike = async () => {
+            if (initialBike) {
+                const sortedImages = [...initialBike.images].sort((a, b) => a.order - b.order);
+                setBike({ ...initialBike, images: sortedImages });
+                if ((initialBike.condition === 'new' || initialBike.condition === 'demo' || initialBike.condition === 'used') && initialBike.status === 'for_sale') {
+                    getDepositSettings().then(s => setDepositAmount(s.deposit_amount)).catch(() => {});
+                }
+                return;
+            }
+
             try {
                 setIsLoading(true);
                 setError(null);
@@ -106,7 +119,7 @@ const BikeDetailPage = () => {
 
         fetchBike();
         fetchFeaturedBikes();
-    }, [slug]);
+    }, [initialBike, slug]);
 
     const sortedImages = useMemo(() => {
         if (!bike?.images) return [];
@@ -393,5 +406,12 @@ const BikeDetailPage = () => {
         </div>
     );
 };
+
+function getInitialSelectedMedia(bike?: Bike | null): string {
+    if (!bike) return 'YOUTUBE';
+    if (bike.youtube_link && getYouTubeVideoId(bike.youtube_link)) return 'YOUTUBE';
+    const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
+    return sortedImages[0]?.image ?? '/src/assets/motorcycle_images/placeholder.png';
+}
 
 export default BikeDetailPage;

@@ -19,19 +19,25 @@ import { getYouTubeVideoId } from '@/utils/youtube';
 import { ShieldCheck } from 'lucide-react';
 import { assetUrl } from '@/utils/assetUrl';
 
-const EScooterDetailPage = () => {
+interface EScooterDetailPageProps {
+    initialProduct?: Product | null;
+}
+
+const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
     const { slug } = useParams<{ slug: string }>();
     const router = useRouter();
-    const [product, setProduct] = useState<Product | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [product, setProduct] = useState<Product | null>(initialProduct ?? null);
+    const [isLoading, setIsLoading] = useState(!initialProduct);
     const [error, setError] = useState<string | null>(null);
-    const [selectedMedia, setSelectedMedia] = useState<string>('');
+    const [selectedMedia, setSelectedMedia] = useState<string>(() => getInitialSelectedMedia(initialProduct));
 
     const videoId = product?.youtube_link ? getYouTubeVideoId(product.youtube_link) : null;
 
     const productId = slug ? Number(slug.split('-').pop()) : null;
 
     useEffect(() => {
+        if (initialProduct) return;
+
         if (!productId || isNaN(productId)) {
             setError('Product not found.');
             setIsLoading(false);
@@ -58,7 +64,7 @@ const EScooterDetailPage = () => {
         };
 
         fetchProduct();
-    }, [productId]);
+    }, [initialProduct, productId]);
 
     const sortedImages = useMemo(() => {
         if (!product?.images) return [];
@@ -225,5 +231,12 @@ const EScooterDetailPage = () => {
         </div>
     );
 };
+
+function getInitialSelectedMedia(product?: Product | null): string {
+    if (!product) return '';
+    if (product.youtube_link && getYouTubeVideoId(product.youtube_link)) return 'YOUTUBE';
+    const sorted = [...product.images].sort((a, b) => a.order - b.order);
+    return sorted[0]?.image ?? '';
+}
 
 export default EScooterDetailPage;

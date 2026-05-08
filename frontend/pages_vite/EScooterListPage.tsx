@@ -39,11 +39,16 @@ const faqData = [
   }
 ];
 
-const EScooterListPage = () => {
-  const [products, setProducts] = useState<Product[] | undefined>(undefined);
+interface EScooterListPageProps {
+  initialProducts?: Product[];
+  initialTotalPages?: number;
+}
+
+const EScooterListPage = ({ initialProducts, initialTotalPages }: EScooterListPageProps) => {
+  const [products, setProducts] = useState<Product[] | undefined>(initialProducts);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(initialTotalPages ?? 0);
+  const [isLoading, setIsLoading] = useState(!initialProducts);
   const [error, setError] = useState<string | null>(null);
   const [filterOptions, setFilterOptions] = useState<FilterSortOptions>({});
 
@@ -68,8 +73,11 @@ const EScooterListPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (initialProducts && currentPage === 1 && Object.keys(filterOptions).length === 0) {
+      return;
+    }
     fetchProducts();
-  }, [fetchProducts]);
+  }, [currentPage, fetchProducts, filterOptions, initialProducts]);
 
   const handleFilterChange = (newOptions: FilterSortOptions) => {
     setCurrentPage(1);
