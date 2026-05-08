@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { authedFetch } from '@/apiClient';
 import type { ServiceSettings } from '@/types/ServiceSettings';

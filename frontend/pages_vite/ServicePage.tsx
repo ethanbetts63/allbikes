@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+"use client";
+
+import Link from 'next/link';
 import Seo from '@/components/Seo';
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
@@ -122,7 +124,7 @@ const ServicePage = () => {
                         ))}
                     </div>
                     <div className="text-center mt-10">
-                        <Link to="/service-booking">
+                        <Link href="/service-booking">
                             <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-dark-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>

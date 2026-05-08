@@ -1,12 +1,13 @@
-import { useLocation, Link } from 'react-router-dom';
+"use client";
+
+import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 import Seo from '@/components/Seo';
 import MotorcycleMovers from '@/components/MotorcycleMovers';
 import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConfirmationState';
 
 const BookingConfirmationPage = () => {
-    const location = useLocation();
-    const state = location.state as ServiceBookingConfirmationState | null;
+    const state: ServiceBookingConfirmationState | null = null;
 
     return (
         <>
@@ -78,7 +79,7 @@ const BookingConfirmationPage = () => {
                     )}
 
                     <Link
-                        to="/"
+                        href="/"
                         className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"
                     >
                         ← Back to Home

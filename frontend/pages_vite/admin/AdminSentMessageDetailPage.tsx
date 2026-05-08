@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { adminGetSentMessage } from '@/api';
 import { formatDateTime } from '@/utils/formatting';
 import type { SentMessage } from '@/types/SentMessage';
@@ -138,7 +141,7 @@ const AdminSentMessageDetailPage = () => {
           </div>
         )}
 
-        <Link to="/dashboard/messages" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
+        <Link href="/dashboard/messages" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Messages
         </Link>
 

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
@@ -8,7 +10,7 @@ import { getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
 import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface LocationState {
   clientSecret: string;
@@ -28,7 +30,7 @@ interface PaymentFormProps {
 const PaymentForm = ({ orderReference, slug, initialError }: PaymentFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(initialError ?? null);
 
@@ -54,7 +56,7 @@ const PaymentForm = ({ orderReference, slug, initialError }: PaymentFormProps) =
     }
 
     if (paymentIntent?.status === 'succeeded') {
-      navigate(`/checkout/processing?ref=${orderReference}`);
+      router.push(`/checkout/processing?ref=${orderReference}`);
       return;
     }
 
@@ -88,10 +90,10 @@ const PaymentForm = ({ orderReference, slug, initialError }: PaymentFormProps) =
 // --- Page wrapper ---
 
 const CheckoutPaymentPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const state = location.state as LocationState | null;
+  const params = useParams<{ slug: string }>();
+  const slug = params.slug;
+  const router = useRouter();
+  const state: LocationState | null = null;
 
   const [itemSummary, setCheckoutItemSummary] = useState<CheckoutItemSummary | null>(state?.itemSummary ?? null);
   const [isLoadingSummary, setIsLoadingSummary] = useState(!state?.itemSummary);
@@ -99,7 +101,7 @@ const CheckoutPaymentPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!state?.clientSecret || !state?.orderReference) {
-      navigate(`/checkout/${slug}`);
+      router.push(`/checkout/${slug}`);
       return;
     }
     // If itemSummary wasn't passed (e.g. 3DS recovery from processing page), fetch order to build it

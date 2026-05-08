@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useCallback } from 'react';
 import Seo from '@/components/Seo';
 import ProductCard from '@/components/ProductCard';

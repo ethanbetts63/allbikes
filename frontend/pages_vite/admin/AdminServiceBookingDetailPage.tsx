@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { adminGetBookingLog, adminDeleteBookingLog } from '@/api';
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,7 +26,7 @@ const Row = ({ label, value }: { label: string; value: string }) => (
 
 const AdminServiceBookingDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [log, setLog] = useState<BookingRequestLog | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +35,7 @@ const AdminServiceBookingDetailPage = () => {
     if (!id || !confirm('Delete this booking log?')) return;
     try {
       await adminDeleteBookingLog(Number(id));
-      navigate('/dashboard/service-bookings');
+      router.push('/dashboard/service-bookings');
     } catch {
       setError('Failed to delete booking log.');
     }
@@ -150,7 +153,7 @@ const AdminServiceBookingDetailPage = () => {
           </div>
         </div>
 
-        <Link to="/dashboard/service-bookings" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
+        <Link href="/dashboard/service-bookings" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Service Bookings
         </Link>
 

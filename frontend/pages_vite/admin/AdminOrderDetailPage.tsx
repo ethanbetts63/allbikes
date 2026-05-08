@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { adminGetOrder, adminUpdateOrderStatus } from '@/api';
 import { formatDate } from '@/utils/formatting';
 import type { Order } from '@/types/Order';
@@ -166,7 +169,7 @@ const AdminOrderDetailPage = () => {
           </div>
         )}
 
-        <Link to="/dashboard/orders" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
+        <Link href="/dashboard/orders" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Orders
         </Link>
 

@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { adminGetDashboard } from '@/api';
 import type { AdminDashboard } from '@/types/AdminDashboard';
@@ -14,7 +17,7 @@ const HIRE_STATUS_BADGE: Record<string, string> = {
 
 const AdminHomePage = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -74,7 +77,7 @@ const AdminHomePage = () => {
                     {dashboard.paid_orders.map(order => (
                       <tr
                         key={order.id}
-                        onClick={() => navigate(`/dashboard/orders/${order.id}`)}
+                        onClick={() => router.push(`/dashboard/orders/${order.id}`)}
                         className="hover:bg-[var(--bg-light-secondary)] cursor-pointer transition-colors"
                       >
                         <td className="px-4 py-3">
@@ -109,7 +112,7 @@ const AdminHomePage = () => {
                 {dashboard.reserved_bikes.map(bike => (
                   <Link
                     key={bike.id}
-                    to="/dashboard/inventory"
+                    href="/dashboard/inventory"
                     className="flex items-center justify-between px-4 py-3 hover:bg-[var(--bg-light-secondary)] transition-colors"
                   >
                     <span className="text-sm text-[var(--text-dark-primary)] font-medium">
@@ -143,7 +146,7 @@ const AdminHomePage = () => {
                     {dashboard.active_hire_bookings.map(booking => (
                       <tr
                         key={booking.id}
-                        onClick={() => navigate(`/dashboard/hire/${booking.id}`)}
+                        onClick={() => router.push(`/dashboard/hire/${booking.id}`)}
                         className="hover:bg-[var(--bg-light-secondary)] cursor-pointer transition-colors"
                       >
                         <td className="px-4 py-3 font-mono font-semibold text-[var(--text-dark-primary)]">
@@ -177,7 +180,7 @@ const AdminHomePage = () => {
                 {dashboard.attention_products.map(product => (
                   <Link
                     key={product.id}
-                    to="/dashboard/products"
+                    href="/dashboard/products"
                     className="flex items-center justify-between px-4 py-3 hover:bg-[var(--bg-light-secondary)] transition-colors"
                   >
                     <span className="text-sm text-[var(--text-dark-primary)] font-medium">{product.name}</span>

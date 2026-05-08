@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
@@ -40,8 +42,8 @@ const hireFaqData = [
 ];
 
 const HireListPage = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -83,7 +85,7 @@ const HireListPage = () => {
       toast.warning('Please select your pick-up and return dates first.');
       return;
     }
-    navigate(`/hire/book?bike=${bike.id}&start=${startDate}&end=${endDate}`);
+    router.push(`/hire/book?bike=${bike.id}&start=${startDate}&end=${endDate}`);
   };
 
   return (

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import Seo from '@/components/Seo';
 import HomeHeroV2 from '@/components/HomeHeroV2';

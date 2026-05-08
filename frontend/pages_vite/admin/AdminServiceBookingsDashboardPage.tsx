@@ -1,7 +1,9 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { Trash2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { adminGetBookingLogs, adminDeleteBookingLog } from '@/api';
 import { formatDate } from '@/utils/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
@@ -25,7 +27,7 @@ const STATUS_BADGE: Record<string, string> = {
 type FilterType = 'all' | 'failed';
 
 const AdminServiceBookingsDashboardPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [data, setData] = useState<BookingRequestLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -122,7 +124,7 @@ const AdminServiceBookingsDashboardPage = () => {
                       <TableRow
                         key={log.id}
                         className="border-border-light cursor-pointer hover:bg-[var(--bg-light-secondary)]"
-                        onClick={() => navigate(`/dashboard/service-bookings/${log.id}`)}
+                        onClick={() => router.push(`/dashboard/service-bookings/${log.id}`)}
                       >
                         <TableCell className="text-[var(--text-dark-primary)]">
                           <div className="font-medium">{log.customer_name}</div>

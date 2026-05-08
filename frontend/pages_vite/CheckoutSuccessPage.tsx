@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
@@ -7,7 +10,7 @@ import { getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
 
 const CheckoutSuccessPage = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const ref = searchParams.get('ref');
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);

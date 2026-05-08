@@ -59,7 +59,7 @@ const HireBookingPage = () => {
             })
             .catch(() => setError('Failed to load bike details.'))
             .finally(() => setIsLoading(false));
-    }, [bikeId, startDate, endDate, navigate]);
+    }, [bikeId, startDate, endDate]);
 
     const numDays = startDate && endDate
         ? Math.round((new Date(endDate + 'T00:00:00').getTime() - new Date(startDate + 'T00:00:00').getTime()) / 86400000) + 1

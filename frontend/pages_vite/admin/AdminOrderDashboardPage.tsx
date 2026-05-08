@@ -1,3 +1,5 @@
+"use client";
+
 import OrderTable from '@/components/OrderTable';
 
 const AdminOrderDashboardPage = () => {

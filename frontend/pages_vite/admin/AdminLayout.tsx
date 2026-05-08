@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { NavLink, Outlet, Navigate, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui/spinner';
 import Seo from '@/components/Seo';
@@ -32,33 +35,44 @@ const SectionLabel = ({ children }: { children: React.ReactNode }) => (
   </p>
 );
 
-const AdminLayout = () => {
+const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading: isAuthLoading } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
+  const pathname = usePathname();
   const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
 
   useEffect(() => {
     adminGetDashboard().then(setDashboard).catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (!isAuthLoading && !user?.is_staff) {
+      router.push('/login');
+    }
+  }, [isAuthLoading, user]);
+
   const handleLogout = async () => {
     await logoutUser();
-    navigate('/login');
+    router.push('/login');
   };
 
-  const navItem = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm transition-colors ${
+  const navItemClass = (href: string, end = false) => {
+    const isActive = end ? pathname === href : pathname.startsWith(href);
+    return `flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm transition-colors ${
       isActive
         ? 'bg-white/10 text-[var(--highlight)] font-semibold'
         : 'text-[var(--text-light-secondary)] hover:bg-white/5 hover:text-[var(--text-light-primary)]'
     }`;
+  };
 
-  const subNavItem = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 w-full pl-8 pr-3 py-1.5 rounded-md text-sm transition-colors ${
+  const subNavItemClass = (href: string) => {
+    const isActive = pathname.startsWith(href);
+    return `flex items-center gap-3 w-full pl-8 pr-3 py-1.5 rounded-md text-sm transition-colors ${
       isActive
         ? 'text-[var(--highlight)] font-semibold'
         : 'text-[var(--text-light-secondary)]/60 hover:text-[var(--text-light-primary)]'
     }`;
+  };
 
   if (isAuthLoading) {
     return (
@@ -69,7 +83,7 @@ const AdminLayout = () => {
   }
 
   if (!user?.is_staff) {
-    return <Navigate to="/login" replace />;
+    return null;
   }
 
   return (
@@ -89,76 +103,76 @@ const AdminLayout = () => {
           {/* Nav */}
           <nav className="flex-1 px-2 py-3 overflow-y-auto">
 
-            <NavLink to="/dashboard" end className={navItem}>
+            <Link href="/dashboard" className={navItemClass('/dashboard', true)}>
               <LayoutDashboard className="h-4 w-4 shrink-0" />
               Dashboard
-            </NavLink>
+            </Link>
 
             <SectionLabel>Inventory</SectionLabel>
-            <NavLink to="/dashboard/inventory" className={navItem}>
+            <Link href="/dashboard/inventory" className={navItemClass('/dashboard/inventory')}>
               <Gauge className="h-4 w-4 shrink-0" />
               <span className="flex-1">Inventory</span>
               <NavBadge count={dashboard?.reserved_bikes.length ?? 0} />
-            </NavLink>
-            <NavLink to="/dashboard/add-motorcycle" className={subNavItem}>
+            </Link>
+            <Link href="/dashboard/add-motorcycle" className={subNavItemClass('/dashboard/add-motorcycle')}>
               <PlusCircle className="h-3.5 w-3.5 shrink-0" />
               Add Motorcycle
-            </NavLink>
+            </Link>
 
             <SectionLabel>Shop</SectionLabel>
-            <NavLink to="/dashboard/orders" className={navItem}>
+            <Link href="/dashboard/orders" className={navItemClass('/dashboard/orders')}>
               <ClipboardList className="h-4 w-4 shrink-0" />
               <span className="flex-1">Orders</span>
               <NavBadge count={dashboard?.paid_orders.length ?? 0} />
-            </NavLink>
-            <NavLink to="/dashboard/products" className={navItem}>
+            </Link>
+            <Link href="/dashboard/products" className={navItemClass('/dashboard/products')}>
               <ShoppingBag className="h-4 w-4 shrink-0" />
               <span className="flex-1">Products</span>
               <NavBadge count={dashboard?.attention_products.length ?? 0} />
-            </NavLink>
-            <NavLink to="/dashboard/products/new" className={subNavItem}>
+            </Link>
+            <Link href="/dashboard/products/new" className={subNavItemClass('/dashboard/products/new')}>
               <PlusCircle className="h-3.5 w-3.5 shrink-0" />
               Add Product
-            </NavLink>
+            </Link>
 
             <SectionLabel>Service</SectionLabel>
-            <NavLink to="/dashboard/service-bookings" className={navItem}>
+            <Link href="/dashboard/service-bookings" className={navItemClass('/dashboard/service-bookings')}>
               <CalendarCheck className="h-4 w-4 shrink-0" />
               Bookings
-            </NavLink>
-            <NavLink to="/dashboard/service-settings" className={navItem}>
+            </Link>
+            <Link href="/dashboard/service-settings" className={navItemClass('/dashboard/service-settings')}>
               <Settings className="h-4 w-4 shrink-0" />
               Service Settings
-            </NavLink>
-            <NavLink to="/dashboard/job-types" className={navItem}>
+            </Link>
+            <Link href="/dashboard/job-types" className={navItemClass('/dashboard/job-types')}>
               <Tag className="h-4 w-4 shrink-0" />
               Job Types
-            </NavLink>
+            </Link>
 
             <SectionLabel>Hire</SectionLabel>
-            <NavLink to="/dashboard/hire" className={navItem}>
+            <Link href="/dashboard/hire" className={navItemClass('/dashboard/hire')}>
               <Key className="h-4 w-4 shrink-0" />
               <span className="flex-1">Hire Bookings</span>
               <NavBadge count={dashboard?.active_hire_bookings.length ?? 0} />
-            </NavLink>
-            <NavLink to="/dashboard/hire-settings" className={navItem}>
+            </Link>
+            <Link href="/dashboard/hire-settings" className={navItemClass('/dashboard/hire-settings')}>
               <Settings className="h-4 w-4 shrink-0" />
               Hire Settings
-            </NavLink>
-            <NavLink to="/dashboard/hire-extras" className={navItem}>
+            </Link>
+            <Link href="/dashboard/hire-extras" className={navItemClass('/dashboard/hire-extras')}>
               <Tag className="h-4 w-4 shrink-0" />
               Extras
-            </NavLink>
-            <NavLink to="/dashboard/hire-blocked-dates" className={navItem}>
+            </Link>
+            <Link href="/dashboard/hire-blocked-dates" className={navItemClass('/dashboard/hire-blocked-dates')}>
               <CalendarCheck className="h-4 w-4 shrink-0" />
               Blocked Dates
-            </NavLink>
+            </Link>
 
             <SectionLabel>Comms</SectionLabel>
-            <NavLink to="/dashboard/messages" className={navItem}>
+            <Link href="/dashboard/messages" className={navItemClass('/dashboard/messages')}>
               <Mail className="h-4 w-4 shrink-0" />
               Messages
-            </NavLink>
+            </Link>
 
           </nav>
 
@@ -180,7 +194,7 @@ const AdminLayout = () => {
 
         {/* Main Content */}
         <main className="flex-grow min-w-0 bg-card overflow-x-hidden">
-          <Outlet />
+          {children}
         </main>
 
       </div>

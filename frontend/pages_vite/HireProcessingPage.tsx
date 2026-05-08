@@ -8,15 +8,15 @@ import { Spinner } from '@/components/ui/spinner';
 import Seo from '@/components/Seo';
 import { getHireBookingByReference } from '@/api';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const MAX_POLLS = 15;
 const POLL_INTERVAL_MS = 2000;
 
 const ProcessingInner = () => {
     const stripe = useStripe();
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const started = useRef(false);
 
     const clientSecret = searchParams.get('payment_intent_client_secret');
@@ -28,7 +28,7 @@ const ProcessingInner = () => {
             try {
                 const booking = await getHireBookingByReference(ref!);
                 if (booking.status === 'confirmed') {
-                    navigate(`/hire/confirmation/${ref}`, { state: booking });
+                    router.push(`/hire/confirmation/${ref}`);
                     return;
                 }
             } catch {
@@ -36,7 +36,7 @@ const ProcessingInner = () => {
             }
             count += 1;
             if (count >= MAX_POLLS) {
-                navigate('/hire');
+                router.push('/hire');
             } else {
                 setTimeout(poll, POLL_INTERVAL_MS);
             }
@@ -47,7 +47,7 @@ const ProcessingInner = () => {
     // Non-3DS path: payment already confirmed inline, just poll backend
     useEffect(() => {
         if (clientSecret) return;
-        if (!ref) { navigate('/hire'); return; }
+        if (!ref) { router.push('/hire'); return; }
         startPolling();
     }, []);
 
@@ -59,9 +59,7 @@ const ProcessingInner = () => {
 
         stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
             if (!paymentIntent || paymentIntent.status === 'requires_payment_method') {
-                navigate(`/hire/book/${ref}/payment`, {
-                    state: { clientSecret, bookingReference: ref, error: 'Payment failed. Please try again.' },
-                });
+                router.push(`/hire/book/${ref}/payment`);
                 return;
             }
             startPolling();
@@ -77,7 +75,7 @@ const ProcessingInner = () => {
 };
 
 const HireProcessingPage = () => {
-    const [searchParams] = useSearchParams();
+    const searchParams = useSearchParams();
     const clientSecret = searchParams.get('payment_intent_client_secret') ?? undefined;
 
     return (

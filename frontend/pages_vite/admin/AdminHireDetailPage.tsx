@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { adminGetHireBooking, adminUpdateHireBookingStatus, adminDeleteHireBooking, adminDownloadHireContract } from '@/api';
 import type { HireBooking } from '@/types/HireBooking';
 import { formatDate } from '@/utils/formatting';
@@ -34,7 +37,7 @@ const Row = ({ label, value }: { label: string; value: string }) => (
 
 const AdminHireDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [booking, setBooking] = useState<HireBooking | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -59,7 +62,7 @@ const AdminHireDetailPage = () => {
     setIsDeleting(true);
     try {
       await adminDeleteHireBooking(booking.id);
-      navigate('/dashboard/hire');
+      router.push('/dashboard/hire');
     } catch {
       setNotification({ message: 'Failed to delete booking.', type: 'error' });
       setIsDeleting(false);
@@ -178,7 +181,7 @@ const AdminHireDetailPage = () => {
           <Row label="Phone" value={booking.customer_phone} />
         </div>
 
-        <Link to="/dashboard/hire" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
+        <Link href="/dashboard/hire" className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2">
           ← Back to Hire Bookings
         </Link>
 

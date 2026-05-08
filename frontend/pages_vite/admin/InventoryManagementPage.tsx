@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import InventoryTable from "@/components/InventoryTable";
 import { getDepositSettings, adminUpdateDepositSettings } from '@/api';

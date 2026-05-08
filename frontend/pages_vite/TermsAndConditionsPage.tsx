@@ -1,12 +1,14 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 import { getLatestTermsAndConditions } from '@/api';
 import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 
 const TermsAndConditionsPage = () => {
-    const [searchParams] = useSearchParams();
+    const searchParams = useSearchParams();
     const termType = searchParams.get('type') as 'hire' | 'service' | 'purchase' | null;
 
     const [terms, setTerms] = useState<TermsAndConditions | null>(null);

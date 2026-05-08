@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Seo from '@/components/Seo';
@@ -7,7 +9,7 @@ import { CalendarDays } from 'lucide-react';
 import { formatDate } from '@/lib/hire';
 import type { HireBookingSummary } from '@/types/HireBookingSummary';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface LocationState {
     clientSecret: string;
@@ -26,7 +28,7 @@ interface PaymentFormProps {
 const PaymentForm = ({ bookingReference, initialError }: PaymentFormProps) => {
     const stripe = useStripe();
     const elements = useElements();
-    const navigate = useNavigate();
+    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [paymentError, setPaymentError] = useState<string | null>(initialError ?? null);
 
@@ -52,7 +54,7 @@ const PaymentForm = ({ bookingReference, initialError }: PaymentFormProps) => {
         }
 
         if (paymentIntent?.status === 'succeeded') {
-            navigate(`/hire/processing?ref=${bookingReference}`);
+            router.push(`/hire/processing?ref=${bookingReference}`);
             return;
         }
 
@@ -86,14 +88,13 @@ const PaymentForm = ({ bookingReference, initialError }: PaymentFormProps) => {
 // --- Page wrapper ---
 
 const HirePaymentPage = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const state = location.state as LocationState | null;
+    const router = useRouter();
+    const state: LocationState | null = null;
 
     useEffect(() => {
         window.scrollTo(0, 0);
         if (!state?.clientSecret || !state?.bookingReference) {
-            navigate('/hire');
+            router.push('/hire');
         }
     }, []);
 

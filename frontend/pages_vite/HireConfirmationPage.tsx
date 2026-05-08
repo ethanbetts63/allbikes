@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle } from 'lucide-react';
@@ -8,11 +11,11 @@ import { formatDate } from '@/lib/hire';
 import type { HireBooking } from '@/types/HireBooking';
 
 const HireConfirmationPage = () => {
-    const { bookingReference } = useParams<{ bookingReference: string }>();
-    const location = useLocation();
-    const navigate = useNavigate();
+    const params = useParams<{ bookingReference: string }>();
+    const bookingReference = params.bookingReference;
+    const router = useRouter();
 
-    const stateBooking = location.state as HireBooking | null;
+    const stateBooking: HireBooking | null = null;
     const [booking, setBooking] = useState<HireBooking | null>(stateBooking);
     const [isLoading, setIsLoading] = useState(!stateBooking);
     const [error, setError] = useState<string | null>(null);
@@ -39,7 +42,7 @@ const HireConfirmationPage = () => {
             <div className="bg-[var(--bg-light-primary)] min-h-screen flex justify-center items-center">
                 <div className="text-center">
                     <p className="text-[var(--text-dark-secondary)] mb-4">{error || 'No booking found.'}</p>
-                    <button onClick={() => navigate('/hire')} className="text-sm underline text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)]">
+                    <button onClick={() => router.push('/hire')} className="text-sm underline text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)]">
                         Browse Hire Bikes
                     </button>
                 </div>
@@ -150,7 +153,7 @@ const HireConfirmationPage = () => {
                     </div>
 
                     <Link
-                        to="/hire"
+                        href="/hire"
                         className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"
                     >
                         ← Browse More Bikes

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter, useParams } from 'next/navigation';
 import MotorcycleForm from "@/forms/MotorcycleForm";
 import type { MotorcycleFormData } from "@/types/MotorcycleFormData";
 import { 
@@ -13,7 +15,7 @@ import type { Bike } from '@/types/Bike';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AddMotorcyclePage = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const { id } = useParams<{ id: string }>();
     const [initialData, setInitialData] = useState<Bike | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +104,7 @@ const AddMotorcyclePage = () => {
                 setNotification({ message: "All images removed", type: 'success' });
             }
 
-            navigate('/dashboard/inventory');
+            router.push('/dashboard/inventory');
 
         } catch (err: any) {
             let errorMessage: string;

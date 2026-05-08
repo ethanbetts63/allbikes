@@ -1,10 +1,13 @@
-import { useSearchParams, Link } from 'react-router-dom';
+"use client";
+
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { AlertCircle } from 'lucide-react';
 import Seo from '@/components/Seo';
 import { siteSettings } from '@/config/siteSettings';
 
 const CheckoutErrorPage = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const ref = searchParams.get('ref');
 
   return (

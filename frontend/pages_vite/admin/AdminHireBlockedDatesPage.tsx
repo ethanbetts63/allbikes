@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { adminGetHireBlockedDates, adminCreateHireBlockedDate, adminDeleteHireBlockedDate, getHireBikes } from '@/api';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';

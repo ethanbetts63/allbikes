@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   flexRender,
   getCoreRowModel,
@@ -23,7 +25,7 @@ import { adminGetProducts, deleteProduct } from '@/api';
 import type { Product } from '@/types/Product';
 
 const AdminProductDashboardPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [data, setData] = useState<Product[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +119,7 @@ const AdminProductDashboardPage = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate(`/dashboard/products/${row.original.id}/edit`)}
+            onClick={() => router.push(`/dashboard/products/${row.original.id}/edit`)}
             className="text-[var(--text-dark-primary)]"
           >
             <Pencil className="h-4 w-4" />
@@ -148,7 +150,7 @@ const AdminProductDashboardPage = () => {
     <div className="p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-[var(--text-dark-primary)]">E-Scooter Products</h1>
-        <Button onClick={() => navigate('/dashboard/products/new')}>
+        <Button onClick={() => router.push('/dashboard/products/new')}>
           <PlusSquare className="h-4 w-4 mr-2" />
           Add Product
         </Button>

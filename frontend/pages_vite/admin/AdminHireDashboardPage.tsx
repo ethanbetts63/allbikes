@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { adminGetHireBookings, adminDeleteHireBooking } from '@/api';
 import type { HireBooking } from '@/types/HireBooking';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
@@ -25,7 +27,7 @@ const STATUS_BADGE: Record<string, string> = {
 };
 
 const AdminHireDashboardPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [data, setData] = useState<PaginatedResponse<HireBooking> | null>(null);
   const [statusFilter, setStatusFilter] = useState('confirmed,active');
   const [page, setPage] = useState(1);
@@ -77,7 +79,7 @@ const AdminHireDashboardPage = () => {
                 {data?.results.map(booking => (
                   <tr
                     key={booking.id}
-                    onClick={() => navigate(`/dashboard/hire/${booking.id}`)}
+                    onClick={() => router.push(`/dashboard/hire/${booking.id}`)}
                     className="hover:bg-[var(--bg-light-secondary)] cursor-pointer transition-colors"
                   >
                     <td className="px-4 py-3 font-mono font-semibold text-[var(--text-dark-primary)]">

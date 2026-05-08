@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { adminGetHireSettings, adminUpdateHireSettings } from '@/api';
 import type { HireSettings } from '@/types/HireBooking';

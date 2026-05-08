@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { getProductById } from '@/api';
 import type { Product } from '@/types/Product';
 import Seo from '@/components/Seo';
@@ -17,7 +20,7 @@ import { ShieldCheck } from 'lucide-react';
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
-    const navigate = useNavigate();
+    const router = useRouter();
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -182,7 +185,7 @@ const EScooterDetailPage = () => {
                             <div className="space-y-3">
                                 <button
                                     disabled={!product.in_stock}
-                                    onClick={() => navigate(`/checkout/${product.slug}`)}
+                                    onClick={() => router.push(`/checkout/${product.slug}`)}
                                     className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
                                     <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
@@ -212,7 +215,7 @@ const EScooterDetailPage = () => {
             {/* Back to E-Scooters */}
             <div className="container mx-auto px-4 lg:px-8 py-8">
                 <Link
-                    to="/escooters"
+                    href="/escooters"
                     className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"
                 >
                     ← Back to E-Scooters

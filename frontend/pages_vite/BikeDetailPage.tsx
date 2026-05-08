@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { getBikeById, getBikes, getDepositSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
@@ -30,7 +33,7 @@ import PopularBadge from '@/components/PopularBadge';
 
 const BikeDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
-    const navigate = useNavigate();
+    const router = useRouter();
     const [bike, setBike] = useState<Bike | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -270,8 +273,8 @@ const BikeDetailPage = () => {
                     {bike.status === 'available_soon' && (
                         <p className="mt-3 text-sm text-[var(--text-dark-secondary)] max-w-lg">
                             {bike.condition === 'new'
-                                ? <>This bike is still on its way — feel free to <Link to="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">reach out</Link> if you're interested.</>
-                                : <>This bike is currently being inspected by our mechanic. It's not quite ready for sale yet — if you're interested feel free to <Link to="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">get in touch</Link> and we'll keep you in the loop.</>
+                                ? <>This bike is still on its way — feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">reach out</Link> if you're interested.</>
+                                : <>This bike is currently being inspected by our mechanic. It's not quite ready for sale yet — if you're interested feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">get in touch</Link> and we'll keep you in the loop.</>
                             }
                         </p>
                     )}
@@ -303,7 +306,7 @@ const BikeDetailPage = () => {
                         {siteSettings.accept_online_payment && (bike.condition === 'new' || bike.condition === 'demo' || bike.condition === 'used') && bike.status === 'for_sale' && depositAmount && (
                             <div className="mb-6">
                                 <button
-                                    onClick={() => navigate(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}
+                                    onClick={() => router.push(`/checkout/${bike.slug}`, { state: { checkoutType: 'deposit' } })}
                                     className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
                                     <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
@@ -319,7 +322,7 @@ const BikeDetailPage = () => {
                                 <p className="text-sm font-semibold text-[var(--text-dark-secondary)]">
                                     {bike.status === 'reserved' ? 'This motorcycle is currently reserved.' : 'This motorcycle has been sold.'}
                                 </p>
-                                <Link to="/contact" className="text-sm text-[var(--highlight)] hover:underline mt-1 inline-block">
+                                <Link href="/contact" className="text-sm text-[var(--highlight)] hover:underline mt-1 inline-block">
                                     Contact us about similar bikes
                                 </Link>
                             </div>

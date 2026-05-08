@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { adminGetSentMessages } from '@/api';
 import { formatDateTime } from '@/utils/formatting';
 import type { SentMessage } from '@/types/SentMessage';
@@ -29,7 +31,7 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const AdminSentMessagesPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [messages, setMessages] = useState<SentMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +90,7 @@ const AdminSentMessagesPage = () => {
                       <TableRow
                         key={msg.id}
                         className="border-border-light cursor-pointer hover:bg-[var(--bg-light-secondary)]"
-                        onClick={() => navigate(`/dashboard/messages/${msg.id}`)}
+                        onClick={() => router.push(`/dashboard/messages/${msg.id}`)}
                       >
                         <TableCell className="text-[var(--text-dark-primary)] text-sm">
                           {TYPE_LABELS[msg.message_type] ?? msg.message_type}

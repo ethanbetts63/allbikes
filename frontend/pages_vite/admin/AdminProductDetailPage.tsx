@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter, useParams } from 'next/navigation';
 import ProductForm from '@/forms/ProductForm';
 import type { ProductFormData } from '@/types/ProductFormData';
 import type { Product } from '@/types/Product';
@@ -13,7 +15,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AdminProductDetailPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const [initialData, setInitialData] = useState<Product | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +87,7 @@ const AdminProductDetailPage = () => {
         await manageProductImages(saved.id, []);
       }
 
-      navigate('/dashboard/products');
+      router.push('/dashboard/products');
     } catch (err: any) {
       let msg: string;
       if (err.data?.detail) {
