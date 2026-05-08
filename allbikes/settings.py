@@ -30,11 +30,17 @@ DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = ['ethanbetts.pythonanywhere.com', 'www.scootershop.com.au', '127.0.0.1', 'localhost']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
+    'http://localhost:3000',
     'https://www.scootershop.com.au',
-    'https://ethanbetts.pythonanywhere.com',
+    # add Vercel deployment URL here once known
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'https://www.scootershop.com.au',
+    # add Vercel deployment URL here once known
+]
+CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -44,9 +50,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-    "django.contrib.sitemaps", 
-    "rest_framework", 
-    "rest_framework_simplejwt", 
+    "django.contrib.sitemaps",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "corsheaders",
     "data_management",
     "inventory",
     "service",
@@ -60,6 +67,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "allbikes.middleware.NoCacheApiMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -76,7 +84,7 @@ ROOT_URLCONF = "allbikes.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, 'frontend', 'dist')],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -125,9 +133,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'dist'),
-]
+STATICFILES_DIRS = []
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media files (user-uploaded files)

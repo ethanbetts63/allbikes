@@ -23,7 +23,7 @@ def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
         max_age=access_max_age,
         httponly=True,
         secure=secure,
-        samesite='Lax',
+        samesite='None',
     )
     if refresh_token is not None:
         response.set_cookie(
@@ -32,7 +32,7 @@ def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
             max_age=refresh_max_age,
             httponly=True,
             secure=secure,
-            samesite='Lax',
+            samesite='None',
         )
 
 
