@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBooking } from '@/services/bookingService';
-import Seo from '@/components/Seo';
 import BookingDetailsForm from '@/forms/ServiceBookingDetailsForm';
 import BikeDetailsForm from '@/forms/ServiceBikeDetailsForm';
 import PersonalDetailsForm from '@/forms/ServicePersonalDetailsForm';
@@ -90,11 +89,6 @@ const BookingPage = () => {
 
     return (
         <>
-            <Seo
-                title="Book a Motorcycle or Scooter Service | ScooterShop Perth"
-                description="Schedule your motorcycle or scooter service online with Allbikes. Our expert technicians are ready to help you with maintenance, repairs, and more."
-                canonicalPath="/service-booking"
-            />
             <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
                 <div className="container mx-auto px-4 py-8 max-w-2xl">
 

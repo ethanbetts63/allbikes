@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Hero from '@/components/Hero';
-import Seo from '@/components/Seo';
 import { Mail, Phone } from 'lucide-react';
 import { siteSettings } from '@/config/siteSettings';
 import SegwayImage from '@/assets/segway_1.webp';
@@ -13,12 +12,6 @@ const RefundsPage = () => {
 
   return (
     <>
-      <Seo
-        title="Returns & Refunds | Scooter Shop"
-        description="Our returns and refund policy for e-scooter purchases. Find out how to request a return or refund."
-        canonicalPath="/refunds"
-      />
-
       <Hero
         title="Returns & Refunds"
         description="We want you to be happy with your purchase. Here is everything you need to know about our returns and refunds process."

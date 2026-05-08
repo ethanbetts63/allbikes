@@ -77,12 +77,7 @@ const ElectricScootersLandingPage = ({ initialFeaturedProducts }: ElectricScoote
 
   return (
     <div>
-      <Seo
-        title="Buy Electric Scooters Online â€” Free Delivery Australia-Wide | ScooterShop"
-        description="Shop electric scooters online with free delivery Australia-wide. All prices include GST. Secure checkout via Stripe. 12-month warranty on every e-scooter."
-        canonicalPath="/electric-scooters"
-        structuredData={structuredDataBase}
-      />
+      <Seo structuredData={structuredDataBase} />
 
       <EScooterHero />
 

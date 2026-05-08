@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui/spinner';
-import Seo from '@/components/Seo';
 import {
   LayoutDashboard,
   PlusCircle,
@@ -89,7 +88,6 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <Seo title="Admin | ScooterShop" noindex={true} />
       <div className="flex min-h-screen">
 
         {/* Sidebar — hidden on mobile, shown from md up */}

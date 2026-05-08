@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { createPaymentIntent, getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
@@ -150,7 +149,6 @@ const CheckoutPaymentPage = () => {
 
   return (
     <>
-      <Seo title="Payment | Scooter Shop" noindex={true} />
       <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
 

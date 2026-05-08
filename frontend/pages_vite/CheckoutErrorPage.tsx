@@ -3,7 +3,6 @@
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AlertCircle } from 'lucide-react';
-import Seo from '@/components/Seo';
 import { siteSettings } from '@/config/siteSettings';
 
 const CheckoutErrorPage = () => {
@@ -12,7 +11,6 @@ const CheckoutErrorPage = () => {
 
   return (
     <>
-      <Seo title="Payment Confirmation Issue | Scooter Shop" noindex={true} />
       <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-12 max-w-2xl">
 

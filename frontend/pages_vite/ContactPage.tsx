@@ -3,7 +3,6 @@ import ContactDetails from '../components/ContactDetails';
 import SymImage from '@/assets/sym_22.webp';
 import { siteSettings } from '@/config/siteSettings';
 import OtherSites from '../components/OtherSites';
-import Seo from '@/components/Seo';
 import ContactButtons from '@/components/ContactButtons';
 import splitcartLogo from "@/assets/splitcart_logo.png";
 import futureReminderLogo from "@/assets/futurereminder_logo.png";
@@ -54,11 +53,6 @@ const ContactPage = () => {
 
     return (
         <div>
-            <Seo
-                title="Contact Us | ScooterShop"
-                description={description}
-                canonicalPath="/contact"
-            />
             <Hero
                 title="Contact Us"
                 description={description}

@@ -139,10 +139,6 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
 
-    const ogImage = selectedMedia === 'YOUTUBE' && videoId
-        ? `https://img.youtube.com/vi/${videoId}/0.jpg`
-        : (selectedMedia !== 'YOUTUBE' ? selectedMedia : '/src/assets/motorcycle_images/placeholder.png');
-
     const breadcrumbItems: BreadcrumbItem[] = bike ? [
         { name: 'Home', href: '/' },
         { name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes', href: `/bikes/${bike.condition}` },
@@ -250,13 +246,7 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
                 </div>
             </div>
 
-            <Seo
-                title={`${pageTitle} | ScooterShop`}
-                description={bike.description || `Check out the ${pageTitle} at Allbikes & Scooters, Perth's most experienced motorcycle and scooter dealership.`}
-                canonicalPath={`/inventory/motorcycles/${bike.slug}`}
-                ogImage={ogImage}
-                structuredData={structuredData}
-            />
+            <Seo structuredData={structuredData} />
 
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 

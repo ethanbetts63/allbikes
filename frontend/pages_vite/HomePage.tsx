@@ -151,12 +151,7 @@ const HomePage = ({
 
   return (
     <div>
-      <Seo
-        title="Motorcycles, Scooters & Electric Scooters Perth | ScooterShop"
-        description="New and used motorcycles, scooters, and electric scooters for sale in Perth. Buy e-scooters online with free Australia-wide delivery. Servicing and tyre fitting also available."
-        canonicalPath="/"
-        structuredData={structuredData}
-      />
+      <Seo structuredData={structuredData} />
         <HomeHeroV2
             newBikes={newBikes}
             usedBikes={usedBikes}

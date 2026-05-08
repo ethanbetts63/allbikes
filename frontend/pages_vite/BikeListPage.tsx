@@ -195,12 +195,7 @@ const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeLi
 
   return (
     <>
-      <Seo 
-        title={`${pageTitle} | ScooterShop`}
-        description={description}
-        canonicalPath={isNew ? '/inventory/motorcycles/new' : isParts ? '/inventory/motorcycles/parts' : '/inventory/motorcycles/used'}
-        structuredData={structuredData}
-      />
+      <Seo structuredData={structuredData} />
       <Hero 
         title={responsivePageTitle}
         description={description}

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -132,7 +131,6 @@ const CheckoutPage = () => {
 
   return (
     <>
-      <Seo title="Checkout | Scooter Shop" noindex={true} />
       <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
 

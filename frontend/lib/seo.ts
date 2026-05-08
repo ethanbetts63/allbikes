@@ -13,13 +13,6 @@ interface MetadataOptions {
   noindex?: boolean;
 }
 
-export interface WebPageStructuredDataOptions {
-  title: string;
-  description?: string;
-  canonicalPath?: string;
-  dateModified?: string | Date;
-}
-
 export function buildMetadata({
   title,
   description,
@@ -50,33 +43,6 @@ export function buildMetadata({
     },
     robots: noindex ? { index: false, follow: false } : undefined,
   };
-}
-
-export function buildWebPageStructuredData({
-  title,
-  description,
-  canonicalPath,
-  dateModified,
-}: WebPageStructuredDataOptions): Record<string, unknown> {
-  const data: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: title,
-  };
-
-  if (description) {
-    data.description = description;
-  }
-
-  if (canonicalPath) {
-    data.url = new URL(canonicalPath, SITE_URL).toString();
-  }
-
-  if (dateModified) {
-    data.dateModified = new Date(dateModified).toISOString();
-  }
-
-  return data;
 }
 
 export async function getBikeMetadata(slug: string): Promise<Metadata> {

@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
-import Seo from '@/components/Seo';
 import MotorcycleMovers from '@/components/MotorcycleMovers';
 import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConfirmationState';
 
@@ -25,11 +24,6 @@ const BookingConfirmationPage = () => {
 
     return (
         <>
-            <Seo
-                title="Service Request Submitted | ScooterShop Perth"
-                description="Your service request has been submitted. We'll be in touch shortly to confirm."
-                noindex={true}
-            />
             <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
                 <div className="container mx-auto px-4 py-12 max-w-2xl">
 

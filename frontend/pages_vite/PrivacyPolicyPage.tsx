@@ -1,13 +1,6 @@
-import Seo from '@/components/Seo';
-
 const PrivacyPolicyPage = () => {
   return (
     <>
-      <Seo
-        title="Privacy Policy | ScooterShop"
-        description="Our privacy policy sets out how we use and protects any information that you give us when you use this website."
-        canonicalPath="/privacy"
-      />
       <div className="container mx-auto p-4 py-8">
         <h1 className="text-4xl font-bold mb-6 text-[var(--text-light-primary)]">Privacy Policy</h1>
         <div className="prose max-w-none text-[var(--text-light-primary)]">

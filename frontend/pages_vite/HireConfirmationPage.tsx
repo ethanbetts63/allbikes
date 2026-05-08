@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle } from 'lucide-react';
 import { getHireBookingByReference } from '@/api';
@@ -55,11 +54,6 @@ const HireConfirmationPage = () => {
 
     return (
         <>
-            <Seo
-                title="Booking Confirmed | ScooterShop"
-                description="Your motorcycle hire booking has been confirmed."
-                noindex={true}
-            />
             <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
                 <div className="container mx-auto px-4 py-12 max-w-2xl">
 

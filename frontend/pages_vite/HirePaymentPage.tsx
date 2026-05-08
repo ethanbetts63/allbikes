@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import Seo from '@/components/Seo';
 import { CalendarDays } from 'lucide-react';
 import { formatDate } from '@/lib/hire';
 import type { HireBookingSummary } from '@/types/HireBookingSummary';
@@ -152,7 +151,6 @@ const HirePaymentPage = () => {
 
     return (
         <>
-            <Seo title="Payment | ScooterShop" noindex={true} />
             <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
                 <div className="container mx-auto px-4 py-8 max-w-2xl">
 

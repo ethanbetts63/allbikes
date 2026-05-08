@@ -5,12 +5,6 @@ import { LoginForm } from "@/forms/LoginForm";
 const LoginPage = () => {
   return (
     <div className="bg-background flex h-full flex-col items-center justify-center py-12">
-      <Seo
-        title="Admin Login | ScooterShop"
-        description="Login to the Allbikes & Scooters administration dashboard."
-        canonicalPath="/login"
-        noindex={true}
-      />
       <LoginForm className="w-full max-w-lg" />
     </div>
   );

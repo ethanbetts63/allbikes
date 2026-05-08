@@ -120,12 +120,7 @@ const EScooterListPage = ({ initialProducts, initialTotalPages }: EScooterListPa
 
   return (
     <>
-      <Seo
-        title="Electric Scooters for Sale | ScooterShop Perth"
-        description="Shop our range of electric scooters online. All prices include GST with free delivery Australia-wide. Secure payment via Stripe."
-        canonicalPath="/escooters"
-        structuredData={structuredData}
-      />
+      <Seo structuredData={structuredData} />
 
       <Hero
         title="Electric Scooters"

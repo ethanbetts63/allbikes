@@ -74,10 +74,6 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
     if (isLoading) return <LoadingScreen />;
     if (error || !product) return <ErrorScreen message={error || 'Product not found.'} />;
 
-    const ogImage = selectedMedia === 'YOUTUBE' && videoId
-        ? `https://img.youtube.com/vi/${videoId}/0.jpg`
-        : (selectedMedia !== 'YOUTUBE' ? selectedMedia : undefined);
-
     const structuredData = {
         "@context": "https://schema.org",
         "@graph": [
@@ -118,13 +114,7 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
 
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">
-            <Seo
-                title={`${product.name} | Free Delivery Australia-Wide | ScooterShop`}
-                description={`Buy the ${product.name} online with free delivery anywhere in Australia. Price includes GST. Secure checkout via Stripe.${product.description ? ' ' + product.description : ''}`}
-                canonicalPath={`/escooters/${product.slug}`}
-                ogImage={ogImage}
-                structuredData={structuredData}
-            />
+            <Seo structuredData={structuredData} />
 
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 

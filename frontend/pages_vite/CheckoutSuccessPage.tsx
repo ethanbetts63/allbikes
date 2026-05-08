@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
-import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
 import { getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
@@ -52,7 +51,6 @@ const CheckoutSuccessPage = () => {
 
   return (
     <>
-      <Seo title={isDeposit ? 'Deposit Confirmed | Scooter Shop' : 'Order Confirmed | Scooter Shop'} noindex={true} />
       <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">
         <div className="container mx-auto px-4 py-12 max-w-2xl">
 

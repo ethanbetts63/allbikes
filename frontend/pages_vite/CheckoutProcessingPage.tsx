@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe } from '@stripe/react-stripe-js';
 import { Spinner } from '@/components/ui/spinner';
-import Seo from '@/components/Seo';
 import { getOrderByReference } from '@/api';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -81,7 +80,6 @@ const CheckoutProcessingPage = () => {
 
   return (
     <>
-      <Seo title="Processing | Scooter Shop" noindex={true} />
       <Elements stripe={stripePromise} options={clientSecret ? { clientSecret } : undefined}>
         <ProcessingInner />
       </Elements>

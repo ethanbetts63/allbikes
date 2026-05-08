@@ -1,13 +1,6 @@
-import Seo from '@/components/Seo';
-
 const SecurityPolicyPage = () => {
   return (
     <>
-      <Seo
-        title="Security Policy | ScooterShop"
-        description="Our security policy outlines the steps we take to protect your information, including electronic and hard-copy data protection."
-        canonicalPath="/security"
-      />
       <div className="container mx-auto p-4 py-8">
         <h1 className="text-4xl font-bold mb-6 text-[var(--text-light-primary)]">Security Policy</h1>
         <div className="prose max-w-none text-[var(--text-light-primary)]">

@@ -99,12 +99,6 @@ const HireListPage = ({ initialBikes, initialStartDate, initialEndDate }: HireLi
 
   return (
     <>
-      <Seo
-        title="Motorcycle Hire Perth | Daily, Weekly & Monthly | ScooterShop"
-        description="Hire a motorcycle in Perth from Allbikes & Scooters, Dianella. Flexible daily, weekly, and monthly rates. Book online â€” refundable bond, maintained fleet."
-        canonicalPath="/hire"
-      />
-
       {/* Hero with date picker */}
       <section className="bg-[var(--bg-dark-primary)] py-16 px-6">
         <div className="max-w-2xl mx-auto flex flex-col items-center text-center gap-8">
