@@ -116,17 +116,11 @@ Every component that uses React hooks or browser APIs must have `"use client"` a
 
 `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` is set in `frontend/.env.local` (copied from root `.env`). The `NEXT_PUBLIC_` prefix is required for vars to be available in the browser bundle.
 
-### `react-helmet-async` → stub
+### `react-helmet-async` → Next metadata
 
-`react-helmet-async` is incompatible with the App Router. `components/Seo.tsx` is a no-op stub:
+`react-helmet-async` is incompatible with the App Router. Phase 5 has started replacing the old `Seo` props with route-level `metadata` / `generateMetadata` exports.
 
-```tsx
-import type { SeoProps } from '@/types/SeoProps';
-const Seo = (_props: SeoProps) => null;
-export default Seo;
-```
-
-This will be replaced with `generateMetadata` exports in a later phase.
+`components/Seo.tsx` is no longer responsible for titles/meta/canonicals. It only renders JSON-LD scripts from existing `structuredData` props while migrated Vite pages still own the structured-data objects.
 
 ### `AdminLayout` rewrite
 
@@ -239,17 +233,31 @@ Phase 4 state bridge status:
 - `ServiceBookingPage` → `ServiceBookingConfirmationPage`: fixed with display-only `sessionStorage` snapshot.
 
 ### Phase 5 — SEO server components + generateMetadata
-Convert the SEO-critical pages to async server components that fetch data server-side, and replace the `Seo` stub with `generateMetadata`:
+Status: partially complete.
 
-```ts
-// app/inventory/motorcycles/[slug]/page.tsx
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const bike = await getBikeBySlug(params.slug);
-  return { title: `${bike.name} | ScooterShop`, description: bike.description };
-}
-```
+Added `frontend/lib/seo.ts` with shared metadata helpers and canonical URL handling.
 
-Pages to convert: `HomePage`, `BikeListPage`, `BikeDetailPage`, `EScooterListPage`, `EScooterDetailPage`.
+Completed route metadata:
+- `/`
+- `/inventory/motorcycles/new`
+- `/inventory/motorcycles/used`
+- `/inventory/motorcycles/parts`
+- `/inventory/motorcycles/[slug]` via `generateMetadata`
+- `/escooters`
+- `/escooters/[slug]` via `generateMetadata`
+- `/electric-scooters`
+- `/contact`
+- `/service`
+- `/tyre-fitting`
+- `/hire`
+- `/service-booking`
+- `/refunds`
+- `/privacy`
+- `/security`
+
+Still to consider:
+- Add route metadata/noindex for transactional pages (`checkout`, `hire/book`, processing/success/error) and dashboard/login if needed.
+- Decide whether to move selected public pages from client fetching to async server components. Current Phase 5 only fixes metadata and JSON-LD while leaving migrated page rendering intact.
 
 ### Phase 6 — Auth middleware
 Status: complete.

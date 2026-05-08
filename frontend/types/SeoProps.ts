@@ -5,5 +5,5 @@ export interface SeoProps {
   ogType?: 'website' | 'article';
   ogImage?: string;
   noindex?: boolean;
-  structuredData?: object | any;
+  structuredData?: object | object[];
 }
