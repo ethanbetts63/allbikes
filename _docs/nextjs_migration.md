@@ -252,21 +252,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 Pages to convert: `HomePage`, `BikeListPage`, `BikeDetailPage`, `EScooterListPage`, `EScooterDetailPage`.
 
 ### Phase 6 — Auth middleware
-Create `frontend/middleware.ts` to protect dashboard routes server-side instead of relying on the client-side redirect in `AdminLayout`:
+Status: complete.
 
-```ts
-// frontend/middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+`frontend/proxy.ts` now protects `/dashboard/:path*` before the dashboard page renders. Next.js 16 renamed the old `middleware.ts` convention to `proxy.ts`, so this uses the current file convention. It checks for either `access_token` or `refresh_token`; the refresh cookie is accepted because `AuthProvider`/`authedFetch` can refresh an expired access token client-side. Unauthenticated users are redirected to `/login?next=/dashboard/...`.
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get('access_token');
-  if (!token && request.nextUrl.pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-}
-export const config = { matcher: ['/dashboard/:path*'] };
-```
+`LoginForm` now honors the `next` param when it points at a dashboard route, otherwise it falls back to `/dashboard/inventory`. `AdminLayout` still keeps its client-side staff check as a second layer, because the middleware only proves that an auth cookie exists; staff authorization still comes from `/api/data/me/`.
 
 ### Phase 7 — Deploy to Vercel
 1. Push `frontend/` to a GitHub repo (or the root monorepo)
