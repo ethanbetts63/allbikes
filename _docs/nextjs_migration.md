@@ -122,6 +122,8 @@ Every component that uses React hooks or browser APIs must have `"use client"` a
 
 `components/Seo.tsx` is no longer responsible for titles/meta/canonicals. It only renders JSON-LD scripts from existing `structuredData` props while migrated Vite pages still own the structured-data objects.
 
+Follow-up cleanup: all active `pages_vite/` call sites now either pass only `structuredData` to `<Seo />` or do not render `<Seo />` at all. No-op metadata props (`title`, `description`, `canonicalPath`, `noindex`, `ogImage`) were removed from the client component calls, the dashboard layout's no-op `<Seo />` was removed, and `dateModified` support was dropped from `Seo` because sitemap `lastmod` is handled by Django for dynamic URLs.
+
 ### `AdminLayout` rewrite
 
 `pages_vite/admin/AdminLayout.tsx` was fully rewritten. Key changes:
@@ -185,7 +187,6 @@ In production on Vercel, set `DJANGO_API_URL` in the Vercel environment variable
 ### `frontend/.env.local` (local dev only, not committed)
 ```
 DJANGO_API_URL=http://localhost:8000
-NEXT_PUBLIC_API_URL=http://localhost:8000
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
