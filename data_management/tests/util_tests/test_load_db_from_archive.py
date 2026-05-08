@@ -29,7 +29,7 @@ class TestLoadDbFromArchive:
     def test_load_db_finds_latest_and_loads(self, mock_run, mock_command, setup_archive_dirs):
         # Create a file in the latest archive
         latest_archive = setup_archive_dirs / '2023-01-02'
-        test_file = latest_archive / 'data_management.brand.json'
+        test_file = latest_archive / 'sites.site.json'
         test_file.touch()
 
         # Patch os.path.join to return our temp path when looking for base_archive_dir
@@ -45,18 +45,22 @@ class TestLoadDbFromArchive:
         # Let's try mocking os.path.exists and os.listdir.
         
         with patch('os.path.exists') as mock_exists, \
-             patch('os.listdir') as mock_listdir:
+             patch('os.listdir') as mock_listdir, \
+             patch('os.path.isfile') as mock_isfile:
             
             # Setup mocks
             def side_effect_exists(path):
                 if 'db_backups' in path and '2023' not in path: # base dir check
                     return True
-                if '2023-01-02' in path and 'data_management.brand.json' in path: # file check
-                    return True
                 return False
 
             mock_exists.side_effect = side_effect_exists
-            mock_listdir.return_value = ['2023-01-01', '2023-01-02']
+            mock_listdir.side_effect = lambda path: (
+                ['2023-01-01', '2023-01-02']
+                if '2023-01-02' not in path
+                else ['sites.site.json']
+            )
+            mock_isfile.side_effect = lambda path: path.endswith('sites.site.json')
             
             # We also need to mock isdir inside list comprehension
             with patch('os.path.isdir', return_value=True):
@@ -71,11 +75,11 @@ class TestLoadDbFromArchive:
         # We expect at least 2 calls (flush + 1 loaddata)
         assert mock_run.call_count >= 2
         
-        # Check if loaddata was called for brand.json
+        # Check if loaddata was called for sites.site.json
         found = False
         for call_args in mock_run.call_args_list:
             cmd = call_args[0][0]
-            if 'loaddata' in cmd and any('data_management.brand.json' in arg for arg in cmd):
+            if 'loaddata' in cmd and any('sites.site.json' in arg for arg in cmd):
                 found = True
                 break
         assert found
