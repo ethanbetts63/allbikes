@@ -1,6 +1,6 @@
 import { buildMetadata } from '@/lib/seo';
 import { getServerBikes, getServerProducts } from '@/lib/serverApi';
-import HomePage from '@/pages_vite/HomePage';
+import HomePage from '@/page_components/HomePage';
 import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
 

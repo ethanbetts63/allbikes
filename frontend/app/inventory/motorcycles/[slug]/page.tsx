@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getBikeMetadata } from '@/lib/seo';
 import { getServerBikeById } from '@/lib/serverApi';
-import BikeDetailPage from '@/pages_vite/BikeDetailPage';
+import BikeDetailPage from '@/page_components/BikeDetailPage';
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }

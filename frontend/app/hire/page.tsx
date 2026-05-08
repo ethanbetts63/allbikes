@@ -1,7 +1,7 @@
 import { buildMetadata } from '@/lib/seo';
 import { getServerHireBikes } from '@/lib/serverApi';
 import type { Bike } from '@/types/Bike';
-import HireListPage from '@/pages_vite/HireListPage';
+import HireListPage from '@/page_components/HireListPage';
 
 export const dynamic = 'force-dynamic';
 

@@ -1,6 +1,6 @@
 import { buildMetadata } from '@/lib/seo';
 import { getInitialProductList } from '@/lib/productList';
-import EScooterListPage from '@/pages_vite/EScooterListPage';
+import EScooterListPage from '@/page_components/EScooterListPage';
 
 export const metadata = buildMetadata({
   title: 'Electric Scooters for Sale | ScooterShop Perth',

@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   canonicalPath: '/contact',
 });
 
-export { default } from '@/pages_vite/ContactPage';
+export { default } from '@/page_components/ContactPage';

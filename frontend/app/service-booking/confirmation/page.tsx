@@ -5,4 +5,4 @@ export const metadata = buildMetadata({
   noindex: true,
 });
 
-export { default } from '@/pages_vite/ServiceBookingConfirmationPage';
+export { default } from '@/page_components/ServiceBookingConfirmationPage';

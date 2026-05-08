@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   canonicalPath: '/security',
 });
 
-export { default } from '@/pages_vite/SecurityPolicyPage';
+export { default } from '@/page_components/SecurityPolicyPage';

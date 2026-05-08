@@ -25,7 +25,9 @@ Both must run simultaneously. All `/api/*` requests from the browser hit Next.js
 
 ## What was migrated (Phase 3 — complete)
 
-The goal of Phase 3 was: get the existing Vite page components running inside the Next.js App Router without rewriting any business logic. The components live in `frontend/pages_vite/` and `frontend/components/` — they are re-exported from `frontend/app/*/page.tsx` files.
+The goal of Phase 3 was: get the existing Vite page components running inside the Next.js App Router without rewriting any business logic. The components live in `frontend/page_components/` and `frontend/components/` — they are re-exported from `frontend/app/*/page.tsx` files.
+
+`frontend/page_components/` contains active production page components used by the App Router. This directory used to be named `pages_vite/`, but it was renamed because those files are no longer Vite-only reference code.
 
 ### App Router route files created
 
@@ -33,11 +35,11 @@ Every page in `frontend/app/` is a thin wrapper:
 
 ```tsx
 // typical static page
-export { default } from '@/pages_vite/SomePage';
+export { default } from '@/page_components/SomePage';
 
 // pages using useSearchParams — need force-dynamic to avoid Suspense error
 export const dynamic = 'force-dynamic';
-export { default } from '@/pages_vite/SomePage';
+export { default } from '@/page_components/SomePage';
 ```
 
 The `force-dynamic` export was added to these 8 pages:
@@ -55,7 +57,7 @@ Dashboard layout: `app/dashboard/layout.tsx` wraps all dashboard routes in `Admi
 BikeListPage pages pass a `bikeCondition` prop:
 ```tsx
 // app/inventory/motorcycles/new/page.tsx
-import BikeListPage from '@/pages_vite/BikeListPage';
+import BikeListPage from '@/page_components/BikeListPage';
 export default function Page() {
   return <BikeListPage bikeCondition="new,demo" />;
 }
@@ -96,16 +98,11 @@ Several pages previously received data via `location.state` (react-router):
 
 **Service confirmation status: fixed in Phase 4.** The service booking flow has no public reference lookup endpoint because the canonical booking is created in MechanicDesk. `ServiceBookingPage` now stores the submitted form snapshot in `sessionStorage` immediately after a successful API response, clears the draft progress, and navigates to `/service-booking/confirmation`. `ServiceBookingConfirmationPage` reads and clears that snapshot for display. This is display-only; Django/MechanicDesk remain the source of truth.
 
-**What needs doing (Phase 4 of payment flow):** Persist the data another way before navigating:
-- `sessionStorage` (simplest — set before `router.push`, read on arrival)
-- URL query params (good for references/IDs that are short)
-- Server-side: store in DB and pass reference in URL
-
 The deposit `checkoutType` was fixed properly: `BikeDetailPage` now navigates to `/checkout/[slug]?type=deposit` and `CheckoutPage` reads it from `useSearchParams()`.
 
 ### `"use client"` directive
 
-Every component that uses React hooks or browser APIs must have `"use client"` as the first line. All `pages_vite/` and interactive `components/` files had this added. Server components (default in App Router) cannot use hooks.
+Every component that uses React hooks or browser APIs must have `"use client"` as the first line. All `page_components/` and interactive `components/` files had this added. Server components (default in App Router) cannot use hooks.
 
 ### Env vars
 
@@ -118,15 +115,15 @@ Every component that uses React hooks or browser APIs must have `"use client"` a
 
 ### `react-helmet-async` → Next metadata
 
-`react-helmet-async` is incompatible with the App Router. Phase 5 has started replacing the old `Seo` props with route-level `metadata` / `generateMetadata` exports.
+`react-helmet-async` is incompatible with the App Router. Phase 5 has started replacing the old client-side SEO props with route-level `metadata` / `generateMetadata` exports.
 
-`components/Seo.tsx` is no longer responsible for titles/meta/canonicals. It only renders JSON-LD scripts from existing `structuredData` props while migrated Vite pages still own the structured-data objects.
+`components/StructuredDataScript.tsx` is not responsible for titles/meta/canonicals. It only renders JSON-LD scripts from existing `structuredData` props while migrated Vite pages still own the structured-data objects.
 
-Follow-up cleanup: all active `pages_vite/` call sites now either pass only `structuredData` to `<Seo />` or do not render `<Seo />` at all. No-op metadata props (`title`, `description`, `canonicalPath`, `noindex`, `ogImage`) were removed from the client component calls, the dashboard layout's no-op `<Seo />` was removed, and `dateModified` support was dropped from `Seo` because sitemap `lastmod` is handled by Django for dynamic URLs.
+Follow-up cleanup: all active `page_components/` call sites now either pass only `structuredData` to `<StructuredDataScript />` or do not render a structured-data script at all. No-op metadata props (`title`, `description`, `canonicalPath`, `noindex`, `ogImage`) were removed from the client component calls, the dashboard layout's no-op client SEO component was removed, and `dateModified` support was dropped because sitemap `lastmod` is handled by Django for dynamic URLs.
 
 ### `AdminLayout` rewrite
 
-`pages_vite/admin/AdminLayout.tsx` was fully rewritten. Key changes:
+`page_components/admin/AdminLayout.tsx` was fully rewritten. Key changes:
 - `NavLink` → `Link` + `usePathname()` for active class
 - `Outlet` → `{children}` prop
 - `<Navigate />` → `useEffect` with `router.push('/login')`
@@ -141,10 +138,10 @@ Files fixed:
 - `components/HomeHeroV2.tsx`
 - `components/MotorcycleMovers.tsx`
 - `components/NavBar.tsx`
-- `pages_vite/BikeListPage.tsx`
-- `pages_vite/ContactPage.tsx`
-- `pages_vite/EScooterListPage.tsx`
-- `pages_vite/RefundsPage.tsx`
+- `page_components/BikeListPage.tsx`
+- `page_components/ContactPage.tsx`
+- `page_components/EScooterListPage.tsx`
+- `page_components/RefundsPage.tsx`
 
 `.svg` imports are typed as `any` in Next.js (see `node_modules/next/image-types/global.d.ts`). At runtime they return a URL string — do NOT add `.src` to SVG imports.
 
@@ -156,7 +153,7 @@ Files fixed:
 
 ### `localStorage` SSR guard
 
-`pages_vite/ServiceBookingPage.tsx` reads `localStorage` in a `useState` lazy initializer. Added `typeof window === 'undefined'` guard so it doesn't throw during SSR.
+`page_components/ServiceBookingPage.tsx` reads `localStorage` in a `useState` lazy initializer. Added `typeof window === 'undefined'` guard so it doesn't throw during SSR.
 
 ### Copied files from `frontend_vite/src/`
 
@@ -205,33 +202,7 @@ There is an unresolved 404 for a URL literally named `[object%20Object]`. This m
 2. Click the request → check the Initiator tab to find the exact file and line
 3. The most likely cause is a `.webp`/`.png` `StaticImageData` that was missed in the `.src` pass
 
-### Payment/hire flows redirect back to start
-
-See "Lost router state" above. This is intentional for now — not a bug introduced by the migration, just a missing Phase 4 implementation.
-
----
-
 ## What still needs doing
-
-### Phase 4 — Payment flow state
-Fix the broken checkout / hire / service confirmation flows. The state was lost in the router migration. Use `sessionStorage` as the bridge:
-
-```ts
-// before navigating
-sessionStorage.setItem('checkoutState', JSON.stringify({ clientSecret, orderReference, itemSummary }));
-router.push('/checkout/payment');
-
-// on arrival
-const raw = sessionStorage.getItem('checkoutState');
-const state = raw ? JSON.parse(raw) : null;
-sessionStorage.removeItem('checkoutState'); // clear after reading
-```
-
-Phase 4 state bridge status:
-- `CheckoutPage` → `CheckoutPaymentPage`: fixed with order reference in URL.
-- `HireBookingPage` → `HirePaymentPage`: fixed with booking reference route param.
-- `HireProcessingPage` → `HireConfirmationPage`: already reference-based.
-- `ServiceBookingPage` → `ServiceBookingConfirmationPage`: fixed with display-only `sessionStorage` snapshot.
 
 ### Phase 5 — SEO server components + generateMetadata
 Status: partially complete.
@@ -307,7 +278,7 @@ Migration strategy:
 - Once a route has initial server data working, optionally split it into a server shell plus smaller client-only widgets.
 
 Recommended conversion order:
-1. `/` homepage: featured new bikes, featured used bikes, featured e-scooters. **Done:** `app/page.tsx` now fetches these datasets on the server and passes them into `pages_vite/HomePage` as initial props. The route revalidates every 5 minutes.
+1. `/` homepage: featured new bikes, featured used bikes, featured e-scooters. **Done:** `app/page.tsx` now fetches these datasets on the server and passes them into `page_components/HomePage` as initial props. The route revalidates every 5 minutes.
 2. `/inventory/motorcycles/new`, `/used`, `/parts`: first page of list data server-rendered; filters can remain client-side. **Done:** these routes now fetch page 1 on the server, pass `initialBikes` / `initialTotalPages` into `BikeListPage`, and revalidate every 5 minutes.
 3. `/escooters`: first page of product list server-rendered; filters can remain client-side. **Done:** this route now fetches page 1 on the server, passes `initialProducts` / `initialTotalPages` into `EScooterListPage`, and revalidates every 5 minutes.
   4. `/inventory/motorcycles/[slug]` and `/escooters/[slug]`: detail data server-rendered and passed into current detail components. **Primary detail data done:** these routes now fetch the bike/product on the server and pass it as `initialBike` / `initialProduct`. Detail components still keep browser fallback fetching, and bike detail still fetches related carousel/deposit data after hydration.
@@ -345,7 +316,7 @@ Acceptance criteria for each converted public page:
 | Concern | Location |
 |---------|----------|
 | App Router pages | `frontend/app/*/page.tsx` |
-| Page components (business logic) | `frontend/pages_vite/` |
+| Page components (business logic) | `frontend/page_components/` |
 | Shared components | `frontend/components/` |
 | Forms | `frontend/forms/` |
 | API client | `frontend/api.ts`, `frontend/apiClient.ts` |

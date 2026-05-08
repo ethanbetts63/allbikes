@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   canonicalPath: '/tyre-fitting',
 });
 
-export { default } from '@/pages_vite/TyreFittingPage';
+export { default } from '@/page_components/TyreFittingPage';

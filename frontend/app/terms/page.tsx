@@ -1,7 +1,7 @@
 import { buildMetadata } from '@/lib/seo';
 import { getServerLatestTermsAndConditions } from '@/lib/serverApi';
 import type { TermsAndConditions } from '@/types/TermsAndConditions';
-import TermsAndConditionsPage from '@/pages_vite/TermsAndConditionsPage';
+import TermsAndConditionsPage from '@/page_components/TermsAndConditionsPage';
 
 export const dynamic = 'force-dynamic';
 export const metadata = buildMetadata({

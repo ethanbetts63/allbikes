@@ -1,4 +1,4 @@
-import BikeListPage from '@/pages_vite/BikeListPage';
+import BikeListPage from '@/page_components/BikeListPage';
 import { buildMetadata } from '@/lib/seo';
 import { getInitialBikeList } from '@/lib/inventoryList';
 

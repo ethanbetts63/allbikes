@@ -1,1 +1,1 @@
-export { default } from '@/pages_vite/admin/InventoryManagementPage';
+export { default } from '@/page_components/admin/InventoryManagementPage';

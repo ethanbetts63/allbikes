@@ -1,1 +1,1 @@
-export { default } from '@/pages_vite/admin/JobTypesPage';
+export { default } from '@/page_components/admin/JobTypesPage';

@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   canonicalPath: '/service',
 });
 
-export { default } from '@/pages_vite/ServicePage';
+export { default } from '@/page_components/ServicePage';

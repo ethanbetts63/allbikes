@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   noindex: true,
 });
 
-export { default } from '@/pages_vite/HireBookingPage';
+export { default } from '@/page_components/HireBookingPage';

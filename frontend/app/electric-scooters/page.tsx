@@ -1,7 +1,7 @@
 import { buildMetadata } from '@/lib/seo';
 import { getServerProducts } from '@/lib/serverApi';
 import type { Product } from '@/types/Product';
-import ElectricScootersLandingPage from '@/pages_vite/ElectricScootersLandingPage';
+import ElectricScootersLandingPage from '@/page_components/ElectricScootersLandingPage';
 
 export const metadata = buildMetadata({
   title: 'Buy Electric Scooters Online | Free Delivery Australia-Wide | ScooterShop',

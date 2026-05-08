@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   canonicalPath: '/refunds',
 });
 
-export { default } from '@/pages_vite/RefundsPage';
+export { default } from '@/page_components/RefundsPage';

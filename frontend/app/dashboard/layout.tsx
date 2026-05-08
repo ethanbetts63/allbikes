@@ -1,4 +1,4 @@
-import AdminLayout from '@/pages_vite/admin/AdminLayout';
+import AdminLayout from '@/page_components/admin/AdminLayout';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata = buildMetadata({

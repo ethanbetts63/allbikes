@@ -10,7 +10,7 @@ export const siteSettings: SiteSettings = {
   id: 1,
   enable_motorcycle_mover: true,
   enable_banner: true,
-  banner_text: "Shut for Easter from 2nd to 8th of April. Happy Easter!",
+  banner_text: "Formally Scootershop Fremantle. New location. Same reputation!",
   phone_number: "94334613",
   mobile_number: "0477700005",
   email_address: "admin@scootershop.com.au",

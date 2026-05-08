@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   canonicalPath: '/privacy',
 });
 
-export { default } from '@/pages_vite/PrivacyPolicyPage';
+export { default } from '@/page_components/PrivacyPolicyPage';

@@ -1,1 +1,1 @@
-export { default } from '@/pages_vite/admin/AdminHireBlockedDatesPage';
+export { default } from '@/page_components/admin/AdminHireBlockedDatesPage';
