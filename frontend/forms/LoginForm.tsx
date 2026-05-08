@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { cn } from "@/utils/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -17,7 +19,7 @@ export function LoginForm({
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { loginWithPassword } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -28,7 +30,7 @@ export function LoginForm({
       await loginWithPassword(email, password);
       setNotification({ message: "Login successful!", type: 'success' });
       // On success, navigate to the admin dashboard
-      navigate('/dashboard/inventory');
+      router.push('/dashboard/inventory');
     } catch (error) {
       console.error("Login failed", error);
       setNotification({ message: "Login Failed: Please check your email and password and try again.", type: 'error' });

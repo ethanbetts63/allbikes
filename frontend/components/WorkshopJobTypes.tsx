@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import type { WorkshopJobTypesProps } from '@/types/WorkshopJobTypesProps';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Cog } from 'lucide-react';
@@ -23,7 +23,7 @@ const WorkshopJobTypes = ({ jobTypes, isLoading, error, title, paragraph, button
         <p className="text-lg text-[var(--text-light-secondary)] leading-relaxed max-w-prose mb-10">
           {paragraph}
         </p>
-        <Link to="/service-booking">
+        <Link href="/service-booking">
           <Button className="bg-highlight1 text-[var(--text-light-primary)] font-bold px-8 py-5 text-xl hover:bg-highlight1/80 flex items-center gap-2">
             {buttonText} <ArrowRight className="h-5" />
           </Button>

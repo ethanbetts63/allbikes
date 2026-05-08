@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useEffect, useMemo } from 'react';
 import { formatDate } from '@/utils/formatting';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   flexRender,
   getCoreRowModel,
@@ -34,7 +36,7 @@ const STATUS_BADGE: Record<string, { label: string; className: string }> = {
 type FilterType = 'all' | 'todo';
 
 const OrderTable = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [data, setData] = useState<Order[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filter, setFilter] = useState<FilterType>('todo');
@@ -189,7 +191,7 @@ const OrderTable = () => {
                 <TableRow
                   key={row.id}
                   className="border-border-light cursor-pointer hover:bg-[var(--bg-light-secondary)]"
-                  onClick={() => navigate(`/dashboard/orders/${row.original.id}`)}
+                  onClick={() => router.push(`/dashboard/orders/${row.original.id}`)}
                 >
                   {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id} className="text-[var(--text-dark-primary)]">

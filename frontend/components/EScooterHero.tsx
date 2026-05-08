@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+"use client";
+
+import Link from 'next/link';
 import { ArrowRight, Truck, ShieldCheck } from 'lucide-react';
 import YouTube from 'react-youtube';
 
@@ -23,7 +25,7 @@ const EScooterHero = () => {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
-            to="/escooters"
+            href="/escooters"
             className="inline-flex items-center justify-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-7 py-3.5 transition-colors duration-200"
           >
             Shop E-Scooters

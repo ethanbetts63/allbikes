@@ -1,9 +1,11 @@
+"use client";
+
 import { type ChangeEvent } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import type { PersonalDetailsFormProps } from '@/types/PersonalDetailsFormProps';
 
 const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, isSubmitting, error }: PersonalDetailsFormProps) => {
@@ -51,7 +53,7 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
           className="mt-0.5"
         />
         <Label htmlFor="terms_accepted" className="text-sm leading-snug cursor-pointer">
-          <span>I have read and agree to the <Link to="/terms?type=service" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">Service Terms and Conditions</Link>.</span>
+          <span>I have read and agree to the <Link href="/terms?type=service" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">Service Terms and Conditions</Link>.</span>
         </Label>
       </div>
 

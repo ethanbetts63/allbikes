@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useMemo } from "react"
 import {
   flexRender,
@@ -26,14 +28,14 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination"
-import { useNavigate } from "react-router-dom"
+import { useRouter } from 'next/navigation'
 import { deleteMotorcycle, getBikes } from "@/api"
 import type { Bike } from "@/types/Bike"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 // Main InventoryTable Component
 const InventoryTable = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [data, setData] = useState<Bike[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -89,7 +91,7 @@ const InventoryTable = () => {
   };
 
   const handleEdit = (id: number) => {
-    navigate(`/dashboard/edit-motorcycle/${id}`);
+    router.push(`/dashboard/edit-motorcycle/${id}`);
   };
   
   const handleFilterChange = (filter: 'new' | 'used' | 'hire' | null) => {

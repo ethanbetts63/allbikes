@@ -1,12 +1,15 @@
+"use client";
+
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import useHireDateConstraints from '@/hooks/useHireDateConstraints';
 
 const HireCTASection = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [blockedDateError, setBlockedDateError] = useState<string | null>(null);
@@ -16,7 +19,7 @@ const HireCTASection = () => {
     const params = new URLSearchParams();
     if (startDate) params.set('start', startDate);
     if (endDate) params.set('end', endDate);
-    navigate(`/hire?${params.toString()}`);
+    router.push(`/hire?${params.toString()}`);
   };
 
   const bothSelected = startDate && endDate;
@@ -90,7 +93,7 @@ const HireCTASection = () => {
         </div>
 
         <Link
-          to="/hire"
+          href="/hire"
           className="text-[var(--text-light-secondary)] text-sm hover:text-[var(--text-light-primary)] underline underline-offset-2"
         >
           Browse all hire bikes →

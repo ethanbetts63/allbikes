@@ -1,7 +1,9 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import SmallBikeCard from "@/components/SmallBikeCard";
 import type { FeaturedBikesProps } from "@/types/FeaturedBikesProps";
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -56,7 +58,7 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
             <div className="md:w-1/5 shrink-0 text-center md:text-left">
               <h2 className="text-2xl font-black tracking-tight mb-2 text-[var(--text-light-primary)] leading-tight">{title}</h2>
               <p className="text-sm text-[var(--text-light-secondary)] mb-6 leading-relaxed">{description}</p>
-              <Link to={linkTo}>
+              <Link href={linkTo}>
                 <Button className="bg-highlight text-[var(--text-dark-primary)] font-bold px-5 py-2.5 text-sm hover:bg-highlight/80 flex items-center gap-1.5 mx-auto md:mx-0">
                   {linkText} <ArrowRight className="h-4 w-4" />
                 </Button>

@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useRef } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe } from '@stripe/react-stripe-js';
 import { Spinner } from '@/components/ui/spinner';

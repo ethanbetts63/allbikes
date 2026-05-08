@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 import { Wrench, Cog, Flame } from "lucide-react";
 import type { SmallBikeCardProps } from "@/types/SmallBikeCardProps";
 
@@ -17,7 +17,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const srcSet = primaryImage ? `${thumbnailUrl} 400w, ${fullImageUrl} 1200w` : '';
 
   return (
-    <Link to={`/inventory/motorcycles/${slug}`} className="block h-full">
+    <Link href={`/inventory/motorcycles/${slug}`} className="block h-full">
       <div className={`relative w-full overflow-hidden flex flex-col h-full bg-[var(--bg-light-primary)] rounded-lg shadow-sm hover:-translate-y-1 transition-transform duration-200 ${bike.popular ? 'ring-2 ring-[var(--highlight)]' : ''}`}>
         {bike.popular && (
           <span className="absolute top-2.5 right-2.5 z-10 bg-[var(--highlight)] text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded flex items-center gap-1">

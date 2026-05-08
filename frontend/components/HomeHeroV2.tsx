@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import type { HomeHeroProps } from "@/types/HomeHeroProps";
 import { ArrowRight, Phone, Mail } from 'lucide-react';
 
@@ -200,7 +202,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         {/* ── USED BIKES PANEL ── */}
         {!error ? (
           <Link
-            to="/inventory/motorcycles/used"
+            href="/inventory/motorcycles/used"
             className="relative group overflow-hidden min-h-[260px] md:min-h-[300px] lg:flex-1"
           >
             {renderUsedCrossfadeImages(usedSlots, usedIsDefaultA, usedIsDefaultB)}
@@ -236,7 +238,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         {/* New bikes image */}
         {!error ? (
           <Link
-            to="/inventory/motorcycles/new"
+            href="/inventory/motorcycles/new"
             className="relative flex-1 group overflow-hidden min-h-[300px] lg:min-h-0 bg-[var(--bg-dark-primary)]"
           >
             {renderCrossfadeImages(newSlots, newIsDefaultA, newIsDefaultB, true)}
@@ -278,7 +280,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             </p>
           </div>
           <Link
-            to="/service-booking"
+            href="/service-booking"
             className="shrink-0 inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
           >
             Book Online

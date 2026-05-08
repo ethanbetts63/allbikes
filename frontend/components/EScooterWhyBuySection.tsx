@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -32,7 +32,7 @@ const EScooterWhyBuySection = ({ buttonLink, buttonText }: EScooterWhyBuySection
             <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
               We're not a faceless warehouse. We're a real workshop in Perth that has been looking after riders for decades — online sales are an extension of that same service.
             </p>
-            <Link to={buttonLink}>
+            <Link href={buttonLink}>
               <Button
                 size="lg"
                 className="bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold px-8 text-base group"

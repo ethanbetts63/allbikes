@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
 import type { BreadcrumbProps } from '@/types/BreadcrumbProps';
@@ -14,7 +14,7 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => {
             )}
             {index < items.length - 1 ? (
               <Link
-                to={item.href}
+                href={item.href}
                 className="inline-flex items-center text-sm font-medium text-[var(--text-light-primary)] hover:text-[var(--text-light-secondary)]"
               >
                 {item.name}

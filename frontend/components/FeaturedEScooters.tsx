@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Zap, Truck, ArrowRight, ShieldCheck, Flame } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import type { FeaturedEScootersProps } from '@/types/FeaturedEScootersProps';
@@ -26,7 +26,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
               Best Selling<br />E-Scooters
             </h2>
             <Link
-              to="/escooters"
+              href="/escooters"
               className="hidden sm:inline-flex items-center gap-2 shrink-0 border border-amber-400 text-[var(--highlight)] hover:border-stone-500 hover:text-[var(--text-light-secondary)] font-bold text-xs uppercase tracking-widest px-4 py-2.5 transition-colors duration-200"
             >
               View All E-Scooters <ArrowRight className="h-3.5 w-3.5" />
@@ -57,7 +57,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
             return (
               <Link
                 key={product.id}
-                to={`/escooters/${product.slug}`}
+                href={`/escooters/${product.slug}`}
                 className={`group bg-[var(--bg-light-primary)] rounded-lg overflow-hidden flex flex-col hover:-translate-y-1 transition-transform duration-200 ${product.popular ? 'ring-2 ring-[var(--highlight)]' : ''}`}
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-light-secondary)]">
@@ -122,7 +122,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
 
         {/* Mobile CTA */}
         <Link
-          to="/escooters"
+          href="/escooters"
           className="sm:hidden inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-widest px-6 py-3 transition-colors duration-200"
         >
           View All E-Scooters

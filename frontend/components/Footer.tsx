@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+"use client";
+
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { siteSettings } from '@/config/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
@@ -43,32 +45,32 @@ const Footer = () => {
         <div>
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Quick Links</p>
           <ul className="space-y-2">
-            <li><Link to="/inventory/motorcycles/new" className={LINK_CLASS}>New Motorcycles &amp; Scooters</Link></li>
-            <li><Link to="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles &amp; Scooters</Link></li>
-            {!siteSettings.hide_escooters && <li><Link to="/escooters" className={LINK_CLASS}>E-Scooters</Link></li>}
-            {!siteSettings.hide_escooters && <li><Link to="/electric-scooters" className={LINK_CLASS}>Buy E-Scooters Online</Link></li>}
-            {siteSettings.show_workshop_clearance && <li><Link to="/inventory/motorcycles/parts" className={LINK_CLASS}>Workshop Clearance</Link></li>}
-            {siteSettings.show_hire && <li><Link to="/hire" className={LINK_CLASS}>Motorcycle Hire Perth</Link></li>}
-            <li><Link to="/service" className={LINK_CLASS}>Servicing</Link></li>
-            <li><Link to="/tyre-fitting" className={LINK_CLASS}>Tyre Fitting</Link></li>
-            <li><Link to="/contact" className={LINK_CLASS}>Contact Us</Link></li>
-            <li><Link to="/refunds" className={LINK_CLASS}>Returns &amp; Refunds</Link></li>
-            <li><Link to="/terms?type=purchase" className={LINK_CLASS}>Sales &amp; Deposit Terms</Link></li>
-            {siteSettings.show_hire && <li><Link to="/terms?type=hire" className={LINK_CLASS}>Hire Terms</Link></li>}
-            <li><Link to="/terms?type=service" className={LINK_CLASS}>Service Terms</Link></li>
-            <li><Link to="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
-            <li><Link to="/security" className={LINK_CLASS}>Security Policy</Link></li>
+            <li><Link href="/inventory/motorcycles/new" className={LINK_CLASS}>New Motorcycles &amp; Scooters</Link></li>
+            <li><Link href="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles &amp; Scooters</Link></li>
+            {!siteSettings.hide_escooters && <li><Link href="/escooters" className={LINK_CLASS}>E-Scooters</Link></li>}
+            {!siteSettings.hide_escooters && <li><Link href="/electric-scooters" className={LINK_CLASS}>Buy E-Scooters Online</Link></li>}
+            {siteSettings.show_workshop_clearance && <li><Link href="/inventory/motorcycles/parts" className={LINK_CLASS}>Workshop Clearance</Link></li>}
+            {siteSettings.show_hire && <li><Link href="/hire" className={LINK_CLASS}>Motorcycle Hire Perth</Link></li>}
+            <li><Link href="/service" className={LINK_CLASS}>Servicing</Link></li>
+            <li><Link href="/tyre-fitting" className={LINK_CLASS}>Tyre Fitting</Link></li>
+            <li><Link href="/contact" className={LINK_CLASS}>Contact Us</Link></li>
+            <li><Link href="/refunds" className={LINK_CLASS}>Returns &amp; Refunds</Link></li>
+            <li><Link href="/terms?type=purchase" className={LINK_CLASS}>Sales &amp; Deposit Terms</Link></li>
+            {siteSettings.show_hire && <li><Link href="/terms?type=hire" className={LINK_CLASS}>Hire Terms</Link></li>}
+            <li><Link href="/terms?type=service" className={LINK_CLASS}>Service Terms</Link></li>
+            <li><Link href="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
+            <li><Link href="/security" className={LINK_CLASS}>Security Policy</Link></li>
             {user ? (
               <>
                 {user.is_staff && (
-                  <li><Link to="/dashboard" className={LINK_CLASS}>Dashboard</Link></li>
+                  <li><Link href="/dashboard" className={LINK_CLASS}>Dashboard</Link></li>
                 )}
                 <li>
                   <button onClick={logout} className={LINK_CLASS}>Logout</button>
                 </li>
               </>
             ) : (
-              <li><Link to="/login" className={LINK_CLASS}>Login</Link></li>
+              <li><Link href="/login" className={LINK_CLASS}>Login</Link></li>
             )}
           </ul>
         </div>

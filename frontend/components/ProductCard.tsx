@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Truck, ShieldCheck, Flame } from 'lucide-react';
 import type { ProductCardProps } from '@/types/ProductCardProps';
 
@@ -8,7 +8,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
 
   return (
-    <Link to={`/escooters/${product.slug}`} className="block group">
+    <Link href={`/escooters/${product.slug}`} className="block group">
       <div className={`bg-[var(--card)] border transition-colors duration-200 flex flex-col h-full ${product.popular ? 'border-[var(--highlight)]' : 'border-[var(--border-light)] group-hover:border-[var(--highlight)]'}`}>
 
         {/* Image */}

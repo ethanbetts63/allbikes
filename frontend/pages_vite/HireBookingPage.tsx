@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
@@ -14,8 +16,8 @@ import type { Bike } from '@/types/Bike';
 import { formatDate } from '@/lib/hire';
 
 const HireBookingPage = () => {
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const bikeId = searchParams.get('bike');
     const startDate = searchParams.get('start') || '';
@@ -39,14 +41,14 @@ const HireBookingPage = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         if (!bikeId || !startDate || !endDate) {
-            navigate('/hire');
+            router.push('/hire');
             return;
         }
 
         Promise.all([getBikeById(bikeId), getPublicHireSettings(), getHireExtras()])
             .then(([bikeData, settings, extrasData]) => {
                 if (!bikeData.is_hire) {
-                    navigate('/hire');
+                    router.push('/hire');
                     return;
                 }
                 setBike(bikeData);
@@ -104,22 +106,7 @@ const HireBookingPage = () => {
                     .map(e => ({ extra_id: e.id, quantity: 1 })),
             });
             const { clientSecret } = await createHirePaymentIntent(booking.booking_id);
-            navigate(`/hire/book/${booking.booking_reference}/payment`, {
-                state: {
-                    clientSecret,
-                    bookingReference: booking.booking_reference,
-                    bookingSummary: {
-                        motorcycleName: booking.motorcycle_name,
-                        hireStart: booking.hire_start,
-                        hireEnd: booking.hire_end,
-                        numDays: booking.num_days,
-                        totalHireAmount: booking.total_hire_amount,
-                        bondAmount: booking.bond_amount,
-                        extrasTotal: booking.extras_total,
-                        totalCharged: booking.total_charged,
-                    },
-                },
-            });
+            router.push(`/hire/book/${booking.booking_reference}/payment`);
         } catch (err: any) {
             setSubmitError(err.message || 'Failed to create booking. Please try again.');
         } finally {
@@ -140,7 +127,7 @@ const HireBookingPage = () => {
             <div className="flex justify-center items-center h-screen bg-[var(--bg-light-primary)]">
                 <div className="text-center">
                     <p className="text-destructive mb-4">{error || 'Bike not found.'}</p>
-                    <button onClick={() => navigate('/hire')} className="text-sm underline text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)]">
+                    <button onClick={() => router.push('/hire')} className="text-sm underline text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)]">
                         Back to Hire
                     </button>
                 </div>

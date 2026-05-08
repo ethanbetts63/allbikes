@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import Seo from '@/components/Seo';
 import { Spinner } from '@/components/ui/spinner';
@@ -12,18 +14,14 @@ import type { Bike } from '@/types/Bike';
 import type { CheckoutFormData } from '@/types/CheckoutFormData';
 import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
 
-interface LocationState {
-  checkoutType?: 'product' | 'deposit';
-}
-
 const AU_STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'];
 
 const CheckoutPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as LocationState | null;
-  const checkoutType = locationState?.checkoutType ?? 'product';
+  const params = useParams<{ slug: string }>();
+  const slug = params.slug;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const checkoutType = (searchParams.get('type') ?? 'product') as 'product' | 'deposit';
 
   const [product, setProduct] = useState<Product | null>(null);
   const [bike, setBike] = useState<Bike | null>(null);
@@ -41,28 +39,28 @@ const CheckoutPage = () => {
     window.scrollTo(0, 0);
 
     if (checkoutType === 'deposit') {
-      if (!slug) { navigate('/inventory/motorcycles/new'); return; }
+      if (!slug) { router.push('/inventory/motorcycles/new'); return; }
       const bikeId = slug.split('-').pop();
-      if (!bikeId) { navigate('/inventory/motorcycles/new'); return; }
+      if (!bikeId) { router.push('/inventory/motorcycles/new'); return; }
       Promise.all([getBikeById(bikeId), getDepositSettings()])
         .then(([bikeData, settings]) => {
           if (bikeData.status !== 'for_sale' || (bikeData.condition !== 'new' && bikeData.condition !== 'demo')) {
-            navigate(`/inventory/motorcycles/${slug}`);
+            router.push(`/inventory/motorcycles/${slug}`);
             return;
           }
           setBike(bikeData);
           setDepositAmount(settings.deposit_amount);
         })
-        .catch(() => navigate('/inventory/motorcycles/new'))
+        .catch(() => router.push('/inventory/motorcycles/new'))
         .finally(() => setIsLoadingItem(false));
     } else {
-      if (!productId || isNaN(productId)) { navigate('/escooters'); return; }
+      if (!productId || isNaN(productId)) { router.push('/escooters'); return; }
       getProductById(productId)
         .then(data => {
-          if (!data.in_stock) { navigate(`/escooters/${slug}`); return; }
+          if (!data.in_stock) { router.push(`/escooters/${slug}`); return; }
           setProduct(data);
         })
-        .catch(() => navigate('/escooters'))
+        .catch(() => router.push('/escooters'))
         .finally(() => setIsLoadingItem(false));
     }
   }, []);
@@ -104,13 +102,7 @@ const CheckoutPage = () => {
       const order = await createOrder(orderPayload);
       const { clientSecret } = await createPaymentIntent(order.order_id);
 
-      navigate(`/checkout/${slug}/payment`, {
-        state: {
-          clientSecret,
-          orderReference: order.order_reference,
-          itemSummary: buildItemSummary(),
-        },
-      });
+      router.push(`/checkout/${slug}/payment`);
     } catch (err: any) {
       if (err?.status === 409) {
         setSubmitError(

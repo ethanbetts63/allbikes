@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useState, useEffect, type ReactNode, useCallback } from 'react';
 import * as api from '@/api';
 import type { UserProfile } from '@/types/UserProfile';

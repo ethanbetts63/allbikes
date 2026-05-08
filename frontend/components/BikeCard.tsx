@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 import { Wrench, Cog, Gauge, Flame } from "lucide-react";
 import type { BikeCardProps } from "@/types/BikeCardProps";
 
@@ -9,7 +9,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
   return (
-    <Link to={`/inventory/motorcycles/${bike.slug}`} className="block group">
+    <Link href={`/inventory/motorcycles/${bike.slug}`} className="block group">
       <div className={`bg-[var(--card)] border transition-colors duration-200 flex flex-col h-full ${bike.popular ? 'border-[var(--highlight)]' : 'border-[var(--border-light)] group-hover:border-[var(--highlight)]'}`}>
 
         {/* Image */}

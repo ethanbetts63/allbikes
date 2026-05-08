@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
@@ -39,7 +39,7 @@ const BrandCard = ({ image, imageSrcSet, alt, title, subtitle, description, imag
         <p className="text-[var(--highlight)] text-sm font-bold uppercase tracking-widest">{subtitle}</p>
         <h3 className="text-3xl font-black text-[var(--text-light-primary)] leading-tight">{title}</h3>
         <p className="text-[var(--text-light-secondary)] text-base leading-relaxed">{description}</p>
-        <Link to="/inventory/motorcycles/new" className="self-start mt-2">
+        <Link href="/inventory/motorcycles/new" className="self-start mt-2">
           <Button className="bg-highlight text-[var(--text-dark-primary)] font-bold px-6 py-3 text-sm hover:bg-highlight/80 flex items-center gap-2">
             <span className="hidden md:inline">See New Motorcycles & Scooters</span>
             <span className="md:hidden">See New Bikes</span>

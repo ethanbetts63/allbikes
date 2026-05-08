@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { createBooking } from '@/services/bookingService';
 import Seo from '@/components/Seo';
 import BookingDetailsForm from '@/forms/ServiceBookingDetailsForm';
@@ -30,7 +32,7 @@ const STEPS = ['Booking Details', 'Bike Details', 'Your Details'];
 
 const BookingPage = () => {
     const [step, setStep] = useState(1);
-    const navigate = useNavigate();
+    const router = useRouter();
     const [formData, setFormData] = useState(() => {
         try {
             const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -62,21 +64,7 @@ const BookingPage = () => {
         try {
             await createBooking(formData);
             localStorage.removeItem(LOCAL_STORAGE_KEY);
-            navigate('/service-booking/confirmation', {
-                state: {
-                    first_name: formData.first_name,
-                    last_name: formData.last_name,
-                    email: formData.email,
-                    phone: formData.phone,
-                    make: formData.make,
-                    model: formData.model,
-                    year: formData.year,
-                    registration_number: formData.registration_number,
-                    drop_off_time: formData.drop_off_time,
-                    job_type_names: formData.job_type_names,
-                    note: formData.note,
-                },
-            });
+            router.push('/service-booking/confirmation');
         } catch (error) {
             console.error("Booking submission error:", error);
             setError("There was an error submitting your booking. Please try again.");
