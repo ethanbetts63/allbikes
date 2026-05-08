@@ -20,7 +20,8 @@
       "Bash(for d:*)",
       "Bash(do touch:*)",
       "Bash(done)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npx create-next-app@latest frontend --typescript --tailwind --eslint --app --no-git --no-src-dir --import-alias \"@/*\")"
     ]
   }
 }
