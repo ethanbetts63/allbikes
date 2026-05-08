@@ -293,7 +293,40 @@ Still noisy:
 - `react/no-unescaped-entities` copy-only issues.
 - `@next/next/no-img-element` image optimization warnings.
 
-### Phase 7 — Deploy to Vercel
+### Phase 7 — CSR to SSR migration
+Status: started.
+
+Goal: move SEO-critical public pages away from Vite-style client-side fetching and toward Next.js server rendering. The current app has real route metadata, but much of the visible page content still loads after hydration via `useEffect`. The target is: server route fetches Django data, sends HTML with real content, and keeps client components only for interactivity.
+
+Migration strategy:
+- Start with the homepage because it has high SEO value and already fetches only three simple public datasets.
+- Use App Router server pages as data loaders. Fetch from Django on the server, then pass serializable initial data into existing client components.
+- Keep existing client components initially. Do not rewrite carousels, forms, filters, or animations during the first SSR pass.
+- Keep browser-side fallback fetching only where it materially improves resilience after hydration.
+- Once a route has initial server data working, optionally split it into a server shell plus smaller client-only widgets.
+
+Recommended conversion order:
+1. `/` homepage: featured new bikes, featured used bikes, featured e-scooters. **Done:** `app/page.tsx` now fetches these datasets on the server and passes them into `pages_vite/HomePage` as initial props. The route revalidates every 5 minutes.
+2. `/inventory/motorcycles/new`, `/used`, `/parts`: first page of list data server-rendered; filters can remain client-side. **Done:** these routes now fetch page 1 on the server, pass `initialBikes` / `initialTotalPages` into `BikeListPage`, and revalidate every 5 minutes.
+3. `/escooters`: first page of product list server-rendered; filters can remain client-side.
+4. `/inventory/motorcycles/[slug]` and `/escooters/[slug]`: detail data server-rendered and passed into current detail components.
+5. Static content pages (`/service`, `/tyre-fitting`, `/contact`, `/electric-scooters`) only need smaller cleanup because they are mostly static already.
+
+Do not SSR:
+- Dashboard/admin pages.
+- Checkout/payment/processing/success/error pages.
+- Hire booking/payment flow pages.
+- Service booking form.
+- Login page.
+
+Acceptance criteria for each converted public page:
+- Initial HTML contains meaningful page content without waiting for browser API calls.
+- Page still works if client JavaScript hydrates normally.
+- Existing interactive behavior remains unchanged.
+- Django API failures produce a usable fallback page instead of a blank page.
+- `npm run build` and `npx tsc --noEmit` pass.
+
+### Phase 8 — Deploy to Vercel
 1. Push `frontend/` to a GitHub repo (or the root monorepo)
 2. Create a Vercel project pointed at `frontend/` as the root directory
 3. Add env vars in Vercel dashboard: `DJANGO_API_URL`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`

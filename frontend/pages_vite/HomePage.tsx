@@ -17,13 +17,25 @@ import FeaturedEScooters from '@/components/FeaturedEScooters';
 import PayLaterSection from '@/components/PayLaterSection';
 import HireCTASection from '@/components/HireCTASection';
 
-const HomePage = () => {
-  const [newBikes, setNewBikes] = useState<Bike[]>([]);
-  const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+interface HomePageProps {
+  initialNewBikes?: Bike[];
+  initialUsedBikes?: Bike[];
+  initialFeaturedProducts?: Product[];
+}
+
+const HomePage = ({
+  initialNewBikes,
+  initialUsedBikes,
+  initialFeaturedProducts,
+}: HomePageProps) => {
+  const [newBikes, setNewBikes] = useState<Bike[]>(initialNewBikes ?? []);
+  const [usedBikes, setUsedBikes] = useState<Bike[]>(initialUsedBikes ?? []);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>(initialFeaturedProducts ?? []);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (initialNewBikes || initialUsedBikes || initialFeaturedProducts) return;
+
     const fetchPageData = async () => {
       setError(null);
 
@@ -59,7 +71,7 @@ const HomePage = () => {
     };
 
     fetchPageData();
-  }, []);
+  }, [initialFeaturedProducts, initialNewBikes, initialUsedBikes]);
 
   const faqData = [
     {

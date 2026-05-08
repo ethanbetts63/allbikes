@@ -13,9 +13,10 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
   const positionRef = useRef(0);
   const [isHovering, setIsHovering] = useState(false);
   const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bikeCount = bikes.length;
 
   useEffect(() => {
-    if (bikes.length === 0) return;
+    if (bikeCount === 0) return;
 
     const scroll = () => {
       if (scrollRef.current) {
@@ -42,9 +43,9 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [bikes.length, isHovering]);
+  }, [bikeCount, isHovering]);
 
-  if (bikes.length === 0) {
+  if (bikeCount === 0) {
     return null;
   }
 

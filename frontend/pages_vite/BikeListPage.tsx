@@ -83,11 +83,11 @@ const partsBikeFaqs = [
   },
 ];
 
-const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
-  const [bikes, setBikes] = useState<Bike[] | undefined>(undefined);
+const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeListPageProps) => {
+  const [bikes, setBikes] = useState<Bike[] | undefined>(initialBikes);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(initialTotalPages ?? 0);
+  const [isLoading, setIsLoading] = useState(!initialBikes);
   const [error, setError] = useState<string | null>(null);
   const [filterOptions, setFilterOptions] = useState<FilterSortOptions>({});
 
@@ -115,8 +115,11 @@ const BikeListPage = ({ bikeCondition }: BikeListPageProps) => {
 
   useEffect(() => {
     window.scrollTo(0, 0); 
+    if (initialBikes && currentPage === 1 && Object.keys(filterOptions).length === 0) {
+      return;
+    }
     fetchBikes();
-  }, [fetchBikes]);
+  }, [currentPage, fetchBikes, filterOptions, initialBikes]);
 
   const handleFilterChange = (newOptions: FilterSortOptions) => {
     setCurrentPage(1); // Reset to first page on filter change

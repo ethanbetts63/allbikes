@@ -1,5 +1,6 @@
 import BikeListPage from '@/pages_vite/BikeListPage';
 import { buildMetadata } from '@/lib/seo';
+import { getInitialBikeList } from '@/lib/inventoryList';
 
 export const metadata = buildMetadata({
   title: 'Used Motorcycles & Scooters | ScooterShop',
@@ -7,6 +8,15 @@ export const metadata = buildMetadata({
   canonicalPath: '/inventory/motorcycles/used',
 });
 
-export default function Page() {
-  return <BikeListPage bikeCondition="used" />;
+export const revalidate = 300;
+
+export default async function Page() {
+  const { bikes, totalPages } = await getInitialBikeList('used');
+  return (
+    <BikeListPage
+      bikeCondition="used"
+      initialBikes={bikes}
+      initialTotalPages={totalPages}
+    />
+  );
 }
