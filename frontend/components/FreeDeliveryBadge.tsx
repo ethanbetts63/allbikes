@@ -1,9 +1,10 @@
 import deliveryIcon from '@/assets/delivery_symbol.svg';
+import { assetUrl } from '@/utils/assetUrl';
 
 const FreeDeliveryBadge = ({ className = '' }: { className?: string }) => (
     <div className={`inline-flex items-center gap-3 bg-[var(--bg-light-secondary)] border border-[var(--highlight)] rounded-xl px-4 py-2.5 ${className}`}>
         <img
-            src={deliveryIcon}
+            src={assetUrl(deliveryIcon)}
             alt=""
             className="h-6 w-6 shrink-0 animate-bounce"
             style={{ animationDuration: '2s' }}

@@ -30,6 +30,7 @@ import PriceDisplay from '@/components/PriceDisplay';
 import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
 import PopularBadge from '@/components/PopularBadge';
+import { assetUrl } from '@/utils/assetUrl';
 
 const BikeDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -309,7 +310,7 @@ const BikeDetailPage = () => {
                                     onClick={() => router.push(`/checkout/${bike.slug}?type=deposit`)}
                                     className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
-                                    <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
+                                    <img src={assetUrl(clickIcon)} alt="" className="h-7 w-7 opacity-70" />
                                     Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
                                 </button>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">

@@ -2,6 +2,7 @@ import afterpayLogo from '@/assets/afterpay_logo.svg';
 import klarnaLogo from '@/assets/klarna_logo.svg';
 import zipLogo from '@/assets/zip_logo.svg';
 import { siteSettings } from '@/config/siteSettings';
+import { assetUrl } from '@/utils/assetUrl';
 
 const providers = [
   {
@@ -53,7 +54,7 @@ const PayLaterSection = () => {
             {providers.map(({ name, logo, logoClass, tagline, detail }) => (
               <div key={name} className="flex items-center gap-6 py-6 first:pt-0 last:pb-0">
                 <div className="flex items-center justify-center shrink-0 w-32">
-                  <img src={logo} alt={name} className={`${logoClass} w-auto`} loading="lazy" />
+                  <img src={assetUrl(logo)} alt={name} className={`${logoClass} w-auto`} loading="lazy" />
                 </div>
                 <div>
                   <p className="text-[var(--text-dark-primary)] font-semibold text-sm leading-tight mb-1">{tagline}</p>

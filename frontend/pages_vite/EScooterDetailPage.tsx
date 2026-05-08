@@ -17,6 +17,7 @@ import PriceDisplay from '@/components/PriceDisplay';
 import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
 import { ShieldCheck } from 'lucide-react';
+import { assetUrl } from '@/utils/assetUrl';
 
 const EScooterDetailPage = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -188,7 +189,7 @@ const EScooterDetailPage = () => {
                                     onClick={() => router.push(`/checkout/${product.slug}`)}
                                     className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
-                                    <img src={clickIcon} alt="" className="h-7 w-7 opacity-70" />
+                                    <img src={assetUrl(clickIcon)} alt="" className="h-7 w-7 opacity-70" />
                                     {product.in_stock ? 'Buy Now' : 'Out of Stock'}
                                 </button>
 
@@ -202,7 +203,7 @@ const EScooterDetailPage = () => {
                                 </div>
                                 <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
                                     <span className="text-xs text-[var(--text-dark-secondary)]">Powered by</span>
-                                    <img src={stripeLogo} alt="Stripe" className="h-6 w-auto opacity-70" />
+                                    <img src={assetUrl(stripeLogo)} alt="Stripe" className="h-6 w-auto opacity-70" />
                                 </div>
                             </div>
                         )}

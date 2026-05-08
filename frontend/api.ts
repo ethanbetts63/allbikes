@@ -33,14 +33,43 @@ async function handleResponse<T>(response: Response): Promise<T> {
     return Promise.resolve(null as T);
   }
 
-  const data = await response.json();
+  const contentType = response.headers.get('content-type') || '';
+  const bodyText = await response.text();
+  const isJson = contentType.includes('application/json');
+  let data: ApiErrorPayload | null = null;
+
+  if (bodyText && isJson) {
+    try {
+      data = JSON.parse(bodyText);
+    } catch {
+      data = null;
+    }
+  }
+
   if (!response.ok) {
-    const error = new Error(data.detail || data.message || 'An unknown API error occurred.');
-    (error as any).data = data;
-    (error as any).status = response.status;
+    const fallbackMessage = bodyText
+      ? bodyText.replace(/\s+/g, ' ').trim().slice(0, 300)
+      : response.statusText || 'An unknown API error occurred.';
+    const error = new Error(
+      data?.detail || data?.message || `API request failed (${response.status}): ${fallbackMessage}`
+    );
+    const apiError = error as Error & { data?: ApiErrorPayload | null; status?: number };
+    apiError.data = data;
+    apiError.status = response.status;
     throw error;
   }
+
+  if (!isJson) {
+    throw new Error(`Expected JSON response but received ${contentType || 'unknown content type'}.`);
+  }
+
   return data as T;
+}
+
+interface ApiErrorPayload {
+  detail?: string;
+  message?: string;
+  [key: string]: unknown;
 }
 
 
@@ -144,7 +173,7 @@ export async function deleteMotorcycle(id: number): Promise<void> {
     return handleResponse(response);
 }
 
-export async function uploadMotorcycleImage(motorcycleId: number, imageFile: File, order: number): Promise<any> {
+export async function uploadMotorcycleImage(motorcycleId: number, imageFile: File, order: number): Promise<unknown> {
     const formData = new FormData();
     formData.append('image', imageFile);
     formData.append('order', String(order));
@@ -156,7 +185,7 @@ export async function uploadMotorcycleImage(motorcycleId: number, imageFile: Fil
     return handleResponse(response);
 }
 
-export async function manageMotorcycleImages(motorcycleId: number, images: Pick<ManagedImage, 'source_id' | 'order'>[]): Promise<any> {
+export async function manageMotorcycleImages(motorcycleId: number, images: Pick<ManagedImage, 'source_id' | 'order'>[]): Promise<unknown> {
     // We only need to send the database ID and the new order for existing images
     const payload = images
         .filter(img => img.source_id !== null)
@@ -225,7 +254,7 @@ export async function deleteProduct(id: number): Promise<void> {
     return handleResponse(response);
 }
 
-export async function uploadProductImage(productId: number, imageFile: File, order: number): Promise<any> {
+export async function uploadProductImage(productId: number, imageFile: File, order: number): Promise<unknown> {
     const formData = new FormData();
     formData.append('image', imageFile);
     formData.append('order', String(order));
@@ -236,7 +265,7 @@ export async function uploadProductImage(productId: number, imageFile: File, ord
     return handleResponse(response);
 }
 
-export async function manageProductImages(productId: number, images: Pick<ManagedImage, 'source_id' | 'order'>[]): Promise<any> {
+export async function manageProductImages(productId: number, images: Pick<ManagedImage, 'source_id' | 'order'>[]): Promise<unknown> {
     const payload = images
         .filter(img => img.source_id !== null)
         .map(img => ({ id: img.source_id, order: img.order }));

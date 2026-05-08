@@ -25,28 +25,36 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchPageData = async () => {
-      try {
-        const [newBikesResponse, usedBikesResponse, productsResponse] = await Promise.all([
-          getBikes({ condition: 'new', page: 1, is_featured: true }),
-          getBikes({ condition: 'used', page: 1, is_featured: true }),
-          getProducts({ is_featured: true }),
-        ]);
+      setError(null);
 
-        const availableNewBikes = newBikesResponse.results.filter(
+      const [newBikesResult, usedBikesResult, productsResult] = await Promise.allSettled([
+        getBikes({ condition: 'new', page: 1, is_featured: true }),
+        getBikes({ condition: 'used', page: 1, is_featured: true }),
+        getProducts({ is_featured: true }),
+      ]);
+
+      if (newBikesResult.status === 'fulfilled') {
+        const availableNewBikes = newBikesResult.value.results.filter(
           bike => bike.status !== 'unavailable'
         );
         setNewBikes(availableNewBikes);
+      } else {
+        console.error("Failed to fetch featured new bikes:", newBikesResult.reason);
+      }
 
-        const availableUsedBikes = usedBikesResponse.results.filter(
+      if (usedBikesResult.status === 'fulfilled') {
+        const availableUsedBikes = usedBikesResult.value.results.filter(
           bike => bike.status !== 'unavailable'
         );
         setUsedBikes(availableUsedBikes);
+      } else {
+        console.error("Failed to fetch featured used bikes:", usedBikesResult.reason);
+      }
 
-        setFeaturedProducts(productsResponse.results.slice(0, 2));
-
-      } catch (err) {
-        console.error("Failed to fetch page data:", err);
-        setError("Failed to load page data.");
+      if (productsResult.status === 'fulfilled') {
+        setFeaturedProducts(productsResult.value.results.slice(0, 2));
+      } else {
+        console.error("Failed to fetch featured e-scooters:", productsResult.reason);
       }
     };
 

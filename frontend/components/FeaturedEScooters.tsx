@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Zap, Truck, ArrowRight, ShieldCheck, Flame } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import type { FeaturedEScootersProps } from '@/types/FeaturedEScootersProps';
+import { assetUrl } from '@/utils/assetUrl';
 
 const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
   if (products.length === 0) return null;
@@ -18,7 +19,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
             </p>
             <div className="flex items-center gap-1.5">
               <span className="text-[var(--text-light-secondary)] text-[10px] uppercase tracking-widest">Powered by</span>
-              <img src={stripeLogo} alt="Stripe" className="h-4 w-auto" />
+              <img src={assetUrl(stripeLogo)} alt="Stripe" className="h-4 w-auto" />
             </div>
           </div>
           <div className="flex items-end justify-center sm:justify-between gap-4">

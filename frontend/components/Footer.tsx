@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { siteSettings } from '@/config/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
+import { assetUrl } from '@/utils/assetUrl';
 
 const LINK_CLASS = 'text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
 
@@ -104,7 +105,7 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-1.5 border-l border-stone-800 pl-4">
               <span className="text-[var(--text-light-secondary)] text-xs">Payments by</span>
-              <img src={stripeLogo} alt="Stripe" className="h-5 w-auto" />
+              <img src={assetUrl(stripeLogo)} alt="Stripe" className="h-5 w-auto" />
             </div>
           </div>
         </div>
