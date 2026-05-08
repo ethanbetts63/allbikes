@@ -254,9 +254,23 @@ Completed route metadata:
 - `/refunds`
 - `/privacy`
 - `/security`
+- `/terms`
+
+Completed noindex route metadata:
+- `/checkout/[slug]`
+- `/checkout/[slug]/payment`
+- `/checkout/processing`
+- `/checkout/success`
+- `/checkout/error`
+- `/hire/book`
+- `/hire/book/[bookingReference]/payment`
+- `/hire/processing`
+- `/hire/confirmation/[bookingReference]`
+- `/service-booking/confirmation`
+- `/login`
+- `/dashboard/:path*` via `app/dashboard/layout.tsx`
 
 Still to consider:
-- Add route metadata/noindex for transactional pages (`checkout`, `hire/book`, processing/success/error) and dashboard/login if needed.
 - Decide whether to move selected public pages from client fetching to async server components. Current Phase 5 only fixes metadata and JSON-LD while leaving migrated page rendering intact.
 
 ### Phase 6 — Auth middleware
