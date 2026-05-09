@@ -8,14 +8,6 @@ from data_management.views.token_views import (
     CookieTokenRefreshView,
     CookieLogoutView,
 )
-from django.contrib.sitemaps.views import sitemap
-from .sitemaps import MotorcycleSitemap, ProductSitemap, StaticViewSitemap
-
-sitemaps = {
-    'motorcycles': MotorcycleSitemap,
-    'products': ProductSitemap,
-    'static': StaticViewSitemap,
-}
 
 urlpatterns = []
 
@@ -34,9 +26,6 @@ urlpatterns += [
     path("api/payments/", include("payments.urls")),
     path("api/hire/", include("hire.urls")),
     path("api/notifications/", include("notifications.urls")),
-
-    # Sitemap
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     # JWT Token Authentication Endpoints
     path('api/token/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),

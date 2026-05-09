@@ -6,21 +6,21 @@ import type { Product } from '@/types/Product';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 
 const STATIC_ROUTES: MetadataRoute.Sitemap = [
-  { url: `${SITE_URL}/`, changeFrequency: 'daily', priority: 1 },
-  { url: `${SITE_URL}/inventory/motorcycles/new`, changeFrequency: 'daily', priority: 0.8 },
-  { url: `${SITE_URL}/inventory/motorcycles/used`, changeFrequency: 'daily', priority: 0.8 },
-  { url: `${SITE_URL}/inventory/motorcycles/parts`, changeFrequency: 'daily', priority: 0.6 },
-  { url: `${SITE_URL}/escooters`, changeFrequency: 'daily', priority: 0.8 },
-  { url: `${SITE_URL}/electric-scooters`, changeFrequency: 'weekly', priority: 0.7 },
-  { url: `${SITE_URL}/hire`, changeFrequency: 'daily', priority: 0.7 },
-  { url: `${SITE_URL}/service`, changeFrequency: 'weekly', priority: 0.7 },
-  { url: `${SITE_URL}/service-booking`, changeFrequency: 'weekly', priority: 0.6 },
-  { url: `${SITE_URL}/tyre-fitting`, changeFrequency: 'weekly', priority: 0.6 },
-  { url: `${SITE_URL}/contact`, changeFrequency: 'monthly', priority: 0.5 },
-  { url: `${SITE_URL}/refunds`, changeFrequency: 'monthly', priority: 0.3 },
-  { url: `${SITE_URL}/privacy`, changeFrequency: 'monthly', priority: 0.3 },
-  { url: `${SITE_URL}/security`, changeFrequency: 'monthly', priority: 0.3 },
-  { url: `${SITE_URL}/terms`, changeFrequency: 'monthly', priority: 0.3 },
+  { url: `${SITE_URL}/`, lastModified: '2026-05-09', changeFrequency: 'daily', priority: 1 },
+  { url: `${SITE_URL}/inventory/motorcycles/new`, lastModified: '2026-05-09', changeFrequency: 'daily', priority: 0.8 },
+  { url: `${SITE_URL}/inventory/motorcycles/used`, lastModified: '2026-05-09', changeFrequency: 'daily', priority: 0.8 },
+  { url: `${SITE_URL}/inventory/motorcycles/parts`, lastModified: '2026-05-09', changeFrequency: 'daily', priority: 0.6 },
+  { url: `${SITE_URL}/escooters`, lastModified: '2026-05-09', changeFrequency: 'daily', priority: 0.8 },
+  { url: `${SITE_URL}/electric-scooters`, lastModified: '2026-05-09', changeFrequency: 'weekly', priority: 0.7 },
+  { url: `${SITE_URL}/hire`, lastModified: '2026-05-09', changeFrequency: 'daily', priority: 0.7 },
+  { url: `${SITE_URL}/service`, lastModified: '2026-05-09', changeFrequency: 'weekly', priority: 0.7 },
+  { url: `${SITE_URL}/service-booking`, lastModified: '2026-05-09', changeFrequency: 'weekly', priority: 0.6 },
+  { url: `${SITE_URL}/tyre-fitting`, lastModified: '2026-05-09', changeFrequency: 'weekly', priority: 0.6 },
+  { url: `${SITE_URL}/contact`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.5 },
+  { url: `${SITE_URL}/refunds`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
+  { url: `${SITE_URL}/privacy`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
+  { url: `${SITE_URL}/security`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
+  { url: `${SITE_URL}/terms`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
