@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
         hostname: "ethanbetts.pythonanywhere.com",
         pathname: "/media/**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8000",
+        pathname: "/media/**",
+      },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 31,
   },

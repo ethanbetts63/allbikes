@@ -48,37 +48,37 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
                   {linkText} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <div className="mt-5 flex items-center justify-center gap-2 md:justify-start">
-                <button
-                  type="button"
-                  aria-label={`Scroll ${title} left`}
-                  onClick={() => scrollByCards("left")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-[var(--text-light-primary)] transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  aria-label={`Scroll ${title} right`}
-                  onClick={() => scrollByCards("right")}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-[var(--text-light-primary)] transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </div>
             </div>
 
             {/* Right Column: Scrollable Bike Cards */}
-            <div
-              ref={scrollRef}
-              className="w-full md:w-4/5 overflow-x-auto py-3 featured-no-scrollbar scroll-smooth snap-x snap-mandatory"
-            >
-              <div className="flex gap-4 w-max">
-                {bikes.map((bike) => (
-                  <div key={bike.id} className="flex-shrink-0 w-64 snap-start">
-                    <SmallBikeCard bike={bike} />
-                  </div>
-                ))}
+            <div className="relative w-full md:w-4/5">
+              <button
+                type="button"
+                aria-label={`Scroll ${title} left`}
+                onClick={() => scrollByCards("left")}
+                className="absolute left-2 top-1/2 z-10 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-foreground/90 text-[var(--text-light-primary)] shadow-lg backdrop-blur transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground md:left-4"
+              >
+                <ChevronLeft className="h-8 w-8" />
+              </button>
+              <button
+                type="button"
+                aria-label={`Scroll ${title} right`}
+                onClick={() => scrollByCards("right")}
+                className="absolute right-2 top-1/2 z-10 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-foreground/90 text-[var(--text-light-primary)] shadow-lg backdrop-blur transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground md:right-4"
+              >
+                <ChevronRight className="h-8 w-8" />
+              </button>
+              <div
+                ref={scrollRef}
+                className="w-full overflow-x-auto py-3 featured-no-scrollbar scroll-smooth snap-x snap-mandatory"
+              >
+                <div className="flex gap-4 w-max">
+                  {bikes.map((bike) => (
+                    <div key={bike.id} className="flex-shrink-0 w-64 snap-start">
+                      <SmallBikeCard bike={bike} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
         </div>
