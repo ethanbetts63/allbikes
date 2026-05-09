@@ -34,6 +34,7 @@ const HireBookingPage = () => {
     const [isOfAge, setIsOfAge] = useState(false);
     const [minimumAge, setMinimumAge] = useState(21);
     const [bondAcknowledged, setBondAcknowledged] = useState(false);
+    const [hireSettings, setHireSettings] = useState<{ weekly_discount_percent: number; monthly_discount_percent: number } | null>(null);
 
     const { register, handleSubmit, formState: { errors } } = useForm<HireBookingFormData>();
 
@@ -63,8 +64,6 @@ const HireBookingPage = () => {
     const numDays = startDate && endDate
         ? Math.round((new Date(endDate + 'T00:00:00').getTime() - new Date(startDate + 'T00:00:00').getTime()) / 86400000) + 1
         : 0;
-
-    const [hireSettings, setHireSettings] = useState<{ weekly_discount_percent: number; monthly_discount_percent: number } | null>(null);
 
     const effectiveDailyRate = bike && hireSettings
         ? (() => {

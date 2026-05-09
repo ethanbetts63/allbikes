@@ -36,8 +36,8 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
   const currentUsedIndexRef = useRef(0);
 
   // Two-slot crossfade state: one slot holds the outgoing image, one the incoming
-  const [newSlots, setNewSlots] = useState<SlotState>({ a: defaultNewImageSrc, b: defaultNewImageSrc, active: 'a' });
-  const [usedSlots, setUsedSlots] = useState<SlotState>({ a: defaultUsedImageSrc, b: defaultUsedImageSrc, active: 'a' });
+  const [newSlots, setNewSlots] = useState<SlotState>({ a: newBikeImageUrls[0], b: newBikeImageUrls[0], active: 'a' });
+  const [usedSlots, setUsedSlots] = useState<SlotState>({ a: usedBikeImageUrls[0], b: usedBikeImageUrls[0], active: 'a' });
 
   // Refs so interval callbacks always see latest URL arrays
   const newUrlsRef = useRef(newBikeImageUrls);
@@ -54,16 +54,6 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
 
     return () => mediaQuery.removeEventListener('change', updateShouldCycle);
   }, []);
-
-  useEffect(() => {
-    setNewSlots({ a: newBikeImageUrls[0], b: newBikeImageUrls[0], active: 'a' });
-    currentNewIndexRef.current = 0;
-  }, [newBikeImageUrls]);
-
-  useEffect(() => {
-    setUsedSlots({ a: usedBikeImageUrls[0], b: usedBikeImageUrls[0], active: 'a' });
-    currentUsedIndexRef.current = 0;
-  }, [usedBikeImageUrls]);
 
   // Image cycling with crossfade for New
   useEffect(() => {

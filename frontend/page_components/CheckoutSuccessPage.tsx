@@ -12,16 +12,13 @@ const CheckoutSuccessPage = () => {
   const searchParams = useSearchParams();
   const ref = searchParams.get('ref');
   const [order, setOrder] = useState<Order | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(!!ref);
+  const [error, setError] = useState<string | null>(ref ? null : 'No order reference found.');
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!ref) {
-      setError('No order reference found.');
-      setIsLoading(false);
-      return;
-    }
+    if (!ref) return;
+
     const fetchOrder = async () => {
       try {
         const data = await getOrderByReference(ref);

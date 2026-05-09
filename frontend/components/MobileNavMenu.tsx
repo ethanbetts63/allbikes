@@ -19,10 +19,6 @@ const MobileNavMenu = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         menuRef.current && !menuRef.current.contains(event.target as Node) &&
@@ -66,26 +62,26 @@ const MobileNavMenu = () => {
       {isMenuOpen && (
         <div ref={menuRef} className="absolute left-0 right-0 top-full md:hidden bg-background border-t border-white/10">
           <nav className="flex flex-col px-6 py-4 gap-5">
-            <Link href="/inventory/motorcycles/new" className={NAV_LINK}>New Motorcycles &amp; Scooters</Link>
-            <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Used Motorcycles &amp; Scooters</Link>
-            {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK}>E-Scooters</Link>}
-            {siteSettings.show_workshop_clearance && <Link href="/inventory/motorcycles/parts" className={NAV_LINK}>Workshop Clearance</Link>}
-            {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}
-            <Link href="/service" className={NAV_LINK}>Servicing</Link>
-            <Link href="/contact" className={NAV_LINK}>Contact Us</Link>
+            <Link href="/inventory/motorcycles/new" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>New Motorcycles &amp; Scooters</Link>
+            <Link href="/inventory/motorcycles/used" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Used Motorcycles &amp; Scooters</Link>
+            {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>E-Scooters</Link>}
+            {siteSettings.show_workshop_clearance && <Link href="/inventory/motorcycles/parts" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Workshop Clearance</Link>}
+            {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Hire</Link>}
+            <Link href="/service" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Servicing</Link>
+            <Link href="/contact" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Contact Us</Link>
 
             {user?.is_staff && (
               <div className="border-t border-white/10 pt-5 flex flex-col gap-5">
-                <Link href="/dashboard" className={activeLink("/dashboard", true)}>Dashboard</Link>
-                <Link href="/dashboard/inventory" className={activeLink("/dashboard/inventory")}>Inventory</Link>
-                <Link href="/dashboard/add-motorcycle" className={activeLink("/dashboard/add-motorcycle")}>Add Motorcycle</Link>
-                <Link href="/dashboard/orders" className={activeLink("/dashboard/orders")}>Orders</Link>
-                <Link href="/dashboard/products" className={activeLink("/dashboard/products")}>Products</Link>
-                <Link href="/dashboard/products/new" className={activeLink("/dashboard/products/new", true)}>Add Product</Link>
-                <Link href="/dashboard/service-bookings" className={activeLink("/dashboard/service-bookings")}>Bookings</Link>
-                <Link href="/dashboard/service-settings" className={activeLink("/dashboard/service-settings")}>Service Settings</Link>
-                <Link href="/dashboard/job-types" className={activeLink("/dashboard/job-types")}>Job Types</Link>
-                <Link href="/dashboard/messages" className={activeLink("/dashboard/messages")}>Messages</Link>
+                <Link href="/dashboard" className={activeLink("/dashboard", true)} onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+                <Link href="/dashboard/inventory" className={activeLink("/dashboard/inventory")} onClick={() => setIsMenuOpen(false)}>Inventory</Link>
+                <Link href="/dashboard/add-motorcycle" className={activeLink("/dashboard/add-motorcycle")} onClick={() => setIsMenuOpen(false)}>Add Motorcycle</Link>
+                <Link href="/dashboard/orders" className={activeLink("/dashboard/orders")} onClick={() => setIsMenuOpen(false)}>Orders</Link>
+                <Link href="/dashboard/products" className={activeLink("/dashboard/products")} onClick={() => setIsMenuOpen(false)}>Products</Link>
+                <Link href="/dashboard/products/new" className={activeLink("/dashboard/products/new", true)} onClick={() => setIsMenuOpen(false)}>Add Product</Link>
+                <Link href="/dashboard/service-bookings" className={activeLink("/dashboard/service-bookings")} onClick={() => setIsMenuOpen(false)}>Bookings</Link>
+                <Link href="/dashboard/service-settings" className={activeLink("/dashboard/service-settings")} onClick={() => setIsMenuOpen(false)}>Service Settings</Link>
+                <Link href="/dashboard/job-types" className={activeLink("/dashboard/job-types")} onClick={() => setIsMenuOpen(false)}>Job Types</Link>
+                <Link href="/dashboard/messages" className={activeLink("/dashboard/messages")} onClick={() => setIsMenuOpen(false)}>Messages</Link>
                 <button onClick={handleLogout} className={`${NAV_LINK} text-left`}>Log Out</button>
               </div>
             )}

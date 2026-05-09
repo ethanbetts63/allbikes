@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getJobTypes, getUnavailableDays, getServiceSettings } from '@/services/bookingService';
 import type { ServiceSettings } from '@/types/ServiceSettings';
 import type { EnrichedJobType } from '@/types/EnrichedJobType';
@@ -23,7 +23,19 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
 
     const [selectedDate, setSelectedDate] = useState<Date | undefined>();
     const [selectedTime, setSelectedTime] = useState<string>('');
-    const [timeSlots, setTimeSlots] = useState<string[]>([]);
+    const timeSlots = useMemo(() => {
+        if (!serviceSettings || !selectedDate) return [];
+
+        const start = parse(serviceSettings.drop_off_start_time, 'HH:mm:ss', selectedDate);
+        const end = parse(serviceSettings.drop_off_end_time, 'HH:mm:ss', selectedDate);
+        let current = start;
+        const slots: string[] = [];
+        while (current < end) {
+            slots.push(format(current, 'HH:mm'));
+            current = add(current, { minutes: 30 });
+        }
+        return slots;
+    }, [serviceSettings, selectedDate]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,20 +57,6 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
         };
         fetchData();
     }, []);
-
-    useEffect(() => {
-        if (serviceSettings && selectedDate) {
-            const start = parse(serviceSettings.drop_off_start_time, 'HH:mm:ss', selectedDate);
-            const end = parse(serviceSettings.drop_off_end_time, 'HH:mm:ss', selectedDate);
-            let current = start;
-            const slots: string[] = [];
-            while (current < end) {
-                slots.push(format(current, 'HH:mm'));
-                current = add(current, { minutes: 30 });
-            }
-            setTimeSlots(slots);
-        }
-    }, [serviceSettings, selectedDate]);
 
     useEffect(() => {
         if (selectedDate && selectedTime) {

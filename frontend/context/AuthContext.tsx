@@ -29,11 +29,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  const logout = useCallback(async () => {
+    try {
+      await api.logoutUser();
+    } catch {
+      // best-effort - clear client state regardless
+    }
+    setUser(null);
+  }, []);
+
   useEffect(() => {
     const handleAuthFailure = () => logout();
     window.addEventListener('auth-failure', handleAuthFailure);
     return () => window.removeEventListener('auth-failure', handleAuthFailure);
-  }, []);
+  }, [logout]);
 
   const loginWithPassword = async (email: string, password: string) => {
     try {
@@ -43,15 +52,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       throw error;
     }
-  };
-
-  const logout = async () => {
-    try {
-      await api.logoutUser();
-    } catch {
-      // best-effort — clear client state regardless
-    }
-    setUser(null);
   };
 
   const value: AuthContextType = {

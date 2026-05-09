@@ -34,12 +34,24 @@ const AdminHireDashboardPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     adminGetHireBookings(statusFilter || undefined, page)
       .then(setData)
       .catch(() => {})
       .finally(() => setIsLoading(false));
   }, [statusFilter, page]);
+
+  const updateStatusFilter = (value: string) => {
+    setData(null);
+    setIsLoading(true);
+    setStatusFilter(value);
+    setPage(1);
+  };
+
+  const goToPage = (nextPage: number) => {
+    setData(null);
+    setIsLoading(true);
+    setPage(nextPage);
+  };
 
   return (
     <div className="p-4 md:p-6">
@@ -48,7 +60,7 @@ const AdminHireDashboardPage = () => {
       <div className="flex items-center gap-3 mb-4">
         <select
           value={statusFilter}
-          onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+          onChange={(e) => updateStatusFilter(e.target.value)}
           className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           {STATUS_OPTIONS.map(opt => (
@@ -127,7 +139,7 @@ const AdminHireDashboardPage = () => {
             <div className="flex justify-between items-center mt-4 text-sm text-[var(--text-dark-secondary)]">
               <button
                 disabled={!data.previous}
-                onClick={() => setPage(p => p - 1)}
+                onClick={() => goToPage(page - 1)}
                 className="disabled:opacity-40"
               >
                 ← Previous
@@ -135,7 +147,7 @@ const AdminHireDashboardPage = () => {
               <span>{data.count} total</span>
               <button
                 disabled={!data.next}
-                onClick={() => setPage(p => p + 1)}
+                onClick={() => goToPage(page + 1)}
                 className="disabled:opacity-40"
               >
                 Next →

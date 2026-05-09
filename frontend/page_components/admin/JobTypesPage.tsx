@@ -33,7 +33,6 @@ const JobTypesPage = () => {
     const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
     const fetchJobTypes = useCallback(async () => {
-        setIsLoading(true);
         try {
             const data = await getJobTypesAdmin();
             setJobTypes(data);
@@ -46,8 +45,14 @@ const JobTypesPage = () => {
     }, []);
 
     useEffect(() => {
-        fetchJobTypes();
-    }, [fetchJobTypes]);
+        getJobTypesAdmin()
+            .then(setJobTypes)
+            .catch((error) => {
+                setNotification({ message: 'Failed to fetch job types.', type: 'error' });
+                console.error(error);
+            })
+            .finally(() => setIsLoading(false));
+    }, []);
 
     const openDialog = (jobType: JobType | null = null) => {
         setNotification(null);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { PlayCircle } from 'lucide-react';
 import YouTube from 'react-youtube';
 import { Spinner } from '@/components/ui/spinner';
@@ -8,13 +8,12 @@ import type { MediaGalleryProps } from '@/types/MediaGalleryProps';
 
 const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay }: MediaGalleryProps) => {
     const [selectedMedia, setSelectedMedia] = useState(initialSelectedMedia);
-    const [imageLoading, setImageLoading] = useState(false);
+    const [imageLoading, setImageLoading] = useState(initialSelectedMedia !== 'YOUTUBE' && !!initialSelectedMedia);
 
-    useEffect(() => {
-        if (selectedMedia && selectedMedia !== 'YOUTUBE') {
-            setImageLoading(true);
-        }
-    }, [selectedMedia]);
+    const selectMedia = (media: string) => {
+        setSelectedMedia(media);
+        setImageLoading(media !== 'YOUTUBE');
+    };
 
     return (
         <div>
@@ -46,7 +45,7 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
             <div className="flex gap-2 flex-wrap">
                 {videoId && (
                     <button
-                        onClick={() => setSelectedMedia('YOUTUBE')}
+                        onClick={() => selectMedia('YOUTUBE')}
                         className={`relative w-20 h-20 overflow-hidden rounded-md ${selectedMedia === 'YOUTUBE' ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
                     >
                         <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
@@ -58,7 +57,7 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
                 {images.map((img, index) => (
                     <button
                         key={img.id}
-                        onClick={() => setSelectedMedia(img.image)}
+                        onClick={() => selectMedia(img.image)}
                         className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === img.image ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
                     >
                         <img

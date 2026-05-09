@@ -8,18 +8,23 @@ import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConf
 
 const CONFIRMATION_STORAGE_KEY = 'serviceBookingConfirmation';
 
+function readConfirmationState() {
+    if (typeof window === 'undefined') return null;
+
+    try {
+        const raw = sessionStorage.getItem(CONFIRMATION_STORAGE_KEY);
+        return raw ? JSON.parse(raw) as ServiceBookingConfirmationState : null;
+    } catch (error) {
+        console.error('Error reading service booking confirmation data:', error);
+        return null;
+    }
+}
+
 const BookingConfirmationPage = () => {
-    const [state, setState] = useState<ServiceBookingConfirmationState | null>(null);
+    const [state] = useState<ServiceBookingConfirmationState | null>(() => readConfirmationState());
 
     useEffect(() => {
-        try {
-            const raw = sessionStorage.getItem(CONFIRMATION_STORAGE_KEY);
-            if (!raw) return;
-            setState(JSON.parse(raw) as ServiceBookingConfirmationState);
-            sessionStorage.removeItem(CONFIRMATION_STORAGE_KEY);
-        } catch (error) {
-            console.error('Error reading service booking confirmation data:', error);
-        }
+        sessionStorage.removeItem(CONFIRMATION_STORAGE_KEY);
     }, []);
 
     return (
