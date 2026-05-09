@@ -8,8 +8,7 @@ export interface GalleryImage {
 export interface MediaGalleryProps {
     videoId: string | null;
     images: GalleryImage[];
-    selectedMedia: string;
-    onSelect: (media: string) => void;
+    initialSelectedMedia: string;
     altText: string;
     overlay?: React.ReactNode;
 }

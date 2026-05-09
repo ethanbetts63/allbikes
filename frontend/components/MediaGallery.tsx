@@ -1,10 +1,13 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { PlayCircle } from 'lucide-react';
 import YouTube from 'react-youtube';
 import { Spinner } from '@/components/ui/spinner';
 import type { MediaGalleryProps } from '@/types/MediaGalleryProps';
 
-const MediaGallery = ({ videoId, images, selectedMedia, onSelect, altText, overlay }: MediaGalleryProps) => {
+const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay }: MediaGalleryProps) => {
+    const [selectedMedia, setSelectedMedia] = useState(initialSelectedMedia);
     const [imageLoading, setImageLoading] = useState(false);
 
     useEffect(() => {
@@ -43,7 +46,7 @@ const MediaGallery = ({ videoId, images, selectedMedia, onSelect, altText, overl
             <div className="flex gap-2 flex-wrap">
                 {videoId && (
                     <button
-                        onClick={() => onSelect('YOUTUBE')}
+                        onClick={() => setSelectedMedia('YOUTUBE')}
                         className={`relative w-20 h-20 overflow-hidden rounded-md ${selectedMedia === 'YOUTUBE' ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
                     >
                         <img src={`https://img.youtube.com/vi/${videoId}/0.jpg`} alt="YouTube video thumbnail" className="w-full h-full object-cover" />
@@ -55,7 +58,7 @@ const MediaGallery = ({ videoId, images, selectedMedia, onSelect, altText, overl
                 {images.map((img, index) => (
                     <button
                         key={img.id}
-                        onClick={() => onSelect(img.image)}
+                        onClick={() => setSelectedMedia(img.image)}
                         className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === img.image ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
                     >
                         <img

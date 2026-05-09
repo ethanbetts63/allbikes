@@ -1,16 +1,12 @@
-"use client";
-
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
 import { siteSettings } from '@/config/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import { assetUrl } from '@/utils/assetUrl';
+import FooterAuthLinks from '@/components/FooterAuthLinks';
 
 const LINK_CLASS = 'text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
 
 const Footer = () => {
-  const { user, logout } = useAuth();
-
   const phoneNumber = siteSettings.phone_number;
   const mobileNumber = siteSettings.mobile_number;
   const displayedPhone = phoneNumber && mobileNumber
@@ -61,18 +57,7 @@ const Footer = () => {
             <li><Link href="/terms?type=service" className={LINK_CLASS}>Service Terms</Link></li>
             <li><Link href="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
             <li><Link href="/security" className={LINK_CLASS}>Security Policy</Link></li>
-            {user ? (
-              <>
-                {user.is_staff && (
-                  <li><Link href="/dashboard" className={LINK_CLASS}>Dashboard</Link></li>
-                )}
-                <li>
-                  <button onClick={logout} className={LINK_CLASS}>Logout</button>
-                </li>
-              </>
-            ) : (
-              <li><Link href="/login" className={LINK_CLASS}>Login</Link></li>
-            )}
+            <FooterAuthLinks linkClass={LINK_CLASS} />
           </ul>
         </div>
 

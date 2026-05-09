@@ -1,9 +1,4 @@
-"use client";
-
-import { useState, useEffect, useMemo } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getProductById } from '@/api';
 import type { Product } from '@/types/Product';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import stripeLogo from '@/assets/stripe-ar21.svg';
@@ -14,7 +9,7 @@ import FreeDeliveryBadge from '@/components/FreeDeliveryBadge';
 import PopularBadge from '@/components/PopularBadge';
 import MediaGallery from '@/components/MediaGallery';
 import PriceDisplay from '@/components/PriceDisplay';
-import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
+import { ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
 import { ShieldCheck } from 'lucide-react';
 import { assetUrl } from '@/utils/assetUrl';
@@ -24,55 +19,12 @@ interface EScooterDetailPageProps {
 }
 
 const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
-    const { slug } = useParams<{ slug: string }>();
-    const router = useRouter();
-    const [product, setProduct] = useState<Product | null>(initialProduct ?? null);
-    const [isLoading, setIsLoading] = useState(!initialProduct);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedMedia, setSelectedMedia] = useState<string>(() => getInitialSelectedMedia(initialProduct));
+    const product = initialProduct ?? null;
 
     const videoId = product?.youtube_link ? getYouTubeVideoId(product.youtube_link) : null;
+    const sortedImages = product?.images ? [...product.images].sort((a, b) => a.order - b.order) : [];
 
-    const productId = slug ? Number(slug.split('-').pop()) : null;
-
-    useEffect(() => {
-        if (initialProduct) return;
-
-        if (!productId || isNaN(productId)) {
-            setError('Product not found.');
-            setIsLoading(false);
-            return;
-        }
-
-        const fetchProduct = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-                const data = await getProductById(productId);
-                setProduct(data);
-                const sorted = [...data.images].sort((a, b) => a.order - b.order);
-                if (data.youtube_link && getYouTubeVideoId(data.youtube_link)) {
-                    setSelectedMedia('YOUTUBE');
-                } else if (sorted.length > 0) {
-                    setSelectedMedia(sorted[0].image);
-                }
-            } catch {
-                setError('Product not found.');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchProduct();
-    }, [initialProduct, productId]);
-
-    const sortedImages = useMemo(() => {
-        if (!product?.images) return [];
-        return [...product.images].sort((a, b) => a.order - b.order);
-    }, [product]);
-
-    if (isLoading) return <LoadingScreen />;
-    if (error || !product) return <ErrorScreen message={error || 'Product not found.'} />;
+    if (!product) return <ErrorScreen message="Product not found." />;
 
     const structuredData = {
         "@context": "https://schema.org",
@@ -154,8 +106,7 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
                     <MediaGallery
                         videoId={videoId}
                         images={sortedImages}
-                        selectedMedia={selectedMedia}
-                        onSelect={setSelectedMedia}
+                        initialSelectedMedia={getInitialSelectedMedia(product)}
                         altText={product.name}
                     />
 
@@ -180,14 +131,23 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
                         {/* CTA */}
                         {siteSettings.accept_online_payment && (
                             <div className="space-y-3">
-                                <button
-                                    disabled={!product.in_stock}
-                                    onClick={() => router.push(`/checkout/${product.slug}`)}
-                                    className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
-                                >
-                                    <img src={assetUrl(clickIcon)} alt="" className="h-7 w-7 opacity-70" />
-                                    {product.in_stock ? 'Buy Now' : 'Out of Stock'}
-                                </button>
+                                {product.in_stock ? (
+                                    <Link
+                                        href={`/checkout/${product.slug}`}
+                                        className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
+                                    >
+                                        <img src={assetUrl(clickIcon)} alt="" className="h-7 w-7 opacity-70" />
+                                        Buy Now
+                                    </Link>
+                                ) : (
+                                    <button
+                                        disabled
+                                        className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors opacity-50 cursor-not-allowed bg-highlight text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
+                                    >
+                                        <img src={assetUrl(clickIcon)} alt="" className="h-7 w-7 opacity-70" />
+                                        Out of Stock
+                                    </button>
+                                )}
 
                                 <div className="text-sm text-[var(--text-dark-secondary)] space-y-1 pt-1">
                                     <p>✓ Order confirmation sent to your email</p>

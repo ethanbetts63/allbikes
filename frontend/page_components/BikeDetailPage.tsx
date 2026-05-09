@@ -1,9 +1,4 @@
-"use client";
-
-import { useState, useEffect, useMemo } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getBikeById, getBikes, getDepositSettings } from '@/api';
 import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
 import StructuredDataScript from '@/components/StructuredDataScript';
@@ -27,104 +22,27 @@ import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
 import MediaGallery from '@/components/MediaGallery';
 import PriceDisplay from '@/components/PriceDisplay';
-import { LoadingScreen, ErrorScreen } from '@/components/DetailPageStates';
+import { ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
 import PopularBadge from '@/components/PopularBadge';
 import { assetUrl } from '@/utils/assetUrl';
 
 interface BikeDetailPageProps {
     initialBike?: Bike | null;
+    initialNewBikes?: Bike[];
+    initialUsedBikes?: Bike[];
+    depositAmount?: string | null;
 }
 
-const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
-    const { slug } = useParams<{ slug: string }>();
-    const router = useRouter();
-    const [bike, setBike] = useState<Bike | null>(initialBike ?? null);
-    const [isLoading, setIsLoading] = useState(!initialBike);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedMedia, setSelectedMedia] = useState<string>(() => getInitialSelectedMedia(initialBike));
-    const [newBikes, setNewBikes] = useState<Bike[]>([]);
-    const [usedBikes, setUsedBikes] = useState<Bike[]>([]);
-    const [depositAmount, setDepositAmount] = useState<string | null>(null);
-
+const BikeDetailPage = ({
+    initialBike,
+    initialNewBikes = [],
+    initialUsedBikes = [],
+    depositAmount = null,
+}: BikeDetailPageProps) => {
+    const bike = initialBike ?? null;
     const videoId = bike?.youtube_link ? getYouTubeVideoId(bike.youtube_link) : null;
-
-    useEffect(() => {
-        if (!slug) return;
-
-        if (/^\d+$/.test(slug)) {
-            setError("Page not found.");
-            setIsLoading(false);
-            return;
-        }
-
-        const id = slug.split('-').pop();
-        if (!id) {
-            setError("Invalid bike identifier.");
-            setIsLoading(false);
-            return;
-        }
-
-        const fetchBike = async () => {
-            if (initialBike) {
-                const sortedImages = [...initialBike.images].sort((a, b) => a.order - b.order);
-                setBike({ ...initialBike, images: sortedImages });
-                if ((initialBike.condition === 'new' || initialBike.condition === 'demo' || initialBike.condition === 'used') && initialBike.status === 'for_sale') {
-                    getDepositSettings().then(s => setDepositAmount(s.deposit_amount)).catch(() => {});
-                }
-                return;
-            }
-
-            try {
-                setIsLoading(true);
-                setError(null);
-                const data = await getBikeById(id);
-
-                const sortedImages = [...data.images].sort((a, b) => a.order - b.order);
-                data.images = sortedImages;
-
-                setBike(data);
-
-                if ((data.condition === 'new' || data.condition === 'demo' || data.condition === 'used') && data.status === 'for_sale') {
-                    getDepositSettings().then(s => setDepositAmount(s.deposit_amount)).catch(() => {});
-                }
-
-                if (data.youtube_link && getYouTubeVideoId(data.youtube_link)) {
-                    setSelectedMedia('YOUTUBE');
-                } else if (data.images && data.images.length > 0) {
-                    setSelectedMedia(data.images[0].image);
-                } else {
-                    setSelectedMedia('/src/assets/motorcycle_images/placeholder.png');
-                }
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "An unknown error occurred.");
-                console.error(err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        const fetchFeaturedBikes = async () => {
-            try {
-                const newBikesData = await getBikes({ condition: 'new', page: 1, is_featured: true });
-                setNewBikes(newBikesData.results);
-
-                const usedBikesData = await getBikes({ condition: 'used', page: 1, is_featured: true });
-                const demoBikesData = await getBikes({ condition: 'demo', page: 1, is_featured: true });
-                setUsedBikes([...usedBikesData.results, ...demoBikesData.results]);
-            } catch (error) {
-                console.error("Failed to fetch featured bikes:", error);
-            }
-        };
-
-        fetchBike();
-        fetchFeaturedBikes();
-    }, [initialBike, slug]);
-
-    const sortedImages = useMemo(() => {
-        if (!bike?.images) return [];
-        return [...bike.images].sort((a, b) => a.order - b.order);
-    }, [bike]);
+    const sortedImages = bike?.images ? [...bike.images].sort((a, b) => a.order - b.order) : [];
 
     const specifications: Specification[] = bike ? [
         { label: "Stock Number", value: bike.stock_number, icon: Hash },
@@ -205,8 +123,6 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
         ]
     } : undefined;
 
-    if (isLoading) return <LoadingScreen />;
-    if (error) return <ErrorScreen message={error} />;
     if (!bike) return <ErrorScreen message="Bike not found." />;
 
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
@@ -292,8 +208,7 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
                     <MediaGallery
                         videoId={videoId}
                         images={sortedImages}
-                        selectedMedia={selectedMedia}
-                        onSelect={setSelectedMedia}
+                        initialSelectedMedia={getInitialSelectedMedia(bike)}
                         altText={cardTitle}
                         overlay={statusOverlay}
                     />
@@ -309,13 +224,13 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
                         {/* Reserve with Deposit */}
                         {siteSettings.accept_online_payment && (bike.condition === 'new' || bike.condition === 'demo' || bike.condition === 'used') && bike.status === 'for_sale' && depositAmount && (
                             <div className="mb-6">
-                                <button
-                                    onClick={() => router.push(`/checkout/${bike.slug}?type=deposit`)}
+                                <Link
+                                    href={`/checkout/${bike.slug}?type=deposit`}
                                     className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
                                     <img src={assetUrl(clickIcon)} alt="" className="h-7 w-7 opacity-70" />
                                     Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
-                                </button>
+                                </Link>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
                                     Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch as soon as possible to arrange the rest.
                                 </p>
@@ -374,19 +289,19 @@ const BikeDetailPage = ({ initialBike }: BikeDetailPageProps) => {
 
             {/* Featured bikes carousels */}
             <div>
-                {bike.condition.toLowerCase() === 'new' && newBikes.length > 0 && (
+                {bike.condition.toLowerCase() === 'new' && initialNewBikes.length > 0 && (
                     <FeaturedBikes
                         title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
-                        bikes={newBikes}
+                        bikes={initialNewBikes}
                         description="Check out our latest models, fresh from the factory."
                         linkTo="/inventory/motorcycles/new"
                         linkText="View All New"
                     />
                 )}
-                {(bike.condition.toLowerCase() === 'used' || bike.condition.toLowerCase() === 'demo') && usedBikes.length > 0 && (
+                {(bike.condition.toLowerCase() === 'used' || bike.condition.toLowerCase() === 'demo') && initialUsedBikes.length > 0 && (
                     <FeaturedBikes
                         title="Featured Used & Demo Bikes"
-                        bikes={usedBikes}
+                        bikes={initialUsedBikes}
                         description="Great value pre-owned and demonstrator bikes."
                         linkTo="/inventory/motorcycles/used"
                         linkText="View All Used"

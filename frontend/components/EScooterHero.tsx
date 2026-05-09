@@ -1,8 +1,6 @@
-"use client";
-
 import Link from 'next/link';
 import { ArrowRight, Truck, ShieldCheck } from 'lucide-react';
-import YouTube from 'react-youtube';
+import EScooterVideo from '@/components/EScooterVideo';
 
 const YOUTUBE_VIDEO_ID = 'cQJm8NcpzMU';
 
@@ -43,7 +41,7 @@ const EScooterHero = () => {
       {/* Video panel */}
       <div className="order-2 lg:order-2 lg:flex-1 flex flex-col">
         <div className="w-full aspect-video">
-          <YouTube videoId={YOUTUBE_VIDEO_ID} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
+          <EScooterVideo videoId={YOUTUBE_VIDEO_ID} />
         </div>
         {/* Fill remaining height with trust chips on same dark bg as text panel */}
         <div className="flex-1 bg-[var(--bg-dark-primary)] flex items-center justify-center px-8 md:px-10 py-5 gap-4 flex-wrap">

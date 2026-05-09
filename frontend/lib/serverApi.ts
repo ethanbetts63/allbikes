@@ -31,6 +31,10 @@ export async function getServerHireBikes(startDate?: string, endDate?: string): 
   return fetchServerJson<Bike[]>(`/api/hire/bikes/${query ? `?${query}` : ''}`);
 }
 
+export async function getServerDepositSettings(): Promise<{ deposit_amount: string }> {
+  return fetchServerJson<{ deposit_amount: string }>('/api/payments/deposit-settings/');
+}
+
 export async function getServerLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase'): Promise<TermsAndConditions> {
   const path = type ? `/api/terms/latest/?type=${type}` : '/api/terms/latest/';
   return fetchServerJson<TermsAndConditions>(path);

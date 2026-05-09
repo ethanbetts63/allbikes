@@ -1,18 +1,9 @@
-"use client";
-
-import { useState } from 'react';
 import { Card, CardContent } from "./ui/card";
 import { ChevronDown } from 'lucide-react';
 
 import type { FaqSectionProps } from '@/types/FaqSectionProps';
 
 export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleFaq = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   const generateJsonLd = () => {
     if (!faqData.length) {
       return null;
@@ -52,25 +43,15 @@ export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
               <div key={index} className="w-full md:w-2/3 lg:w-2/3">
                 <Card className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] rounded-lg shadow-md">
                   <CardContent className="p-0">
-                    <div
-                      className="flex justify-between items-center p-4 cursor-pointer"
-                      onClick={() => toggleFaq(index)}
-                    >
-                      <h3 className="text-xl font-semibold text-[var(--text-dark-primary)]">{faq.question}</h3>
-                      <ChevronDown
-                        className={`h-6 w-6 text-[var(--text-dark-secondary)] transition-transform duration-300 ${openIndex === index ? 'transform rotate-180' : ''
-                          }`}
-                      />
-                    </div>
-                    <div
-                      className={`overflow-hidden transition-all ease-in-out duration-500 ${
-                        openIndex === index ? 'max-h-96' : 'max-h-0'
-                      }`}
-                    >
+                    <details className="group">
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-4 marker:hidden">
+                        <h3 className="text-xl font-semibold text-[var(--text-dark-primary)]">{faq.question}</h3>
+                        <ChevronDown className="h-6 w-6 shrink-0 text-[var(--text-dark-secondary)] transition-transform duration-300 group-open:rotate-180" />
+                      </summary>
                       <div className="px-6 pb-6 pt-2">
                         <p className="text-[var(--text-dark-secondary)] text-lg">{faq.answer}</p>
                       </div>
-                    </div>
+                    </details>
                   </CardContent>
                 </Card>
               </div>
