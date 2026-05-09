@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { Wrench, Cog, Flame } from "lucide-react";
 import type { SmallBikeCardProps } from "@/types/SmallBikeCardProps";
 
@@ -6,15 +7,10 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
   const primaryImage = sortedImages[0];
 
-  const placeholderImage = '/src/assets/motorcycle_images/placeholder.png';
-
-  const thumbnailUrl = primaryImage?.thumbnail || primaryImage?.image || placeholderImage;
-  const fullImageUrl = primaryImage?.image || placeholderImage;
+  const thumbnailUrl = primaryImage?.thumbnail || primaryImage?.image;
 
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
   const slug = bike.slug;
-
-  const srcSet = primaryImage ? `${thumbnailUrl} 400w, ${fullImageUrl} 1200w` : '';
 
   return (
     <Link href={`/inventory/motorcycles/${slug}`} className="block h-full">
@@ -36,14 +32,17 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           </span>
         )}
         <div className="relative h-32 shrink-0">
-          <img
-            src={thumbnailUrl}
-            srcSet={srcSet}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            alt={cardTitle}
-            className="w-full h-full object-contain"
-            loading="lazy"
-          />
+          {thumbnailUrl ? (
+            <NextImage
+              src={thumbnailUrl}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              alt={cardTitle}
+              fill
+              className="object-contain"
+            />
+          ) : (
+            <div className="h-full w-full bg-[var(--bg-light-secondary)]" />
+          )}
         </div>
         <div className="px-3 py-2.5 flex flex-col flex-1 gap-1.5">
           <h3 className="text-base font-bold text-[var(--text-dark-primary)] leading-snug">{cardTitle}</h3>

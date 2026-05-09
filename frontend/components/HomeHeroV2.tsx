@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import type { HomeHeroProps } from "@/types/HomeHeroProps";
 import { ArrowRight, Phone, Mail } from 'lucide-react';
 
@@ -9,24 +10,8 @@ import { ArrowRight, Phone, Mail } from 'lucide-react';
 import defaultNewImage from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ.webp';
 import defaultUsedImage from '@/assets/IMG_20250730_102056.webp';
 
-// Import responsive images for New
-import defaultNewImage320 from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ-320w.webp';
-import defaultNewImage640 from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ-640w.webp';
-import defaultNewImage768 from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ-768w.webp';
-import defaultNewImage1024 from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ-1024w.webp';
-import defaultNewImage1280 from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ-1280w.webp';
-
-// Import responsive images for Used
-import defaultUsedImage320 from '@/assets/IMG_20250730_102056-320w.webp';
-import defaultUsedImage640 from '@/assets/IMG_20250730_102056-640w.webp';
-import defaultUsedImage768 from '@/assets/IMG_20250730_102056-768w.webp';
-import defaultUsedImage1024 from '@/assets/IMG_20250730_102056-1024w.webp';
-import defaultUsedImage1280 from '@/assets/IMG_20250730_102056-1280w.webp';
-
 const defaultNewImageSrc = defaultNewImage.src;
 const defaultUsedImageSrc = defaultUsedImage.src;
-const defaultNewSrcSet = `${defaultNewImage320.src} 320w, ${defaultNewImage640.src} 640w, ${defaultNewImage768.src} 768w, ${defaultNewImage1024.src} 1024w, ${defaultNewImage1280.src} 1280w`;
-const defaultUsedSrcSet = `${defaultUsedImage320.src} 320w, ${defaultUsedImage640.src} 640w, ${defaultUsedImage768.src} 768w, ${defaultUsedImage1024.src} 1024w, ${defaultUsedImage1280.src} 1280w`;
 
 interface SlotState {
   a: string;
@@ -112,53 +97,46 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
 
   const renderCrossfadeImages = (
     slots: SlotState,
-    isDefaultA: boolean,
-    isDefaultB: boolean,
     priority?: boolean
   ) => (
     <>
-      <img
+      <NextImage
         src={slots.a}
-        srcSet={isDefaultA ? defaultNewSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 60vw"
         alt="New motorcycles and scooters for sale at ScooterShop Perth"
-        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
-        {...(priority ? { fetchPriority: 'high' as const } : {})}
+        fill
+        priority={priority}
+        className={`object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
       />
-      <img
+      <NextImage
         src={slots.b}
-        srcSet={isDefaultB ? defaultNewSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 60vw"
         alt="New motorcycles and scooters for sale at ScooterShop Perth"
-        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
+        fill
+        className={`object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
     </>
   );
 
-  const renderUsedCrossfadeImages = (slots: SlotState, isDefaultA: boolean, isDefaultB: boolean) => (
+  const renderUsedCrossfadeImages = (slots: SlotState) => (
     <>
-      <img
+      <NextImage
         src={slots.a}
-        srcSet={isDefaultA ? defaultUsedSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 40vw"
         alt="Used motorcycles and scooters for sale at ScooterShop Perth"
-        fetchPriority="high"
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
+        fill
+        priority
+        className={`object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
       />
-      <img
+      <NextImage
         src={slots.b}
-        srcSet={isDefaultB ? defaultUsedSrcSet : undefined}
         sizes="(max-width: 768px) 100vw, 40vw"
         alt="Used motorcycles and scooters for sale at ScooterShop Perth"
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
+        fill
+        className={`object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
     </>
   );
-
-  const newIsDefaultA = newSlots.a === defaultNewImageSrc;
-  const newIsDefaultB = newSlots.b === defaultNewImageSrc;
-  const usedIsDefaultA = usedSlots.a === defaultUsedImageSrc;
-  const usedIsDefaultB = usedSlots.b === defaultUsedImageSrc;
 
   return (
     <div className="w-full flex flex-col lg:flex-row min-h-[480px] md:min-h-[420px]">
@@ -207,7 +185,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             href="/inventory/motorcycles/used"
             className="relative group overflow-hidden min-h-[260px] md:min-h-[300px] lg:flex-1"
           >
-            {renderUsedCrossfadeImages(usedSlots, usedIsDefaultA, usedIsDefaultB)}
+            {renderUsedCrossfadeImages(usedSlots)}
             {/* Overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute inset-0 bg-[var(--bg-dark-primary)]/20 group-hover:bg-transparent transition-colors duration-300" />
@@ -243,7 +221,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             href="/inventory/motorcycles/new"
             className="relative flex-1 group overflow-hidden min-h-[300px] lg:min-h-0 bg-[var(--bg-dark-primary)]"
           >
-            {renderCrossfadeImages(newSlots, newIsDefaultA, newIsDefaultB, true)}
+            {renderCrossfadeImages(newSlots, true)}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
             <div className="absolute inset-0 bg-[var(--bg-dark-primary)]/30 group-hover:bg-transparent transition-colors duration-300" />

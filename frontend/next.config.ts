@@ -6,6 +6,17 @@ const nextConfig: NextConfig = {
   // APPEND_SLASH adds it back, and the browser loops until ERR_TOO_MANY_REDIRECTS.
   skipTrailingSlashRedirect: true,
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ethanbetts.pythonanywhere.com",
+        pathname: "/media/**",
+      },
+    ],
+    minimumCacheTTL: 60 * 60 * 24 * 31,
+  },
+
   async rewrites() {
     return [
       {

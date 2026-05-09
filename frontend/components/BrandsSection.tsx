@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
@@ -6,33 +7,18 @@ import { ArrowRight } from 'lucide-react';
 import symImage from '../assets/sym_22.webp';
 import segwayImage from '../assets/segway_1.webp';
 
-// Import responsive images for SYM
-import symImage320 from '../assets/sym_22-320w.webp';
-import symImage640 from '../assets/sym_22-640w.webp';
-import symImage768 from '../assets/sym_22-768w.webp';
-import symImage1024 from '../assets/sym_22-1024w.webp';
-import symImage1280 from '../assets/sym_22-1280w.webp';
-
-// Import responsive images for Segway
-import segwayImage320 from '../assets/segway_1-320w.webp';
-import segwayImage640 from '../assets/segway_1-640w.webp';
-import segwayImage768 from '../assets/segway_1-768w.webp';
-import segwayImage1024 from '../assets/segway_1-1024w.webp';
-import segwayImage1280 from '../assets/segway_1-1280w.webp';
-
 import type { BrandProps } from '@/types/BrandProps';
 
-const BrandCard = ({ image, imageSrcSet, alt, title, subtitle, description, imageLeft }: BrandProps) => {
+const BrandCard = ({ image, alt, title, subtitle, description, imageLeft }: BrandProps) => {
   return (
     <div className={`flex flex-col ${imageLeft ? 'md:flex-row' : 'md:flex-row-reverse'} min-h-[420px]`}>
-      <div className="w-full md:w-1/2 overflow-hidden">
-        <img
+      <div className="relative w-full md:w-1/2 overflow-hidden h-64 md:h-auto">
+        <NextImage
           src={image}
-          srcSet={imageSrcSet}
           sizes="(max-width: 768px) 100vw, 50vw"
           alt={alt}
-          className="w-full h-64 md:h-full object-cover"
-          loading="lazy"
+          fill
+          className="object-cover"
         />
       </div>
       <div className="w-full md:w-1/2 bg-[var(--bg-dark-primary)] p-10 flex flex-col justify-center gap-3">
@@ -58,14 +44,10 @@ We've proudly partnered with them for years—mainly because it just makes sense
   const segwayText = `Best known for their self-balancing transporters, Segway has evolved into a serious player in the electric moped space. As the market changes, Segway stands out with the experience and quality that comes from being an early innovator.
 We've tested a lot of brands, but Segway's electric mopeds impressed us with their build quality, design, and performance. We're confident these are vehicles we can stand behind—and that you'll love riding.`;
 
-  const symSrcSet = `${symImage320.src} 320w, ${symImage640.src} 640w, ${symImage768.src} 768w, ${symImage1024.src} 1024w, ${symImage1280.src} 1280w`;
-  const segwaySrcSet = `${segwayImage320.src} 320w, ${segwayImage640.src} 640w, ${segwayImage768.src} 768w, ${segwayImage1024.src} 1024w, ${segwayImage1280.src} 1280w`;
-
   return (
     <section className="w-full">
       <BrandCard
-        image={symImage.src}
-        imageSrcSet={symSrcSet}
+        image={symImage}
         alt="SYM scooter for sale at ScooterShop, Dianella Perth"
         title="SYM Scooters"
         subtitle="Reliable, Affordable, and Built to Last"
@@ -73,8 +55,7 @@ We've tested a lot of brands, but Segway's electric mopeds impressed us with the
         imageLeft={true}
       />
       <BrandCard
-        image={segwayImage.src}
-        imageSrcSet={segwaySrcSet}
+        image={segwayImage}
         alt="Segway electric moped for sale at ScooterShop Perth"
         title="Segway Electric Mopeds"
         subtitle="Innovation Meets Reliability"

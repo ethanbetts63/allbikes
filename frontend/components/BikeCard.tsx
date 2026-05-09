@@ -1,11 +1,12 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { Wrench, Cog, Gauge, Flame } from "lucide-react";
 import type { BikeCardProps } from "@/types/BikeCardProps";
 
 const BikeCard = ({ bike }: BikeCardProps) => {
   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
   const primaryImage = sortedImages[0];
-  const imageUrl = primaryImage?.thumbnail || primaryImage?.image || '/src/assets/motorcycle_images/placeholder.png';
+  const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
   return (
@@ -14,12 +15,17 @@ const BikeCard = ({ bike }: BikeCardProps) => {
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
-          <img
-            src={imageUrl}
-            alt={cardTitle}
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
+          {imageUrl ? (
+            <NextImage
+              src={imageUrl}
+              alt={cardTitle}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-contain group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="h-full w-full bg-[var(--bg-light-secondary)]" />
+          )}
           {/* Condition pill */}
           <span className="absolute bottom-2 left-2 bg-black/60 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
             {bike.condition}

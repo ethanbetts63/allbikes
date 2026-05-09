@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { Zap, Truck, ArrowRight, ShieldCheck, Flame } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import type { FeaturedEScootersProps } from '@/types/FeaturedEScootersProps';
@@ -63,10 +64,12 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-light-secondary)]">
                   {imageUrl ? (
-                    <img
+                    <NextImage
                       src={imageUrl}
                       alt={product.name}
-                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      className="object-contain group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
