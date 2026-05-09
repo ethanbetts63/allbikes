@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import NextImage from 'next/image';
 import type { HomeHeroProps } from "@/types/HomeHeroProps";
@@ -19,9 +19,19 @@ interface SlotState {
   active: 'a' | 'b';
 }
 
+const getBikeImageUrls = (bikes: HomeHeroProps['newBikes'], fallback: string) => {
+  const urls = bikes.map(bike => {
+    const sorted = [...bike.images].sort((a, b) => a.order - b.order);
+    return sorted[0]?.medium || sorted[0]?.image;
+  }).filter(Boolean) as string[];
+
+  return urls.length > 0 ? urls : [fallback];
+};
+
 const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, emailAddress }: HomeHeroProps) => {
-  const [newBikeImageUrls, setNewBikeImageUrls] = useState<string[]>([defaultNewImageSrc]);
-  const [usedBikeImageUrls, setUsedBikeImageUrls] = useState<string[]>([defaultUsedImageSrc]);
+  const newBikeImageUrls = useMemo(() => getBikeImageUrls(newBikes, defaultNewImageSrc), [newBikes]);
+  const usedBikeImageUrls = useMemo(() => getBikeImageUrls(usedBikes, defaultUsedImageSrc), [usedBikes]);
+  const [shouldCycleImages, setShouldCycleImages] = useState(false);
   const currentNewIndexRef = useRef(0);
   const currentUsedIndexRef = useRef(0);
 
@@ -36,35 +46,28 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
   useEffect(() => { usedUrlsRef.current = usedBikeImageUrls; }, [usedBikeImageUrls]);
 
   useEffect(() => {
-    if (newBikes.length > 0) {
-      const urls = newBikes.map(bike => {
-        const sorted = [...bike.images].sort((a, b) => a.order - b.order);
-        return sorted[0]?.medium || sorted[0]?.image;
-      }).filter(Boolean) as string[];
-      if (urls.length > 0) {
-        setNewBikeImageUrls(urls);
-        setNewSlots({ a: urls[0], b: urls[0], active: 'a' });
-        currentNewIndexRef.current = 0;
-      }
-    }
-  }, [newBikes]);
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    const updateShouldCycle = () => setShouldCycleImages(mediaQuery.matches);
+
+    updateShouldCycle();
+    mediaQuery.addEventListener('change', updateShouldCycle);
+
+    return () => mediaQuery.removeEventListener('change', updateShouldCycle);
+  }, []);
 
   useEffect(() => {
-    if (usedBikes.length > 0) {
-      const urls = usedBikes.map(bike => {
-        const sorted = [...bike.images].sort((a, b) => a.order - b.order);
-        return sorted[0]?.medium || sorted[0]?.image;
-      }).filter(Boolean) as string[];
-      if (urls.length > 0) {
-        setUsedBikeImageUrls(urls);
-        setUsedSlots({ a: urls[0], b: urls[0], active: 'a' });
-        currentUsedIndexRef.current = 0;
-      }
-    }
-  }, [usedBikes]);
+    setNewSlots({ a: newBikeImageUrls[0], b: newBikeImageUrls[0], active: 'a' });
+    currentNewIndexRef.current = 0;
+  }, [newBikeImageUrls]);
+
+  useEffect(() => {
+    setUsedSlots({ a: usedBikeImageUrls[0], b: usedBikeImageUrls[0], active: 'a' });
+    currentUsedIndexRef.current = 0;
+  }, [usedBikeImageUrls]);
 
   // Image cycling with crossfade for New
   useEffect(() => {
+    if (!shouldCycleImages) return;
     if (newBikeImageUrls.length <= 1) return;
     const interval = setInterval(() => {
       const next = (currentNewIndexRef.current + 1) % newUrlsRef.current.length;
@@ -77,10 +80,11 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       });
     }, 8000);
     return () => clearInterval(interval);
-  }, [newBikeImageUrls]);
+  }, [newBikeImageUrls, shouldCycleImages]);
 
   // Image cycling with crossfade for Used
   useEffect(() => {
+    if (!shouldCycleImages) return;
     if (usedBikeImageUrls.length <= 1) return;
     const interval = setInterval(() => {
       const next = (currentUsedIndexRef.current + 1) % usedUrlsRef.current.length;
@@ -93,7 +97,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       });
     }, 8000);
     return () => clearInterval(interval);
-  }, [usedBikeImageUrls]);
+  }, [usedBikeImageUrls, shouldCycleImages]);
 
   const renderCrossfadeImages = (
     slots: SlotState,
@@ -102,7 +106,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
     <>
       <NextImage
         src={slots.a}
-        sizes="(max-width: 768px) 100vw, 60vw"
+        sizes="60vw"
         alt="New motorcycles and scooters for sale at ScooterShop Perth"
         fill
         priority={priority}
@@ -110,7 +114,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       />
       <NextImage
         src={slots.b}
-        sizes="(max-width: 768px) 100vw, 60vw"
+        sizes="60vw"
         alt="New motorcycles and scooters for sale at ScooterShop Perth"
         fill
         className={`object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
@@ -122,19 +126,53 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
     <>
       <NextImage
         src={slots.a}
-        sizes="(max-width: 768px) 100vw, 40vw"
+        sizes="40vw"
         alt="Used motorcycles and scooters for sale at ScooterShop Perth"
         fill
-        priority
         className={`object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
       />
       <NextImage
         src={slots.b}
-        sizes="(max-width: 768px) 100vw, 40vw"
+        sizes="40vw"
         alt="Used motorcycles and scooters for sale at ScooterShop Perth"
         fill
         className={`object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
+    </>
+  );
+
+  const renderNewHeroImages = () => (
+    <>
+      <span className="absolute inset-0 md:hidden">
+        <NextImage
+          src={newBikeImageUrls[0]}
+          sizes="100vw"
+          alt="New motorcycles and scooters for sale at ScooterShop Perth"
+          fill
+          priority
+          className="object-contain"
+        />
+      </span>
+      <span className="absolute inset-0 hidden md:block">
+        {renderCrossfadeImages(newSlots)}
+      </span>
+    </>
+  );
+
+  const renderUsedHeroImages = () => (
+    <>
+      <span className="absolute inset-0 md:hidden">
+        <NextImage
+          src={usedBikeImageUrls[0]}
+          sizes="100vw"
+          alt="Used motorcycles and scooters for sale at ScooterShop Perth"
+          fill
+          className="object-cover"
+        />
+      </span>
+      <span className="absolute inset-0 hidden md:block">
+        {renderUsedCrossfadeImages(usedSlots)}
+      </span>
     </>
   );
 
@@ -185,7 +223,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             href="/inventory/motorcycles/used"
             className="relative group overflow-hidden min-h-[260px] md:min-h-[300px] lg:flex-1"
           >
-            {renderUsedCrossfadeImages(usedSlots)}
+            {renderUsedHeroImages()}
             {/* Overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute inset-0 bg-[var(--bg-dark-primary)]/20 group-hover:bg-transparent transition-colors duration-300" />
@@ -221,7 +259,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             href="/inventory/motorcycles/new"
             className="relative flex-1 group overflow-hidden min-h-[300px] lg:min-h-0 bg-[var(--bg-dark-primary)]"
           >
-            {renderCrossfadeImages(newSlots, true)}
+            {renderNewHeroImages()}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
             <div className="absolute inset-0 bg-[var(--bg-dark-primary)]/30 group-hover:bg-transparent transition-colors duration-300" />
