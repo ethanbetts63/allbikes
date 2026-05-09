@@ -1,13 +1,9 @@
-"use client";
-
-import { useState, useEffect } from 'react';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import HomeHeroV2 from '@/components/HomeHeroV2';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
 import FeaturedBikes from '@/components/FeaturedBikes';
 import { FaqSection } from '@/components/FaqSection';
-import { getBikes, getProducts } from '@/api';
 import type { Bike } from "@/types/Bike";
 import type { Product } from "@/types/Product";
 import { siteSettings } from '@/config/siteSettings';
@@ -28,50 +24,9 @@ const HomePage = ({
   initialUsedBikes,
   initialFeaturedProducts,
 }: HomePageProps) => {
-  const [newBikes, setNewBikes] = useState<Bike[]>(initialNewBikes ?? []);
-  const [usedBikes, setUsedBikes] = useState<Bike[]>(initialUsedBikes ?? []);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>(initialFeaturedProducts ?? []);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialNewBikes || initialUsedBikes || initialFeaturedProducts) return;
-
-    const fetchPageData = async () => {
-      setError(null);
-
-      const [newBikesResult, usedBikesResult, productsResult] = await Promise.allSettled([
-        getBikes({ condition: 'new', page: 1, is_featured: true }),
-        getBikes({ condition: 'used', page: 1, is_featured: true }),
-        getProducts({ is_featured: true }),
-      ]);
-
-      if (newBikesResult.status === 'fulfilled') {
-        const availableNewBikes = newBikesResult.value.results.filter(
-          bike => bike.status !== 'unavailable'
-        );
-        setNewBikes(availableNewBikes);
-      } else {
-        console.error("Failed to fetch featured new bikes:", newBikesResult.reason);
-      }
-
-      if (usedBikesResult.status === 'fulfilled') {
-        const availableUsedBikes = usedBikesResult.value.results.filter(
-          bike => bike.status !== 'unavailable'
-        );
-        setUsedBikes(availableUsedBikes);
-      } else {
-        console.error("Failed to fetch featured used bikes:", usedBikesResult.reason);
-      }
-
-      if (productsResult.status === 'fulfilled') {
-        setFeaturedProducts(productsResult.value.results.slice(0, 2));
-      } else {
-        console.error("Failed to fetch featured e-scooters:", productsResult.reason);
-      }
-    };
-
-    fetchPageData();
-  }, [initialFeaturedProducts, initialNewBikes, initialUsedBikes]);
+  const newBikes = initialNewBikes ?? [];
+  const usedBikes = initialUsedBikes ?? [];
+  const featuredProducts = initialFeaturedProducts ?? [];
 
   const faqData = [
     {
@@ -155,7 +110,7 @@ const HomePage = ({
         <HomeHeroV2
             newBikes={newBikes}
             usedBikes={usedBikes}
-            error={error}
+            error={null}
             phoneNumber={siteSettings.phone_number}
             mobileNumber={siteSettings.mobile_number}
             emailAddress={siteSettings.email_address}
