@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
 import { Star } from "lucide-react";
 
 const GOOGLE_REVIEWS_URL = "https://www.google.com/search?sca_esv=c50016dede84fb5a&cs=1&sxsrf=ANbL-n7auNsA8EF9qA71_DeC0xkkejRXgQ:1773338332751&q=Scooter+Shop+Reviews&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxIxNDCzMDUxNDAxMjc3tzCysACSGxgZXzGKBCfn55ekFikEZ-QXKASllmWmlhcvYsUqDADhIHceSQAAAA&rldimm=10685410427778288778&tbm=lcl&hl=en-DK&sa=X&ved=2ahUKEwipoY6L-JqTAxXK3AIHHQwDItoQ9fQKegQIEBAG&biw=1440&bih=731&dpr=2#lkt=LocalPoiReviews";
@@ -69,46 +66,29 @@ const GoogleG = ({ size = 18 }: { size?: number }) => (
   </svg>
 );
 
-const scrollbarHideStyle = `
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+const reviewCarouselStyle = `
+  @keyframes review-carousel-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+
+  .review-carousel-track {
+    animation: review-carousel-scroll 64s linear infinite;
+    will-change: transform;
+  }
+
+  .review-carousel:hover .review-carousel-track,
+  .review-carousel:focus-within .review-carousel-track {
+    animation-play-state: paused;
+  }
 `;
 
 const ReviewCarousel = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const animationFrameRef = useRef<number | null>(null);
-  const positionRef = useRef(0);
-  const [isHovering, setIsHovering] = useState(false);
-  const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const scroll = () => {
-      if (scrollRef.current) {
-        const halfwayPoint = scrollRef.current.scrollWidth / 2;
-        positionRef.current += 0.3;
-        if (positionRef.current >= halfwayPoint) {
-          positionRef.current = 0;
-        }
-        scrollRef.current.scrollLeft = positionRef.current;
-      }
-      animationFrameRef.current = requestAnimationFrame(scroll);
-    };
-
-    if (!isHovering) {
-      positionRef.current = scrollRef.current?.scrollLeft || 0;
-      animationFrameRef.current = requestAnimationFrame(scroll);
-    }
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [isHovering]);
+  const reviews = [...reviewData, ...reviewData];
 
   return (
     <>
-      <style>{scrollbarHideStyle}</style>
+      <style>{reviewCarouselStyle}</style>
       <div className="w-full py-8 bg-foreground">
         <div className="container mx-auto px-4">
 
@@ -131,21 +111,9 @@ const ReviewCarousel = () => {
           </div>
 
           {/* Cards */}
-          <div
-            ref={scrollRef}
-            className="flex overflow-x-auto space-x-4 pb-2 no-scrollbar"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            onTouchStart={() => {
-              if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current);
-              setIsHovering(true);
-            }}
-            onTouchEnd={() => {
-              touchTimeoutRef.current = setTimeout(() => setIsHovering(false), 1500);
-            }}
-          >
-            <div className="flex gap-4 w-max">
-            {[...reviewData, ...reviewData].map((review, i) => {
+          <div className="review-carousel overflow-hidden pb-2">
+            <div className="review-carousel-track flex w-max">
+            {reviews.map((review, i) => {
               const charLimit = 220;
               const truncatedText = review.text.length > charLimit
                 ? review.text.substring(0, charLimit) + "…"
@@ -159,7 +127,7 @@ const ReviewCarousel = () => {
                   href={GOOGLE_REVIEWS_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-shrink-0 w-72 bg-[var(--bg-light-primary)] rounded-xl border border-border-light shadow-sm hover:shadow-md transition-shadow duration-200 p-5 flex flex-col gap-3"
+                  className="mr-4 flex-shrink-0 w-72 bg-[var(--bg-light-primary)] rounded-xl border border-border-light shadow-sm hover:shadow-md transition-shadow duration-200 p-5 flex flex-col gap-3"
                 >
                   {/* Author row */}
                   <div className="flex items-center justify-between">
