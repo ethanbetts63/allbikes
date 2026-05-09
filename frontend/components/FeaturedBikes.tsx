@@ -1,31 +1,13 @@
-"use client";
-
-import { useRef } from "react";
 import SmallBikeCard from "@/components/SmallBikeCard";
+import FeaturedBikesCarouselControls from "@/components/FeaturedBikesCarouselControls";
 import type { FeaturedBikesProps } from "@/types/FeaturedBikesProps";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description, linkTo, linkText }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const bikeCount = bikes.length;
-
-  const scrollByCards = (direction: "left" | "right") => {
-    const scroller = scrollRef.current;
-    if (!scroller) {
-      return;
-    }
-
-    const cardStep = 272;
-    const visibleCards = Math.max(1, Math.floor(scroller.clientWidth / cardStep));
-    const distance = visibleCards * cardStep;
-
-    scroller.scrollBy({
-      left: direction === "left" ? -distance : distance,
-      behavior: "smooth",
-    });
-  };
+  const carouselId = `featured-bikes-${linkTo.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase()}`;
 
   if (bikeCount === 0) {
     return null;
@@ -52,24 +34,9 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
 
             {/* Right Column: Scrollable Bike Cards */}
             <div className="relative w-full md:w-4/5">
-              <button
-                type="button"
-                aria-label={`Scroll ${title} left`}
-                onClick={() => scrollByCards("left")}
-                className="absolute left-2 top-1/2 z-10 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-foreground/90 text-[var(--text-light-primary)] shadow-lg backdrop-blur transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground md:left-4"
-              >
-                <ChevronLeft className="h-8 w-8" />
-              </button>
-              <button
-                type="button"
-                aria-label={`Scroll ${title} right`}
-                onClick={() => scrollByCards("right")}
-                className="absolute right-2 top-1/2 z-10 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-foreground/90 text-[var(--text-light-primary)] shadow-lg backdrop-blur transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground md:right-4"
-              >
-                <ChevronRight className="h-8 w-8" />
-              </button>
+              <FeaturedBikesCarouselControls targetId={carouselId} label={linkText} />
               <div
-                ref={scrollRef}
+                id={carouselId}
                 className="w-full overflow-x-auto py-3 featured-no-scrollbar scroll-smooth snap-x snap-mandatory"
               >
                 <div className="flex gap-4 w-max">
