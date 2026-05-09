@@ -7,7 +7,7 @@ Allbikes & Scooters is a full-stack web platform for a Perth-based motorcycle an
 ## Tech Stack
 
 *   **Backend:** Django, Django REST Framework
-*   **Frontend:** React, Vite, TypeScript, Tailwind CSS, Shadcn UI
+*   **Frontend:** Next.js, React, TypeScript, Tailwind CSS, Shadcn UI
 *   **Database:** MySQL
 *   **Payments:** Stripe
 *   **Email:** Mailgun
@@ -22,7 +22,7 @@ Allbikes & Scooters is a full-stack web platform for a Perth-based motorcycle an
 *   `notifications`: Sends and records transactional emails via Mailgun. Stores a full audit log of every sent message (HTML + text body, status, recipient) in the `SentMessage` model.
 *   `service`: Handles service bookings, with a deep integration into the external MechanicDesk API for managing job types and availability.
 *   `data_management`: A central app for managing brand information, terms and conditions, user profiles, and various data import/export/cleanup utilities.
-*   `frontend`: A modern, responsive single-page application built with React and Vite, providing the user interface for the entire platform.
+*   `frontend`: A modern Next.js application providing the user interface for the entire platform.
 
 ## Getting Started
 
@@ -115,7 +115,7 @@ Follow these instructions to set up a local development environment.
     ```bash
     npm run dev
     ```
-    The frontend will be available at `http://localhost:5173` (or another port if 5173 is in use). The Vite dev server is configured to proxy API requests to the backend.
+    The frontend will be available at `http://localhost:3000` (or another port if 3000 is in use). Next.js rewrites `/api/*` requests to the backend.
 
 ## Running Tests
 

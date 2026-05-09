@@ -10,7 +10,6 @@ This document records everything done during the Vite → Next.js (App Router) m
 allbikes/
 ├── allbikes/          Django project (settings, urls, wsgi)
 ├── frontend/          Next.js 16 app (this is the active frontend)
-├── frontend_vite/     Old Vite+React SPA — kept for reference, do not modify
 ├── _docs/             Documentation
 └── requirements.txt   Python deps
 ```
@@ -155,9 +154,9 @@ Files fixed:
 
 `page_components/ServiceBookingPage.tsx` reads `localStorage` in a `useState` lazy initializer. Added `typeof window === 'undefined'` guard so it doesn't throw during SSR.
 
-### Copied files from `frontend_vite/src/`
+### Copied files from the old Vite app
 
-These files were missing from `frontend/` and were copied from the old Vite project:
+These files were missing from `frontend/` during migration and were copied from the old reference app before it was removed:
 - `frontend/api.ts` — all API functions
 - `frontend/apiClient.ts` — `authedFetch` wrapper with CSRF/JWT handling
 
