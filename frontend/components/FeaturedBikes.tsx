@@ -1,49 +1,31 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import SmallBikeCard from "@/components/SmallBikeCard";
 import type { FeaturedBikesProps } from "@/types/FeaturedBikesProps";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description, linkTo, linkText }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const animationFrameRef = useRef<number | null>(null);
-  const positionRef = useRef(0);
-  const [isHovering, setIsHovering] = useState(false);
-  const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bikeCount = bikes.length;
 
-  useEffect(() => {
-    if (bikeCount === 0) return;
-
-    const scroll = () => {
-      if (scrollRef.current) {
-        const halfwayPoint = scrollRef.current.scrollWidth / 2;
-
-        positionRef.current += 0.3;
-
-        if (positionRef.current >= halfwayPoint) {
-          positionRef.current = 0;
-        }
-
-        scrollRef.current.scrollLeft = positionRef.current;
-      }
-      animationFrameRef.current = requestAnimationFrame(scroll);
-    };
-
-    if (!isHovering) {
-      positionRef.current = scrollRef.current?.scrollLeft || 0;
-      animationFrameRef.current = requestAnimationFrame(scroll);
+  const scrollByCards = (direction: "left" | "right") => {
+    const scroller = scrollRef.current;
+    if (!scroller) {
+      return;
     }
 
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [bikeCount, isHovering]);
+    const cardStep = 272;
+    const visibleCards = Math.max(1, Math.floor(scroller.clientWidth / cardStep));
+    const distance = visibleCards * cardStep;
+
+    scroller.scrollBy({
+      left: direction === "left" ? -distance : distance,
+      behavior: "smooth",
+    });
+  };
 
   if (bikeCount === 0) {
     return null;
@@ -66,25 +48,34 @@ const FeaturedBikes: React.FC<FeaturedBikesProps> = ({ title, bikes, description
                   {linkText} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
+              <div className="mt-5 flex items-center justify-center gap-2 md:justify-start">
+                <button
+                  type="button"
+                  aria-label={`Scroll ${title} left`}
+                  onClick={() => scrollByCards("left")}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-[var(--text-light-primary)] transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  aria-label={`Scroll ${title} right`}
+                  onClick={() => scrollByCards("right")}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-[var(--text-light-primary)] transition-colors hover:border-[var(--highlight)] hover:text-[var(--highlight)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--highlight)] focus-visible:ring-offset-2 focus-visible:ring-offset-foreground"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Right Column: Auto-scrolling Bike Cards */}
+            {/* Right Column: Scrollable Bike Cards */}
             <div
               ref={scrollRef}
-              className="w-full md:w-4/5 overflow-x-auto py-3 featured-no-scrollbar"
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              onTouchStart={() => {
-                if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current);
-                setIsHovering(true);
-              }}
-              onTouchEnd={() => {
-                touchTimeoutRef.current = setTimeout(() => setIsHovering(false), 1500);
-              }}
+              className="w-full md:w-4/5 overflow-x-auto py-3 featured-no-scrollbar scroll-smooth snap-x snap-mandatory"
             >
               <div className="flex gap-4 w-max">
-                {[...bikes, ...bikes].map((bike, i) => (
-                  <div key={`${bike.id}-${i}`} className="flex-shrink-0 w-64">
+                {bikes.map((bike) => (
+                  <div key={bike.id} className="flex-shrink-0 w-64 snap-start">
                     <SmallBikeCard bike={bike} />
                   </div>
                 ))}
