@@ -82,3 +82,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .defer-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 640px;
+  }
+
+  .defer-section-sm {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 360px;
+  }
+
+  .defer-section-lg {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 920px;
+  }
+}

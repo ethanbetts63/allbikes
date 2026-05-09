@@ -93,7 +93,7 @@ export default function BikeFilterForm({ basePath, filters }: BikeFilterFormProp
           <Button type="submit" className="flex-1 bg-highlight text-[var(--text-dark-primary)] font-bold hover:bg-highlight/80 text-sm">
             Apply Filters
           </Button>
-          <Button asChild variant="outline" className="border-border-light text-sm">
+          <Button asChild variant="outline" className="border-border-light bg-white text-black hover:bg-gray-100 hover:text-black text-sm">
             <Link href={basePath}>Clear</Link>
           </Button>
         </div>

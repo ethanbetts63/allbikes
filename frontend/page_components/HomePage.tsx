@@ -118,38 +118,58 @@ const HomePage = ({
         <ReviewCarousel />
         
 
-        {!siteSettings.hide_escooters && <FeaturedEScooters products={featuredProducts} />}
+        {!siteSettings.hide_escooters && (
+          <div className="defer-section">
+            <FeaturedEScooters products={featuredProducts} />
+          </div>
+        )}
  
 
         
 
-        <FeaturedBikes
-          title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
-          bikes={newBikes}
-          description="Check out some of our latest new models available now."
-          linkTo="/inventory/motorcycles/new"
-          linkText="All New Bikes"
-        />
+        <div className="defer-section-sm">
+          <FeaturedBikes
+            title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
+            bikes={newBikes}
+            description="Check out some of our latest new models available now."
+            linkTo="/inventory/motorcycles/new"
+            linkText="All New Bikes"
+          />
+        </div>
         
-        {siteSettings.show_hire && <HireCTASection />}
+        {siteSettings.show_hire && (
+          <div className="defer-section-sm">
+            <HireCTASection />
+          </div>
+        )}
         
-        <FeaturedBikes
-          title={<>Featured <span className="hidden md:inline">Used Motorcycles & Scooters</span><span className="md:hidden">Used Bikes</span></>}
-          bikes={usedBikes}
-          description="Explore our range of quality pre-owned motorcycles and scooters."
-          linkTo="/inventory/motorcycles/used"
-          linkText="All Used Bikes"
-        />
+        <div className="defer-section-sm">
+          <FeaturedBikes
+            title={<>Featured <span className="hidden md:inline">Used Motorcycles & Scooters</span><span className="md:hidden">Used Bikes</span></>}
+            bikes={usedBikes}
+            description="Explore our range of quality pre-owned motorcycles and scooters."
+            linkTo="/inventory/motorcycles/used"
+            linkText="All Used Bikes"
+          />
+        </div>
 
-        <ServiceCTAV2 />
+        <div className="defer-section">
+          <ServiceCTAV2 />
+        </div>
 
 
 
-        <PayLaterSection />
+        <div className="defer-section">
+          <PayLaterSection />
+        </div>
 
-        <BrandsSection />
+        <div className="defer-section-lg">
+          <BrandsSection />
+        </div>
 
-        <FaqSection title="Frequently Asked Questions" faqData={faqData} />
+        <div className="defer-section">
+          <FaqSection title="Frequently Asked Questions" faqData={faqData} />
+        </div>
         <FloatingActionButton /> 
     </div>
   );
