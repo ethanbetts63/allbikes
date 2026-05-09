@@ -1,15 +1,8 @@
-"use client";
-
-import { useState, useEffect, useCallback } from 'react';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import BikeCard from '@/components/BikeCard';
-import type { Bike } from '@/types/Bike';
-import type { GetBikesOptions } from '@/types/GetBikesOptions';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import type { BikeListPageProps } from '@/types/BikeListPageProps';
-import { getBikes } from '@/api';
-import { Spinner } from '@/components/ui/spinner';
 import {
   Pagination,
   PaginationContent,
@@ -19,8 +12,9 @@ import {
 } from "@/components/ui/pagination";
 import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
-import FilterSort from '@/components/FilterSort';
+import BikeFilterForm from '@/components/BikeFilterForm';
 import { FaqSection } from '@/components/FaqSection';
+import { buildListHref } from '@/lib/listQuery';
 
 const newBikeFaqs = [
   {
@@ -83,49 +77,7 @@ const partsBikeFaqs = [
   },
 ];
 
-const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeListPageProps) => {
-  const [bikes, setBikes] = useState<Bike[] | undefined>(initialBikes);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(initialTotalPages ?? 0);
-  const [isLoading, setIsLoading] = useState(!initialBikes);
-  const [error, setError] = useState<string | null>(null);
-  const [filterOptions, setFilterOptions] = useState<FilterSortOptions>({});
-
-  const fetchBikes = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      const options: GetBikesOptions = {
-        condition: bikeCondition,
-        page: currentPage,
-        ...filterOptions,
-      };
-
-      const response = await getBikes(options);
-      setBikes(response.results);
-      setTotalPages(Math.ceil(response.count / 12)); 
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [bikeCondition, currentPage, filterOptions]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0); 
-    if (initialBikes && currentPage === 1 && Object.keys(filterOptions).length === 0) {
-      return;
-    }
-    fetchBikes();
-  }, [currentPage, fetchBikes, filterOptions, initialBikes]);
-
-  const handleFilterChange = (newOptions: FilterSortOptions) => {
-    setCurrentPage(1); // Reset to first page on filter change
-    setFilterOptions(newOptions);
-  };
-
+const BikeListPage = ({ bikeCondition, bikes, totalPages, currentPage, filters }: BikeListPageProps) => {
   const isNew = bikeCondition === 'new,demo';
   const isParts = bikeCondition === 'parts';
 
@@ -152,6 +104,7 @@ const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeLi
     { name: 'Home', href: '/' },
     { name: pageTitle, href: isNew ? '/inventory/motorcycles/new' : isParts ? '/inventory/motorcycles/parts' : '/inventory/motorcycles/used' }
   ];
+  const basePath = breadcrumbItems[1].href;
   
   const structuredData = bikes && bikes.length > 0 ? {
     "@context": "https://schema.org",
@@ -203,27 +156,17 @@ const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeLi
       />
 <div className="bg-[var(--card)]">
         <div className="container mx-auto px-4 lg:px-8 py-8">
-          <FilterSort options={filterOptions} onFilterChange={handleFilterChange} />
+          <BikeFilterForm basePath={basePath} filters={filters} />
 
-          {isLoading && (
-            <div className="flex justify-center items-center h-64">
-              <Spinner className="h-12 w-12" />
-            </div>
-          )}
-
-          {error && <p className="text-destructive text-center">{error}</p>}
-
-          {!isLoading && !error && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {bikes && bikes.length > 0 ? (
-                bikes.map(bike => (
-                  <BikeCard key={bike.id} bike={bike} />
-                ))
-              ) : (
-                <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">No bikes found for this category. Sorry, we must have sold out. We'll be sure to update this page as soon as possible.</p>
-              )}
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {bikes.length > 0 ? (
+              bikes.map(bike => (
+                <BikeCard key={bike.id} bike={bike} />
+              ))
+            ) : (
+              <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">No bikes found for this category. Sorry, we must have sold out. We'll be sure to update this page as soon as possible.</p>
+            )}
+          </div>
 
           {totalPages > 1 && (
             <div className="mt-8">
@@ -231,11 +174,7 @@ const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeLi
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentPage((prev) => Math.max(prev - 1, 1));
-                      }}
+                      href={buildListHref(basePath, filters, Math.max(currentPage - 1, 1))}
                       className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                     />
                   </PaginationItem>
@@ -246,11 +185,7 @@ const BikeListPage = ({ bikeCondition, initialBikes, initialTotalPages }: BikeLi
                   </PaginationItem>
                   <PaginationItem>
                     <PaginationNext
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-                      }}
+                      href={buildListHref(basePath, filters, Math.min(currentPage + 1, totalPages))}
                       className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
                     />
                   </PaginationItem>

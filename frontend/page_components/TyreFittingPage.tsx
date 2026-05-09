@@ -1,5 +1,3 @@
-"use client";
-
 import Link from 'next/link';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import MotorcycleMovers from "@/components/MotorcycleMovers";

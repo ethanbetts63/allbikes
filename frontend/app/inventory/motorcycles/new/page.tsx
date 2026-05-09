@@ -1,6 +1,7 @@
 import BikeListPage from '@/page_components/BikeListPage';
 import { buildMetadata } from '@/lib/seo';
 import { getInitialBikeList } from '@/lib/inventoryList';
+import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({
   title: 'New Motorcycles & Scooters | ScooterShop',
@@ -10,13 +11,21 @@ export const metadata = buildMetadata({
 
 export const revalidate = 300;
 
-export default async function Page() {
-  const { bikes, totalPages } = await getInitialBikeList('new,demo');
+interface PageProps {
+  searchParams?: Promise<ListSearchParams>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const { bikes, totalPages, currentPage, filters } = await getInitialBikeList('new,demo', params);
+
   return (
     <BikeListPage
       bikeCondition="new,demo"
-      initialBikes={bikes}
-      initialTotalPages={totalPages}
+      bikes={bikes}
+      totalPages={totalPages}
+      currentPage={currentPage}
+      filters={filters}
     />
   );
 }
