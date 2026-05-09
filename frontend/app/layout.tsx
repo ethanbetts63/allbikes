@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "ScooterShop Perth | Motorcycles, Scooters & Servicing",
@@ -28,6 +29,7 @@ export default function RootLayout({
           </div>
           <Toaster position="top-center" richColors />
         </AuthProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
