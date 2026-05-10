@@ -33,19 +33,22 @@ ALLOWED_HOSTS = [
     'allbikes.vercel.app',
     '127.0.0.1',
     'localhost',
-    "api.memorylock.com.au",
+    "api.memorylock.com.au",    
+    "www.memorylock.com.au",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'https://www.scootershop.com.au',
     'https://allbikes.vercel.app',
+    'https://www.memorylock.com.au'
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://www.scootershop.com.au',
     'https://allbikes.vercel.app',
+    'https://www.memorylock.com.au'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
