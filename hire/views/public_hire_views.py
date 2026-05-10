@@ -258,6 +258,7 @@ class HireBookingRetrieveView(APIView):
             return Response({'detail': 'Booking not found.'}, status=404)
 
         return Response({
+            'id': booking.id,
             'booking_reference': booking.booking_reference,
             'motorcycle_name': str(booking.motorcycle),
             'hire_start': str(booking.hire_start),
