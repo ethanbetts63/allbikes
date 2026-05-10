@@ -29,6 +29,7 @@ DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
     'ethanbetts.pythonanywhere.com',
+    'api.scootershop.com.au',
     'www.scootershop.com.au',
     'allbikes.vercel.app',
     '127.0.0.1',
