@@ -10,12 +10,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "ethanbetts.pythonanywhere.com",
-        pathname: "/media/**",
-      },
-      {
-        protocol: "https",
-        hostname: "api.memorylock.com.au",
+        hostname: "api.scootershop.com.au",
         pathname: "/media/**",
       },
       {

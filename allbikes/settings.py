@@ -28,28 +28,20 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
-    'ethanbetts.pythonanywhere.com',
     'api.scootershop.com.au',
     'www.scootershop.com.au',
-    'allbikes.vercel.app',
     '127.0.0.1',
     'localhost',
-    "api.memorylock.com.au",    
-    "www.memorylock.com.au",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'https://www.scootershop.com.au',
-    'https://allbikes.vercel.app',
-    'https://www.memorylock.com.au'
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://www.scootershop.com.au',
-    'https://allbikes.vercel.app',
-    'https://www.memorylock.com.au'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
