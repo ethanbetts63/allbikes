@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         pathname: "/media/**",
       },
       {
+        protocol: "https",
+        hostname: "api.memorylock.com.au",
+        pathname: "/media/**",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         port: "8000",
