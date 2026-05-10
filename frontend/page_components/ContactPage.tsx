@@ -5,7 +5,6 @@ import { siteSettings } from '@/config/siteSettings';
 import OtherSites from '../components/OtherSites';
 import ContactButtons from '@/components/ContactButtons';
 import splitcartLogo from "@/assets/splitcart_logo.png";
-import futureReminderLogo from "@/assets/futurereminder_logo.png";
 import foreverFlowerLogo from "@/assets/foreverflower_logo.png";
 import { FaqSection } from '@/components/FaqSection';
 
@@ -15,12 +14,6 @@ const otherSitesData = [
         logoSrc: splitcartLogo.src,
         description: "Compare grocery prices across major Australian supermarkets.",
         url: "https://www.splitcart.com.au",
-    },
-    {
-        name: "Future Reminder",
-        logoSrc: futureReminderLogo.src,
-        description: "Never miss an important event with our persistent reminder service.",
-        url: "https://www.futurereminder.app",
     },
     {
         name: "FutureFlower",
