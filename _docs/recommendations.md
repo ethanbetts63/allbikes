@@ -48,3 +48,43 @@ A few things worth looking at before you go live:
   total_charged is a Python property that calls self.extras.all(). Now that it's exposed via the serializer, any list endpoint that returns multiple
    bookings (e.g. the admin hire dashboard) will fire a separate DB query per booking. The fix is prefetch_related('extras') on list views — worth
   checking which views don't have it yet.
+
+
+  1. High: invalid detail URLs can return soft-404 pages instead of real 404s.
+     Bike and product detail pages parse the id from the slug, fetch by id, and pass null into the page component on failure. The component then
+     renders “not found” UI, but the route still appears to be a valid 200 page.
+     Relevant code: frontend/app/inventory/motorcycles/[slug]/page.tsx:18, frontend/page_components/BikeDetailPage.tsx:126, frontend/app/escooters/
+     [slug]/page.tsx:18, frontend/page_components/EScooterDetailPage.tsx:27.
+     SEO impact: Google may classify these as soft 404s, crawl junk URLs, or temporarily index generic fallback metadata. These should return
+     notFound() or redirect to the canonical slug when the id exists but the slug text is wrong.
+  2. High/Medium: metadata fallback can make failed API detail pages indexable.
+     If metadata fetch fails, the helper returns normal metadata with a canonical to the requested slug, not noindex.
+     Relevant code: frontend/lib/seo.ts:73, frontend/lib/seo.ts:102.
+     SEO impact: during backend/API trouble, Google can see an indexable generic “Motorcycles & Scooters” or “Electric Scooters” page at an
+     arbitrary detail URL.
+  3. Medium: robots.txt and sitemap.xml disagree.
+     The sitemap includes /refunds, /privacy, /security, and /terms, but robots disallows the same paths.
+     Sitemap entries: frontend/app/sitemap.ts:20.
+     Robots disallows: frontend/app/robots.ts:13.
+     SEO impact: Search Console will likely report “submitted URL blocked by robots.txt”. Decide one policy: either allow these pages and optionally
+     noindex, or remove them from the sitemap.
+  4. Medium: structured-data image URLs are likely inconsistent or invalid.
+     Motorcycle JSON-LD blindly prefixes https://www.scootershop.com.au onto API image URLs. If DRF returns absolute media URLs, this becomes malfo
+     rmed. Product JSON-LD uses raw image values without guaranteeing absolute URLs.
+     Relevant code: frontend/page_components/BikeListPage.tsx:130, frontend/page_components/BikeDetailPage.tsx:81, frontend/page_components/
+     EScooterListPage.tsx:65, frontend/page_components/EScooterDetailPage.tsx:43.
+     SEO impact: rich-result eligibility can be reduced if image fields are invalid.
+  5. Medium: fallback Open Graph image points to a file that does not exist.
+     buildMetadata() defaults to https://www.scootershop.com.au/logo-512x512.png, but there is no frontend/public/logo-512x512.png.
+     Relevant code: frontend/lib/seo.ts:24.
+     SEO/social impact: shared pages without a product image get a broken preview image.
+  6. Medium: list pages canonicalize all query states to the base URL.
+     /inventory/motorcycles/new?page=2, sorted pages, and filtered pages all use the same canonical as /inventory/motorcycles/new.
+     Relevant metadata: frontend/app/inventory/motorcycles/new/page.tsx:6, frontend/app/inventory/motorcycles/used/page.tsx:6, frontend/app/
+     escooters/page.tsx:6.
+     This may be intentional for filters, but page 2+ canonicalizing to page 1 can weaken crawl paths to older inventory. Detail pages are in the
+     sitemap, so this is not critical, but it is worth deciding deliberately.
+  7. Low/Medium: visible mojibake exists in some SEO copy.
+     rg found actual mojibake sequences like â€”, Â·, and 25â€“60 km in page copy.
+     Examples: frontend/page_components/ElectricScootersLandingPage.tsx:15, frontend/page_components/HireListPage.tsx:31.
+     SEO impact is mostly quality/trust rather than indexing, but this can appear in rendered text, snippets, and FAQ content.

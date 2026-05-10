@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     'allbikes.vercel.app',
     '127.0.0.1',
     'localhost',
+    "api.memorylock.com.au",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
