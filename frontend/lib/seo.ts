@@ -108,6 +108,116 @@ export async function getProductMetadata(slug: string): Promise<Metadata> {
   }
 }
 
+export function buildBikeSchema(bike: Bike): object {
+  const name = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
+  const url = `${SITE_URL}/inventory/motorcycles/${bike.slug}`;
+  const price = bike.discount_price || bike.price;
+  const primaryImage = [...bike.images].sort((a, b) => a.order - b.order)[0];
+
+  const conditionMap: Record<string, string> = {
+    new: 'https://schema.org/NewCondition',
+    used: 'https://schema.org/UsedCondition',
+    demo: 'https://schema.org/RefurbishedCondition',
+  };
+
+  const availabilityMap: Record<string, string> = {
+    for_sale: 'https://schema.org/InStock',
+    available_soon: 'https://schema.org/PreOrder',
+    sold: 'https://schema.org/OutOfStock',
+    reserved: 'https://schema.org/LimitedAvailability',
+    unavailable: 'https://schema.org/Discontinued',
+  };
+
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name,
+    url,
+    description: bike.description || `${name} for sale at ScooterShop, Perth.`,
+    brand: { '@type': 'Brand', name: bike.make },
+    offers: {
+      '@type': 'Offer',
+      url,
+      priceCurrency: 'AUD',
+      price,
+      itemCondition: conditionMap[bike.condition] ?? conditionMap.used,
+      availability: availabilityMap[bike.status] ?? 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'ScooterShop',
+        '@id': `${SITE_URL}/#business`,
+      },
+    },
+  };
+
+  if (primaryImage) schema.image = primaryImage.medium || primaryImage.image;
+  if (bike.year) schema.vehicleModelDate = String(bike.year);
+  if (bike.odometer) {
+    schema.mileageFromOdometer = {
+      '@type': 'QuantitativeValue',
+      value: bike.odometer,
+      unitCode: 'KMT',
+    };
+  }
+  if (bike.vin) schema.vehicleIdentificationNumber = bike.vin;
+  if (bike.transmission) schema.vehicleTransmission = bike.transmission;
+  if (bike.warranty_months > 0) {
+    schema.warranty = {
+      '@type': 'WarrantyPromise',
+      durationOfWarranty: {
+        '@type': 'QuantitativeValue',
+        value: bike.warranty_months,
+        unitCode: 'MON',
+      },
+    };
+  }
+
+  return schema;
+}
+
+export function buildProductSchema(product: Product): object {
+  const url = `${SITE_URL}/escooters/${product.slug}`;
+  const price = product.discount_price || product.price;
+  const primaryImage = [...product.images].sort((a, b) => a.order - b.order)[0];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    url,
+    description: product.description || `${product.name} available at ScooterShop. Free delivery Australia-wide.`,
+    brand: { '@type': 'Brand', name: product.brand },
+    ...(primaryImage ? { image: primaryImage.medium || primaryImage.image } : {}),
+    offers: {
+      '@type': 'Offer',
+      url,
+      priceCurrency: 'AUD',
+      price,
+      itemCondition: 'https://schema.org/NewCondition',
+      availability: product.in_stock
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'ScooterShop',
+        '@id': `${SITE_URL}/#business`,
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'AUD',
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'AU',
+        },
+      },
+    },
+  };
+}
+
 async function fetchJson<T>(path: string): Promise<T> {
   const baseUrl = process.env.DJANGO_API_URL ?? 'http://localhost:8000';
   const response = await fetch(`${baseUrl}${path}`, {

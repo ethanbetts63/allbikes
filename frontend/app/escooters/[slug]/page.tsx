@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getProductMetadata } from '@/lib/seo';
+import { getProductMetadata, buildProductSchema } from '@/lib/seo';
 import { getServerProductById } from '@/lib/serverApi';
 import EScooterDetailPage from '@/page_components/EScooterDetailPage';
 
@@ -18,7 +18,17 @@ export default async function Page(
   const { slug } = await params;
   const id = Number(slug.split('-').pop());
   const product = id && !Number.isNaN(id) ? await getProductOrNull(id) : null;
-  return <EScooterDetailPage initialProduct={product} />;
+  return (
+    <>
+      {product && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildProductSchema(product)) }}
+        />
+      )}
+      <EScooterDetailPage initialProduct={product} />
+    </>
+  );
 }
 
 async function getProductOrNull(id: number) {

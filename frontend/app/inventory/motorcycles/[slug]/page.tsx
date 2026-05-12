@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getBikeMetadata } from '@/lib/seo';
+import { getBikeMetadata, buildBikeSchema } from '@/lib/seo';
 import { getServerBikeById, getServerBikes, getServerDepositSettings } from '@/lib/serverApi';
 import BikeDetailPage from '@/page_components/BikeDetailPage';
 
@@ -26,12 +26,20 @@ export default async function Page(
   ]);
 
   return (
-    <BikeDetailPage
-      initialBike={bike}
-      initialNewBikes={newBikes}
-      initialUsedBikes={usedBikes}
-      depositAmount={depositSettings?.deposit_amount ?? null}
-    />
+    <>
+      {bike && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBikeSchema(bike)) }}
+        />
+      )}
+      <BikeDetailPage
+        initialBike={bike}
+        initialNewBikes={newBikes}
+        initialUsedBikes={usedBikes}
+        depositAmount={depositSettings?.deposit_amount ?? null}
+      />
+    </>
   );
 }
 
