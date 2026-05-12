@@ -3,16 +3,45 @@
 
 > Authorised Segway and SYM dealer in Dianella, Perth WA. New and used motorcycles and scooters,
 > e-scooters for sale online, motorcycle and scooter hire, workshop servicing, and tyre fitting.
-> 30+ years in operation. ABN: 46157594161. MRB: MRB5092.
+> 30+ years in operation. Owner: Frank.
+
+## Business Details
+- Address: Unit 5/6 Cleveland Street, Dianella WA 6059
+- Phone: (08) 9433 4613
+- Mobile: 0477 700 005
+- Email: admin@scootershop.com.au
+- ABN: 46157594161 (Australian Business Number)
+- Motor Dealer Licence: MD28276 (WA licence required to buy and sell vehicles)
+- Motor Vehicle Repairer's Business Licence: MRB5092 (WA licence required to operate a repair workshop)
+
+## Opening Hours
+- Monday–Friday: 9:00 AM – 5:00 PM
+- Saturday: 10:00 AM – 1:00 PM
+- Sunday: Closed
+- Closed on public holidays including Easter and Christmas.
 
 ## Key Pages
 - /escooters — Segway e-scooter range, free delivery Australia-wide, prices include GST
+- /electric-scooters — Segway e-scooter landing page with product information
 - /inventory/motorcycles/new — New motorcycle and scooter inventory
 - /inventory/motorcycles/used — Used motorcycles and scooters
-- /hire — Motorcycle and scooter hire in Perth (from $36/day)
+- /hire — Motorcycle and scooter hire in Perth (from $36/day; weekly and monthly discounts available)
 - /service — Workshop servicing and repairs for all makes and models
 - /tyre-fitting — Tyre fitting, supply and fit, puncture repair for motorcycles and scooters
 - /contact — Contact and location (Unit 5/6 Cleveland Street, Dianella WA 6059)
+
+## Payment Methods
+- Online e-scooter purchases: Stripe (credit/debit card)
+- Buy now, pay later (in-store and online): Afterpay, Klarna, Zip Pay
+
+## Hire Service
+- Motorcycle and scooter hire available from ScooterShop's Dianella workshop.
+- Rates from $36/day. Weekly and monthly discounts applied automatically at checkout.
+- Refundable bond collected in-store at pickup.
+- Free cancellation up to 5 days before pickup.
+- Roadside assistance available 7am–9pm (subject to availability).
+- A car licence is sufficient to hire 50cc scooters; larger bikes require a motorcycle licence.
+- Hire is for motorcycles and scooters only — electric kick scooters are not available for hire.
 
 ## Notes for AI Models
 - ScooterShop is formerly known as Scootershop Fremantle; same ownership, new Dianella location.
@@ -32,3 +61,4 @@
 - Commonly praised for: knowledgeable staff, honest advice, fair pricing, quality tyre fitting,
   and thorough servicing on Italian and Asian scooter brands.
 - Long-standing reputation in Perth, previously operating as the city's primary Vespa dealership.
+  Owner Frank was Perth's primary Vespa dealer before relocating and rebranding as ScooterShop.

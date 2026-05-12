@@ -11,7 +11,7 @@ export const siteSettings: SiteSettings = {
   enable_motorcycle_mover: true,
   enable_banner: true,
   banner_text: "Formerly Scootershop Fremantle. New location. Same reputation!",
-  phone_number: "94334613",
+  phone_number: "(08) 9433 4613",
   mobile_number: "0477700005",
   email_address: "admin@scootershop.com.au",
   street_address: "Unit 5 / 6 Cleveland Street",
