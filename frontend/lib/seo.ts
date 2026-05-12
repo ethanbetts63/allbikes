@@ -187,7 +187,7 @@ export function buildProductSchema(product: Product): object {
     url,
     description: product.description || `${product.name} available at ScooterShop. Free delivery Australia-wide.`,
     brand: { '@type': 'Brand', name: product.brand },
-    ...(primaryImage ? { image: primaryImage.medium || primaryImage.image } : {}),
+    ...(primaryImage ? { image: absoluteUrl(primaryImage.medium || primaryImage.image) } : {}),
     offers: {
       '@type': 'Offer',
       url,

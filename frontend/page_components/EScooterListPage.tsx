@@ -1,4 +1,3 @@
-import StructuredDataScript from '@/components/StructuredDataScript';
 import ProductCard from '@/components/ProductCard';
 import ProductFilterForm from '@/components/ProductFilterForm';
 import type { Product } from '@/types/Product';
@@ -43,44 +42,8 @@ interface EScooterListPageProps {
 }
 
 const EScooterListPage = ({ products, totalPages, currentPage, filters }: EScooterListPageProps) => {
-  const structuredData = products && products.length > 0 ? {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
-          { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/escooters" }
-        ]
-      },
-      {
-        "@type": "ItemList",
-        "itemListElement": products.map((product, index) => ({
-          "@type": "ListItem",
-          "position": index + 1,
-          "item": {
-            "@type": "Product",
-            "url": `https://www.scootershop.com.au/escooters/${product.slug}`,
-            "name": product.name,
-            ...(product.images[0]?.image && { "image": product.images[0].image }),
-            ...(product.description && { "description": product.description }),
-            ...(product.brand && { "brand": { "@type": "Brand", "name": product.brand } }),
-            "offers": {
-              "@type": "Offer",
-              "price": product.discount_price && parseFloat(product.discount_price) > 0 ? product.discount_price : product.price,
-              "priceCurrency": "AUD",
-              "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
-            }
-          }
-        }))
-      }
-    ]
-  } : undefined;
-
   return (
     <>
-      <StructuredDataScript structuredData={structuredData} />
-
       <Hero
         title="Electric Scooters"
         description="Buy online with free delivery Australia-wide. All prices include GST and are processed securely via Stripe."

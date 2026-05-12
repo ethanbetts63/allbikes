@@ -28,39 +28,11 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
 
     const structuredData = {
         "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
-                    { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/escooters" },
-                    { "@type": "ListItem", "position": 3, "name": product.name, "item": `https://www.scootershop.com.au/escooters/${product.slug}` }
-                ]
-            },
-            {
-                "@type": "Product",
-                "name": product.name,
-                "image": sortedImages[0]?.image,
-                "description": product.description || `Buy the ${product.name} online. Price includes GST with free delivery Australia-wide.`,
-                ...(product.brand && { "brand": { "@type": "Brand", "name": product.brand } }),
-                "offers": {
-                    "@type": "Offer",
-                    "price": product.discount_price && parseFloat(product.discount_price) > 0 ? product.discount_price : product.price,
-                    "priceCurrency": "AUD",
-                    "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-                    "url": `https://www.scootershop.com.au/escooters/${product.slug}`
-                },
-                ...(videoId && {
-                    "video": {
-                        "@type": "VideoObject",
-                        "name": `${product.name} - Walkthrough`,
-                        "description": product.description,
-                        "thumbnailUrl": `https://img.youtube.com/vi/${videoId}/0.jpg`,
-                        "embedUrl": `https://www.youtube.com/embed/${videoId}`,
-                        "uploadDate": product.created_at
-                    }
-                })
-            }
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
+            { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/escooters" },
+            { "@type": "ListItem", "position": 3, "name": product.name, "item": `https://www.scootershop.com.au/escooters/${product.slug}` }
         ]
     };
 

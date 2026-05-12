@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getProductMetadata, buildProductSchema } from '@/lib/seo';
 import { getServerProductById } from '@/lib/serverApi';
 import EScooterDetailPage from '@/page_components/EScooterDetailPage';
@@ -17,7 +18,19 @@ export default async function Page(
 ) {
   const { slug } = await params;
   const id = Number(slug.split('-').pop());
-  const product = id && !Number.isNaN(id) ? await getProductOrNull(id) : null;
+  if (!id || Number.isNaN(id)) {
+    notFound();
+  }
+
+  const product = await getProductOrNull(id);
+  if (!product) {
+    notFound();
+  }
+
+  if (product.slug !== slug) {
+    permanentRedirect(`/escooters/${product.slug}`);
+  }
+
   return (
     <>
       {product && (

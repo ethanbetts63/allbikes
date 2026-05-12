@@ -1,4 +1,3 @@
-import StructuredDataScript from '@/components/StructuredDataScript';
 import BikeCard from '@/components/BikeCard';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
@@ -106,49 +105,8 @@ const BikeListPage = ({ bikeCondition, bikes, totalPages, currentPage, filters }
   ];
   const basePath = breadcrumbItems[1].href;
   
-  const structuredData = bikes && bikes.length > 0 ? {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": breadcrumbItems.map((item, index) => ({
-          "@type": "ListItem",
-          "position": index + 1,
-          "name": item.name,
-          "item": `https://www.scootershop.com.au${item.href}`
-        }))
-      },
-      {
-        "@type": "ItemList",
-        "itemListElement": bikes.map((bike, index) => ({
-            "@type": "ListItem",
-            "position": index + 1,
-            "item": {
-              "@type": "Product",
-              "url": `https://www.scootershop.com.au/inventory/motorcycles/${bike.slug}`,
-              "name": `${bike.year} ${bike.make} ${bike.model}`,
-              "image": bike.images.length > 0 ? `https://www.scootershop.com.au${bike.images[0].image}` : `https://www.scootershop.com.au/src/assets/motorcycle_images/placeholder.png`,
-              "description": bike.description,
-              "brand": {
-                "@type": "Brand",
-                "name": bike.make
-              },
-              "offers": {
-                "@type": "Offer",
-                "price": bike.price,
-                "priceCurrency": "AUD",
-                "availability": bike.status === 'for_sale' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-                "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition'
-              }
-            }
-          }))
-      }
-    ]
-  } : undefined;
-
   return (
     <>
-      <StructuredDataScript structuredData={structuredData} />
       <Hero 
         title={responsivePageTitle}
         description={description}
