@@ -150,7 +150,7 @@ export function buildBikeSchema(bike: Bike): object {
     },
   };
 
-  if (primaryImage) schema.image = primaryImage.medium || primaryImage.image;
+  if (primaryImage) schema.image = absoluteUrl(primaryImage.medium || primaryImage.image);
   if (bike.year) schema.vehicleModelDate = String(bike.year);
   if (bike.odometer) {
     schema.mileageFromOdometer = {

@@ -65,62 +65,13 @@ const BikeDetailPage = ({
 
     const structuredData = bike ? {
         "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "BreadcrumbList",
-                "itemListElement": breadcrumbItems.map((item, index) => ({
-                    "@type": "ListItem",
-                    "position": index + 1,
-                    "name": item.name,
-                    "item": `https://www.scootershop.com.au${item.href}`
-                }))
-            },
-            {
-                "@type": "Product",
-                "name": pageTitle,
-                "image": bike.images.length > 0 ? `https://www.scootershop.com.au${bike.images[0].image}` : `https://www.scootershop.com.au/src/assets/motorcycle_images/placeholder.png`,
-                "description": bike.description,
-                "sku": bike.stock_number,
-                "brand": {
-                    "@type": "Brand",
-                    "name": bike.make
-                },
-                "offers": {
-                    "@type": "Offer",
-                    "price": bike.price,
-                    "priceCurrency": "AUD",
-                    "availability": bike.status === 'for_sale' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-                    "itemCondition": bike.condition.toLowerCase() === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-                    "url": `https://www.scootershop.com.au/inventory/motorcycles/${bike.slug}`
-                },
-                ...(videoId && {
-                    "video": {
-                        "@type": "VideoObject",
-                        "name": `${pageTitle} - Walkthrough`,
-                        "description": bike.description,
-                        "thumbnailUrl": `https://img.youtube.com/vi/${videoId}/0.jpg`,
-                        "embedUrl": `https://www.youtube.com/embed/${videoId}`,
-                        "uploadDate": bike.date_posted
-                    }
-                }),
-                "vehicle": {
-                    "@type": "Vehicle",
-                    "vehicleIdentificationNumber": bike.rego,
-                    "mileageFromOdometer": {
-                        "@type": "QuantitativeValue",
-                        "value": bike.odometer,
-                        "unitCode": "KMT"
-                    },
-                    "engineDisplacement": {
-                        "@type": "QuantitativeValue",
-                        "value": bike.engine_size,
-                        "unitText": "cc"
-                    },
-                    "vehicleModelDate": bike.year,
-                    "vehicleTransmission": bike.transmission
-                }
-            }
-        ]
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbItems.map((item, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": item.name,
+            "item": `https://www.scootershop.com.au${item.href}`
+        }))
     } : undefined;
 
     if (!bike) return <ErrorScreen message="Bike not found." />;

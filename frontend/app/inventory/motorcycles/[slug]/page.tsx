@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getBikeMetadata, buildBikeSchema } from '@/lib/seo';
 import { getServerBikeById, getServerBikes, getServerDepositSettings } from '@/lib/serverApi';
 import BikeDetailPage from '@/page_components/BikeDetailPage';
@@ -17,7 +18,19 @@ export default async function Page(
 ) {
   const { slug } = await params;
   const id = slug.split('-').pop();
-  const bike = id ? await getBikeOrNull(id) : null;
+  if (!id || Number.isNaN(Number(id))) {
+    notFound();
+  }
+
+  const bike = await getBikeOrNull(id);
+  if (!bike) {
+    notFound();
+  }
+
+  if (bike.slug !== slug) {
+    permanentRedirect(`/inventory/motorcycles/${bike.slug}`);
+  }
+
   const shouldFetchDeposit = bike && ['new', 'demo', 'used'].includes(bike.condition) && bike.status === 'for_sale';
   const [newBikes, usedBikes, depositSettings] = await Promise.all([
     fetchFeaturedBikes('new'),
