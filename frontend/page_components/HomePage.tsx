@@ -77,7 +77,12 @@ const HomePage = ({
     "@type": ["MotorcycleDealer", "AutoDealer"],
     "@id": "https://www.scootershop.com.au/#business",
     "name": "ScooterShop",
-    "image": "https://www.scootershop.com.au/logo-512x512.png",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://www.scootershop.com.au/logo-512x512.png",
+      "width": 512,
+      "height": 512
+    },
     "url": "https://www.scootershop.com.au",
     "telephone": toE164Au(siteSettings.phone_number),
     "email": siteSettings.email_address,

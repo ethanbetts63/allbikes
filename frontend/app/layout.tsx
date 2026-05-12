@@ -10,6 +10,16 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 export const metadata: Metadata = {
   title: "ScooterShop Perth | Motorcycles, Scooters & Servicing",
   description: "Perth's motorcycle and scooter specialists. New and used bike sales, servicing, tyre fitting, and e-scooters. Located in Dianella, WA.",
+  icons: {
+    icon: [
+      { url: '/logo-48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/logo-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/logo-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/logo-180x180.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export default function RootLayout({
