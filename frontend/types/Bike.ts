@@ -26,6 +26,7 @@ export type Bike = {
   transmission: string;
   images: BikeImage[];
   date_posted: string;
+  is_lams_approved?: boolean;
   is_hire?: boolean;
   daily_rate?: string | null;
 };

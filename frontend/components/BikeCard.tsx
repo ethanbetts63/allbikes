@@ -30,6 +30,12 @@ const BikeCard = ({ bike }: BikeCardProps) => {
           <span className="absolute bottom-2 left-2 bg-black/60 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
             {bike.condition}
           </span>
+          {/* LAMS pill */}
+          {bike.is_lams_approved && (
+            <span className="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">
+              LAMS
+            </span>
+          )}
           {/* Popular pill */}
           {bike.popular && (
             <span className="absolute top-3 right-3 bg-[var(--highlight)] text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1">

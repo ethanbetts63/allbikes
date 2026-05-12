@@ -140,6 +140,11 @@ const BikeDetailPage = ({
                                 Coming Soon
                             </span>
                         )}
+                        {bike.is_lams_approved && (
+                            <span className="bg-green-600 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                                LAMS Approved
+                            </span>
+                        )}
                     </div>
                     {bike.status === 'available_soon' && (
                         <p className="mt-3 text-sm text-[var(--text-dark-secondary)] max-w-lg">

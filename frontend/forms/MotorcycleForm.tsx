@@ -161,6 +161,12 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                             )} />
                             <Label htmlFor="is_hire">For Hire?</Label>
                         </div>
+                        <div className="flex items-center space-x-2 pt-6">
+                            <Controller name="is_lams_approved" control={control} render={({ field }) => (
+                                <Switch id="is_lams_approved" checked={!!field.value} onCheckedChange={field.onChange} />
+                            )} />
+                            <Label htmlFor="is_lams_approved">LAMS Approved?</Label>
+                        </div>
                     </div>
 
                     {/* Description */}

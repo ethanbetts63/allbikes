@@ -145,6 +145,10 @@ class Motorcycle(models.Model):
         help_text="Number of months the warranty is valid for",
     )
 
+    is_lams_approved = models.BooleanField(
+        default=False,
+        help_text="This motorcycle is LAMS (Learner Approved Motorcycle Scheme) approved.",
+    )
     is_hire = models.BooleanField(
         default=False,
         help_text="This motorcycle is available for hire.",
