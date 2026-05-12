@@ -121,7 +121,7 @@ const HomePage = ({
     .filter(({ hours }) => hours && !hours.toLowerCase().includes('closed'))
     .map(({ day, hours }) => ({
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": `https://schema.org/${day}`,
+        "dayOfWeek": day,
         "opens": to24h(hours.split('-')[0].trim()),
         "closes": to24h(hours.split('-')[1].trim()),
     })),
@@ -132,7 +132,7 @@ const HomePage = ({
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
-      "reviewCount": "105",
+      "reviewCount": 105,
       "bestRating": "5"
     }
 } : null;
