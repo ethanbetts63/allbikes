@@ -1,5 +1,5 @@
 import BikeListPage from '@/page_components/BikeListPage';
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, buildBikeListSchema } from '@/lib/seo';
 import { getInitialBikeList } from '@/lib/inventoryList';
 import type { ListSearchParams } from '@/lib/listQuery';
 
@@ -20,12 +20,18 @@ export default async function Page({ searchParams }: PageProps) {
   const { bikes, totalPages, currentPage, filters } = await getInitialBikeList('new,demo', params);
 
   return (
-    <BikeListPage
-      bikeCondition="new,demo"
-      bikes={bikes}
-      totalPages={totalPages}
-      currentPage={currentPage}
-      filters={filters}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBikeListSchema(bikes, 'New Motorcycles & Scooters for Sale', '/inventory/motorcycles/new')) }}
+      />
+      <BikeListPage
+        bikeCondition="new,demo"
+        bikes={bikes}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        filters={filters}
+      />
+    </>
   );
 }

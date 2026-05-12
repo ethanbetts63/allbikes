@@ -1,4 +1,4 @@
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, buildProductListSchema } from '@/lib/seo';
 import { getInitialProductList } from '@/lib/productList';
 import EScooterListPage from '@/page_components/EScooterListPage';
 import type { ListSearchParams } from '@/lib/listQuery';
@@ -20,11 +20,17 @@ export default async function Page({ searchParams }: PageProps) {
   const { products, totalPages, currentPage, filters } = await getInitialProductList(params);
 
   return (
-    <EScooterListPage
-      products={products}
-      totalPages={totalPages}
-      currentPage={currentPage}
-      filters={filters}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildProductListSchema(products, 'Electric Scooters for Sale', '/escooters')) }}
+      />
+      <EScooterListPage
+        products={products}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        filters={filters}
+      />
+    </>
   );
 }

@@ -218,6 +218,39 @@ export function buildProductSchema(product: Product): object {
   };
 }
 
+export function buildBikeListSchema(bikes: Bike[], listName: string, listUrl: string): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName,
+    url: `${SITE_URL}${listUrl}`,
+    itemListElement: bikes.map((bike, index) => {
+      const name = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${SITE_URL}/inventory/motorcycles/${bike.slug}`,
+        name,
+      };
+    }),
+  };
+}
+
+export function buildProductListSchema(products: Product[], listName: string, listUrl: string): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName,
+    url: `${SITE_URL}${listUrl}`,
+    itemListElement: products.map((product, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `${SITE_URL}/escooters/${product.slug}`,
+      name: product.name,
+    })),
+  };
+}
+
 async function fetchJson<T>(path: string): Promise<T> {
   const baseUrl = process.env.DJANGO_API_URL ?? 'http://localhost:8000';
   const response = await fetch(`${baseUrl}${path}`, {
