@@ -19,6 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://api.scootershop.com.au" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://api.scootershop.com.au" />
+      </head>
       <body>
         <AuthProvider>
           <div className="min-h-screen flex flex-col">
