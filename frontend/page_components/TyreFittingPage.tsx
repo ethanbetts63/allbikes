@@ -78,6 +78,7 @@ const structuredData = {
             "serviceType": "Motorcycle and scooter tyre fitting",
             "provider": {
                 "@type": "Organization",
+                "@id": "https://www.scootershop.com.au/#business",
                 "name": "ScooterShop"
             },
             "description": "Motorcycle tyre change, scooter tyre replacement, puncture repair, flat tyre repair, and tyre supply and fit in Perth.",

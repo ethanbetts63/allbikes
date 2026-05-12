@@ -52,6 +52,7 @@ const structuredDataBase = {
     },
     {
       "@type": "LocalBusiness",
+      "@id": "https://www.scootershop.com.au/#business",
       "name": "ScooterShop",
       "url": "https://www.scootershop.com.au",
       "telephone": siteSettings.phone_number,

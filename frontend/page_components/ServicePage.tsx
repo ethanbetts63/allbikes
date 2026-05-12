@@ -75,6 +75,7 @@ const structuredData = {
             "serviceType": "Motorcycle and scooter servicing and repairs",
             "provider": {
                 "@type": "Organization",
+                "@id": "https://www.scootershop.com.au/#business",
                 "name": "ScooterShop"
             },
             "description": "Expert motorcycle and scooter servicing, repairs, and tyre fitting in Perth.",
