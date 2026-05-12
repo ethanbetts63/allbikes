@@ -130,7 +130,7 @@ export function buildBikeSchema(bike: Bike): object {
 
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
-    '@type': 'Product',
+    '@type': 'Motorcycle',
     name,
     url,
     description: bike.description || `${name} for sale at ScooterShop, Perth.`,
@@ -142,6 +142,19 @@ export function buildBikeSchema(bike: Bike): object {
       price,
       itemCondition: conditionMap[bike.condition] ?? conditionMap.used,
       availability: availabilityMap[bike.status] ?? 'https://schema.org/OutOfStock',
+      ...(bike.stock_number ? { sku: bike.stock_number } : {}),
+      availableAtOrFrom: {
+        '@type': 'Place',
+        name: 'ScooterShop',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Unit 5/6 Cleveland Street',
+          addressLocality: 'Dianella',
+          addressRegion: 'WA',
+          postalCode: '6059',
+          addressCountry: 'AU',
+        },
+      },
       seller: {
         '@type': 'Organization',
         name: 'ScooterShop',
@@ -161,6 +174,15 @@ export function buildBikeSchema(bike: Bike): object {
   }
   if (bike.vin) schema.vehicleIdentificationNumber = bike.vin;
   if (bike.transmission) schema.vehicleTransmission = bike.transmission;
+  if (bike.engine_size) {
+    schema.engineDisplacement = {
+      '@type': 'QuantitativeValue',
+      value: bike.engine_size,
+      unitCode: 'CMQ',
+      unitText: 'cc',
+    };
+  }
+  if (bike.seats) schema.seatingCapacity = bike.seats;
   if (bike.warranty_months > 0) {
     schema.warranty = {
       '@type': 'WarrantyPromise',

@@ -83,12 +83,18 @@ const HomePage = ({
       "width": 512,
       "height": 512
     },
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.scootershop.com.au/logo-512x512.png",
+      "width": 512,
+      "height": 512
+    },
     "url": "https://www.scootershop.com.au",
     "telephone": toE164Au(siteSettings.phone_number),
     "email": siteSettings.email_address,
-    "founder": {
+    "owner": {
       "@type": "Person",
-      "name": "Ethan Betts"
+      "name": "Frank Ingram"
     },
     "address": {
         "@type": "PostalAddress",
@@ -115,10 +121,13 @@ const HomePage = ({
     .filter(({ hours }) => hours && !hours.toLowerCase().includes('closed'))
     .map(({ day, hours }) => ({
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": day,
+        "dayOfWeek": `https://schema.org/${day}`,
         "opens": to24h(hours.split('-')[0].trim()),
         "closes": to24h(hours.split('-')[1].trim()),
     })),
+    "currenciesAccepted": "AUD",
+    "paymentAccepted": "Cash, Credit Card, Afterpay, Klarna, Zip Pay",
+    "hasMap": `https://www.google.com/maps/place/?q=place_id:${siteSettings.google_places_place_id}`,
     "priceRange": "$$",
     "aggregateRating": {
       "@type": "AggregateRating",

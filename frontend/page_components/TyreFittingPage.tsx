@@ -76,6 +76,8 @@ const structuredData = {
         {
             "@type": "Service",
             "serviceType": "Motorcycle and scooter tyre fitting",
+            "url": "https://www.scootershop.com.au/tyre-fitting",
+            "areaServed": { "@type": "City", "name": "Perth" },
             "provider": {
                 "@type": "Organization",
                 "@id": "https://www.scootershop.com.au/#business",

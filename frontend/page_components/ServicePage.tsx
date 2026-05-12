@@ -73,6 +73,8 @@ const structuredData = {
         {
             "@type": "Service",
             "serviceType": "Motorcycle and scooter servicing and repairs",
+            "url": "https://www.scootershop.com.au/service",
+            "areaServed": { "@type": "City", "name": "Perth" },
             "provider": {
                 "@type": "Organization",
                 "@id": "https://www.scootershop.com.au/#business",
