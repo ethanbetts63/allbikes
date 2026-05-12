@@ -45,7 +45,7 @@ const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
           )}
         </div>
         <div className="px-3 py-2.5 flex flex-col flex-1 gap-1.5">
-          <h3 className="text-base font-bold text-[var(--text-dark-primary)] leading-snug">{cardTitle}</h3>
+          <p className="text-base font-bold text-[var(--text-dark-primary)] leading-snug">{cardTitle}</p>
           <div className="flex items-center gap-3 text-sm text-[var(--text-dark-secondary)]">
             {bike.engine_size && (
               <span className="flex items-center gap-1">
