@@ -1,7 +1,32 @@
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { getServerHireBikes } from '@/lib/serverApi';
 import type { Bike } from '@/types/Bike';
 import HireListPage from '@/page_components/HireListPage';
+
+const hireSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'Hire', item: `${SITE_URL}/hire` },
+      ],
+    },
+    {
+      '@type': 'Service',
+      serviceType: 'Motorcycle and scooter hire',
+      url: `${SITE_URL}/hire`,
+      provider: {
+        '@type': 'Organization',
+        '@id': `${SITE_URL}/#business`,
+        name: 'ScooterShop',
+      },
+      areaServed: { '@type': 'City', name: 'Perth' },
+      description: 'Short and long term motorcycle and scooter hire in Perth, WA. Daily, weekly, and monthly rates available from ScooterShop Dianella.',
+    },
+  ],
+};
 
 export const dynamic = 'force-dynamic';
 
@@ -25,11 +50,17 @@ export default async function Page({ searchParams }: HirePageProps) {
   const bikes = await fetchInitialHireBikes(startDate, endDate);
 
   return (
-    <HireListPage
-      initialBikes={bikes}
-      initialStartDate={startDate}
-      initialEndDate={endDate}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(hireSchema) }}
+      />
+      <HireListPage
+        initialBikes={bikes}
+        initialStartDate={startDate}
+        initialEndDate={endDate}
+      />
+    </>
   );
 }
 
