@@ -173,7 +173,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       <div className="order-1 lg:order-2 lg:w-[38%] flex flex-col">
         <div className="bg-[var(--bg-dark-primary)] flex flex-col justify-center items-center lg:items-start px-8 py-4 md:px-10 md:py-5 flex-1 text-center lg:text-left">
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-2">
-            Allbikes &amp; Scooters &nbsp;·&nbsp; Dianella, Perth
+            ScooterShop &nbsp;·&nbsp; Dianella, Perth
           </p>
           <h1 className="text-[var(--text-light-primary)] text-4xl sm:text-5xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-[0.92] mb-3">
             Perth's<br />
@@ -278,7 +278,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         <div className="bg-[var(--bg-dark-primary)] flex flex-col sm:flex-row items-center justify-between gap-4 px-8 py-4 md:px-10">
           <div>
             <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-              Allbikes Workshop &nbsp;·&nbsp; Perth
+              ScooterShop &nbsp;·&nbsp; Perth
             </p>
             <h2 className="text-[var(--text-light-primary)] text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">
               Get Your Bike Serviced.

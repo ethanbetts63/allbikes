@@ -65,7 +65,7 @@ export async function getBikeMetadata(slug: string): Promise<Metadata> {
       title: `${name} | ScooterShop`,
       description:
         bike.description ||
-        `View the ${name} at Allbikes & Scooters, Perth's motorcycle and scooter dealership.`,
+        `View the ${name} at ScooterShop, Perth's motorcycle and scooter dealership.`,
       canonicalPath: `/inventory/motorcycles/${bike.slug}`,
       image: primaryImage?.medium || primaryImage?.image,
       noindex: bike.status === 'unavailable',

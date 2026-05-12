@@ -33,7 +33,7 @@ const NavBar = () => {
             sizes="175px"
             width="1756"
             height="810"
-            alt="Allbikes Logo"
+            alt="ScooterShop Logo"
             className="h-full w-auto object-contain"
           />
         </Link>

@@ -24,7 +24,7 @@ const EScooterWhyBuySection = ({ buttonLink, buttonText }: EScooterWhyBuySection
           {/* Left — bold typographic block */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em] mb-6">
-              Allbikes &amp; Scooters · Dianella, Perth
+              ScooterShop · Dianella, Perth
             </p>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
               Shop With<br />Confidence.

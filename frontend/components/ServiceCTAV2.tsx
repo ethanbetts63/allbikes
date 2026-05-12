@@ -20,7 +20,7 @@ const ServiceCTAV2 = () => {
                     {/* Left — bold typographic block */}
                     <div>
                         <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em] mb-6">
-                            Allbikes Workshop · Perth
+                            ScooterShop · Perth
                         </p>
                         <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
                             Get Your<br />Bike<br />Sorted.

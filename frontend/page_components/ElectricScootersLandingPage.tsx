@@ -52,7 +52,7 @@ const structuredDataBase = {
     },
     {
       "@type": "LocalBusiness",
-      "name": "Allbikes & Scooters",
+      "name": "ScooterShop",
       "url": "https://www.scootershop.com.au",
       "telephone": siteSettings.phone_number,
       "address": {

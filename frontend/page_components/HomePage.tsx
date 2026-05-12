@@ -39,7 +39,7 @@ const HomePage = ({
     },
     {
       "question": "What areas of Perth do you service?",
-      "answer": `Our workshop is based in Dianella at ${siteSettings.street_address || '{address}'}. If you are looking for "motorcycle mechanics near me" or "scooter mechanics near me", Allbikes & Scooters frequently services the areas of Dianella, Morley, Fremantle, Yokine, CBD, Menora, Cottesloe, Mount Lawley, North Perth, Northbridge, Inglewood and many other Perth suburbs. If you are more distant, or are unable to move your bike, we work closely with and can recommend Perth Motorcycle and Scooter Movers. More information is available on our service page.`
+      "answer": `Our workshop is based in Dianella at ${siteSettings.street_address || '{address}'}. If you are looking for "motorcycle mechanics near me" or "scooter mechanics near me", ScooterShop frequently services the areas of Dianella, Morley, Fremantle, Yokine, CBD, Menora, Cottesloe, Mount Lawley, North Perth, Northbridge, Inglewood and many other Perth suburbs. If you are more distant, or are unable to move your bike, we work closely with and can recommend Perth Motorcycle and Scooter Movers. More information is available on our service page.`
     },
     {
       "question": "Do you service electric motorcycles and scooters?",
@@ -76,7 +76,7 @@ const HomePage = ({
     "@context": "https://schema.org",
     "@type": ["MotorcycleDealer", "AutoDealer"],
     "@id": "https://www.scootershop.com.au/#business",
-    "name": "Allbikes & Scooters",
+    "name": "ScooterShop",
     "image": "https://www.scootershop.com.au/logo-512x512.png",
     "url": "https://www.scootershop.com.au",
     "telephone": toE164Au(siteSettings.phone_number),
@@ -126,7 +126,7 @@ const HomePage = ({
   const webSiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Allbikes & Scooters",
+    "name": "ScooterShop",
     "url": "https://www.scootershop.com.au"
   };
 

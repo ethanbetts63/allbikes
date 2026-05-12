@@ -83,7 +83,7 @@ const Footer = () => {
 
       <div className="border-t border-stone-800">
         <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-[var(--text-light-secondary)] text-xs">&copy; {new Date().getFullYear()} Allbikes. All rights reserved.</p>
+          <p className="text-[var(--text-light-secondary)] text-xs">&copy; {new Date().getFullYear()} ScooterShop. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <p className="text-[var(--text-light-secondary)] text-xs">
               ABN: {siteSettings.abn_number}&nbsp;&nbsp;MD: {siteSettings.md_number}&nbsp;&nbsp;MRB: {siteSettings.mrb_number}

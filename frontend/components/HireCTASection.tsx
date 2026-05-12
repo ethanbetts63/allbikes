@@ -30,7 +30,7 @@ const HireCTASection = () => {
       <div className="max-w-2xl mx-auto flex flex-col items-center text-center gap-8">
         <div>
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-            Allbikes &amp; Scooters · Dianella, Perth
+            ScooterShop · Dianella, Perth
           </p>
           <h2 className="text-3xl sm:text-4xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
             Hire a Bike

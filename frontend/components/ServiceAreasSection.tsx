@@ -18,7 +18,7 @@ const ServiceAreasSection = () => {
             <div className="flex items-center gap-2 mb-6">
               <MapPin className="h-4 w-4 text-[var(--highlight)] shrink-0" />
               <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em]">
-                Allbikes Workshop · Dianella, Perth
+                ScooterShop · Dianella, Perth
               </p>
             </div>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-8 uppercase italic">

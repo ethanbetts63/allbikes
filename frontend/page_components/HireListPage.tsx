@@ -104,7 +104,7 @@ const HireListPage = ({ initialBikes, initialStartDate, initialEndDate }: HireLi
         <div className="max-w-2xl mx-auto flex flex-col items-center text-center gap-8">
           <div>
             <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-              Allbikes &amp; Scooters Â· Dianella, Perth
+              ScooterShop · Dianella, Perth
             </p>
             <h1 className="text-4xl sm:text-5xl font-black uppercase italic text-[var(--text-light-primary)] leading-none">
               Select Your Hire Dates
