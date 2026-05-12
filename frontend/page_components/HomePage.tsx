@@ -51,13 +51,35 @@ const HomePage = ({
     }
   ];
 
+  // Converts a local AU phone number to E.164 (required by schema.org)
+  const toE164Au = (phone: string): string => {
+    const digits = phone.replace(/\D/g, '');
+    if (digits.startsWith('61')) return `+${digits}`;
+    if (digits.startsWith('0')) return `+61${digits.slice(1)}`;
+    if (digits.length === 8) return `+618${digits}`; // Perth landline missing area code
+    return `+61${digits}`;
+  };
+
+  // Converts "9:00 AM" / "5:00 PM" to ISO 24h "09:00" / "17:00"
+  const to24h = (timeStr: string): string => {
+    const match = timeStr.trim().match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+    if (!match) return timeStr;
+    let h = parseInt(match[1]);
+    const m = match[2];
+    const period = match[3].toUpperCase();
+    if (period === 'AM' && h === 12) h = 0;
+    if (period === 'PM' && h !== 12) h += 12;
+    return `${String(h).padStart(2, '0')}:${m}`;
+  };
+
   const localBusinessSchema = siteSettings ? {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": ["MotorcycleDealer", "AutoDealer"],
+    "@id": "https://www.scootershop.com.au/#business",
     "name": "Allbikes & Scooters",
     "image": "https://www.scootershop.com.au/logo-512x512.png",
     "url": "https://www.scootershop.com.au",
-    "telephone": siteSettings.phone_number,
+    "telephone": toE164Au(siteSettings.phone_number),
     "email": siteSettings.email_address,
     "founder": {
       "@type": "Person",
@@ -69,7 +91,12 @@ const HomePage = ({
         "addressLocality": siteSettings.address_locality,
         "addressRegion": siteSettings.address_region,
         "postalCode": siteSettings.postal_code,
-        "addressCountry": "AU" 
+        "addressCountry": "AU"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -31.90652137087452,
+      "longitude": 115.88103847100608
     },
     "openingHoursSpecification": [
         { day: "Monday",    hours: siteSettings.opening_hours_monday },
@@ -84,10 +111,16 @@ const HomePage = ({
     .map(({ day, hours }) => ({
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": day,
-        "opens": hours.split('-')[0].trim(),
-        "closes": hours.split('-')[1].trim(),
+        "opens": to24h(hours.split('-')[0].trim()),
+        "closes": to24h(hours.split('-')[1].trim()),
     })),
-    "priceRange": "AUD"
+    "priceRange": "$$",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "105",
+      "bestRating": "5"
+    }
 } : null;
 
   const webSiteSchema = {
