@@ -5,7 +5,7 @@ import { siteSettings } from '@/config/siteSettings';
 import OtherSites from '../components/OtherSites';
 import ContactButtons from '@/components/ContactButtons';
 import splitcartLogo from "@/assets/splitcart_logo.png";
-import foreverFlowerLogo from "@/assets/foreverflower_logo.png";
+import futureFlowerLogo from "@/assets/futureflower_logo.png";
 import { FaqSection } from '@/components/FaqSection';
 
 const otherSitesData = [
@@ -17,7 +17,7 @@ const otherSitesData = [
     },
     {
         name: "FutureFlower",
-        logoSrc: foreverFlowerLogo.src,
+        logoSrc: futureFlowerLogo.src,
         description: "Flower delivery and subscription service.",
         url: "https://www.futureflower.app", 
     },
