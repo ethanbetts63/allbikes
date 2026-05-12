@@ -17,10 +17,6 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/service-booking`, lastModified: '2026-05-09', changeFrequency: 'weekly', priority: 0.6 },
   { url: `${SITE_URL}/tyre-fitting`, lastModified: '2026-05-09', changeFrequency: 'weekly', priority: 0.6 },
   { url: `${SITE_URL}/contact`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.5 },
-  { url: `${SITE_URL}/refunds`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
-  { url: `${SITE_URL}/privacy`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
-  { url: `${SITE_URL}/security`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
-  { url: `${SITE_URL}/terms`, lastModified: '2026-05-09', changeFrequency: 'monthly', priority: 0.3 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
