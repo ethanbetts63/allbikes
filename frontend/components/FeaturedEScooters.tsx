@@ -25,7 +25,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
           </div>
           <div className="flex items-end justify-center sm:justify-between gap-4">
             <h2 className="text-[var(--text-light-primary)] text-3xl md:text-4xl font-black uppercase italic leading-none text-center sm:text-left">
-              Best Selling<br />E-Scooters
+              Electric Scooters<br />for Sale
             </h2>
             <Link
               href="/escooters"
