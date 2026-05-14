@@ -7,7 +7,7 @@ from ..models import Motorcycle, MotorcycleImage
 from ..serializers.motorcycle_serializer import MotorcycleSerializer
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 12
+    page_size = 9
     page_size_query_param = 'page_size'
     max_page_size = 100
 

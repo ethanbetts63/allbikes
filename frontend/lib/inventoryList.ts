@@ -17,7 +17,7 @@ export async function getInitialBikeList(condition: string, searchParams: ListSe
     const response = await getServerBikes(query.params);
     return {
       bikes: response.results,
-      totalPages: Math.ceil(response.count / 12),
+      totalPages: Math.ceil(response.count / 9),
       currentPage: query.page,
       filters: query.filters,
     };
