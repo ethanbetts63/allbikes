@@ -3,7 +3,7 @@ import NextImage from 'next/image';
 import { Wrench, Cog, Gauge, Flame } from "lucide-react";
 import type { BikeCardProps } from "@/types/BikeCardProps";
 
-const BikeCard = ({ bike }: BikeCardProps) => {
+const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boolean }) => {
   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
   const primaryImage = sortedImages[0];
   const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
@@ -20,6 +20,7 @@ const BikeCard = ({ bike }: BikeCardProps) => {
               src={imageUrl}
               alt={cardTitle}
               fill
+              priority={priority}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-contain group-hover:scale-105 transition-transform duration-500"
             />

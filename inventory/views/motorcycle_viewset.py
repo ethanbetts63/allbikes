@@ -18,7 +18,7 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
     Read-only access is public.
     Write access is restricted to admin users.
     """
-    queryset = Motorcycle.objects.all().order_by('-popular', '-date_posted')
+    queryset = Motorcycle.objects.prefetch_related('images').order_by('-popular', '-date_posted')
     serializer_class = MotorcycleSerializer
     pagination_class = StandardResultsSetPagination
 
@@ -27,7 +27,7 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
         Optionally restricts the returned motorcycles by condition, featured status,
         and applies ordering and filtering, by using query parameters in the URL.
         """
-        queryset = Motorcycle.objects.all()
+        queryset = Motorcycle.objects.prefetch_related('images')
         
         # Filtering by condition (supports comma-separated values e.g. "new,demo")
         condition = self.request.query_params.get('condition')

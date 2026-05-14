@@ -118,8 +118,8 @@ const BikeListPage = ({ bikeCondition, bikes, totalPages, currentPage, filters }
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {bikes.length > 0 ? (
-              bikes.map(bike => (
-                <BikeCard key={bike.id} bike={bike} />
+              bikes.map((bike, i) => (
+                <BikeCard key={bike.id} bike={bike} priority={i === 0} />
               ))
             ) : (
               <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">No bikes found for this category. Sorry, we must have sold out. We'll be sure to update this page as soon as possible.</p>
