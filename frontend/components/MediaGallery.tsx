@@ -30,6 +30,7 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
                         <img
                             src={selectedMedia}
                             alt={altText}
+                            fetchPriority="high"
                             className={`w-full h-full object-contain transition-opacity duration-200 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
                             onLoad={() => setImageLoading(false)}
                         />
@@ -57,8 +58,8 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
                 {images.map((img, index) => (
                     <button
                         key={img.id}
-                        onClick={() => selectMedia(img.image)}
-                        className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === img.image ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
+                        onClick={() => selectMedia(img.medium || img.image)}
+                        className={`w-20 h-20 overflow-hidden rounded-md ${selectedMedia === (img.medium || img.image) ? 'ring-2 ring-[var(--highlight)]' : 'ring-1 ring-stone-200'}`}
                     >
                         <img
                             src={img.medium || img.image}
