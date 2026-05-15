@@ -5,6 +5,7 @@ import type { SiteSettings } from '@/types/SiteSettings';
 // To update these values, edit this file directly.
 
 export const SITE_TIMEZONE = 'Australia/Perth';
+export const INVENTORY_PAGE_SIZE = 9;
 
 export const siteSettings: SiteSettings = {
   id: 1,

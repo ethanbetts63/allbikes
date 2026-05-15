@@ -2,6 +2,7 @@ import type { Bike } from '@/types/Bike';
 import { getServerBikes } from '@/lib/serverApi';
 import { buildBikeListQuery, type ListSearchParams } from '@/lib/listQuery';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
+import { INVENTORY_PAGE_SIZE } from '@/config/siteSettings';
 
 export interface InitialBikeList {
   bikes: Bike[];
@@ -17,7 +18,7 @@ export async function getInitialBikeList(condition: string, searchParams: ListSe
     const response = await getServerBikes(query.params);
     return {
       bikes: response.results,
-      totalPages: Math.ceil(response.count / 9),
+      totalPages: Math.ceil(response.count / INVENTORY_PAGE_SIZE),
       currentPage: query.page,
       filters: query.filters,
     };

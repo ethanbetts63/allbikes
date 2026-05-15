@@ -272,7 +272,7 @@ function getInitialSelectedMedia(bike?: Bike | null): string {
     if (!bike) return 'YOUTUBE';
     if (bike.youtube_link && getYouTubeVideoId(bike.youtube_link)) return 'YOUTUBE';
     const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-    return sortedImages[0]?.image ?? '/src/assets/motorcycle_images/placeholder.png';
+    return sortedImages[0]?.medium || sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png';
 }
 
 export default BikeDetailPage;
