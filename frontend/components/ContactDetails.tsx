@@ -1,4 +1,5 @@
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import DeferredMap from '@/components/DeferredMap';
 import { siteSettings } from '@/config/siteSettings';
 
 const days = [
@@ -80,18 +81,7 @@ const ContactDetails = () => {
             </div>
 
             {/* Map */}
-            <div className="mt-6 rounded-lg overflow-hidden border border-border-light shadow-sm">
-                <iframe
-                    src="https://maps.google.com/maps?q=Unit+5%2F6+Cleveland+Street+Dianella+WA+6059&output=embed&z=16"
-                    width="100%"
-                    height="360"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="ScooterShop location map"
-                />
-            </div>
+            <DeferredMap />
         </div>
     );
 };

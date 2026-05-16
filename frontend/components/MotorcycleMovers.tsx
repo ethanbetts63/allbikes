@@ -1,3 +1,4 @@
+import NextImage from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import moverImage from '@/assets/movers.webp';
@@ -8,10 +9,12 @@ const MotorcycleMovers = () => {
 
             {/* Image */}
             <div className="relative min-h-[240px] md:min-h-0">
-                <img
-                    src={moverImage.src}
+                <NextImage
+                    src={moverImage}
                     alt="Motorcycle on a transport ramp"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
                 />
             </div>
 

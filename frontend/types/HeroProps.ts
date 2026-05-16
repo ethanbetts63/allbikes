@@ -4,4 +4,6 @@ export interface HeroProps {
   title: React.ReactNode;
   description: string;
   imageUrl: string;
+  imageSrcSet?: string;
+  imageSizes?: string;
 }

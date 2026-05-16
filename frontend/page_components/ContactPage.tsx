@@ -1,12 +1,18 @@
 import Hero from '../components/Hero';
 import ContactDetails from '../components/ContactDetails';
 import SymImage from '@/assets/sym_22.webp';
+import SymImage320 from '@/assets/sym_22-320w.webp';
+import SymImage640 from '@/assets/sym_22-640w.webp';
+import SymImage768 from '@/assets/sym_22-768w.webp';
+import SymImage1024 from '@/assets/sym_22-1024w.webp';
+import SymImage1280 from '@/assets/sym_22-1280w.webp';
 import { siteSettings } from '@/config/siteSettings';
-import OtherSites from '../components/OtherSites';
 import ContactButtons from '@/components/ContactButtons';
 import splitcartLogo from "@/assets/splitcart_logo.png";
 import futureFlowerLogo from "@/assets/futureflower_logo.png";
-import { FaqSection } from '@/components/FaqSection';
+import DeferredContactSections from '@/components/DeferredContactSections';
+
+const symSrcSet = `${SymImage320.src} 320w, ${SymImage640.src} 640w, ${SymImage768.src} 768w, ${SymImage1024.src} 1024w, ${SymImage1280.src} 1280w`;
 
 const otherSitesData = [
     {
@@ -50,6 +56,8 @@ const ContactPage = () => {
                 title="Contact Us"
                 description={description}
                 imageUrl={SymImage.src}
+                imageSrcSet={symSrcSet}
+                imageSizes="100vw"
             />
             {siteSettings && (
                 <ContactButtons
@@ -61,9 +69,7 @@ const ContactPage = () => {
 
             <ContactDetails />
 
-            <FaqSection title="Frequently Asked Questions" faqData={faqData} />
-
-            <OtherSites sites={otherSitesData} />
+            <DeferredContactSections faqData={faqData} otherSites={otherSitesData} />
 
         </div>
     );
