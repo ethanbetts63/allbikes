@@ -15,6 +15,7 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
         const initialIndex = mediaItems.findIndex((item) => item.src === initialSelectedMedia || (item.type === 'youtube' && initialSelectedMedia === 'YOUTUBE'));
         return initialIndex >= 0 ? initialIndex : 0;
     });
+    const [pendingImageSrc, setPendingImageSrc] = useState<string | null>(null);
     const [showDesktopThumbnails, setShowDesktopThumbnails] = useState(false);
 
     useEffect(() => {
@@ -27,14 +28,21 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
     }, []);
 
     const selectedItem = mediaItems[selectedIndex] ?? null;
+    const isPendingSelectedImage = selectedItem?.type === 'image' && pendingImageSrc === selectedItem.src;
     const hasMultipleItems = mediaItems.length > 1;
 
+    const selectMediaAtIndex = (index: number) => {
+        const nextItem = mediaItems[index];
+        setSelectedIndex(index);
+        setPendingImageSrc(nextItem?.type === 'image' ? nextItem.src : null);
+    };
+
     const selectPrevious = () => {
-        setSelectedIndex((currentIndex) => (currentIndex - 1 + mediaItems.length) % mediaItems.length);
+        selectMediaAtIndex((selectedIndex - 1 + mediaItems.length) % mediaItems.length);
     };
 
     const selectNext = () => {
-        setSelectedIndex((currentIndex) => (currentIndex + 1) % mediaItems.length);
+        selectMediaAtIndex((selectedIndex + 1) % mediaItems.length);
     };
 
     return (
@@ -43,12 +51,23 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
                 {selectedItem?.type === 'youtube' ? (
                     <YouTube videoId={selectedItem.videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
                 ) : selectedItem?.type === 'image' ? (
-                    <img
-                        src={selectedItem.src}
-                        alt={selectedItem.alt}
-                        fetchPriority="high"
-                        className="w-full h-full object-contain"
-                    />
+                    isPendingSelectedImage ? (
+                        <img
+                            key={selectedItem.src}
+                            src={selectedItem.src}
+                            alt={selectedItem.alt}
+                            className="absolute h-0 w-0 opacity-0"
+                            onLoad={() => setPendingImageSrc(null)}
+                        />
+                    ) : (
+                        <img
+                            key={selectedItem.src}
+                            src={selectedItem.src}
+                            alt={selectedItem.alt}
+                            fetchPriority="high"
+                            className="w-full h-full object-contain"
+                        />
+                    )
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-[var(--text-light-secondary)]">
                         <span className="text-sm">No image available</span>
@@ -85,7 +104,7 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
                             key={item.id}
                             item={item}
                             isSelected={selectedIndex === index}
-                            onSelect={() => setSelectedIndex(index)}
+                            onSelect={() => selectMediaAtIndex(index)}
                         />
                     ))}
                 </div>
