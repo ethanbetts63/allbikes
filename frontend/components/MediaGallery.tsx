@@ -17,7 +17,7 @@ const YouTube = dynamic(() => import('react-youtube'), {
 
 const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay }: MediaGalleryProps) => {
     const [selectedMedia, setSelectedMedia] = useState(initialSelectedMedia);
-    const [imageLoading, setImageLoading] = useState(initialSelectedMedia !== 'YOUTUBE' && !!initialSelectedMedia);
+    const [imageLoading, setImageLoading] = useState(false);
 
     const selectMedia = (media: string) => {
         setSelectedMedia(media);
