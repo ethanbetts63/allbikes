@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
+import { preload } from 'react-dom';
+import type { Bike } from '@/types/Bike';
 import { getBikeMetadata, buildBikeSchema } from '@/lib/seo';
 import { getServerBikeById, getServerBikes, getServerDepositSettings } from '@/lib/serverApi';
 import BikeDetailPage from '@/page_components/BikeDetailPage';
@@ -29,6 +31,14 @@ export default async function Page(
 
   if (bike.slug !== slug) {
     permanentRedirect(`/inventory/motorcycles/${bike.slug}`);
+  }
+
+  const primaryImage = getPrimaryBikeImage(bike);
+  if (primaryImage) {
+    preload(primaryImage, {
+      as: 'image',
+      fetchPriority: 'high',
+    });
   }
 
   const shouldFetchDeposit = bike && ['new', 'demo', 'used'].includes(bike.condition) && bike.status === 'for_sale';
@@ -63,6 +73,11 @@ async function getBikeOrNull(id: string) {
     console.error(`Failed to server-render bike ${id}:`, error);
     return null;
   }
+}
+
+function getPrimaryBikeImage(bike: Bike): string | null {
+  const primaryImage = [...bike.images].sort((a, b) => a.order - b.order)[0];
+  return primaryImage?.medium || primaryImage?.image || null;
 }
 
 async function fetchFeaturedBikes(condition: string) {
