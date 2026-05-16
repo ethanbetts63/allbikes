@@ -178,10 +178,12 @@ const HireAvailabilitySection = ({
           {!isLoading && !displayError && !isBlockedSelection && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {bikes.length > 0 ? (
-                bikes.map((bike) => {
+                bikes.map((bike, index) => {
                   const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-                  const imageUrl = sortedImages[0]?.thumbnail || sortedImages[0]?.image || '/src/assets/motorcycle_images/placeholder.png';
+                  const primaryImage = sortedImages[0];
+                  const imageUrl = primaryImage?.thumbnail || primaryImage?.medium || primaryImage?.image || '/src/assets/motorcycle_images/placeholder.png';
                   const title = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
+                  const isPriorityImage = index === 0;
 
                   return (
                     <div key={bike.id} className="bg-[var(--card)] border border-[var(--border-light)] flex flex-col h-full">
@@ -190,7 +192,8 @@ const HireAvailabilitySection = ({
                           src={imageUrl}
                           alt={title}
                           className="w-full h-full object-contain"
-                          loading="lazy"
+                          loading={isPriorityImage ? 'eager' : 'lazy'}
+                          fetchPriority={isPriorityImage ? 'high' : 'auto'}
                         />
                         <span className="absolute bottom-2 left-2 bg-black/60 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
                           {bike.condition}
