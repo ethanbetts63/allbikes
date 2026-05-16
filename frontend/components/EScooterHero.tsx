@@ -39,7 +39,7 @@ const EScooterHero = () => {
       </div>
 
       {/* Video panel */}
-      <div className="order-2 lg:order-2 lg:flex-1 flex flex-col">
+      <div className="order-2 lg:order-2 lg:flex-1 hidden lg:flex flex-col">
         <div className="w-full aspect-video">
           <EScooterVideo videoId={YOUTUBE_VIDEO_ID} />
         </div>
