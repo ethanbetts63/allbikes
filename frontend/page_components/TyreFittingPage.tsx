@@ -123,6 +123,13 @@ const TyreFittingPage = () => {
                             </div>
                         ))}
                     </div>
+                    <p className="mt-8 text-center text-[var(--text-light-secondary)] text-lg">
+                        Ready to organise a tyre change, puncture repair, or wheel balancing?{' '}
+                        <Link href="/service-booking" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
+                            Book online
+                        </Link>
+                        {' '}and we&apos;ll confirm the job with you.
+                    </p>
                     <div className="text-center mt-10">
                         <Link href="/service-booking">
                             <Button className="bg-highlight1 text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg hover:bg-highlight1/90 inline-flex items-center gap-2">

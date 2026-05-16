@@ -119,6 +119,17 @@ const ServicePage = () => {
                             </div>
                         ))}
                     </div>
+                    <p className="mt-8 text-center text-[var(--text-light-secondary)] text-lg">
+                        Need tyres as part of the job? See our{' '}
+                        <Link href="/tyre-fitting" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
+                            motorcycle and scooter tyre fitting
+                        </Link>
+                        . Looking for your next ride? Browse our{' '}
+                        <Link href="/inventory/motorcycles/used" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
+                            used bikes
+                        </Link>
+                        .
+                    </p>
                     <div className="text-center mt-10">
                         <Link href="/service-booking">
                             <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-dark-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
