@@ -2,11 +2,10 @@ import Link from 'next/link';
 import NextImage from 'next/image';
 import { Wrench, Cog, Gauge, Flame } from "lucide-react";
 import type { BikeCardProps } from "@/types/BikeCardProps";
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boolean }) => {
-  const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-  const primaryImage = sortedImages[0];
-  const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
+  const imageUrl = getPrimaryVehicleImage(bike.images, 'card');
   const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
   return (

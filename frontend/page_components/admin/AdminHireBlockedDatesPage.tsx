@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Trash2 } from 'lucide-react';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 const AdminHireBlockedDatesPage = () => {
   const [blockedDates, setBlockedDates] = useState<HireBlockedDate[]>([]);
@@ -116,8 +117,7 @@ const AdminHireBlockedDatesPage = () => {
                 <option value="">— Shop-wide closure —</option>
                 {bikes.map(bike => {
                   const name = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
-                  const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-                  const thumb = sortedImages[0]?.thumbnail || sortedImages[0]?.image;
+                  const thumb = getPrimaryVehicleImage(bike.images, 'thumbnail');
                   return (
                     <option key={bike.id} value={bike.id}>
                       {thumb ? '' : ''}{name}
@@ -129,8 +129,7 @@ const AdminHireBlockedDatesPage = () => {
               {motorcycleId && (() => {
                 const bike = bikes.find(b => b.id === parseInt(motorcycleId));
                 if (!bike) return null;
-                const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-                const thumb = sortedImages[0]?.thumbnail || sortedImages[0]?.image;
+                const thumb = getPrimaryVehicleImage(bike.images, 'thumbnail');
                 const name = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
                 return (
                   <div className="flex items-center gap-3 mt-2 p-2 bg-[var(--bg-light-secondary)] rounded-md border border-[var(--border-light)]">
@@ -187,8 +186,7 @@ const AdminHireBlockedDatesPage = () => {
             <ul className="divide-y divide-[var(--border-light)]">
               {bikeBlocks.map(b => {
                 const bike = bikes.find(bk => bk.id === b.motorcycle);
-                const sortedImages = bike ? [...bike.images].sort((a, b) => a.order - b.order) : [];
-                const thumb = sortedImages[0]?.thumbnail || sortedImages[0]?.image;
+                const thumb = getPrimaryVehicleImage(bike?.images, 'thumbnail');
                 return (
                   <li key={b.id} className="flex items-center justify-between py-3 gap-3">
                     <div className="flex items-center gap-3 min-w-0">

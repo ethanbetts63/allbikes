@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 export const SITE_URL = 'https://www.scootershop.com.au';
 export const SITE_NAME = 'ScooterShop';
@@ -59,7 +60,7 @@ export async function getBikeMetadata(slug: string): Promise<Metadata> {
     const name = bike.year
       ? `${bike.year} ${bike.make} ${bike.model}`
       : `${bike.make} ${bike.model}`;
-    const primaryImage = [...bike.images].sort((a, b) => a.order - b.order)[0];
+    const primaryImage = getPrimaryVehicleImage(bike.images, 'detail');
 
     return buildMetadata({
       title: `${name} | ScooterShop`,
@@ -67,7 +68,7 @@ export async function getBikeMetadata(slug: string): Promise<Metadata> {
         bike.description ||
         `View the ${name} at ScooterShop, Perth's motorcycle and scooter dealership.`,
       canonicalPath: `/inventory/motorcycles/${bike.slug}`,
-      image: primaryImage?.medium || primaryImage?.image,
+      image: primaryImage,
       noindex: bike.status === 'unavailable',
     });
   } catch {
@@ -90,13 +91,13 @@ export async function getProductMetadata(slug: string): Promise<Metadata> {
 
   try {
     const product = await fetchJson<Product>(`/api/product/products/${productId}/`);
-    const primaryImage = [...product.images].sort((a, b) => a.order - b.order)[0];
+    const primaryImage = getPrimaryVehicleImage(product.images, 'detail');
 
     return buildMetadata({
       title: `${product.name} | Free Delivery Australia-Wide | ScooterShop`,
       description: `Buy the ${product.name} online with free delivery anywhere in Australia. Price includes GST. Secure checkout via Stripe.${product.description ? ` ${product.description}` : ''}`,
       canonicalPath: `/escooters/${product.slug}`,
-      image: primaryImage?.medium || primaryImage?.image,
+      image: primaryImage,
       noindex: !product.is_active,
     });
   } catch {
@@ -112,7 +113,7 @@ export function buildBikeSchema(bike: Bike): object {
   const name = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
   const url = `${SITE_URL}/inventory/motorcycles/${bike.slug}`;
   const price = bike.discount_price || bike.price;
-  const primaryImage = [...bike.images].sort((a, b) => a.order - b.order)[0];
+  const primaryImage = getPrimaryVehicleImage(bike.images, 'detail');
 
   const conditionMap: Record<string, string> = {
     new: 'https://schema.org/NewCondition',
@@ -163,7 +164,7 @@ export function buildBikeSchema(bike: Bike): object {
     },
   };
 
-  if (primaryImage) schema.image = absoluteUrl(primaryImage.medium || primaryImage.image);
+  if (primaryImage) schema.image = absoluteUrl(primaryImage);
   if (bike.year) schema.vehicleModelDate = String(bike.year);
   if (bike.odometer) {
     schema.mileageFromOdometer = {
@@ -200,7 +201,7 @@ export function buildBikeSchema(bike: Bike): object {
 export function buildProductSchema(product: Product): object {
   const url = `${SITE_URL}/escooters/${product.slug}`;
   const price = product.discount_price || product.price;
-  const primaryImage = [...product.images].sort((a, b) => a.order - b.order)[0];
+  const primaryImage = getPrimaryVehicleImage(product.images, 'detail');
 
   return {
     '@context': 'https://schema.org',
@@ -209,7 +210,7 @@ export function buildProductSchema(product: Product): object {
     url,
     description: product.description || `${product.name} available at ScooterShop. Free delivery Australia-wide.`,
     brand: { '@type': 'Brand', name: product.brand },
-    ...(primaryImage ? { image: absoluteUrl(primaryImage.medium || primaryImage.image) } : {}),
+    ...(primaryImage ? { image: absoluteUrl(primaryImage) } : {}),
     offers: {
       '@type': 'Offer',
       url,

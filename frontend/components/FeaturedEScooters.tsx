@@ -4,6 +4,7 @@ import { Zap, Truck, ArrowRight, ShieldCheck, Flame } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import type { FeaturedEScootersProps } from '@/types/FeaturedEScootersProps';
 import { assetUrl } from '@/utils/assetUrl';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
   if (products.length === 0) return null;
@@ -51,8 +52,7 @@ const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
         {/* Product tiles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
           {products.map((product) => {
-            const primaryImage = [...product.images].sort((a, b) => a.order - b.order)[0];
-            const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
+            const imageUrl = getPrimaryVehicleImage(product.images, 'card');
             const displayPrice = product.discount_price && parseFloat(product.discount_price) > 0
               ? product.discount_price
               : product.price;

@@ -5,6 +5,7 @@ import type { Bike } from '@/types/Bike';
 import { getBikeMetadata, buildBikeSchema } from '@/lib/seo';
 import { getServerBikeById, getServerBikes, getServerDepositSettings } from '@/lib/serverApi';
 import BikeDetailPage from '@/page_components/BikeDetailPage';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -76,8 +77,7 @@ async function getBikeOrNull(id: string) {
 }
 
 function getPrimaryBikeImage(bike: Bike): string | null {
-  const primaryImage = [...bike.images].sort((a, b) => a.order - b.order)[0];
-  return primaryImage?.medium || primaryImage?.image || null;
+  return getPrimaryVehicleImage(bike.images, 'detail');
 }
 
 async function fetchFeaturedBikes(condition: string) {

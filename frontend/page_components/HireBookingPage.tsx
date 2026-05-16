@@ -13,6 +13,7 @@ import type { HireExtra } from '@/types/HireBooking';
 import type { HireBookingFormData } from '@/types/HireBookingFormData';
 import type { Bike } from '@/types/Bike';
 import { formatDate } from '@/lib/hire';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 const HireBookingPage = () => {
     const router = useRouter();
@@ -132,8 +133,7 @@ const HireBookingPage = () => {
         );
     }
 
-    const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-    const imageUrl = sortedImages[0]?.thumbnail || sortedImages[0]?.image || null;
+    const imageUrl = getPrimaryVehicleImage(bike.images, 'card');
     const bikeName = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
 
     return (

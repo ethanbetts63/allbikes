@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ChevronLeft, ChevronRight, PlayCircle } from 'lucide-react';
 import type { MediaGalleryProps } from '@/types/MediaGalleryProps';
+import { getVehicleImageUrl } from '@/utils/vehicleImages';
 
 const YouTube = dynamic(() => import('react-youtube'), {
     ssr: false,
@@ -132,12 +133,13 @@ type MediaItem =
 
 function buildMediaItems(images: MediaGalleryProps['images'], videoId: string | null, altText: string): MediaItem[] {
     const imageItems = images.map((image, index) => {
-        const src = image.medium || image.image;
+        const src = getVehicleImageUrl(image, 'detail') || image.image;
+        const thumbnailSrc = getVehicleImageUrl(image, 'thumbnail') || src;
         return {
             id: `image-${image.id}`,
             type: 'image' as const,
             src,
-            thumbnailSrc: image.thumbnail || src,
+            thumbnailSrc,
             alt: `${altText} image ${index + 1}`,
         };
     });

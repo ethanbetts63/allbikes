@@ -88,3 +88,43 @@ A few things worth looking at before you go live:
      rg found actual mojibake sequences like â€”, Â·, and 25â€“60 km in page copy.
      Examples: frontend/page_components/ElectricScootersLandingPage.tsx:15, frontend/page_components/HireListPage.tsx:31.
      SEO impact is mostly quality/trust rather than indexing, but this can appear in rendered text, snippets, and FAQ content.
+
+
+  3. Reduce “page component” size
+
+     A few page components are doing too much: data presentation, section ordering, conditional business logic, schema, CTA decisions.
+
+     I’d aim for:
+      - route file: fetch/preload/schema
+      - page component: section composition
+      - child components: actual UI blocks
+
+     This makes performance work easier because you can see what mounts early.
+  4. Clean up encoding issues
+
+     I noticed mojibake-style text in places, like Â·, âœ“, â†.
+
+
+  1. Normalize image handling everywhere
+
+     This is the biggest recurring issue. Some pages use optimized/static images, some use raw backend image URLs, some use medium, some fall back
+     to original uploads.
+
+     I’d make one shared image helper/component for bikes/products/hire cards:
+      - prefer thumbnail for small cards
+      - prefer medium for detail/gallery main images
+      - never use original image unless there is no alternative
+      - always set width/height or stable aspect ratio
+      - always set correct loading/fetchPriority
+
+     This helps SEO indirectly through Core Web Vitals and makes future mistakes less likely.
+
+       5. Expand structured data
+
+     You already have product/breadcrumb schema in places. I’d make this more consistent:
+      - Product schema on all product/detail pages
+      - LocalBusiness / MotorcycleDealer style schema globally or on contact page
+      - FAQPage schema where real FAQ content exists
+      - Service schema for service/tyre fitting/hire pages
+
+     This is probably one of the cleaner SEO wins.

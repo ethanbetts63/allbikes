@@ -13,6 +13,7 @@ import { ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
 import { ShieldCheck } from 'lucide-react';
 import { assetUrl } from '@/utils/assetUrl';
+import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/utils/vehicleImages';
 
 interface EScooterDetailPageProps {
     initialProduct?: Product | null;
@@ -22,7 +23,7 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
     const product = initialProduct ?? null;
 
     const videoId = product?.youtube_link ? getYouTubeVideoId(product.youtube_link) : null;
-    const sortedImages = product?.images ? [...product.images].sort((a, b) => a.order - b.order) : [];
+    const sortedImages = getSortedVehicleImages(product?.images);
 
     if (!product) return <ErrorScreen message="Product not found." />;
 
@@ -156,8 +157,7 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
 
 function getInitialSelectedMedia(product?: Product | null): string {
     if (!product) return '';
-    const sorted = [...product.images].sort((a, b) => a.order - b.order);
-    const primaryImage = sorted[0]?.medium || sorted[0]?.image;
+    const primaryImage = getPrimaryVehicleImage(product.images, 'detail');
     if (primaryImage) return primaryImage;
     if (product.youtube_link && getYouTubeVideoId(product.youtube_link)) return 'YOUTUBE';
     return '';

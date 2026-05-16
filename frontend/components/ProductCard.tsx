@@ -1,11 +1,11 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { Truck, ShieldCheck, Flame } from 'lucide-react';
 import type { ProductCardProps } from '@/types/ProductCardProps';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const sortedImages = [...product.images].sort((a, b) => a.order - b.order);
-  const primaryImage = sortedImages[0];
-  const imageUrl = primaryImage?.thumbnail || primaryImage?.image;
+  const imageUrl = getPrimaryVehicleImage(product.images, 'card');
 
   return (
     <Link href={`/escooters/${product.slug}`} className="block group">
@@ -14,11 +14,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden shrink-0">
           {imageUrl ? (
-            <img
+            <NextImage
               src={imageUrl}
               alt={product.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-              loading="lazy"
             />
           ) : (
             <div className="w-full h-full bg-[var(--bg-light-secondary)] flex items-center justify-center text-[var(--text-light-secondary)] text-sm">

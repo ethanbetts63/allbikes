@@ -5,6 +5,7 @@ import { getProductMetadata, buildProductSchema } from '@/lib/seo';
 import { getServerProductById } from '@/lib/serverApi';
 import EScooterDetailPage from '@/page_components/EScooterDetailPage';
 import type { Product } from '@/types/Product';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -64,6 +65,5 @@ async function getProductOrNull(id: number) {
 }
 
 function getPrimaryProductImage(product: Product): string | null {
-  const primaryImage = [...product.images].sort((a, b) => a.order - b.order)[0];
-  return primaryImage?.medium || primaryImage?.image || null;
+  return getPrimaryVehicleImage(product.images, 'detail');
 }

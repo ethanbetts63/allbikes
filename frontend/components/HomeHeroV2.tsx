@@ -5,6 +5,7 @@ import Link from 'next/link';
 import NextImage from 'next/image';
 import type { HomeHeroProps } from "@/types/HomeHeroProps";
 import { ArrowRight, Phone, Mail } from 'lucide-react';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 // Import default images
 import defaultNewImage from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ.webp';
@@ -20,10 +21,9 @@ interface SlotState {
 }
 
 const getBikeImageUrls = (bikes: HomeHeroProps['newBikes'], fallback: string) => {
-  const urls = bikes.map(bike => {
-    const sorted = [...bike.images].sort((a, b) => a.order - b.order);
-    return sorted[0]?.medium || sorted[0]?.image;
-  }).filter(Boolean) as string[];
+  const urls = bikes
+    .map((bike) => getPrimaryVehicleImage(bike.images, 'detail'))
+    .filter(Boolean) as string[];
 
   return urls.length > 0 ? urls : [fallback];
 };

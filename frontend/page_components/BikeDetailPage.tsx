@@ -26,6 +26,7 @@ import { ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
 import PopularBadge from '@/components/PopularBadge';
 import { assetUrl } from '@/utils/assetUrl';
+import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/utils/vehicleImages';
 
 interface BikeDetailPageProps {
     initialBike?: Bike | null;
@@ -42,7 +43,7 @@ const BikeDetailPage = ({
 }: BikeDetailPageProps) => {
     const bike = initialBike ?? null;
     const videoId = bike?.youtube_link ? getYouTubeVideoId(bike.youtube_link) : null;
-    const sortedImages = bike?.images ? [...bike.images].sort((a, b) => a.order - b.order) : [];
+    const sortedImages = getSortedVehicleImages(bike?.images);
 
     const specifications: Specification[] = bike ? [
         { label: "Stock Number", value: bike.stock_number, icon: Hash },
@@ -265,8 +266,7 @@ const BikeDetailPage = ({
 
 function getInitialSelectedMedia(bike?: Bike | null): string {
     if (!bike) return 'YOUTUBE';
-    const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-    const primaryImage = sortedImages[0]?.medium || sortedImages[0]?.image;
+    const primaryImage = getPrimaryVehicleImage(bike.images, 'detail');
     if (primaryImage) return primaryImage;
     if (bike.youtube_link && getYouTubeVideoId(bike.youtube_link)) return 'YOUTUBE';
     return '/src/assets/motorcycle_images/placeholder.png';

@@ -12,6 +12,7 @@ import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
 import type { CheckoutFormData } from '@/types/CheckoutFormData';
 import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 const AU_STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'];
 
@@ -66,22 +67,20 @@ const CheckoutPage = () => {
 
   const buildItemSummary = (): CheckoutItemSummary => {
     if (checkoutType === 'deposit' && bike && depositAmount) {
-      const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
       return {
         name: bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`,
-        imageUrl: sortedImages[0]?.image ?? null,
+        imageUrl: getPrimaryVehicleImage(bike.images, 'thumbnail'),
         priceLabel: `$${parseFloat(depositAmount).toLocaleString()} deposit`,
         isDeposit: true,
       };
     }
     if (product) {
-      const sortedImages = [...product.images].sort((a, b) => a.order - b.order);
       const price = product.discount_price && parseFloat(product.discount_price) > 0
         ? product.discount_price
         : product.price;
       return {
         name: product.name,
-        imageUrl: sortedImages[0]?.thumbnail ?? sortedImages[0]?.image ?? null,
+        imageUrl: getPrimaryVehicleImage(product.images, 'thumbnail'),
         priceLabel: `$${parseFloat(price).toLocaleString()} incl. GST · Free delivery Australia-wide`,
         isDeposit: false,
       };

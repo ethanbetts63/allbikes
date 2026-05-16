@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
+import NextImage from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
@@ -14,6 +15,7 @@ import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { PublicHireSettings } from '@/types/PublicHireSettings';
 import { formatRate } from '@/lib/hire';
 import useHireDateConstraints from '@/hooks/useHireDateConstraints';
+import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 interface HireAvailabilitySectionProps {
   initialBikes?: Bike[];
@@ -179,22 +181,25 @@ const HireAvailabilitySection = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {bikes.length > 0 ? (
                 bikes.map((bike, index) => {
-                  const sortedImages = [...bike.images].sort((a, b) => a.order - b.order);
-                  const primaryImage = sortedImages[0];
-                  const imageUrl = primaryImage?.thumbnail || primaryImage?.medium || primaryImage?.image || '/src/assets/motorcycle_images/placeholder.png';
+                  const imageUrl = getPrimaryVehicleImage(bike.images, 'card');
                   const title = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
                   const isPriorityImage = index === 0;
 
                   return (
                     <div key={bike.id} className="bg-[var(--card)] border border-[var(--border-light)] flex flex-col h-full">
                       <div className="relative aspect-[4/3] overflow-hidden shrink-0">
-                        <img
-                          src={imageUrl}
-                          alt={title}
-                          className="w-full h-full object-contain"
-                          loading={isPriorityImage ? 'eager' : 'lazy'}
-                          fetchPriority={isPriorityImage ? 'high' : 'auto'}
-                        />
+                        {imageUrl ? (
+                          <NextImage
+                            src={imageUrl}
+                            alt={title}
+                            fill
+                            priority={isPriorityImage}
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-contain"
+                          />
+                        ) : (
+                          <div className="h-full w-full bg-[var(--bg-light-secondary)]" />
+                        )}
                         <span className="absolute bottom-2 left-2 bg-black/60 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
                           {bike.condition}
                         </span>
