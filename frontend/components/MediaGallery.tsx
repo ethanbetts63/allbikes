@@ -3,25 +3,17 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { PlayCircle } from 'lucide-react';
-import { Spinner } from '@/components/ui/spinner';
 import type { MediaGalleryProps } from '@/types/MediaGalleryProps';
 
 const YouTube = dynamic(() => import('react-youtube'), {
     ssr: false,
-    loading: () => (
-        <div className="absolute inset-0 flex items-center justify-center">
-            <Spinner className="h-8 w-8" />
-        </div>
-    ),
 });
 
 const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay }: MediaGalleryProps) => {
     const [selectedMedia, setSelectedMedia] = useState(initialSelectedMedia);
-    const [imageLoading, setImageLoading] = useState(false);
 
     const selectMedia = (media: string) => {
         setSelectedMedia(media);
-        setImageLoading(media !== 'YOUTUBE');
     };
 
     return (
@@ -30,20 +22,12 @@ const MediaGallery = ({ videoId, images, initialSelectedMedia, altText, overlay 
                 {selectedMedia === 'YOUTUBE' && videoId ? (
                     <YouTube videoId={videoId} className="w-full h-full" opts={{ width: '100%', height: '100%' }} />
                 ) : selectedMedia ? (
-                    <>
-                        {imageLoading && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <Spinner className="h-8 w-8" />
-                            </div>
-                        )}
-                        <img
-                            src={selectedMedia}
-                            alt={altText}
-                            fetchPriority="high"
-                            className={`w-full h-full object-contain transition-opacity duration-200 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
-                            onLoad={() => setImageLoading(false)}
-                        />
-                    </>
+                    <img
+                        src={selectedMedia}
+                        alt={altText}
+                        fetchPriority="high"
+                        className="w-full h-full object-contain"
+                    />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-[var(--text-light-secondary)]">
                         <span className="text-sm">No image available</span>
