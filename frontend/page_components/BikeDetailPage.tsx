@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
 import StructuredDataScript from '@/components/StructuredDataScript';
+import DesktopOnly from '@/components/DesktopOnly';
 import FeaturedBikes from "@/components/FeaturedBikes";
 import {
     Hash,
@@ -236,26 +237,28 @@ const BikeDetailPage = ({
             {bike.condition === 'new' && <PayLaterSection />}
 
             {/* Featured bikes carousels */}
-            <div>
-                {bike.condition.toLowerCase() === 'new' && initialNewBikes.length > 0 && (
-                    <FeaturedBikes
-                        title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
-                        bikes={initialNewBikes}
-                        description="Check out our latest models, fresh from the factory."
-                        linkTo="/inventory/motorcycles/new"
-                        linkText="View All New"
-                    />
-                )}
-                {(bike.condition.toLowerCase() === 'used' || bike.condition.toLowerCase() === 'demo') && initialUsedBikes.length > 0 && (
-                    <FeaturedBikes
-                        title="Featured Used & Demo Bikes"
-                        bikes={initialUsedBikes}
-                        description="Great value pre-owned and demonstrator bikes."
-                        linkTo="/inventory/motorcycles/used"
-                        linkText="View All Used"
-                    />
-                )}
-            </div>
+            <DesktopOnly>
+                <div>
+                    {bike.condition.toLowerCase() === 'new' && initialNewBikes.length > 0 && (
+                        <FeaturedBikes
+                            title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
+                            bikes={initialNewBikes}
+                            description="Check out our latest models, fresh from the factory."
+                            linkTo="/inventory/motorcycles/new"
+                            linkText="View All New"
+                        />
+                    )}
+                    {(bike.condition.toLowerCase() === 'used' || bike.condition.toLowerCase() === 'demo') && initialUsedBikes.length > 0 && (
+                        <FeaturedBikes
+                            title="Featured Used & Demo Bikes"
+                            bikes={initialUsedBikes}
+                            description="Great value pre-owned and demonstrator bikes."
+                            linkTo="/inventory/motorcycles/used"
+                            linkText="View All Used"
+                        />
+                    )}
+                </div>
+            </DesktopOnly>
         </div>
     );
 };
