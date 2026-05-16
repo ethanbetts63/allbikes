@@ -140,7 +140,7 @@ function buildMediaItems(images: MediaGalleryProps['images'], videoId: string | 
             type: 'image' as const,
             src,
             thumbnailSrc,
-            alt: `${altText} image ${index + 1}`,
+            alt: index === 0 ? altText : `${altText} - photo ${index + 1}`,
         };
     });
 

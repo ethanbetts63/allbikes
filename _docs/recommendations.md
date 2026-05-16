@@ -128,3 +128,36 @@ A few things worth looking at before you go live:
       - Service schema for service/tyre fitting/hire pages
 
      This is probably one of the cleaner SEO wins.
+
+
+     check if stripe is loading on every page. 
+
+     the log in me thing fires on every page maybe that could have a better method. 
+
+      Change 2 — Upload filename (motorcycle_image.py)
+
+  Change upload_to from a static string to a function:
+
+  from django.utils.text import slugify
+
+  def motorcycle_image_upload_to(instance, filename):
+      ext = filename.rsplit('.', 1)[-1].lower()
+      bike = instance.motorcycle
+      parts = []
+      if bike.year:
+          parts.append(str(bike.year))
+      parts.append(bike.make)
+      parts.append(bike.model)
+      if bike.engine_size:
+          parts.append(f"{bike.engine_size}cc")
+      parts.append('perth')
+      base = slugify('-'.join(parts))
+      return f"motorcycles/{base}-{instance.order + 1}.{ext}"
+
+  This generates: motorcycles/2013-ducati-streetfighter-849cc-perth-1.jpg
+
+  Imagekit's cache path then becomes:
+  CACHE/images/motorcycles/2013-ducati-streetfighter-849cc-perth-1/hash.webp
+
+  Caveat: This only renames new uploads. Existing images keep their current names unless you run a migration script to rename them on disk and
+  update the DB — probably not worth the risk for existing stock.

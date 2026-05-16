@@ -72,6 +72,12 @@ const BikeDetailPage = ({
     if (!bike) return <ErrorScreen message="Bike not found." />;
 
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
+    const bikeAltText = [
+        cardTitle,
+        bike.engine_size ? `${bike.engine_size}cc` : null,
+        bike.condition,
+        'motorcycle Perth',
+    ].filter(Boolean).join(' ');
 
     const bikeSubtitle = bike.condition === 'new'
         ? <p className="text-sm text-[var(--text-dark-secondary)]">
@@ -160,7 +166,7 @@ const BikeDetailPage = ({
                         videoId={videoId}
                         images={sortedImages}
                         initialSelectedMedia={getInitialSelectedMedia(bike)}
-                        altText={cardTitle}
+                        altText={bikeAltText}
                         overlay={statusOverlay}
                     />
 
