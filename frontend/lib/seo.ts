@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
+import type { SiteSettings } from '@/types/SiteSettings';
 import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 export const SITE_URL = 'https://www.scootershop.com.au';
@@ -274,6 +275,85 @@ export function buildProductListSchema(products: Product[], listName: string, li
   };
 }
 
+export function buildLocalBusinessSchema(settings: SiteSettings): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': ['MotorcycleDealer', 'AutoDealer'],
+    '@id': `${SITE_URL}/#business`,
+    name: SITE_NAME,
+    image: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/logo-512x512.png`,
+      width: 512,
+      height: 512,
+    },
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/logo-512x512.png`,
+      width: 512,
+      height: 512,
+    },
+    url: SITE_URL,
+    telephone: toE164Au(settings.phone_number),
+    email: settings.email_address,
+    owner: {
+      '@type': 'Person',
+      name: 'Frank Ingram',
+    },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: settings.street_address,
+      addressLocality: settings.address_locality,
+      addressRegion: settings.address_region,
+      postalCode: settings.postal_code,
+      addressCountry: 'AU',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: -31.90652137087452,
+      longitude: 115.88103847100608,
+    },
+    openingHoursSpecification: [
+      { day: 'Monday', hours: settings.opening_hours_monday },
+      { day: 'Tuesday', hours: settings.opening_hours_tuesday },
+      { day: 'Wednesday', hours: settings.opening_hours_wednesday },
+      { day: 'Thursday', hours: settings.opening_hours_thursday },
+      { day: 'Friday', hours: settings.opening_hours_friday },
+      { day: 'Saturday', hours: settings.opening_hours_saturday },
+      { day: 'Sunday', hours: settings.opening_hours_sunday },
+    ]
+      .filter(({ hours }) => hours && !hours.toLowerCase().includes('closed'))
+      .map(({ day, hours }) => {
+        const [opens = '', closes = ''] = hours.split('-').map((part) => part.trim());
+        return {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: day,
+          opens: to24h(opens),
+          closes: to24h(closes),
+        };
+      }),
+    currenciesAccepted: 'AUD',
+    paymentAccepted: 'Cash, Credit Card, Afterpay, Klarna, Zip Pay',
+    hasMap: `https://www.google.com/maps/place/?q=place_id:${settings.google_places_place_id}`,
+    priceRange: '$$',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: 105,
+      bestRating: '5',
+    },
+  };
+}
+
+export function buildWebsiteSchema(): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+  };
+}
+
 async function fetchJson<T>(path: string): Promise<T> {
   const baseUrl = process.env.DJANGO_API_URL ?? 'http://localhost:8000';
   const response = await fetch(`${baseUrl}${path}`, {
@@ -290,4 +370,23 @@ async function fetchJson<T>(path: string): Promise<T> {
 
 function absoluteUrl(url: string): string {
   return new URL(url, SITE_URL).toString();
+}
+
+function toE164Au(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('61')) return `+${digits}`;
+  if (digits.startsWith('0')) return `+61${digits.slice(1)}`;
+  if (digits.length === 8) return `+618${digits}`;
+  return `+61${digits}`;
+}
+
+function to24h(timeStr: string): string {
+  const match = timeStr.trim().match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+  if (!match) return timeStr;
+  let hour = parseInt(match[1]);
+  const minutes = match[2];
+  const period = match[3].toUpperCase();
+  if (period === 'AM' && hour === 12) hour = 0;
+  if (period === 'PM' && hour !== 12) hour += 12;
+  return `${String(hour).padStart(2, '0')}:${minutes}`;
 }

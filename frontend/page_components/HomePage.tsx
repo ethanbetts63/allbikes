@@ -12,6 +12,7 @@ import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import FeaturedEScooters from '@/components/FeaturedEScooters';
 import PayLaterSection from '@/components/PayLaterSection';
 import HireCTASection from '@/components/HireCTASection';
+import { buildLocalBusinessSchema, buildWebsiteSchema } from '@/lib/seo';
 
 interface HomePageProps {
   initialNewBikes?: Bike[];
@@ -51,104 +52,10 @@ const HomePage = ({
     }
   ];
 
-  // Converts a local AU phone number to E.164 (required by schema.org)
-  const toE164Au = (phone: string): string => {
-    const digits = phone.replace(/\D/g, '');
-    if (digits.startsWith('61')) return `+${digits}`;
-    if (digits.startsWith('0')) return `+61${digits.slice(1)}`;
-    if (digits.length === 8) return `+618${digits}`; // Perth landline missing area code
-    return `+61${digits}`;
-  };
-
-  // Converts "9:00 AM" / "5:00 PM" to ISO 24h "09:00" / "17:00"
-  const to24h = (timeStr: string): string => {
-    const match = timeStr.trim().match(/^(\d+):(\d+)\s*(AM|PM)$/i);
-    if (!match) return timeStr;
-    let h = parseInt(match[1]);
-    const m = match[2];
-    const period = match[3].toUpperCase();
-    if (period === 'AM' && h === 12) h = 0;
-    if (period === 'PM' && h !== 12) h += 12;
-    return `${String(h).padStart(2, '0')}:${m}`;
-  };
-
-  const localBusinessSchema = siteSettings ? {
-    "@context": "https://schema.org",
-    "@type": ["MotorcycleDealer", "AutoDealer"],
-    "@id": "https://www.scootershop.com.au/#business",
-    "name": "ScooterShop",
-    "image": {
-      "@type": "ImageObject",
-      "url": "https://www.scootershop.com.au/logo-512x512.png",
-      "width": 512,
-      "height": 512
-    },
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.scootershop.com.au/logo-512x512.png",
-      "width": 512,
-      "height": 512
-    },
-    "url": "https://www.scootershop.com.au",
-    "telephone": toE164Au(siteSettings.phone_number),
-    "email": siteSettings.email_address,
-    "owner": {
-      "@type": "Person",
-      "name": "Frank Ingram"
-    },
-    "address": {
-        "@type": "PostalAddress",
-        "streetAddress": siteSettings.street_address,
-        "addressLocality": siteSettings.address_locality,
-        "addressRegion": siteSettings.address_region,
-        "postalCode": siteSettings.postal_code,
-        "addressCountry": "AU"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": -31.90652137087452,
-      "longitude": 115.88103847100608
-    },
-    "openingHoursSpecification": [
-        { day: "Monday",    hours: siteSettings.opening_hours_monday },
-        { day: "Tuesday",   hours: siteSettings.opening_hours_tuesday },
-        { day: "Wednesday", hours: siteSettings.opening_hours_wednesday },
-        { day: "Thursday",  hours: siteSettings.opening_hours_thursday },
-        { day: "Friday",    hours: siteSettings.opening_hours_friday },
-        { day: "Saturday",  hours: siteSettings.opening_hours_saturday },
-        { day: "Sunday",    hours: siteSettings.opening_hours_sunday },
-    ]
-    .filter(({ hours }) => hours && !hours.toLowerCase().includes('closed'))
-    .map(({ day, hours }) => ({
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": day,
-        "opens": to24h(hours.split('-')[0].trim()),
-        "closes": to24h(hours.split('-')[1].trim()),
-    })),
-    "currenciesAccepted": "AUD",
-    "paymentAccepted": "Cash, Credit Card, Afterpay, Klarna, Zip Pay",
-    "hasMap": `https://www.google.com/maps/place/?q=place_id:${siteSettings.google_places_place_id}`,
-    "priceRange": "$$",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": 105,
-      "bestRating": "5"
-    }
-} : null;
-
-  const webSiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "ScooterShop",
-    "url": "https://www.scootershop.com.au"
-  };
-
-  const structuredData = [];
-  if (localBusinessSchema) {
-      structuredData.push(localBusinessSchema);
-  }
-  structuredData.push(webSiteSchema);
+  const structuredData = [
+    buildLocalBusinessSchema(siteSettings),
+    buildWebsiteSchema(),
+  ];
 
 
   return (

@@ -1,4 +1,6 @@
-import { buildMetadata, SITE_URL } from '@/lib/seo';
+import StructuredDataScript from '@/components/StructuredDataScript';
+import { siteSettings } from '@/config/siteSettings';
+import { buildLocalBusinessSchema, buildMetadata, SITE_URL } from '@/lib/seo';
 import ContactPage from '@/page_components/ContactPage';
 
 export const metadata = buildMetadata({
@@ -14,18 +16,19 @@ const contactPageSchema = {
   name: 'Contact ScooterShop',
   description: 'Contact ScooterShop in Dianella, Perth for motorcycle and scooter sales, servicing, tyre fitting, and workshop enquiries.',
   about: {
-    '@type': 'Organization',
     '@id': `${SITE_URL}/#business`,
   },
 };
 
+const structuredData = [
+  buildLocalBusinessSchema(siteSettings),
+  contactPageSchema,
+];
+
 export default function Page() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
-      />
+      <StructuredDataScript structuredData={structuredData} />
       <ContactPage />
     </>
   );
