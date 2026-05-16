@@ -62,10 +62,11 @@ export async function getBikeMetadata(slug: string): Promise<Metadata> {
     const name = bike.year
       ? `${bike.year} ${bike.make} ${bike.model}`
       : `${bike.make} ${bike.model}`;
+    const enginePart = bike.engine_size ? ` ${bike.engine_size}cc` : '';
     const primaryImage = getPrimaryVehicleImage(bike.images, 'detail');
 
     return buildMetadata({
-      title: `${name} | ScooterShop`,
+      title: `${name}${enginePart}`,
       description:
         bike.description ||
         `View the ${name} at ScooterShop, Perth's motorcycle and scooter dealership.`,
@@ -337,12 +338,6 @@ export function buildLocalBusinessSchema(settings: SiteSettings): object {
     paymentAccepted: 'Cash, Credit Card, Afterpay, Klarna, Zip Pay',
     hasMap: `https://www.google.com/maps/place/?q=place_id:${settings.google_places_place_id}`,
     priceRange: '$$',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      reviewCount: 105,
-      bestRating: '5',
-    },
   };
 }
 
