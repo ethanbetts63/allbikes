@@ -156,9 +156,11 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
 
 function getInitialSelectedMedia(product?: Product | null): string {
     if (!product) return '';
-    if (product.youtube_link && getYouTubeVideoId(product.youtube_link)) return 'YOUTUBE';
     const sorted = [...product.images].sort((a, b) => a.order - b.order);
-    return sorted[0]?.image ?? '';
+    const primaryImage = sorted[0]?.medium || sorted[0]?.image;
+    if (primaryImage) return primaryImage;
+    if (product.youtube_link && getYouTubeVideoId(product.youtube_link)) return 'YOUTUBE';
+    return '';
 }
 
 export default EScooterDetailPage;

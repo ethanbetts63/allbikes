@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
+import { preload } from 'react-dom';
 import { getProductMetadata, buildProductSchema } from '@/lib/seo';
 import { getServerProductById } from '@/lib/serverApi';
 import EScooterDetailPage from '@/page_components/EScooterDetailPage';
+import type { Product } from '@/types/Product';
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -31,6 +33,14 @@ export default async function Page(
     permanentRedirect(`/escooters/${product.slug}`);
   }
 
+  const primaryImage = getPrimaryProductImage(product);
+  if (primaryImage) {
+    preload(primaryImage, {
+      as: 'image',
+      fetchPriority: 'high',
+    });
+  }
+
   return (
     <>
       {product && (
@@ -51,4 +61,9 @@ async function getProductOrNull(id: number) {
     console.error(`Failed to server-render product ${id}:`, error);
     return null;
   }
+}
+
+function getPrimaryProductImage(product: Product): string | null {
+  const primaryImage = [...product.images].sort((a, b) => a.order - b.order)[0];
+  return primaryImage?.medium || primaryImage?.image || null;
 }
