@@ -15,7 +15,6 @@ import {
     Mail,
     Phone
 } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import clickIcon from '@/assets/click.svg';
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import { siteSettings } from '@/config/siteSettings';
@@ -212,17 +211,10 @@ const BikeDetailPage = ({
                                     const displayValue = spec.formatter ? spec.formatter(spec.value) : spec.value;
                                     return (
                                         <li key={spec.label} className="flex justify-between items-center py-2.5">
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger className="flex items-center gap-2 text-[var(--text-dark-secondary)]">
-                                                        <spec.icon className="h-4 w-4" />
-                                                        <span className="text-sm">{spec.label}</span>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p>{spec.label}</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
+                                            <span className="flex items-center gap-2 text-[var(--text-dark-secondary)]">
+                                                <spec.icon className="h-4 w-4" />
+                                                <span className="text-sm">{spec.label}</span>
+                                            </span>
                                             <span className="text-[var(--text-dark-primary)] font-semibold text-sm">{displayValue}</span>
                                         </li>
                                     );
