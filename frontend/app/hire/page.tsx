@@ -1,4 +1,4 @@
-import { buildMetadata, SITE_URL } from '@/lib/seo';
+import { buildFaqSchema, buildMetadata, SITE_URL } from '@/lib/seo';
 import { getServerHireBikes, getServerHireBlockedDates, getServerPublicHireSettings } from '@/lib/serverApi';
 import type { Bike } from '@/types/Bike';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
@@ -82,6 +82,10 @@ export default async function Page({ searchParams }: HirePageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(hireSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(hireFaqData)) }}
       />
       <HireListPage
         initialBikes={bikes}

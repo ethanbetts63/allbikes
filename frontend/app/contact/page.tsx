@@ -1,6 +1,7 @@
 import StructuredDataScript from '@/components/StructuredDataScript';
 import { siteSettings } from '@/config/siteSettings';
-import { buildLocalBusinessSchema, buildMetadata, SITE_URL } from '@/lib/seo';
+import { contactFaqData } from '@/data/contactFaqs';
+import { buildFaqSchema, buildLocalBusinessSchema, buildMetadata, SITE_URL } from '@/lib/seo';
 import ContactPage from '@/page_components/ContactPage';
 
 export const metadata = buildMetadata({
@@ -23,7 +24,8 @@ const contactPageSchema = {
 const structuredData = [
   buildLocalBusinessSchema(siteSettings),
   contactPageSchema,
-];
+  buildFaqSchema(contactFaqData),
+].filter(Boolean) as object[];
 
 export default function Page() {
   return (

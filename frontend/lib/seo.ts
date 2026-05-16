@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { Bike } from '@/types/Bike';
+import type { FaqItem } from '@/types/FaqItem';
 import type { Product } from '@/types/Product';
 import type { SiteSettings } from '@/types/SiteSettings';
 import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
@@ -351,6 +352,23 @@ export function buildWebsiteSchema(): object {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: SITE_URL,
+  };
+}
+
+export function buildFaqSchema(faqData: FaqItem[]): object | null {
+  if (!faqData.length) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqData.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
   };
 }
 

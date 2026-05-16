@@ -8,6 +8,7 @@ import PayLaterSection from '@/components/PayLaterSection';
 import { FaqSection } from '@/components/FaqSection';
 import type { Product } from '@/types/Product';
 import { siteSettings } from '@/config/siteSettings';
+import { buildLocalBusinessSchema } from '@/lib/seo';
 
 const faqData = [
   {
@@ -49,22 +50,6 @@ const structuredDataBase = {
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
         { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/electric-scooters" },
       ]
-    },
-    {
-      "@type": "LocalBusiness",
-      "@id": "https://www.scootershop.com.au/#business",
-      "name": "ScooterShop",
-      "url": "https://www.scootershop.com.au",
-      "telephone": siteSettings.phone_number,
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": siteSettings.street_address,
-        "addressLocality": siteSettings.address_locality,
-        "addressRegion": siteSettings.address_region,
-        "postalCode": siteSettings.postal_code,
-        "addressCountry": "AU"
-      },
-      "description": "Perth motorcycle and scooter dealership offering electric scooters for sale online with free delivery Australia-wide."
     }
   ]
 };
@@ -78,7 +63,7 @@ const ElectricScootersLandingPage = ({ initialFeaturedProducts }: ElectricScoote
 
   return (
     <div>
-      <StructuredDataScript structuredData={structuredDataBase} />
+      <StructuredDataScript structuredData={[structuredDataBase, buildLocalBusinessSchema(siteSettings)]} />
 
       <EScooterHero />
 
