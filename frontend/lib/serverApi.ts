@@ -1,4 +1,6 @@
 import type { Bike } from '@/types/Bike';
+import type { HireBlockedDate } from '@/types/HireBlockedDate';
+import type { PublicHireSettings } from '@/types/PublicHireSettings';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 import type { Product } from '@/types/Product';
 import type { TermsAndConditions } from '@/types/TermsAndConditions';
@@ -29,6 +31,14 @@ export async function getServerHireBikes(startDate?: string, endDate?: string): 
   if (endDate) params.append('end_date', endDate);
   const query = params.toString();
   return fetchServerJson<Bike[]>(`/api/hire/bikes/${query ? `?${query}` : ''}`);
+}
+
+export async function getServerPublicHireSettings(): Promise<PublicHireSettings> {
+  return fetchServerJson<PublicHireSettings>('/api/hire/settings/');
+}
+
+export async function getServerHireBlockedDates(): Promise<HireBlockedDate[]> {
+  return fetchServerJson<HireBlockedDate[]>('/api/hire/blocked-dates/');
 }
 
 export async function getServerDepositSettings(): Promise<{ deposit_amount: string }> {

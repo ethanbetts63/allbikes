@@ -1,8 +1,10 @@
 import { buildMetadata, SITE_URL } from '@/lib/seo';
-import { getServerHireBikes } from '@/lib/serverApi';
+import { getServerHireBikes, getServerHireBlockedDates, getServerPublicHireSettings } from '@/lib/serverApi';
 import type { Bike } from '@/types/Bike';
+import type { HireBlockedDate } from '@/types/HireBlockedDate';
+import type { PublicHireSettings } from '@/types/PublicHireSettings';
 import HireListPage from '@/page_components/HireListPage';
-import { FaqSection } from '@/components/FaqSection';
+import DeferredHireSections from '@/components/DeferredHireSections';
 
 const hireFaqData = [
   {
@@ -71,7 +73,11 @@ export default async function Page({ searchParams }: HirePageProps) {
   const params = await searchParams;
   const startDate = typeof params?.start === 'string' ? params.start : '';
   const endDate = typeof params?.end === 'string' ? params.end : '';
-  const bikes = await fetchInitialHireBikes(startDate, endDate);
+  const [bikes, hireSettings, blockedDates] = await Promise.all([
+    fetchInitialHireBikes(startDate, endDate),
+    fetchInitialHireSettings(),
+    fetchInitialBlockedDates(),
+  ]);
 
   return (
     <>
@@ -83,8 +89,10 @@ export default async function Page({ searchParams }: HirePageProps) {
         initialBikes={bikes}
         initialStartDate={startDate}
         initialEndDate={endDate}
+        initialHireSettings={hireSettings}
+        initialBlockedDates={blockedDates}
       />
-      <FaqSection title="Hire FAQs" faqData={hireFaqData} />
+      <DeferredHireSections faqData={hireFaqData} />
     </>
   );
 }
@@ -94,6 +102,24 @@ async function fetchInitialHireBikes(startDate: string, endDate: string): Promis
     return await getServerHireBikes(startDate || undefined, endDate || undefined);
   } catch (error) {
     console.error('Failed to server-render hire bikes:', error);
+    return [];
+  }
+}
+
+async function fetchInitialHireSettings(): Promise<PublicHireSettings | null> {
+  try {
+    return await getServerPublicHireSettings();
+  } catch (error) {
+    console.error('Failed to server-render hire settings:', error);
+    return null;
+  }
+}
+
+async function fetchInitialBlockedDates(): Promise<HireBlockedDate[]> {
+  try {
+    return await getServerHireBlockedDates();
+  } catch (error) {
+    console.error('Failed to server-render hire blocked dates:', error);
     return [];
   }
 }
