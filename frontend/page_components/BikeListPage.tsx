@@ -13,6 +13,8 @@ import Hero from '@/components/Hero';
 import SymImage from '@/assets/sym_22.webp';
 import BikeFilterForm from '@/components/BikeFilterForm';
 import { FaqSection } from '@/components/FaqSection';
+import StructuredDataScript from '@/components/StructuredDataScript';
+import { buildFaqSchema } from '@/lib/seo';
 import { buildListHref } from '@/lib/listQuery';
 
 const newBikeFaqs = [
@@ -105,9 +107,12 @@ const BikeListPage = ({ bikeCondition, bikes, totalPages, currentPage, filters }
   ];
   const basePath = breadcrumbItems[1].href;
   
+  const faqData = isNew ? newBikeFaqs : isParts ? partsBikeFaqs : usedBikeFaqs;
+
   return (
     <>
-      <Hero 
+      <StructuredDataScript structuredData={buildFaqSchema(faqData) ?? undefined} />
+      <Hero
         title={responsivePageTitle}
         description={description}
         imageUrl={SymImage.src}

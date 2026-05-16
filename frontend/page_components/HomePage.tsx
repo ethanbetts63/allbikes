@@ -12,7 +12,7 @@ import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import FeaturedEScooters from '@/components/FeaturedEScooters';
 import PayLaterSection from '@/components/PayLaterSection';
 import HireCTASection from '@/components/HireCTASection';
-import { buildLocalBusinessSchema, buildWebsiteSchema } from '@/lib/seo';
+import { buildLocalBusinessSchema, buildWebsiteSchema, buildFaqSchema } from '@/lib/seo';
 
 interface HomePageProps {
   initialNewBikes?: Bike[];
@@ -55,7 +55,8 @@ const HomePage = ({
   const structuredData = [
     buildLocalBusinessSchema(siteSettings),
     buildWebsiteSchema(),
-  ];
+    buildFaqSchema(faqData),
+  ].filter(Boolean) as object[];
 
 
   return (

@@ -1,7 +1,7 @@
 import StructuredDataScript from '@/components/StructuredDataScript';
 import { siteSettings } from '@/config/siteSettings';
 import { contactFaqData } from '@/data/contactFaqs';
-import { buildFaqSchema, buildLocalBusinessSchema, buildMetadata, SITE_URL } from '@/lib/seo';
+import { buildFaqSchema, buildLocalBusinessSchema, buildContactPageSchema, buildMetadata } from '@/lib/seo';
 import ContactPage from '@/page_components/ContactPage';
 
 export const metadata = buildMetadata({
@@ -10,20 +10,9 @@ export const metadata = buildMetadata({
   canonicalPath: '/contact',
 });
 
-const contactPageSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'ContactPage',
-  url: `${SITE_URL}/contact`,
-  name: 'Contact ScooterShop',
-  description: 'Contact ScooterShop in Dianella, Perth for motorcycle and scooter sales, servicing, tyre fitting, and workshop enquiries.',
-  about: {
-    '@id': `${SITE_URL}/#business`,
-  },
-};
-
 const structuredData = [
   buildLocalBusinessSchema(siteSettings),
-  contactPageSchema,
+  buildContactPageSchema(),
   buildFaqSchema(contactFaqData),
 ].filter(Boolean) as object[];
 

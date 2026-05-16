@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
+import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 
 const ServiceFaqs = [
   {
@@ -53,49 +54,20 @@ const services = [
   },
 ];
 
-const breadcrumbItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Servicing & Tyres', href: '/service' },
-];
-
-const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-        {
-            "@type": "BreadcrumbList",
-            "itemListElement": breadcrumbItems.map((item, index) => ({
-                "@type": "ListItem",
-                "position": index + 1,
-                "name": item.name,
-                "item": `https://www.scootershop.com.au${item.href}`
-            }))
-        },
-        {
-            "@type": "Service",
-            "serviceType": "Motorcycle and scooter servicing and repairs",
-            "url": "https://www.scootershop.com.au/service",
-            "areaServed": { "@type": "City", "name": "Perth" },
-            "provider": {
-                "@type": "Organization",
-                "@id": "https://www.scootershop.com.au/#business",
-                "name": "ScooterShop"
-            },
-            "description": "Expert motorcycle and scooter servicing, repairs, and tyre fitting in Perth.",
-            "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Workshop Services",
-                "itemListElement": services.map(s => ({
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": s.title,
-                        "description": s.description
-                    }
-                }))
-            }
-        }
-    ]
-};
+const structuredData = [
+  buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Servicing & Tyres', path: '/service' },
+  ]),
+  buildServiceSchema({
+    serviceType: 'Motorcycle and scooter servicing and repairs',
+    path: '/service',
+    description: 'Expert motorcycle and scooter servicing, repairs, and tyre fitting in Perth.',
+    catalogName: 'Workshop Services',
+    offers: services.map((s) => ({ name: s.title, description: s.description })),
+  }),
+  buildFaqSchema(ServiceFaqs),
+].filter(Boolean) as object[];
 
 const ServicePage = () => {
     return (

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { CircleDot, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
+import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 
 const TyreFittingFaqs = [
   {
@@ -57,49 +58,21 @@ const tyreServices = [
   },
 ];
 
-const breadcrumbItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Tyre Fitting', href: '/tyre-fitting' },
-];
-
-const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-        {
-            "@type": "BreadcrumbList",
-            "itemListElement": breadcrumbItems.map((item, index) => ({
-                "@type": "ListItem",
-                "position": index + 1,
-                "name": item.name,
-                "item": `https://www.scootershop.com.au${item.href}`
-            }))
-        },
-        {
-            "@type": "Service",
-            "serviceType": "Motorcycle and scooter tyre fitting",
-            "url": "https://www.scootershop.com.au/tyre-fitting",
-            "areaServed": { "@type": "City", "name": "Perth" },
-            "provider": {
-                "@type": "Organization",
-                "@id": "https://www.scootershop.com.au/#business",
-                "name": "ScooterShop"
-            },
-            "description": "Motorcycle tyre change, scooter tyre replacement, puncture repair, flat tyre repair, and tyre supply and fit in Perth.",
-            "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Tyre Fitting Services",
-                "itemListElement": tyreServices.map(s => ({
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": s.title,
-                        "description": s.description
-                    }
-                }))
-            }
-        }
-    ]
-};
+const structuredData = [
+  buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Tyre Fitting', path: '/tyre-fitting' },
+  ]),
+  buildServiceSchema({
+    serviceType: 'Motorcycle and scooter tyre fitting',
+    path: '/tyre-fitting',
+    description:
+      'Motorcycle tyre change, scooter tyre replacement, puncture repair, flat tyre repair, and tyre supply and fit in Perth.',
+    catalogName: 'Tyre Fitting Services',
+    offers: tyreServices.map((s) => ({ name: s.title, description: s.description })),
+  }),
+  buildFaqSchema(TyreFittingFaqs),
+].filter(Boolean) as object[];
 
 const TyreFittingPage = () => {
     return (

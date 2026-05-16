@@ -355,6 +355,75 @@ export function buildWebsiteSchema(): object {
   };
 }
 
+export function buildBreadcrumbSchema(items: { name: string; path: string }[]): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: `${SITE_URL}${item.path}`,
+    })),
+  };
+}
+
+interface ServiceOffer {
+  name: string;
+  description: string;
+}
+
+interface ServiceSchemaOptions {
+  serviceType: string;
+  path: string;
+  description: string;
+  catalogName?: string;
+  offers?: ServiceOffer[];
+}
+
+export function buildServiceSchema(options: ServiceSchemaOptions): object {
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: options.serviceType,
+    url: `${SITE_URL}${options.path}`,
+    description: options.description,
+    areaServed: { '@type': 'City', name: 'Perth' },
+    provider: {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#business`,
+      name: SITE_NAME,
+    },
+  };
+
+  if (options.offers?.length && options.catalogName) {
+    schema.hasOfferCatalog = {
+      '@type': 'OfferCatalog',
+      name: options.catalogName,
+      itemListElement: options.offers.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: s.name, description: s.description },
+      })),
+    };
+  }
+
+  return schema;
+}
+
+export function buildContactPageSchema(): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    url: `${SITE_URL}/contact`,
+    name: `Contact ${SITE_NAME}`,
+    description:
+      'Contact ScooterShop in Dianella, Perth for motorcycle and scooter sales, servicing, tyre fitting, and workshop enquiries.',
+    about: {
+      '@id': `${SITE_URL}/#business`,
+    },
+  };
+}
+
 export function buildFaqSchema(faqData: FaqItem[]): object | null {
   if (!faqData.length) return null;
 

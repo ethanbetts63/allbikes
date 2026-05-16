@@ -14,6 +14,7 @@ import { getYouTubeVideoId } from '@/utils/youtube';
 import { ShieldCheck } from 'lucide-react';
 import { assetUrl } from '@/utils/assetUrl';
 import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/utils/vehicleImages';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 interface EScooterDetailPageProps {
     initialProduct?: Product | null;
@@ -27,15 +28,11 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
 
     if (!product) return <ErrorScreen message="Product not found." />;
 
-    const structuredData = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
-            { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/escooters" },
-            { "@type": "ListItem", "position": 3, "name": product.name, "item": `https://www.scootershop.com.au/escooters/${product.slug}` }
-        ]
-    };
+    const structuredData = buildBreadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Electric Scooters', path: '/escooters' },
+        { name: product.name, path: `/escooters/${product.slug}` },
+    ]);
 
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)]">

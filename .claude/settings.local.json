@@ -27,7 +27,8 @@
       "PowerShell(pip install *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\ethan\\\\coding\\\\allbikes\\\\frontend\" -Force)",
       "Bash(Select-Object Name)",
-      "Bash(echo \"EXIT: $?\")"
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(npx tsc *)"
     ]
   }
 }

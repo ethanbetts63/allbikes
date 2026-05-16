@@ -17,7 +17,6 @@ import {
     Phone
 } from 'lucide-react';
 import clickIcon from '@/assets/click.svg';
-import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import { siteSettings } from '@/config/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
 import MediaGallery from '@/components/MediaGallery';
@@ -27,6 +26,7 @@ import { getYouTubeVideoId } from '@/utils/youtube';
 import PopularBadge from '@/components/PopularBadge';
 import { assetUrl } from '@/utils/assetUrl';
 import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/utils/vehicleImages';
+import { buildBreadcrumbSchema } from '@/lib/seo';
 
 interface BikeDetailPageProps {
     initialBike?: Bike | null;
@@ -58,22 +58,16 @@ const BikeDetailPage = ({
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
 
-    const breadcrumbItems: BreadcrumbItem[] = bike ? [
-        { name: 'Home', href: '/' },
-        { name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes', href: bike.condition === 'new' ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used' },
-        { name: pageTitle, href: `/inventory/motorcycles/${bike.slug}` }
-    ] : [];
-
-    const structuredData = bike ? {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": breadcrumbItems.map((item, index) => ({
-            "@type": "ListItem",
-            "position": index + 1,
-            "name": item.name,
-            "item": `https://www.scootershop.com.au${item.href}`
-        }))
-    } : undefined;
+    const structuredData = bike
+        ? buildBreadcrumbSchema([
+              { name: 'Home', path: '/' },
+              {
+                  name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes',
+                  path: bike.condition === 'new' ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used',
+              },
+              { name: pageTitle, path: `/inventory/motorcycles/${bike.slug}` },
+          ])
+        : undefined;
 
     if (!bike) return <ErrorScreen message="Bike not found." />;
 

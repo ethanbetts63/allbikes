@@ -8,7 +8,7 @@ import PayLaterSection from '@/components/PayLaterSection';
 import { FaqSection } from '@/components/FaqSection';
 import type { Product } from '@/types/Product';
 import { siteSettings } from '@/config/siteSettings';
-import { buildLocalBusinessSchema } from '@/lib/seo';
+import { buildLocalBusinessSchema, buildBreadcrumbSchema, buildFaqSchema } from '@/lib/seo';
 
 const faqData = [
   {
@@ -41,18 +41,10 @@ const faqData = [
   },
 ];
 
-const structuredDataBase = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.scootershop.com.au/" },
-        { "@type": "ListItem", "position": 2, "name": "Electric Scooters", "item": "https://www.scootershop.com.au/electric-scooters" },
-      ]
-    }
-  ]
-};
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Electric Scooters', path: '/electric-scooters' },
+]);
 
 interface ElectricScootersLandingPageProps {
   initialFeaturedProducts?: Product[];
@@ -63,7 +55,7 @@ const ElectricScootersLandingPage = ({ initialFeaturedProducts }: ElectricScoote
 
   return (
     <div>
-      <StructuredDataScript structuredData={[structuredDataBase, buildLocalBusinessSchema(siteSettings)]} />
+      <StructuredDataScript structuredData={[breadcrumbSchema, buildLocalBusinessSchema(siteSettings), buildFaqSchema(faqData)].filter(Boolean) as object[]} />
 
       <EScooterHero />
 

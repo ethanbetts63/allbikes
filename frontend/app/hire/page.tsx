@@ -1,4 +1,4 @@
-import { buildFaqSchema, buildMetadata, SITE_URL } from '@/lib/seo';
+import { buildFaqSchema, buildBreadcrumbSchema, buildServiceSchema, buildMetadata } from '@/lib/seo';
 import { getServerHireBikes, getServerHireBlockedDates, getServerPublicHireSettings } from '@/lib/serverApi';
 import type { Bike } from '@/types/Bike';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
@@ -29,30 +29,19 @@ const hireFaqData = [
   },
 ];
 
-const hireSchema = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-        { '@type': 'ListItem', position: 2, name: 'Hire', item: `${SITE_URL}/hire` },
-      ],
-    },
-    {
-      '@type': 'Service',
-      serviceType: 'Motorcycle and scooter hire',
-      url: `${SITE_URL}/hire`,
-      provider: {
-        '@type': 'Organization',
-        '@id': `${SITE_URL}/#business`,
-        name: 'ScooterShop',
-      },
-      areaServed: { '@type': 'City', name: 'Perth' },
-      description: 'Short and long term motorcycle and scooter hire in Perth, WA. Daily, weekly, and monthly rates available from ScooterShop Dianella.',
-    },
-  ],
-};
+const hireStructuredData = [
+  buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Hire', path: '/hire' },
+  ]),
+  buildServiceSchema({
+    serviceType: 'Motorcycle and scooter hire',
+    path: '/hire',
+    description:
+      'Short and long term motorcycle and scooter hire in Perth, WA. Daily, weekly, and monthly rates available from ScooterShop Dianella.',
+  }),
+  buildFaqSchema(hireFaqData),
+].filter(Boolean) as object[];
 
 export const metadata = buildMetadata({
   title: 'Motorcycle Hire Perth | Daily, Weekly & Monthly | ScooterShop',
@@ -81,11 +70,7 @@ export default async function Page({ searchParams }: HirePageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(hireSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(hireFaqData)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(hireStructuredData) }}
       />
       <HireListPage
         initialBikes={bikes}

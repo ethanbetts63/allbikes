@@ -4,37 +4,8 @@ import { ChevronDown } from 'lucide-react';
 import type { FaqSectionProps } from '@/types/FaqSectionProps';
 
 export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
-  const generateJsonLd = () => {
-    if (!faqData.length) {
-      return null;
-    }
-
-    const faqItems = faqData.map(faq => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer
-      }
-    }));
-
-    const jsonLd = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": faqItems
-    };
-
-    return (
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-    );
-  };
-
   return (
     <>
-      {generateJsonLd()}
       <div className="py-8 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center text-[var(--text-light-primary)] mb-8">{title}</h2>
