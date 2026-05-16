@@ -1,6 +1,7 @@
 export interface GalleryImage {
     id: number;
     image: string;
+    thumbnail?: string | null;
     medium?: string;
     order: number;
 }
