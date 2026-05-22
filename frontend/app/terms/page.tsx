@@ -5,8 +5,8 @@ import TermsAndConditionsPage from '@/page_components/TermsAndConditionsPage';
 
 export const dynamic = 'force-dynamic';
 export const metadata = buildMetadata({
-  title: 'Terms & Conditions | ScooterShop',
-  description: 'Read the terms and conditions for ScooterShop purchases, hire, and service bookings.',
+  title: 'Terms & Conditions',
+  description: 'Read the terms and conditions for online purchases, motorcycle hire, service bookings, payments, cancellations, and website use.',
   canonicalPath: '/terms',
 });
 

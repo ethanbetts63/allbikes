@@ -4,8 +4,8 @@ import type { Product } from '@/types/Product';
 import ElectricScootersLandingPage from '@/page_components/ElectricScootersLandingPage';
 
 export const metadata = buildMetadata({
-  title: 'Buy Electric Scooters Online | Free Delivery Australia-Wide | ScooterShop',
-  description: 'Shop electric scooters online with free delivery Australia-wide. All prices include GST. Secure checkout via Stripe and 12-month warranty on every e-scooter.',
+  title: 'Buy Electric Scooters Online | Free AU Delivery',
+  description: 'Shop electric scooters online with free Australia-wide delivery, GST-inclusive pricing, secure Stripe checkout, and 12-month warranty.',
   canonicalPath: '/electric-scooters',
 });
 

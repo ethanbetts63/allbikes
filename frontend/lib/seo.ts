@@ -52,7 +52,7 @@ export async function getBikeMetadata(slug: string): Promise<Metadata> {
   const bikeId = slug.split('-').pop();
   if (!bikeId) {
     return buildMetadata({
-      title: 'Motorcycle Not Found | ScooterShop',
+      title: 'Motorcycle Not Found',
       noindex: true,
     });
   }
@@ -76,8 +76,8 @@ export async function getBikeMetadata(slug: string): Promise<Metadata> {
     });
   } catch {
     return buildMetadata({
-      title: 'Motorcycles & Scooters | ScooterShop',
-      description: 'Browse motorcycles and scooters available from ScooterShop Perth.',
+      title: 'Motorcycles & Scooters for Sale Perth',
+      description: 'Browse motorcycles and scooters available for sale in Perth.',
       canonicalPath: `/inventory/motorcycles/${slug}`,
     });
   }
@@ -87,7 +87,7 @@ export async function getProductMetadata(slug: string): Promise<Metadata> {
   const productId = Number(slug.split('-').pop());
   if (!productId || Number.isNaN(productId)) {
     return buildMetadata({
-      title: 'E-Scooter Not Found | ScooterShop',
+      title: 'E-Scooter Not Found',
       noindex: true,
     });
   }
@@ -97,7 +97,7 @@ export async function getProductMetadata(slug: string): Promise<Metadata> {
     const primaryImage = getPrimaryVehicleImage(product.images, 'detail');
 
     return buildMetadata({
-      title: `${product.name} | Free Delivery Australia-Wide | ScooterShop`,
+      title: `${product.name} | Free Australia-Wide Delivery`,
       description: `Buy the ${product.name} online with free delivery anywhere in Australia. Price includes GST. Secure checkout via Stripe.${product.description ? ` ${product.description}` : ''}`,
       canonicalPath: `/escooters/${product.slug}`,
       image: primaryImage,
@@ -105,7 +105,7 @@ export async function getProductMetadata(slug: string): Promise<Metadata> {
     });
   } catch {
     return buildMetadata({
-      title: 'Electric Scooters | ScooterShop',
+      title: 'Electric Scooters for Sale Online',
       description: 'Shop electric scooters online with free delivery Australia-wide.',
       canonicalPath: `/escooters/${slug}`,
     });
@@ -412,7 +412,7 @@ export function buildContactPageSchema(): object {
     url: `${SITE_URL}/contact`,
     name: `Contact ${SITE_NAME}`,
     description:
-      'Contact ScooterShop in Dianella, Perth for motorcycle and scooter sales, servicing, tyre fitting, and workshop enquiries.',
+      'Contact the Dianella workshop for motorcycle and scooter sales, servicing, tyre fitting, hire, and general enquiries.',
     about: {
       '@id': `${SITE_URL}/#business`,
     },

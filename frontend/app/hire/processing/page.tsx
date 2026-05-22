@@ -2,7 +2,7 @@ import { buildMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 export const metadata = buildMetadata({
-  title: 'Processing Hire Payment | ScooterShop',
+  title: 'Processing Hire Payment',
   noindex: true,
 });
 

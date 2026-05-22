@@ -5,8 +5,8 @@ import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
 
 export const metadata = buildMetadata({
-  title: 'Motorcycles, Scooters & Electric Scooters Perth | ScooterShop',
-  description: 'New and used motorcycles, scooters, and electric scooters for sale in Perth. Buy e-scooters online with free Australia-wide delivery. Servicing and tyre fitting also available.',
+  title: 'Motorcycles, Scooters & Electric Scooters Perth',
+  description: 'New and used motorcycles, scooters, and electric scooters for sale in Perth, plus servicing, tyre fitting, and free Australia-wide e-scooter delivery.',
   canonicalPath: '/',
 });
 

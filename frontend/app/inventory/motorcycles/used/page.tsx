@@ -4,8 +4,8 @@ import { getInitialBikeList } from '@/lib/inventoryList';
 import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({
-  title: 'Used Motorcycles & Scooters | ScooterShop',
-  description: 'Browse used motorcycles and scooters available in Perth. Quality pre-owned bikes inspected and prepared by the ScooterShop workshop.',
+  title: 'Used Motorcycles & Scooters for Sale Perth',
+  description: 'Browse used motorcycles and scooters for sale in Perth, with quality pre-owned bikes inspected and prepared by the workshop.',
   canonicalPath: '/inventory/motorcycles/used',
 });
 

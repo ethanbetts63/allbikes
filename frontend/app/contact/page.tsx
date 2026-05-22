@@ -5,8 +5,8 @@ import { buildFaqSchema, buildLocalBusinessSchema, buildContactPageSchema, build
 import ContactPage from '@/page_components/ContactPage';
 
 export const metadata = buildMetadata({
-  title: 'Contact Us | ScooterShop',
-  description: 'Contact ScooterShop in Dianella, Perth for motorcycle and scooter sales, servicing, tyre fitting, and workshop enquiries.',
+  title: 'Contact Motorcycle & Scooter Workshop Perth',
+  description: 'Contact the Dianella workshop for motorcycle and scooter sales, servicing, tyre fitting, hire, and general enquiries.',
   canonicalPath: '/contact',
 });
 

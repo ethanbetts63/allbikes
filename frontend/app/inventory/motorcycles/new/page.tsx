@@ -4,8 +4,8 @@ import { getInitialBikeList } from '@/lib/inventoryList';
 import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({
-  title: 'New Motorcycles & Scooters | ScooterShop',
-  description: 'Browse new motorcycles and scooters available in Perth, including petrol and electric models. Workshop-prepared and backed by warranty.',
+  title: 'New Motorcycles & Scooters for Sale Perth',
+  description: 'Browse new motorcycles and scooters for sale in Perth, including petrol and electric models prepared by the workshop and backed by warranty.',
   canonicalPath: '/inventory/motorcycles/new',
 });
 

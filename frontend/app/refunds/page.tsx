@@ -1,8 +1,8 @@
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata = buildMetadata({
-  title: 'Returns & Refunds | ScooterShop',
-  description: 'Returns and refund policy for e-scooter purchases from ScooterShop.',
+  title: 'Returns & Refunds',
+  description: 'Read the returns and refund policy for online electric scooter purchases, including damaged, faulty, and change-of-mind items.',
   canonicalPath: '/refunds',
 });
 

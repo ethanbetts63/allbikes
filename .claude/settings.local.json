@@ -31,7 +31,15 @@
       "Bash(npx tsc *)",
       "WebFetch(domain:www.scootershop.com.au)",
       "Bash(dir C:\\\\Users\\\\ethan\\\\coding\\\\allbikes *)",
-      "Bash(dir C:\\\\Users\\\\ethan\\\\coding\\\\allbikes\\\\frontend *)"
+      "Bash(dir C:\\\\Users\\\\ethan\\\\coding\\\\allbikes\\\\frontend *)",
+      "Bash(python3 *)",
+      "Bash(node *)",
+      "Bash(where python *)",
+      "Bash(where python3 *)",
+      "Bash(where node *)",
+      "Bash(findstr /c:\"<url>\")",
+      "Bash(measure-object)",
+      "Bash(select-object -expand Count)"
     ]
   }
 }

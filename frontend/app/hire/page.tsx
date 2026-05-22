@@ -44,8 +44,8 @@ const hireStructuredData = [
 ].filter(Boolean) as object[];
 
 export const metadata = buildMetadata({
-  title: 'Motorcycle Hire Perth | Daily, Weekly & Monthly | ScooterShop',
-  description: 'Hire a motorcycle in Perth from ScooterShop Dianella. Flexible daily, weekly, and monthly rates with maintained hire bikes.',
+  title: 'Motorcycle Hire Perth | Daily, Weekly & Monthly',
+  description: 'Hire a motorcycle or scooter in Perth with flexible daily, weekly, and monthly rates from a maintained Dianella hire fleet.',
   canonicalPath: '/hire',
 });
 

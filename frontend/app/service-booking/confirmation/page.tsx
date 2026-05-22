@@ -1,7 +1,7 @@
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata = buildMetadata({
-  title: 'Service Request Submitted | ScooterShop',
+  title: 'Service Request Submitted',
   noindex: true,
 });
 

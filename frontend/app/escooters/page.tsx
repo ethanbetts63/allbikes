@@ -4,8 +4,8 @@ import EScooterListPage from '@/page_components/EScooterListPage';
 import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({
-  title: 'Electric Scooters for Sale | ScooterShop Perth',
-  description: 'Shop electric scooters online. All prices include GST with free delivery Australia-wide and secure payment via Stripe.',
+  title: 'Electric Scooters for Sale Online',
+  description: 'Shop electric scooters online with GST-inclusive pricing, free Australia-wide delivery, and secure Stripe payment.',
   canonicalPath: '/escooters',
 });
 

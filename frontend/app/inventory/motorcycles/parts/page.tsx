@@ -4,8 +4,8 @@ import { getInitialBikeList } from '@/lib/inventoryList';
 import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({
-  title: 'Workshop Clearance | ScooterShop',
-  description: 'Browse workshop clearance motorcycles and scooters sold as-is for parts, projects, and mechanical restoration.',
+  title: 'Workshop Clearance Motorcycles & Scooters',
+  description: 'Browse workshop clearance motorcycles and scooters sold as-is for parts, projects, and mechanical restoration in Perth.',
   canonicalPath: '/inventory/motorcycles/parts',
 });
 
