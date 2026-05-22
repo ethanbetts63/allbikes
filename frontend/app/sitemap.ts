@@ -6,17 +6,17 @@ import type { Product } from '@/types/Product';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 
 const STATIC_ROUTES: MetadataRoute.Sitemap = [
-  { url: `${SITE_URL}/`, lastModified: '2026-05-22', changeFrequency: 'daily', priority: 1 },
-  { url: `${SITE_URL}/inventory/motorcycles/new`, lastModified: '2026-05-22', changeFrequency: 'daily', priority: 0.8 },
-  { url: `${SITE_URL}/inventory/motorcycles/used`, lastModified: '2026-05-22', changeFrequency: 'daily', priority: 0.8 },
-  { url: `${SITE_URL}/inventory/motorcycles/parts`, lastModified: '2026-05-22', changeFrequency: 'daily', priority: 0.6 },
-  { url: `${SITE_URL}/escooters`, lastModified: '2026-05-22', changeFrequency: 'daily', priority: 0.8 },
-  { url: `${SITE_URL}/electric-scooters`, lastModified: '2026-05-22', changeFrequency: 'weekly', priority: 0.7 },
-  { url: `${SITE_URL}/hire`, lastModified: '2026-05-22', changeFrequency: 'daily', priority: 0.7 },
-  { url: `${SITE_URL}/service`, lastModified: '2026-05-22', changeFrequency: 'weekly', priority: 0.7 },
-  { url: `${SITE_URL}/service-booking`, lastModified: '2026-05-22', changeFrequency: 'weekly', priority: 0.6 },
-  { url: `${SITE_URL}/tyre-fitting`, lastModified: '2026-05-22', changeFrequency: 'weekly', priority: 0.6 },
-  { url: `${SITE_URL}/contact`, lastModified: '2026-05-22', changeFrequency: 'monthly', priority: 0.5 },
+  { url: `${SITE_URL}/`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/inventory/motorcycles/new`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/inventory/motorcycles/used`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/inventory/motorcycles/parts`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/escooters`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/electric-scooters`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/hire`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/service`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/service-booking`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/tyre-fitting`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/contact`, lastModified: '2026-05-22' },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -30,15 +30,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((bike): MetadataRoute.Sitemap[number] => ({
       url: `${SITE_URL}/inventory/motorcycles/${bike.slug}`,
       lastModified: bike.date_posted,
-      changeFrequency: 'weekly',
-      priority: 0.9,
     }));
 
   const productRoutes = products.map((product): MetadataRoute.Sitemap[number] => ({
     url: `${SITE_URL}/escooters/${product.slug}`,
     lastModified: product.updated_at,
-    changeFrequency: 'weekly',
-    priority: 0.8,
   }));
 
   return [...STATIC_ROUTES, ...bikeRoutes, ...productRoutes];
