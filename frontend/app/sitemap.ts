@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/seo';
 import { getServerBikes, getServerProducts } from '@/lib/serverApi';
+import { getAllArticleMeta } from '@/lib/articles';
 import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
@@ -39,7 +40,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: product.updated_at,
   }));
 
-  return [...STATIC_ROUTES, ...bikeRoutes, ...productRoutes];
+  const articleRoutes = getAllArticleMeta().map((article): MetadataRoute.Sitemap[number] => ({
+    url: `${SITE_URL}/blog/${article.slug}`,
+    lastModified: article.lastModified,
+  }));
+
+  const blogIndex: MetadataRoute.Sitemap[number] = {
+    url: `${SITE_URL}/blog`,
+    lastModified: '2026-05-23',
+  };
+
+  return [...STATIC_ROUTES, blogIndex, ...articleRoutes, ...bikeRoutes, ...productRoutes];
 }
 
 async function fetchAllPages<T>(

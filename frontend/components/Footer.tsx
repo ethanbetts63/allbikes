@@ -24,7 +24,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-[var(--bg-dark-primary)]">
-      <div className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
         {/* Contact */}
         <div>
@@ -59,6 +59,18 @@ const Footer = () => {
             <li><Link href="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
             <li><Link href="/security" className={LINK_CLASS}>Security Policy</Link></li>
             <li><Link href="/login" className={LINK_CLASS}>Login</Link></li>
+          </ul>
+        </div>
+
+        {/* Articles */}
+        <div>
+          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Guides &amp; Articles</p>
+          <ul className="space-y-2">
+            <li><Link href="/blog" className={LINK_CLASS}>All Guides</Link></li>
+            <li><Link href="/blog/buying-used-scooter-perth" className={LINK_CLASS}>Buying a Used Scooter in Perth</Link></li>
+            <li><Link href="/blog/car-vs-scooter-perth-commuter-guide" className={LINK_CLASS}>Car vs Scooter: Cost Guide</Link></li>
+            <li><Link href="/blog/wa-e-scooter-laws-2026" className={LINK_CLASS}>WA E-Scooter Laws</Link></li>
+            <li><Link href="/blog/wa-scooter-motorcycle-licence-guide" className={LINK_CLASS}>WA Licence Guide</Link></li>
           </ul>
         </div>
 

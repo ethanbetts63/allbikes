@@ -39,7 +39,9 @@
       "Bash(where node *)",
       "Bash(findstr /c:\"<url>\")",
       "Bash(measure-object)",
-      "Bash(select-object -expand Count)"
+      "Bash(select-object -expand Count)",
+      "WebSearch",
+      "WebFetch(domain:www.transport.wa.gov.au)"
     ]
   }
 }
