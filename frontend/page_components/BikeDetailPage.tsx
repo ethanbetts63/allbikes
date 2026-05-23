@@ -3,8 +3,7 @@ import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import DesktopOnly from '@/components/DesktopOnly';
-import dynamic from 'next/dynamic';
-const FeaturedBikes = dynamic(() => import('@/components/FeaturedBikes'), { ssr: false });
+import FeaturedBikes from '@/components/FeaturedBikesLazy';
 import {
     Hash,
     Gauge,

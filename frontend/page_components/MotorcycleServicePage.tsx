@@ -7,8 +7,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
-import dynamic from 'next/dynamic';
-const FeaturedBikes = dynamic(() => import('@/components/FeaturedBikes'), { ssr: false });
+import FeaturedBikes from '@/components/FeaturedBikesLazy';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 import type { Bike } from '@/types/Bike';
 
