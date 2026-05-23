@@ -24,14 +24,6 @@ A living to-do list of approved improvements.
   safety. The suggestion is correct that any is being used where BookingFormData should be — but BookingFormData itself has an any hole in it that
   needs fixing first before the swap is meaningful.
 
-
-
-
-  
-
-
-
-
 A few things worth looking at before you go live:
 
   ---
@@ -57,27 +49,7 @@ A few things worth looking at before you go live:
      [slug]/page.tsx:18, frontend/page_components/EScooterDetailPage.tsx:27.
      SEO impact: Google may classify these as soft 404s, crawl junk URLs, or temporarily index generic fallback metadata. These should return
      notFound() or redirect to the canonical slug when the id exists but the slug text is wrong.
-  2. High/Medium: metadata fallback can make failed API detail pages indexable.
-     If metadata fetch fails, the helper returns normal metadata with a canonical to the requested slug, not noindex.
-     Relevant code: frontend/lib/seo.ts:73, frontend/lib/seo.ts:102.
-     SEO impact: during backend/API trouble, Google can see an indexable generic “Motorcycles & Scooters” or “Electric Scooters” page at an
-     arbitrary detail URL.
-  3. Medium: robots.txt and sitemap.xml disagree.
-     The sitemap includes /refunds, /privacy, /security, and /terms, but robots disallows the same paths.
-     Sitemap entries: frontend/app/sitemap.ts:20.
-     Robots disallows: frontend/app/robots.ts:13.
-     SEO impact: Search Console will likely report “submitted URL blocked by robots.txt”. Decide one policy: either allow these pages and optionally
-     noindex, or remove them from the sitemap.
-  4. Medium: structured-data image URLs are likely inconsistent or invalid.
-     Motorcycle JSON-LD blindly prefixes https://www.scootershop.com.au onto API image URLs. If DRF returns absolute media URLs, this becomes malfo
-     rmed. Product JSON-LD uses raw image values without guaranteeing absolute URLs.
-     Relevant code: frontend/page_components/BikeListPage.tsx:130, frontend/page_components/BikeDetailPage.tsx:81, frontend/page_components/
-     EScooterListPage.tsx:65, frontend/page_components/EScooterDetailPage.tsx:43.
-     SEO impact: rich-result eligibility can be reduced if image fields are invalid.
-  5. Medium: fallback Open Graph image points to a file that does not exist.
-     buildMetadata() defaults to https://www.scootershop.com.au/logo-512x512.png, but there is no frontend/public/logo-512x512.png.
-     Relevant code: frontend/lib/seo.ts:24.
-     SEO/social impact: shared pages without a product image get a broken preview image.
+
   6. Medium: list pages canonicalize all query states to the base URL.
      /inventory/motorcycles/new?page=2, sorted pages, and filtered pages all use the same canonical as /inventory/motorcycles/new.
      Relevant metadata: frontend/app/inventory/motorcycles/new/page.tsx:6, frontend/app/inventory/motorcycles/used/page.tsx:6, frontend/app/
@@ -119,15 +91,6 @@ A few things worth looking at before you go live:
 
      This helps SEO indirectly through Core Web Vitals and makes future mistakes less likely.
 
-       5. Expand structured data
-
-     You already have product/breadcrumb schema in places. I’d make this more consistent:
-      - Product schema on all product/detail pages
-      - LocalBusiness / MotorcycleDealer style schema globally or on contact page
-      - FAQPage schema where real FAQ content exists
-      - Service schema for service/tyre fitting/hire pages
-
-     This is probably one of the cleaner SEO wins.
 
 
      check if stripe is loading on every page. 
