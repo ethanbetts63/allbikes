@@ -7,32 +7,33 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
+import ReviewCarousel from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 
 const ServiceFaqs = [
   {
-    question: "Do you offer motorcycle and scooter tyre fitting?",
-    answer: "Yes. We specialise in motorcycle and scooter tyre fitting, including tyre install, motorcycle tyre change, and scooter tyre change. We can supply and fit tyres or install tyres you provide, depending on the job."
+    question: "Do you repair scooters and motorcycles?",
+    answer: "Yes. We carry out scooter repairs and motorcycle repairs across all makes and models — from no-start diagnosis and electrical faults to mechanical repairs, full servicing, and tyre fitting. Our workshop is in Dianella and we serve riders across Perth."
   },
   {
-    question: "Do you fit tyres on Vespa and Piaggio scooters?",
-    answer: "Yes. We have extensive experience fitting scooter tyres on Vespa and Piaggio models. This includes scooter tyre replacement, tyre repair, and flat tyre repair. The business has a long history with Vespa in Perth, with owner Frank previously operating the primary Vespa dealership."
+    question: "What scooter brands do you service?",
+    answer: "We service all scooter brands. We have a long history with Italian brands — Vespa, Piaggio, and Aprilia — and regularly work on Honda, Yamaha, SYM, Kymco, TGB, Bolwell, and all other major brands. If you're unsure whether we work on your specific model, get in touch."
   },
   {
-    question: "Do you do tyre changes on 50cc scooters?",
-    answer: "Yes. We perform tyre fitting and scooter tyre replacement on 50cc scooters, as well as larger-capacity scooters, including puncture repair and tyre install where applicable."
+    question: "Do you service electric scooters?",
+    answer: "Yes. We service electric mopeds and electric motorcycle-style scooters, including regular servicing, battery-related issues, and electrical faults. Get in touch if you have a specific question about your electric scooter."
   },
   {
-    question: "Do you fit tyres on dirt bikes?",
-    answer: "Yes. We offer motorcycle tyre replacement and tyre fitting for dirt bikes, including flat tyre repair and puncture repair. If you're unsure whether your specific bike is suitable, feel free to get in touch."
+    question: "My scooter won't start — can you help?",
+    answer: "Yes. No-start diagnosis is a core part of what we do. Whether the cause is electrical, fuel-related, or mechanical, we'll identify the problem and carry out the required work to get you back on the road."
   },
   {
-    question: "Do you work on electric scooter tyres?",
-    answer: "Yes. We provide tyre fitting and tyre repair for electric scooters and electric motorcycle-style scooters. We do not work on electric kick scooter tyres."
+    question: "How long does a scooter or motorcycle repair take?",
+    answer: "It depends on the work required. We'll assess your bike and give you an honest timeframe before any work begins. Simple repairs and services are typically completed within a few days. We'll keep you updated throughout."
   },
   {
-    question: "Can you help if I have a flat tyre and can't transport my bike?",
-    answer: "Yes. If you're dealing with a flat tyre or motorcycle tyre change and can't ride your bike in, we work closely with Perth Motorcycle and Scooter Movers to arrange affordable pickup and delivery."
+    question: "Can you pick up my bike if I can't ride it in?",
+    answer: "Yes. We work closely with Perth Motorcycle and Scooter Movers to arrange affordable pickup and delivery if you can't ride your bike in. All bookings and fees are handled directly with them."
   }
 ];
 
@@ -74,7 +75,9 @@ const ServicePage = () => {
         <div>
             <StructuredDataScript structuredData={structuredData} />
 
-            <ServiceCTAV2 />
+            <ServiceCTAV2 subtitle="Expert scooter repairs and servicing in Perth. Our experienced mechanics have been keeping local riders on the road for decades — book your service online in minutes." />
+
+            <ReviewCarousel />
 
             {/* Services */}
             <div className="bg-background pt-8 pb-16">
