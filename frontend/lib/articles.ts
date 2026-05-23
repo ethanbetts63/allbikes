@@ -81,11 +81,12 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
   const rewritten = rewriteLinks(raw);
 
   const html = await marked(rewritten, { gfm: true });
+  const pageMeta = getArticlePageMeta(slug);
 
   return {
     slug,
     title: extractTitle(raw),
-    excerpt: extractExcerpt(raw),
+    excerpt: pageMeta?.description ?? extractExcerpt(raw),
     lastModified: stat.mtime.toISOString().split('T')[0],
     html,
   };

@@ -6,4 +6,5 @@ export interface HeroProps {
   imageUrl: string;
   imageSrcSet?: string;
   imageSizes?: string;
+  centered?: boolean;
 }

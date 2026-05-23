@@ -1,6 +1,6 @@
 import type { HeroProps } from '@/types/HeroProps';
 
-const Hero = ({ title, description, imageUrl, imageSrcSet, imageSizes }: HeroProps) => {
+const Hero = ({ title, description, imageUrl, imageSrcSet, imageSizes, centered }: HeroProps) => {
   const sizes = imageSizes || '100vw';
 
   return (
@@ -33,8 +33,8 @@ const Hero = ({ title, description, imageUrl, imageSrcSet, imageSizes }: HeroPro
           className="absolute inset-0 w-full h-full object-cover"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 flex items-end justify-start p-10 pb-8">
-          <div className="bg-[var(--bg-dark-primary)]/70 backdrop-blur-sm rounded-lg px-6 py-4 max-w-xl">
+        <div className={`absolute inset-0 flex p-10 pb-8 ${centered ? 'items-center justify-center' : 'items-end justify-start'}`}>
+          <div className={`bg-[var(--bg-dark-primary)]/70 backdrop-blur-sm rounded-lg px-6 py-4 max-w-xl ${centered ? 'text-center' : ''}`}>
             <h1 className="text-3xl font-black text-[var(--text-light-primary)] leading-tight">{title}</h1>
             <p className="text-[var(--text-light-secondary)] text-sm mt-1 leading-relaxed">{description}</p>
           </div>

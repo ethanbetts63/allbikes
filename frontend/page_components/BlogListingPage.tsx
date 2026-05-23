@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import Hero from '@/components/Hero';
-import HeroImage from '@/assets/IMG_20250730_102056.webp';
-import HeroImage320 from '@/assets/IMG_20250730_102056-320w.webp';
-import HeroImage640 from '@/assets/IMG_20250730_102056-640w.webp';
-import HeroImage768 from '@/assets/IMG_20250730_102056-768w.webp';
-import HeroImage1024 from '@/assets/IMG_20250730_102056-1024w.webp';
-import HeroImage1280 from '@/assets/IMG_20250730_102056-1280w.webp';
+import HeroImage from '@/assets/sym_22.webp';
+import HeroImage320 from '@/assets/sym_22-320w.webp';
+import HeroImage640 from '@/assets/sym_22-640w.webp';
+import HeroImage768 from '@/assets/sym_22-768w.webp';
+import HeroImage1024 from '@/assets/sym_22-1024w.webp';
+import HeroImage1280 from '@/assets/sym_22-1280w.webp';
 import type { ArticleMeta } from '@/lib/articles';
 
 interface Props {
