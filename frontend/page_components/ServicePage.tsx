@@ -29,7 +29,7 @@ const ServiceFaqs = [
   },
   {
     question: "How long does a scooter or motorcycle repair take?",
-    answer: "It depends on the work required. We'll assess your bike and give you an honest timeframe before any work begins. Simple repairs and services are typically completed within a few days. We'll keep you updated throughout."
+    answer: "It depends on the work required. We'll assess your bike and give you an honest timeframe before any work begins. Simple repairs and services are often completed same-day. We'll keep you updated throughout."
   },
   {
     question: "Can you pick up my bike if I can't ride it in?",
