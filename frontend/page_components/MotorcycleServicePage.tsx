@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
-import FeaturedBikes from '@/components/FeaturedBikes';
+import dynamic from 'next/dynamic';
+const FeaturedBikes = dynamic(() => import('@/components/FeaturedBikes'), { ssr: false });
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 import type { Bike } from '@/types/Bike';
 
@@ -140,13 +141,15 @@ const MotorcycleServicePage = ({ initialUsedMotorcycles }: MotorcycleServicePage
             <MotorcycleMovers />
 
             {initialUsedMotorcycles.length > 0 && (
-                <FeaturedBikes
-                    title="Thinking of Upgrading Your Motorcycle?"
-                    bikes={initialUsedMotorcycles}
-                    description="Browse our current used motorcycles while your ride is in the workshop."
-                    linkTo="/inventory/motorcycles/used"
-                    linkText="View All Used Motorcycles"
-                />
+                <div className="defer-section-sm">
+                    <FeaturedBikes
+                        title="Thinking of Upgrading Your Motorcycle?"
+                        bikes={initialUsedMotorcycles}
+                        description="Browse our current used motorcycles while your ride is in the workshop."
+                        linkTo="/inventory/motorcycles/used"
+                        linkText="View All Used Motorcycles"
+                    />
+                </div>
             )}
 
             <FaqSection title="Motorcycle Servicing FAQ" faqData={motorcycleFaqs} />
