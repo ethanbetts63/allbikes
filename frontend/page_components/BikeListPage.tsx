@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import BikeCard from '@/components/BikeCard';
 import type { BreadcrumbItem } from '@/types/BreadcrumbItem';
 import type { BikeListPageProps } from '@/types/BikeListPageProps';
@@ -120,7 +121,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
   ) : isParts ? 'Workshop Clearance' : (
     <>
       <span className="hidden md:inline">{pageTitle}</span>
-      <span className="md:hidden">{isUsedScooters ? 'Used Scooters' : 'Used Bikes'}</span>
+      <span className="md:hidden">{isUsedScooters ? 'Used Scooters' : 'Used Motorcycles'}</span>
     </>
   );
 
@@ -163,6 +164,16 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
         description={description}
         imageUrl={SymImage.src}
       />
+      {(isUsedScooters || isUsedMotorcycles) && (
+        <div className="bg-[var(--card)] border-b border-stone-200">
+          <div className="container mx-auto px-4 lg:px-8 py-3 text-sm text-[var(--text-dark-secondary)]">
+            {isUsedScooters
+              ? <>Looking for a used motorcycle? <Link href="/inventory/motorcycles/used" className="text-[var(--highlight)] font-medium hover:underline">Browse used motorcycles →</Link></>
+              : <>Looking for a used scooter? <Link href="/inventory/scooters/used" className="text-[var(--highlight)] font-medium hover:underline">Browse used scooters →</Link></>
+            }
+          </div>
+        </div>
+      )}
       <div className="bg-[var(--card)]">
         <div className="container mx-auto px-4 lg:px-8 py-8">
           <BikeFilterForm basePath={basePath} filters={filters} />

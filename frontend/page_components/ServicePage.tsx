@@ -98,7 +98,7 @@ const ServicePage = () => {
                         </Link>
                         . Looking for your next ride? Browse our{' '}
                         <Link href="/inventory/motorcycles/used" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
-                            used bikes
+                            used motorcycles
                         </Link>
                         .
                     </p>
