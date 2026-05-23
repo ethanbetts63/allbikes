@@ -56,14 +56,18 @@ const BikeDetailPage = ({
         { label: "Warranty", value: bike.warranty_months, icon: ShieldCheck, formatter: (val: number) => `${val} months` },
     ] : [];
 
-    const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
+    const vehicleLabel = bike?.vehicle_type === 'scooter' ? 'scooter' : 'motorcycle';
+    const vehicleLabelPlural = bike?.vehicle_type === 'scooter' ? 'scooters' : 'motorcycles';
+    const vehicleTitlePlural = bike?.vehicle_type === 'scooter' ? 'Scooters' : 'Motorcycles';
+
+    const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Vehicle Details';
     const inventoryPath = bike?.condition === 'new'
         ? '/inventory/motorcycles/new'
         : bike?.vehicle_type === 'scooter'
             ? '/inventory/scooters/used'
             : '/inventory/motorcycles/used';
     const inventoryName = bike?.condition === 'new'
-        ? 'New Bikes'
+        ? `New ${vehicleTitlePlural}`
         : bike?.vehicle_type === 'scooter'
             ? 'Used Scooters'
             : 'Used Motorcycles';
@@ -76,7 +80,7 @@ const BikeDetailPage = ({
           ])
         : undefined;
 
-    if (!bike) return <ErrorScreen message="Bike not found." />;
+    if (!bike) return <ErrorScreen message="Vehicle not found." />;
 
     const cardTitle = bike.year ? `${bike.year} ${bike.make} ${bike.model}` : `${bike.make} ${bike.model}`;
     const bikeAltText = [
@@ -157,8 +161,8 @@ const BikeDetailPage = ({
                     {bike.status === 'available_soon' && (
                         <p className="mt-3 text-sm text-[var(--text-dark-secondary)] max-w-lg">
                             {bike.condition === 'new'
-                                ? <>This bike is still on its way — feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">reach out</Link> if you&apos;re interested.</>
-                                : <>This bike is currently being inspected by our mechanic. It&apos;s not quite ready for sale yet — if you&apos;re interested feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">get in touch</Link> and we&apos;ll keep you in the loop.</>
+                                ? <>This {vehicleLabel} is still on its way — feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">reach out</Link> if you&apos;re interested.</>
+                                : <>This {vehicleLabel} is currently being inspected by our mechanic. It&apos;s not quite ready for sale yet — if you&apos;re interested feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">get in touch</Link> and we&apos;ll keep you in the loop.</>
                             }
                         </p>
                     )}
@@ -203,10 +207,10 @@ const BikeDetailPage = ({
                         {bike.condition === 'new' && (bike.status === 'reserved' || bike.status === 'sold') && (
                             <div className="mb-6 p-4 bg-[var(--bg-light-secondary)] border border-border-light rounded-lg text-center">
                                 <p className="text-sm font-semibold text-[var(--text-dark-secondary)]">
-                                    {bike.status === 'reserved' ? 'This motorcycle is currently reserved.' : 'This motorcycle has been sold.'}
+                                    {bike.status === 'reserved' ? `This ${vehicleLabel} is currently reserved.` : `This ${vehicleLabel} has been sold.`}
                                 </p>
                                 <Link href="/contact" className="text-sm text-[var(--highlight)] hover:underline mt-1 inline-block">
-                                    Contact us about similar bikes
+                                    Contact us about similar {vehicleLabelPlural}
                                 </Link>
                             </div>
                         )}
@@ -249,20 +253,20 @@ const BikeDetailPage = ({
                 <div>
                     {bike.condition.toLowerCase() === 'new' && initialNewBikes.length > 0 && (
                         <FeaturedBikes
-                            title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New Bikes</span></>}
+                            title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New {vehicleTitlePlural}</span></>}
                             bikes={initialNewBikes}
                             description="Check out our latest models, fresh from the factory."
                             linkTo="/inventory/motorcycles/new"
-                            linkText="View All New"
+                            linkText={`View All New ${vehicleTitlePlural}`}
                         />
                     )}
                     {(bike.condition.toLowerCase() === 'used' || bike.condition.toLowerCase() === 'demo') && initialUsedBikes.length > 0 && (
                         <FeaturedBikes
                             title={bike.vehicle_type === 'scooter' ? 'Featured Used Scooters' : 'Featured Used & Demo Motorcycles'}
                             bikes={initialUsedBikes}
-                            description="Great value pre-owned and demonstrator bikes."
+                            description={`Great value pre-owned and demonstrator ${vehicleLabelPlural}.`}
                             linkTo={bike.vehicle_type === 'scooter' ? '/inventory/scooters/used' : '/inventory/motorcycles/used'}
-                            linkText="View All Used"
+                            linkText={`View All Used ${vehicleTitlePlural}`}
                         />
                     )}
                 </div>

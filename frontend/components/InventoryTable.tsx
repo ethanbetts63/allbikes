@@ -44,6 +44,7 @@ const InventoryTable = () => {
   });
   const [pageCount, setPageCount] = useState(0);
   const [conditionFilter, setConditionFilter] = useState<'new' | 'used' | 'hire' | null>(null);
+  const [vehicleTypeFilter, setVehicleTypeFilter] = useState<Bike['vehicle_type'] | null>(null);
 
   const pagination = useMemo(
     () => ({
@@ -61,7 +62,12 @@ const InventoryTable = () => {
         // Tanstack table is 0-indexed, API is 1-indexed
         const isHire = conditionFilter === 'hire';
         const condition = isHire ? undefined : (conditionFilter || undefined);
-        const response = await getBikes({ condition, is_hire: isHire || undefined, page: pageIndex + 1 });
+        const response = await getBikes({
+          condition,
+          vehicle_type: vehicleTypeFilter || undefined,
+          is_hire: isHire || undefined,
+          page: pageIndex + 1,
+        });
         setData(response.results);
         setPageCount(Math.ceil(response.count / pageSize));
       } catch (error) {
@@ -70,7 +76,7 @@ const InventoryTable = () => {
       }
     };
     fetchBikes();
-  }, [pageIndex, pageSize, conditionFilter]);
+  }, [pageIndex, pageSize, conditionFilter, vehicleTypeFilter]);
 
   const handleDelete = async (id: number) => {
     setNotification(null);
@@ -79,7 +85,12 @@ const InventoryTable = () => {
         await deleteMotorcycle(id);
         const isHire = conditionFilter === 'hire';
         const condition = isHire ? undefined : (conditionFilter || undefined);
-        const response = await getBikes({ condition, is_hire: isHire || undefined, page: pageIndex + 1 });
+        const response = await getBikes({
+          condition,
+          vehicle_type: vehicleTypeFilter || undefined,
+          is_hire: isHire || undefined,
+          page: pageIndex + 1,
+        });
         setData(response.results);
         setPageCount(Math.ceil(response.count / pageSize));
         setNotification({ message: "Motorcycle deleted successfully", type: 'success' });
@@ -99,6 +110,11 @@ const InventoryTable = () => {
     setConditionFilter(filter);
   };
 
+  const handleVehicleTypeFilterChange = (filter: Bike['vehicle_type'] | null) => {
+    setPagination({ pageIndex: 0, pageSize });
+    setVehicleTypeFilter(filter);
+  };
+
   const columns: ColumnDef<Bike>[] = useMemo(() => [
     {
       accessorKey: "condition",
@@ -111,6 +127,15 @@ const InventoryTable = () => {
           Condition
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      ),
+    },
+    {
+      accessorKey: "vehicle_type",
+      header: () => <div className="text-[var(--text-dark-primary)]">Type</div>,
+      cell: ({ row }) => (
+        <Badge variant="outline" className="text-[var(--text-dark-primary)] border-black capitalize">
+          {row.getValue("vehicle_type")}
+        </Badge>
       ),
     },
     { accessorKey: "year", header: () => <div className="text-[var(--text-dark-primary)]">Year</div> },
@@ -171,7 +196,7 @@ const InventoryTable = () => {
           <AlertDescription>{notification.message}</AlertDescription>
         </Alert>
       )}
-      <div className="flex items-center space-x-2 py-4">
+      <div className="flex flex-wrap items-center gap-2 py-4">
         <Button 
           variant="outline"
           onClick={() => handleFilterChange(null)} 
@@ -199,6 +224,28 @@ const InventoryTable = () => {
           className={conditionFilter === 'hire' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
         >
           Hire
+        </Button>
+        <span className="mx-1 h-8 w-px bg-border-light" aria-hidden="true" />
+        <Button
+          variant="outline"
+          onClick={() => handleVehicleTypeFilterChange(null)}
+          className={!vehicleTypeFilter ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+        >
+          All Types
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => handleVehicleTypeFilterChange('motorcycle')}
+          className={vehicleTypeFilter === 'motorcycle' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+        >
+          Motorcycles
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => handleVehicleTypeFilterChange('scooter')}
+          className={vehicleTypeFilter === 'scooter' ? 'bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] border-black' : 'bg-gray-200 text-[var(--text-dark-primary)] border-black hover:bg-gray-300'}
+        >
+          Scooters
         </Button>
       </div>
       <div className="rounded-md border border-border-light overflow-x-auto">
