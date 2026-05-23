@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const checkItems = [
+const defaultCheckItems = [
     'Full mechanical servicing & repairs',
     'Tyre fitting & wheel balancing',
     'Puncture & flat tyre repair',
@@ -11,7 +11,14 @@ const checkItems = [
     "Can't move your bike? Pickup can be arranged",
 ];
 
-const ServiceCTAV2 = () => {
+const defaultHeadingLines = ['Get Your', 'Bike', 'Sorted.'];
+
+interface ServiceCTAV2Props {
+    headingLines?: string[];
+    checkItems?: string[];
+}
+
+const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = defaultCheckItems }: ServiceCTAV2Props) => {
     return (
         <section className="bg-[var(--bg-dark-primary)] py-20 px-4">
             <div className="container mx-auto">
@@ -23,7 +30,9 @@ const ServiceCTAV2 = () => {
                             ScooterShop · Perth
                         </p>
                         <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
-                            Get Your<br />Bike<br />Sorted.
+                            {headingLines.map((line, i) => (
+                                <span key={i}>{line}{i < headingLines.length - 1 && <br />}</span>
+                            ))}
                         </h2>
                         <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
                             Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes.

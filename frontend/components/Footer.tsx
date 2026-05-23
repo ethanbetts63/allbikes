@@ -43,6 +43,8 @@ const Footer = () => {
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Quick Links</p>
           <ul className="space-y-2">
             <li><Link href="/service" className={LINK_CLASS}>Servicing</Link></li>
+            <li><Link href="/scooter-service" className={LINK_CLASS}>Scooter Repairs</Link></li>
+            <li><Link href="/motorcycle-service" className={LINK_CLASS}>Motorcycle Service</Link></li>
             {siteSettings.show_hire && <li><Link href="/hire" className={LINK_CLASS}>Motorcycle Hire Perth</Link></li>}
             <li><Link href="/inventory/scooters/new" className={LINK_CLASS}>New Scooters</Link></li>
             <li><Link href="/inventory/scooters/used" className={LINK_CLASS}>Used Scooters</Link></li>

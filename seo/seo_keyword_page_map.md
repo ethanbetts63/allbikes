@@ -1,9 +1,4 @@
 # SEO Keyword-to-Page Map
-
-Last updated: 2026-05-23
-
-This document maps the main commercial search intents ScooterShop should target to one primary indexable page each. The goal is to avoid making the homepage carry every query, reduce page cannibalization, and use blog content only where the query is informational rather than commercial.
-
 ## Current Context
 
 - The homepage receives most organic traffic and has the strongest historical authority.
@@ -44,14 +39,6 @@ Completed:
 
 The old mixed used inventory experience has been split by `vehicle_type`. The Django model/API/admin now support motorcycle vs scooter classification, the public listing pages fetch the correct vehicle type, and navigation exposes both used inventory pages.
 
-Each page now has its own:
-
-- Title and meta description
-- H1 and intro copy
-- FAQ content
-- ItemList and FAQ schema
-- Sitemap entry
-- Internal links from nav/footer/detail pages
 
 ### Electric Scooter Consolidation
 

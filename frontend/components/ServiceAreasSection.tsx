@@ -7,7 +7,26 @@ const suburbs = [
   'Mirrabooka', 'Balga', 'Westminster', 'Subiaco', 'Fremantle', 'Cottesloe',
 ];
 
-const ServiceAreasSection = () => {
+const defaultHeadingLines = ['Serving', 'Perth', 'Riders.'];
+
+interface ServiceAreasSectionProps {
+  headingLines?: string[];
+  vehicleType?: 'scooter' | 'motorcycle';
+}
+
+const ServiceAreasSection = ({ headingLines = defaultHeadingLines, vehicleType }: ServiceAreasSectionProps) => {
+  const vehicleText = vehicleType === 'scooter'
+    ? 'scooters'
+    : vehicleType === 'motorcycle'
+      ? 'motorcycles'
+      : 'motorcycles and scooters';
+
+  const mechanicText = vehicleType === 'scooter'
+    ? 'scooter mechanic'
+    : vehicleType === 'motorcycle'
+      ? 'motorcycle mechanic'
+      : 'motorcycle mechanic or scooter mechanic';
+
   return (
     <section className="bg-[var(--bg-dark-primary)] py-20 px-4">
       <div className="container mx-auto">
@@ -22,7 +41,9 @@ const ServiceAreasSection = () => {
               </p>
             </div>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-8 uppercase italic">
-              Serving<br />Riders<br />Across Perth.
+              {headingLines.map((line, i) => (
+                <span key={i}>{line}{i < headingLines.length - 1 && <br />}</span>
+              ))}
             </h2>
             <p className="text-[var(--text-light-secondary)] text-xs font-bold uppercase tracking-widest mb-5">
               Areas we cover
@@ -44,17 +65,17 @@ const ServiceAreasSection = () => {
             <div className="space-y-4 text-[var(--text-light-secondary)] text-lg leading-relaxed">
               <p>
                 Our workshop is based in <strong className="text-[var(--text-light-primary)]">Dianella</strong>, making
-                us easily accessible from the northern suburbs and inner city. We regularly service
-                motorcycles and scooters from Morley, Yokine, Inglewood, Mount Lawley, North Perth,
+                us easily accessible from the northern suburbs and inner city. We regularly service{' '}
+                {vehicleText} from Morley, Yokine, Inglewood, Mount Lawley, North Perth,
                 Northbridge, and the Perth CBD.
               </p>
               <p>
                 Riders also come to us from further afield — Scarborough, Osborne Park, Subiaco,
-                Fremantle, and Cottesloe. If you're searching for a motorcycle mechanic or scooter
-                mechanic near you, chances are we're not far away.
+                Fremantle, and Cottesloe. If you&apos;re searching for a {mechanicText} near you,
+                chances are we&apos;re not far away.
               </p>
               <p>
-                Can't ride your bike in? We work closely with{' '}
+                Can&apos;t ride your bike in? We work closely with{' '}
                 <a
                   href="https://perthmotorcyclescootermovers.com.au/"
                   target="_blank"

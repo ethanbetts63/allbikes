@@ -100,11 +100,11 @@ const HomePage = ({
         
         <div className="defer-section-sm">
           <FeaturedBikes
-            title={<>Featured <span className="hidden md:inline">Used Motorcycles</span><span className="md:hidden">Used Bikes</span></>}
+            title="Featured Used Bikes"
             bikes={usedBikes}
-            description="Explore our range of quality pre-owned motorcycles."
+            description="Explore our range of quality pre-owned motorcycles and scooters."
             linkTo="/inventory/motorcycles/used"
-            linkText="All Used Motorcycles"
+            linkText="Browse Used Inventory"
           />
         </div>
 
