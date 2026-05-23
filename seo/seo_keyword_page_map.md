@@ -16,42 +16,53 @@ This document maps the main commercial search intents ScooterShop should target 
 | Page | Primary query | Supporting queries | Notes |
 |---|---|---|---|
 | `/` | `scooter shop perth` | `scooter shop fremantle`, `scooter shop dianella`, `scooter shop near me`, `scooter store perth` | Keep the homepage focused on the local store/brand intent. It should link clearly to the commercial subpages rather than trying to rank for every product and service query. |
-| `/inventory/scooters/used` | `used scooters for sale perth` | `second hand scooters perth`, `scooter second hand near me`, `used mopeds perth` | Recommended new split. This gives used scooter and moped searches a dedicated landing/listing page instead of mixing them with motorcycles. |
-| `/inventory/motorcycles/used` | `used motorcycles for sale perth` | `second hand motorcycles perth`, `motorcycle dealers perth` | Keep this page focused on used motorcycles. If it also displays scooters, the search intent becomes less clear. |
-| `/inventory/scooters/new` | `new scooters for sale perth` | `moped for sale perth`, `buy scooter perth`, `125cc scooter for sale`, `50cc scooter for sale` | Recommended long-term URL if new inventory is scooters only. The current `/inventory/motorcycles/new` URL is semantically weaker for scooter searches. |
-| `/electric-scooters` | `electric scooters perth` or `electric moped perth` | `electric scooter shop perth`, `electric scooters near me`, `e scooter perth`, `electric mopeds` | Use one canonical electric scooter page. Do not keep `/electric-scooters` and `/escooters` as separate SEO targets unless their intents are genuinely different. |
+| `/inventory/scooters/used` | `used scooters for sale perth` | `second hand scooters perth`, `scooter second hand near me`, `used mopeds perth` | Implemented as a dedicated used scooter listing page with scooter-specific copy, FAQs, schema, sitemap entry, and nav/footer links. |
+| `/inventory/motorcycles/used` | `used motorcycles for sale perth` | `second hand motorcycles perth`, `motorcycle dealers perth` | Implemented as a dedicated used motorcycle listing page, filtered separately from scooters and supported by motorcycle-specific copy and FAQs. |
+| `/inventory/scooters/new` | `new scooters for sale perth` | `moped for sale perth`, `buy scooter perth`, `125cc scooter for sale`, `50cc scooter for sale` | Implemented as the canonical new scooter listing page. `/inventory/motorcycles/new` redirects here. |
+| `/escooters` | `electric scooters perth` or `electric moped perth` | `electric scooter shop perth`, `electric scooters near me`, `e scooter perth`, `electric mopeds` | Implemented as the canonical electric scooter page. `/electric-scooters` redirects here. |
 | `/hire` | `motorcycle hire perth` | `moped hire perth`, `moped for rent`, `scooter hire perth`, `motorbike hire perth` | The page is already focused, but should clearly cover each hire/rental wording if those services are offered. |
 | `/service` | `scooter service perth` | `scooter repair perth`, `scooter maintenance`, `e scooter service near me` if accurate | Keep this as the general servicing and repair page. It should link to tyre fitting as a more specific service. |
 | `/tyre-fitting` | `motorcycle tyre fitting perth` | `motorcycle tyre repair`, `motorcycle tyre fitting near me`, `scooter tyre fitting perth` | Keep this separate. It already has traction and the intent is specific enough to justify its own page. |
 | `/contact` | `scooter shop fremantle contact` | `scooter shop open now`, location, address, phone, opening-hours queries | Do not stretch this page into a broad SEO landing page. Improve it for trust, location clarity, and conversion. |
 
-## Structural Recommendations
+## Completed Changes
 
-### Split Used Inventory by Vehicle Type
+### New Scooter Inventory URL
 
-Create or strengthen:
+Completed:
+
+- `/inventory/scooters/new` is now the canonical new scooter inventory page.
+- `/inventory/motorcycles/new` redirects to `/inventory/scooters/new`.
+- Internal navigation, homepage feature links, detail page links, sitemap, and public copy now refer to new scooters rather than new bikes or new motorcycles.
+
+### Used Inventory Split
+
+Completed:
 
 - `/inventory/scooters/used`
 - `/inventory/motorcycles/used`
 
-The current used inventory experience mixes scooters and motorcycles. Splitting the URLs gives Google clearer page intent and lets each page target a different commercial query set.
+The old mixed used inventory experience has been split by `vehicle_type`. The Django model/API/admin now support motorcycle vs scooter classification, the public listing pages fetch the correct vehicle type, and navigation exposes both used inventory pages.
 
-### Improve New Scooter Inventory Semantics
+Each page now has its own:
 
-If new stock is scooters only, the long-term SEO target should be:
+- Title and meta description
+- H1 and intro copy
+- FAQ content
+- ItemList and FAQ schema
+- Sitemap entry
+- Internal links from nav/footer/detail pages
 
-- `/inventory/scooters/new`
+### Electric Scooter Consolidation
 
-The current `/inventory/motorcycles/new` URL may be confusing if it mostly or only lists scooters. This does not have to be changed immediately, but the URL and page copy should eventually align with the actual inventory.
+Completed:
 
-### Consolidate Electric Scooter Pages
+- `/escooters` is now the canonical electric scooter page.
+- `/electric-scooters` redirects to `/escooters`.
+- The page uses the full electric scooter list instead of a limited featured section.
+- Navigation points to `/escooters`.
 
-Avoid running both of these as independent SEO pages:
-
-- `/electric-scooters`
-- `/escooters`
-
-Pick one canonical target. `/electric-scooters` is clearer for users and search engines unless `/escooters` has stronger historical links or performance. The non-canonical page should redirect or canonicalize to the chosen target.
+## Open Recommendations
 
 ### Keep Service and Tyre Fitting Separate
 
@@ -88,11 +99,11 @@ Recommended exports:
 
 - Homepage queries
 - `/hire` queries
-- `/electric-scooters` queries
 - `/escooters` queries
 - `/service` queries
 - `/tyre-fitting` queries
-- Used inventory queries
+- `/inventory/motorcycles/used` queries
+- `/inventory/scooters/used` queries
 - New inventory queries
 
 This will show which terms the homepage is currently absorbing and which terms already belong to the newer commercial pages.

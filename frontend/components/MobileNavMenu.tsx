@@ -62,7 +62,7 @@ const MobileNavMenu = () => {
       {isMenuOpen && (
         <div ref={menuRef} className="absolute left-0 right-0 top-full md:hidden bg-background border-t border-white/10">
           <nav className="flex flex-col px-6 py-4 gap-5">
-            <Link href="/inventory/motorcycles/new" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>New Motorcycles &amp; Scooters</Link>
+            <Link href="/inventory/scooters/new" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>New Scooters</Link>
             <Link href="/inventory/motorcycles/used" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Used Motorcycles</Link>
             <Link href="/inventory/scooters/used" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Used Scooters</Link>
             {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>E-Scooters</Link>}

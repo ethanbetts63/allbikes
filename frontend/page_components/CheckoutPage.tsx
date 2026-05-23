@@ -39,9 +39,9 @@ const CheckoutPage = () => {
     window.scrollTo(0, 0);
 
     if (checkoutType === 'deposit') {
-      if (!slug) { router.push('/inventory/motorcycles/new'); return; }
+      if (!slug) { router.push('/inventory/scooters/new'); return; }
       const bikeId = slug.split('-').pop();
-      if (!bikeId) { router.push('/inventory/motorcycles/new'); return; }
+      if (!bikeId) { router.push('/inventory/scooters/new'); return; }
       Promise.all([getBikeById(bikeId), getDepositSettings()])
         .then(([bikeData, settings]) => {
           if (bikeData.status !== 'for_sale' || (bikeData.condition !== 'new' && bikeData.condition !== 'demo')) {
@@ -51,7 +51,7 @@ const CheckoutPage = () => {
           setBike(bikeData);
           setDepositAmount(settings.deposit_amount);
         })
-        .catch(() => router.push('/inventory/motorcycles/new'))
+        .catch(() => router.push('/inventory/scooters/new'))
         .finally(() => setIsLoadingItem(false));
     } else {
       if (!productId || isNaN(productId)) { router.push('/escooters'); return; }

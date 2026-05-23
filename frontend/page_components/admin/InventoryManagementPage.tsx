@@ -47,7 +47,7 @@ const DepositSettingsPanel = () => {
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-0.5">Motorcycle Deposit Amount</p>
-                    <p className="text-xs text-[var(--text-dark-secondary)]">Flat deposit charged when a customer reserves a new motorcycle.</p>
+                    <p className="text-xs text-[var(--text-dark-secondary)]">Flat deposit charged when a customer reserves a new scooter.</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                     <span className="text-sm text-[var(--text-dark-secondary)] font-medium">$</span>

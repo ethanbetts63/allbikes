@@ -62,7 +62,7 @@ const BikeDetailPage = ({
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Vehicle Details';
     const inventoryPath = bike?.condition === 'new'
-        ? '/inventory/motorcycles/new'
+        ? '/inventory/scooters/new'
         : bike?.vehicle_type === 'scooter'
             ? '/inventory/scooters/used'
             : '/inventory/motorcycles/used';
@@ -253,10 +253,10 @@ const BikeDetailPage = ({
                 <div>
                     {bike.condition.toLowerCase() === 'new' && initialNewBikes.length > 0 && (
                         <FeaturedBikes
-                            title={<>Featured <span className="hidden md:inline">New Motorcycles & Scooters</span><span className="md:hidden">New {vehicleTitlePlural}</span></>}
+                            title="Featured New Scooters"
                             bikes={initialNewBikes}
                             description="Check out our latest models, fresh from the factory."
-                            linkTo="/inventory/motorcycles/new"
+                            linkTo="/inventory/scooters/new"
                             linkText={`View All New ${vehicleTitlePlural}`}
                         />
                     )}

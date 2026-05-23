@@ -97,7 +97,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       <NextImage
         src={slots.a}
         sizes="60vw"
-        alt="New motorcycles and scooters for sale at ScooterShop Perth"
+        alt="New scooters for sale at ScooterShop Perth"
         fill
         priority={priority}
         className={`object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
@@ -105,7 +105,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       <NextImage
         src={slots.b}
         sizes="60vw"
-        alt="New motorcycles and scooters for sale at ScooterShop Perth"
+        alt="New scooters for sale at ScooterShop Perth"
         fill
         className={`object-contain transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
@@ -137,7 +137,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         <NextImage
           src={newBikeImageUrls[0]}
           sizes="100vw"
-          alt="New motorcycles and scooters for sale at ScooterShop Perth"
+          alt="New scooters for sale at ScooterShop Perth"
           fill
           priority
           className="object-contain"
@@ -240,13 +240,13 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         )}
       </div>
 
-      {/* ── LEFT COLUMN: new bikes image + service strip ── */}
+      {/* ── LEFT COLUMN: new scooters image + service strip ── */}
       <div className="order-2 lg:order-1 lg:flex-1 flex flex-col">
 
-        {/* New bikes image */}
+        {/* New scooters image */}
         {!error ? (
           <Link
-            href="/inventory/motorcycles/new"
+            href="/inventory/scooters/new"
             className="relative flex-1 group overflow-hidden min-h-[300px] lg:min-h-0 bg-[var(--bg-dark-primary)]"
           >
             {renderNewHeroImages()}
@@ -259,8 +259,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
               </p>
               <h2 className="text-[var(--text-light-primary)] text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-none mb-4">
                 New<br />
-                <span className="hidden md:inline">Motorcycles<br />&amp; Scooters</span>
-                <span className="md:hidden">Bikes</span>
+                <span>Scooters</span>
               </h2>
               <span className="inline-flex items-center text-[var(--text-light-primary)] font-bold text-sm uppercase tracking-widest border-b border-white/40 pb-0.5 group-hover:text-[var(--highlight)] group-hover:border-amber-400 transition-colors duration-200">
                 Shop Now

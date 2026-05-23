@@ -46,7 +46,7 @@ const EScooterMopedsSection = () => {
             quality, design, and performance. We're confident these are vehicles we can stand behind —
             and that you'll love riding.
           </p>
-          <Link href="/inventory/motorcycles/new" className="self-start mt-2">
+          <Link href="/inventory/scooters/new" className="self-start mt-2">
             <Button className="bg-highlight text-[var(--text-dark-primary)] font-bold px-6 py-3 text-sm hover:bg-highlight/80 flex items-center gap-2">
               Shop Electric Mopeds
               <ArrowRight className="h-4 w-4" />

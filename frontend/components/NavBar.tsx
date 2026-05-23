@@ -39,7 +39,7 @@ const NavBar = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-10 self-center ml-auto">
-          <Link href="/inventory/motorcycles/new" className={NAV_LINK}>New Bikes</Link>
+          <Link href="/inventory/scooters/new" className={NAV_LINK}>New Scooters</Link>
           <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Used Motorcycles</Link>
           <Link href="/inventory/scooters/used" className={NAV_LINK}>Used Scooters</Link>
           {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK}>E-Scooters</Link>}

@@ -44,7 +44,7 @@ export default async function Page(
 
   const shouldFetchDeposit = bike && ['new', 'demo', 'used'].includes(bike.condition) && bike.status === 'for_sale';
   const [newBikes, usedBikes, depositSettings] = await Promise.all([
-    fetchFeaturedBikes('new'),
+    fetchFeaturedBikes('new', 'scooter'),
     fetchFeaturedBikes('used,demo', bike.vehicle_type),
     shouldFetchDeposit ? getDepositSettingsOrNull() : null,
   ]);

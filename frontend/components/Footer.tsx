@@ -42,7 +42,7 @@ const Footer = () => {
         <div>
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Quick Links</p>
           <ul className="space-y-2">
-            <li><Link href="/inventory/motorcycles/new" className={LINK_CLASS}>New Motorcycles &amp; Scooters</Link></li>
+            <li><Link href="/inventory/scooters/new" className={LINK_CLASS}>New Scooters</Link></li>
             <li><Link href="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles</Link></li>
             <li><Link href="/inventory/scooters/used" className={LINK_CLASS}>Used Scooters</Link></li>
             {!siteSettings.hide_escooters && <li><Link href="/escooters" className={LINK_CLASS}>E-Scooters</Link></li>}

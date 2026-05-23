@@ -64,7 +64,7 @@ The API endpoints are configured as follows:
 While the backend API uses simple ID-based lookups, the frontend application employs a more descriptive, SEO-friendly URL structure for displaying bikes to users.
 
 ### List Pages
--   **New Bikes**: `/inventory/motorcycles/new`
+-   **New Scooters**: `/inventory/scooters/new`
 -   **Used Bikes**: `/inventory/motorcycles/used`
 
 ### Detail Page

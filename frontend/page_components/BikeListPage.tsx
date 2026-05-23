@@ -18,20 +18,20 @@ import { buildListHref } from '@/lib/listQuery';
 
 const newBikeFaqs = [
   {
-    question: 'What new motorcycles and scooters do you sell?',
-    answer: 'We sell brand-new SYM scooters and Segway electric scooters or electric motorcycles. These are the only brands we offer new, so we can confidently stand behind their quality and reliability.'
+    question: 'What new scooters do you sell?',
+    answer: 'We sell brand-new SYM scooters and Segway electric mopeds. These are the only new scooter brands we offer, so we can confidently stand behind their quality and reliability.'
   },
   {
     question: 'Is your dealership in Perth?',
-    answer: 'Yes. Our motorcycle and scooter dealership and showroom are in Perth, where you can view and buy new SYM or Segway models in person.'
+    answer: 'Yes. Our scooter dealership and showroom are in Perth, where you can view and buy new SYM or Segway models in person.'
   },
   {
-    question: 'Do you sell electric scooters or electric motorcycles?',
-    answer: 'Yes. We sell electric scooters and electric motorcycles, including the Segway range, for commuting and everyday riding in Perth.'
+    question: 'Do you sell electric scooters or electric mopeds?',
+    answer: 'Yes. We sell electric scooters and electric mopeds, including the Segway range, for commuting and everyday riding in Perth.'
   },
   {
-    question: 'Do you have a showroom for new vehicles?',
-    answer: 'Yes. We operate a scooter and motorcycle showroom in Perth, displaying current new SYM and Segway inventory for direct purchase.'
+    question: 'Do you have a showroom for new scooters?',
+    answer: 'Yes. We operate a scooter showroom in Perth, displaying current new SYM and Segway inventory for direct purchase.'
   }
 ];
 
@@ -46,7 +46,7 @@ const usedMotorcycleFaqs = [
   },
   {
     question: 'Can I view used motorcycles at your Perth dealership?',
-    answer: 'Yes. Used motorcycles can be viewed at our Dianella dealership unless a listing specifically states otherwise. Contact us first if you want to confirm availability before visiting.'
+    answer: 'Yes. Used motorcycles can be viewed at our Dianella dealership unless a listing specifically states otherwise.'
   },
   {
     question: 'Do you sell learner-approved used motorcycles?',
@@ -108,7 +108,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
   const isUsedMotorcycles = resolvedPageType === 'used-motorcycles';
 
   const pageTitle = isNew
-    ? 'New Motorcycles & Scooters'
+    ? 'New Scooters'
     : isParts
       ? 'Workshop Clearance'
       : isUsedScooters
@@ -116,10 +116,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
         : 'Used Motorcycles';
 
   const responsivePageTitle = isNew ? (
-    <>
-      <span className="hidden md:inline">New Motorcycles & Scooters</span>
-      <span className="md:hidden">New Bikes</span>
-    </>
+    'New Scooters'
   ) : isParts ? 'Workshop Clearance' : (
     <>
       <span className="hidden md:inline">{pageTitle}</span>
@@ -128,7 +125,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
   );
 
   const description = isNew
-    ? 'Browse our range of new motorcycles and scooters available in Perth, including petrol and electric models. All new motorcycles and scooters are workshop-prepared and available for local purchase through our Perth dealership.'
+    ? 'Browse our range of new scooters available in Perth, including petrol and electric models. All new scooters are workshop-prepared and available for local purchase through our Perth dealership.'
     : isParts
       ? 'Running a busy workshop means we accumulate bikes over time: bikes that are not worth our time to fully restore, or donor bikes we have stripped for parts. Rather than let them gather dust, we list them here so enthusiasts, tinkerers, and mechanics can give them a second life.'
       : isUsedScooters
@@ -140,7 +137,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
     {
       name: pageTitle,
       href: isNew
-        ? '/inventory/motorcycles/new'
+        ? '/inventory/scooters/new'
         : isParts
           ? '/inventory/motorcycles/parts'
           : isUsedScooters
@@ -177,7 +174,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
               ))
             ) : (
               <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">
-                No bikes found for this category. Sorry, we must have sold out. We will update this page as soon as possible.
+                No scooters found for this category. Sorry, we must have sold out. We will update this page as soon as possible.
               </p>
             )}
           </div>
@@ -210,7 +207,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
         </div>
       </div>
       <FaqSection
-        title={isNew ? 'New Bike FAQs' : isParts ? 'Workshop Clearance FAQs' : isUsedMotorcycles ? 'Used Motorcycle FAQs' : 'Used Scooter FAQs'}
+        title={isNew ? 'New Scooter FAQs' : isParts ? 'Workshop Clearance FAQs' : isUsedMotorcycles ? 'Used Motorcycle FAQs' : 'Used Scooter FAQs'}
         faqData={faqData}
       />
     </>

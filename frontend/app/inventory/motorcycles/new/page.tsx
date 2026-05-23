@@ -1,15 +1,5 @@
-import BikeListPage from '@/page_components/BikeListPage';
-import { buildMetadata, buildBikeListSchema } from '@/lib/seo';
-import { getInitialBikeList } from '@/lib/inventoryList';
+import { permanentRedirect } from 'next/navigation';
 import type { ListSearchParams } from '@/lib/listQuery';
-
-export const metadata = buildMetadata({
-  title: 'New Motorcycles & Scooters for Sale Perth',
-  description: 'Browse new motorcycles and scooters for sale in Perth, including petrol and electric models prepared by the workshop and backed by warranty.',
-  canonicalPath: '/inventory/motorcycles/new',
-});
-
-export const revalidate = 300;
 
 interface PageProps {
   searchParams?: Promise<ListSearchParams>;
@@ -17,21 +7,16 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
-  const { bikes, totalPages, currentPage, filters } = await getInitialBikeList('new,demo', params);
+  const query = new URLSearchParams();
 
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBikeListSchema(bikes, 'New Motorcycles & Scooters for Sale', '/inventory/motorcycles/new')) }}
-      />
-      <BikeListPage
-        bikeCondition="new,demo"
-        bikes={bikes}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        filters={filters}
-      />
-    </>
-  );
+  for (const [key, value] of Object.entries(params ?? {})) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => query.append(key, item));
+    } else if (value) {
+      query.set(key, value);
+    }
+  }
+
+  const queryString = query.toString();
+  permanentRedirect(queryString ? `/inventory/scooters/new?${queryString}` : '/inventory/scooters/new');
 }
