@@ -8,8 +8,8 @@ class MotorcycleImageInline(admin.TabularInline):
 @admin.register(Motorcycle)
 class MotorcycleAdmin(admin.ModelAdmin):
     inlines = [MotorcycleImageInline]
-    list_display = ('make', 'model', 'year', 'condition', 'status', 'is_featured', 'price', 'stock_number')
-    list_filter = ('status', 'is_featured', 'make', 'condition')
+    list_display = ('make', 'model', 'year', 'vehicle_type', 'condition', 'status', 'is_featured', 'price', 'stock_number')
+    list_filter = ('vehicle_type', 'status', 'is_featured', 'make', 'condition')
     search_fields = ('make', 'model', 'stock_number')
 
 admin.site.register(MotorcycleImage)
