@@ -11,22 +11,15 @@ const defaultHeadingLines = ['Serving', 'Perth', 'Riders.'];
 
 interface ServiceAreasSectionProps {
   headingLines?: string[];
-  vehicleType?: 'scooter' | 'motorcycle';
+  prose1?: string;
+  prose2?: string;
 }
 
-const ServiceAreasSection = ({ headingLines = defaultHeadingLines, vehicleType }: ServiceAreasSectionProps) => {
-  const vehicleText = vehicleType === 'scooter'
-    ? 'scooters'
-    : vehicleType === 'motorcycle'
-      ? 'motorcycles'
-      : 'motorcycles and scooters';
-
-  const mechanicText = vehicleType === 'scooter'
-    ? 'scooter mechanic'
-    : vehicleType === 'motorcycle'
-      ? 'motorcycle mechanic'
-      : 'motorcycle mechanic or scooter mechanic';
-
+const ServiceAreasSection = ({
+  headingLines = defaultHeadingLines,
+  prose1 = "Our workshop is based in Dianella, making us easily accessible from the northern suburbs and inner city. We regularly service motorcycles and scooters from Morley, Yokine, Inglewood, Mount Lawley, North Perth, Northbridge, and the Perth CBD.",
+  prose2 = "Riders also come to us from further afield — Scarborough, Osborne Park, Subiaco, Fremantle, and Cottesloe. If you're searching for a motorcycle mechanic or scooter mechanic near you, chances are we're not far away.",
+}: ServiceAreasSectionProps) => {
   return (
     <section className="bg-[var(--bg-dark-primary)] py-20 px-4">
       <div className="container mx-auto">
@@ -63,29 +56,8 @@ const ServiceAreasSection = ({ headingLines = defaultHeadingLines, vehicleType }
           {/* Right — prose */}
           <div className="lg:border-l lg:border-stone-700 lg:pl-16">
             <div className="space-y-4 text-[var(--text-light-secondary)] text-lg leading-relaxed">
-              <p>
-                Our workshop is based in <strong className="text-[var(--text-light-primary)]">Dianella</strong>, making
-                us easily accessible from the northern suburbs and inner city. We regularly service{' '}
-                {vehicleText} from Morley, Yokine, Inglewood, Mount Lawley, North Perth,
-                Northbridge, and the Perth CBD.
-              </p>
-              <p>
-                Riders also come to us from further afield — Scarborough, Osborne Park, Subiaco,
-                Fremantle, and Cottesloe. If you&apos;re searching for a {mechanicText} near you,
-                chances are we&apos;re not far away.
-              </p>
-              <p>
-                Can&apos;t ride your bike in? We work closely with{' '}
-                <a
-                  href="https://perthmotorcyclescootermovers.com.au/"
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  className="text-[var(--highlight)] hover:underline"
-                >
-                  Perth Motorcycle and Scooter Movers
-                </a>{' '}
-                to arrange affordable pickup and delivery across the metro area.
-              </p>
+              <p>{prose1}</p>
+              <p>{prose2}</p>
             </div>
           </div>
 

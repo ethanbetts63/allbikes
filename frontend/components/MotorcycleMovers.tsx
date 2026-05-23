@@ -12,7 +12,7 @@ interface MotorcycleMoversProps {
 const MotorcycleMovers = ({
     heading = "Can't Ride Your Bike In?",
     body = "We work with and highly recommend Perth Motorcycle and Scooter Movers for all your transportation needs — whether you're bringing a bike in for service, buying from us, or just need it moved.",
-    disclaimer = "All bookings and fees are handled directly by Perth Motorcycle and Scooter Movers. They are a separate business — we do not take bookings or payments on their behalf.",
+    disclaimer = "All bookings and fees are handled directly by Perth Motorcycle and Scooter Movers. We do not take bookings or payments on their behalf.",
 }: MotorcycleMoversProps) => {
     return (
         <div className="bg-foreground overflow-hidden grid grid-cols-1 md:grid-cols-2">

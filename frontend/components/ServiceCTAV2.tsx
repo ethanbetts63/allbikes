@@ -16,9 +16,10 @@ const defaultHeadingLines = ['Get Your', 'Bike', 'Sorted.'];
 interface ServiceCTAV2Props {
     headingLines?: string[];
     checkItems?: string[];
+    subtitle?: string;
 }
 
-const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = defaultCheckItems }: ServiceCTAV2Props) => {
+const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = defaultCheckItems, subtitle = "Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes." }: ServiceCTAV2Props) => {
     return (
         <section className="bg-[var(--bg-dark-primary)] py-20 px-4">
             <div className="container mx-auto">
@@ -35,7 +36,7 @@ const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = default
                             ))}
                         </h2>
                         <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
-                            Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes.
+                            {subtitle}
                         </p>
                         <Link href="/service-booking">
                             <Button

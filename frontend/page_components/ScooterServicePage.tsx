@@ -51,17 +51,17 @@ const services = [
     {
         Icon: AlertCircle,
         title: 'No-Start Diagnosis & Service',
-        description: "Your scooter won't fire up? We'll identify the root cause — electrical, fuel, or mechanical — and carry out all required work to get you back on the road.",
+        description: "Your scooter won't start? We'll track down the cause — electrical fault, fuel issue, or mechanical problem — and carry out all the work needed to get you back on the road.",
     },
     {
         Icon: Activity,
         title: 'Running Scooter Diagnosis & Service',
-        description: 'Something feeling off, or just due for a service? We perform a thorough inspection and carry out any required maintenance or repairs to keep your scooter running at its best.',
+        description: "Something not quite right, or just time for a service? We do a full inspection and take care of whatever needs attention to keep your scooter running reliably.",
     },
     {
         Icon: CircleDot,
         title: 'Tyre Fitting',
-        description: 'Supply and fit, or fit-only. We handle tyre changes, replacements, and wheel balancing for all scooters — from 50cc to maxi-scooters.',
+        description: 'Supply and fit, or fit-only. We work across all scooter tyre sizes — from 50cc commuters and mopeds to full maxi-scooters.',
     },
 ];
 
@@ -93,6 +93,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
             <ServiceCTAV2
                 headingLines={['Get Your', 'Scooter', 'Sorted.']}
                 checkItems={scooterCheckItems}
+                subtitle="Scooter specialists with decades of experience keeping Perth riders on the road. Book your service online in minutes."
             />
 
             {/* Services */}
@@ -102,7 +103,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {services.map(({ Icon, title, description }) => (
                             <div key={title} className="bg-foreground rounded-lg p-8 flex flex-col gap-4">
-                                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-highlight/20">
+                                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-highlight1/20">
                                     <Icon className="h-7 w-7 text-highlight1" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-[var(--text-light-primary)]">{title}</h3>
@@ -123,7 +124,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
                     </p>
                     <div className="text-center mt-10">
                         <Link href="/service-booking">
-                            <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-dark-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
+                            <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>
                         </Link>
@@ -139,7 +140,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
             <MotorcycleMovers
                 heading="Can't Ride Your Scooter In?"
                 body="We work with and highly recommend Perth Motorcycle and Scooter Movers for all your transportation needs — whether you're bringing your scooter in for service, buying from us, or just need it moved."
-                disclaimer="All bookings and fees are handled directly by Perth Motorcycle and Scooter Movers. They are a separate business — we do not take bookings or payments on their behalf."
+                disclaimer="All bookings and fees are handled directly by Perth Motorcycle and Scooter Movers. We do not take bookings or payments on their behalf."
             />
 
             {initialUsedScooters.length > 0 && (
