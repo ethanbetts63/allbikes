@@ -73,7 +73,7 @@ const usedScooterFaqs = [
   },
   {
     question: 'Can I ride a used scooter on a car licence in WA?',
-    answer: 'Licence requirements depend on engine size and WA road rules. Some 50cc scooters may be suitable for car licence riders, but always check the listing and current WA licensing rules before buying.'
+    answer: 'You can ride anything up to 50cc on a car licence in Western Australia, so all used scooters we sell that are 50cc or under can be ridden on a car licence. Check the individual scooter listing for its engine size and details.'
   },
   {
     question: 'Can I view used scooters in Perth?',
