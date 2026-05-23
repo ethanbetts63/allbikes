@@ -15,7 +15,7 @@ export const revalidate = 300;
 export default async function Page() {
   const [newBikes, usedBikes, products] = await Promise.all([
     fetchFeaturedBikes('new'),
-    fetchFeaturedBikes('used'),
+    fetchFeaturedBikes('used', 'motorcycle'),
     fetchFeaturedProducts(),
   ]);
 
@@ -28,12 +28,15 @@ export default async function Page() {
   );
 }
 
-async function fetchFeaturedBikes(condition: string): Promise<Bike[]> {
+async function fetchFeaturedBikes(condition: string, vehicleType?: Bike['vehicle_type']): Promise<Bike[]> {
   const params = new URLSearchParams({
     page: '1',
     condition,
     is_featured: 'true',
   });
+  if (vehicleType) {
+    params.set('vehicle_type', vehicleType);
+  }
 
   try {
     const response = await getServerBikes(params);

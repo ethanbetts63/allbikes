@@ -115,6 +115,7 @@ export async function getUserProfile(): Promise<UserProfile> {
 export async function getBikes(options: GetBikesOptions = {}): Promise<PaginatedResponse<Bike>> {
     const {
         condition,
+        vehicle_type,
         page = 1,
         is_featured,
         is_hire,
@@ -132,6 +133,7 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
     });
 
     if (condition) params.append('condition', condition);
+    if (vehicle_type) params.append('vehicle_type', vehicle_type);
     if (is_featured) params.append('is_featured', 'true');
     if (is_hire) params.append('is_hire', 'true');
     if (ordering) params.append('ordering', ordering);

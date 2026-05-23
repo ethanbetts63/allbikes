@@ -45,7 +45,7 @@ export default async function Page(
   const shouldFetchDeposit = bike && ['new', 'demo', 'used'].includes(bike.condition) && bike.status === 'for_sale';
   const [newBikes, usedBikes, depositSettings] = await Promise.all([
     fetchFeaturedBikes('new'),
-    fetchFeaturedBikes('used,demo'),
+    fetchFeaturedBikes('used,demo', bike.vehicle_type),
     shouldFetchDeposit ? getDepositSettingsOrNull() : null,
   ]);
 
@@ -80,12 +80,15 @@ function getPrimaryBikeImage(bike: Bike): string | null {
   return getPrimaryVehicleImage(bike.images, 'detail');
 }
 
-async function fetchFeaturedBikes(condition: string) {
+async function fetchFeaturedBikes(condition: string, vehicleType?: Bike['vehicle_type']) {
   const params = new URLSearchParams({
     page: '1',
     condition,
     is_featured: 'true',
   });
+  if (vehicleType) {
+    params.set('vehicle_type', vehicleType);
+  }
 
   try {
     const response = await getServerBikes(params);

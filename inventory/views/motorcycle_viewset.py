@@ -36,6 +36,13 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
             conditions = [c for c in condition.split(',') if c in valid]
             if conditions:
                 queryset = queryset.filter(condition__in=conditions)
+
+        vehicle_type = self.request.query_params.get('vehicle_type')
+        if vehicle_type:
+            valid_vehicle_types = {'motorcycle', 'scooter'}
+            vehicle_types = [v for v in vehicle_type.split(',') if v in valid_vehicle_types]
+            if vehicle_types:
+                queryset = queryset.filter(vehicle_type__in=vehicle_types)
             
         # Filtering by featured status
         is_featured = self.request.query_params.get('is_featured')

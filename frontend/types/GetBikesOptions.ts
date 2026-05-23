@@ -1,5 +1,6 @@
 export interface GetBikesOptions {
   condition?: 'new' | 'used' | 'demo' | 'new,demo' | 'parts';
+  vehicle_type?: 'motorcycle' | 'scooter' | 'motorcycle,scooter';
   page?: number;
   is_featured?: boolean;
   is_hire?: boolean;

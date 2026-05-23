@@ -28,9 +28,10 @@ export interface ListQueryState {
 
 export function buildBikeListQuery(
   condition: string,
-  searchParams: ListSearchParams = {}
+  searchParams: ListSearchParams = {},
+  fixedParams: Record<string, string> = {}
 ): ListQueryState {
-  return buildListQuery(searchParams, BIKE_FILTER_KEYS, { condition });
+  return buildListQuery(searchParams, BIKE_FILTER_KEYS, { condition, ...fixedParams });
 }
 
 export function buildProductListQuery(searchParams: ListSearchParams = {}): ListQueryState {

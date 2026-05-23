@@ -44,6 +44,21 @@ class TestMotorcycleViewSetList:
         assert response.data['count'] == 1
         assert response.data['results'][0]['condition'] == 'new'
 
+    def test_filter_by_vehicle_type(self, api_client):
+        """
+        GIVEN a motorcycle and a scooter
+        WHEN filtering by vehicle_type='scooter'
+        THEN only the scooter should be returned.
+        """
+        MotorcycleFactory(vehicle_type='motorcycle')
+        MotorcycleFactory(vehicle_type='scooter')
+        url = reverse("inventory:motorcycle-list")
+        response = api_client.get(url, {'vehicle_type': 'scooter'})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == 1
+        assert response.data['results'][0]['vehicle_type'] == 'scooter'
+
     def test_filter_by_featured(self, api_client):
         """
         GIVEN a featured and a non-featured motorcycle
@@ -143,7 +158,7 @@ class TestMotorcycleViewSetWriteAccess:
         url = reverse("inventory:motorcycle-list")
         data = {
             "make": "NewMake", "model": "NewModel", "year": 2024, "price": 9999.99,
-            "condition": "new", "status": "for_sale"
+            "condition": "new", "vehicle_type": "motorcycle", "status": "for_sale"
         }
         response = admin_client.post(url, data, format='json')
         assert response.status_code == status.HTTP_201_CREATED

@@ -11,8 +11,12 @@ export interface InitialBikeList {
   filters: FilterSortOptions;
 }
 
-export async function getInitialBikeList(condition: string, searchParams: ListSearchParams = {}): Promise<InitialBikeList> {
-  const query = buildBikeListQuery(condition, searchParams);
+export async function getInitialBikeList(
+  condition: string,
+  searchParams: ListSearchParams = {},
+  fixedParams: Record<string, string> = {}
+): Promise<InitialBikeList> {
+  const query = buildBikeListQuery(condition, searchParams, fixedParams);
 
   try {
     const response = await getServerBikes(query.params);

@@ -29,6 +29,7 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
     
     const { register, handleSubmit, control, formState: { errors } } = useForm<MotorcycleFormData>({
         defaultValues: {
+            vehicle_type: 'motorcycle',
             ...initialData,
             managedImages: initialData?.images
                 .sort((a, b) => a.order - b.order)
@@ -100,7 +101,7 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                         <div className="space-y-2"><Label htmlFor="seats">Seats</Label><Input id="seats" type="number" {...register('seats', { valueAsNumber: true })} /></div>
                     </div>
 
-                    {/* Status, Condition, Transmission, and Boolean Switches */}
+                    {/* Status, Condition, Vehicle Type, Transmission, and Boolean Switches */}
                     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
                         <div className="space-y-2">
                             <Label>Status</Label>
@@ -126,6 +127,18 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                                         <SelectItem value="new">New</SelectItem>
                                         <SelectItem value="used">Used</SelectItem>
                                         <SelectItem value="demo">Demo</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            )} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Vehicle Type</Label>
+                            <Controller name="vehicle_type" control={control} render={({ field }) => (
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <SelectTrigger><SelectValue placeholder="Select vehicle type" /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="motorcycle">Motorcycle</SelectItem>
+                                        <SelectItem value="scooter">Scooter</SelectItem>
                                     </SelectContent>
                                 </Select>
                             )} />

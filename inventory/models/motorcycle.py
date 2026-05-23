@@ -19,6 +19,11 @@ class Motorcycle(models.Model):
         ("parts", "Parts"),
     ]
 
+    VEHICLE_TYPE_CHOICES = [
+        ("motorcycle", "Motorcycle"),
+        ("scooter", "Scooter"),
+    ]
+
     TRANSMISSION_CHOICES = [
         ("automatic", "Automatic"),
         ("manual", "Manual"),
@@ -58,6 +63,12 @@ class Motorcycle(models.Model):
         max_length=20,
         choices=CONDITION_CHOICES,
         blank=True,
+    )
+    vehicle_type = models.CharField(
+        max_length=20,
+        choices=VEHICLE_TYPE_CHOICES,
+        default="motorcycle",
+        help_text="Whether this inventory item is a motorcycle or scooter.",
     )
 
     status = models.CharField(

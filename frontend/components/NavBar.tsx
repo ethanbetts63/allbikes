@@ -40,7 +40,8 @@ const NavBar = () => {
 
         <nav className="hidden md:flex items-center gap-10 self-center ml-auto">
           <Link href="/inventory/motorcycles/new" className={NAV_LINK}>New Bikes</Link>
-          <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Used Bikes</Link>
+          <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Used Motorcycles</Link>
+          <Link href="/inventory/scooters/used" className={NAV_LINK}>Used Scooters</Link>
           {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK}>E-Scooters</Link>}
           {siteSettings.show_workshop_clearance && <Link href="/inventory/motorcycles/parts" className={NAV_LINK}>Workshop Clearance</Link>}
           {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}

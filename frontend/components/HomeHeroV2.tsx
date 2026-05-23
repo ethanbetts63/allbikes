@@ -117,14 +117,14 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
       <NextImage
         src={slots.a}
         sizes="40vw"
-        alt="Used motorcycles and scooters for sale at ScooterShop Perth"
+        alt="Used motorcycles for sale at ScooterShop Perth"
         fill
         className={`object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
       />
       <NextImage
         src={slots.b}
         sizes="40vw"
-        alt="Used motorcycles and scooters for sale at ScooterShop Perth"
+        alt="Used motorcycles for sale at ScooterShop Perth"
         fill
         className={`object-cover transition-opacity duration-1000 ease-in-out ${slots.active === 'b' ? 'opacity-100' : 'opacity-0'}`}
       />
@@ -155,7 +155,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         <NextImage
           src={usedBikeImageUrls[0]}
           sizes="100vw"
-          alt="Used motorcycles and scooters for sale at ScooterShop Perth"
+          alt="Used motorcycles for sale at ScooterShop Perth"
           fill
           className="object-cover"
         />
@@ -176,7 +176,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
             ScooterShop &nbsp;·&nbsp; Dianella, Perth
           </p>
           <h1 className="text-[var(--text-light-primary)] text-4xl sm:text-5xl lg:text-4xl xl:text-5xl font-black uppercase italic leading-[0.92] mb-3">
-            Perth's<br />
+            Perth&apos;s<br />
             Motorcycle<br />
             &amp; Scooter<br />
             Specialists
@@ -224,7 +224,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
               </p>
               <h2 className="text-[var(--text-light-primary)] text-2xl md:text-3xl lg:text-2xl xl:text-3xl font-black uppercase italic leading-none mb-4">
                 Used<br />
-                <span className="hidden md:inline">Motorcycles &amp; Scooters</span>
+                <span className="hidden md:inline">Motorcycles</span>
                 <span className="md:hidden">Bikes</span>
               </h2>
               <span className="inline-flex items-center text-[var(--text-light-primary)]/70 font-bold text-xs uppercase tracking-widest border-b border-white/30 pb-0.5 group-hover:text-[var(--highlight)] group-hover:border-amber-400 transition-colors duration-200">

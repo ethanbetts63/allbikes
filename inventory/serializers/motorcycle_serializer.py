@@ -16,6 +16,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'price',
             'discount_price',
             'condition',
+            'vehicle_type',
             'status',
             'is_featured',
             'popular',

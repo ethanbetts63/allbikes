@@ -8,7 +8,8 @@ import type { PaginatedResponse } from '@/types/PaginatedResponse';
 const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/`, lastModified: '2026-05-22' },
   { url: `${SITE_URL}/inventory/motorcycles/new`, lastModified: '2026-05-22' },
-  { url: `${SITE_URL}/inventory/motorcycles/used`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/inventory/motorcycles/used`, lastModified: '2026-05-23' },
+  { url: `${SITE_URL}/inventory/scooters/used`, lastModified: '2026-05-23' },
   { url: `${SITE_URL}/inventory/motorcycles/parts`, lastModified: '2026-05-22' },
   { url: `${SITE_URL}/escooters`, lastModified: '2026-05-23' },
   { url: `${SITE_URL}/hire`, lastModified: '2026-05-22' },

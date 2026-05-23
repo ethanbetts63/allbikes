@@ -43,7 +43,8 @@ const Footer = () => {
           <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Quick Links</p>
           <ul className="space-y-2">
             <li><Link href="/inventory/motorcycles/new" className={LINK_CLASS}>New Motorcycles &amp; Scooters</Link></li>
-            <li><Link href="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles &amp; Scooters</Link></li>
+            <li><Link href="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles</Link></li>
+            <li><Link href="/inventory/scooters/used" className={LINK_CLASS}>Used Scooters</Link></li>
             {!siteSettings.hide_escooters && <li><Link href="/escooters" className={LINK_CLASS}>E-Scooters</Link></li>}
             {siteSettings.show_workshop_clearance && <li><Link href="/inventory/motorcycles/parts" className={LINK_CLASS}>Workshop Clearance</Link></li>}
             {siteSettings.show_hire && <li><Link href="/hire" className={LINK_CLASS}>Motorcycle Hire Perth</Link></li>}

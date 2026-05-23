@@ -57,14 +57,21 @@ const BikeDetailPage = ({
     ] : [];
 
     const pageTitle = bike ? `${bike.year || ''} ${bike.make} ${bike.model}`.trim() : 'Bike Details';
+    const inventoryPath = bike?.condition === 'new'
+        ? '/inventory/motorcycles/new'
+        : bike?.vehicle_type === 'scooter'
+            ? '/inventory/scooters/used'
+            : '/inventory/motorcycles/used';
+    const inventoryName = bike?.condition === 'new'
+        ? 'New Bikes'
+        : bike?.vehicle_type === 'scooter'
+            ? 'Used Scooters'
+            : 'Used Motorcycles';
 
     const structuredData = bike
         ? buildBreadcrumbSchema([
               { name: 'Home', path: '/' },
-              {
-                  name: bike.condition === 'new' ? 'New Bikes' : 'Used Bikes',
-                  path: bike.condition === 'new' ? '/inventory/motorcycles/new' : '/inventory/motorcycles/used',
-              },
+              { name: inventoryName, path: inventoryPath },
               { name: pageTitle, path: `/inventory/motorcycles/${bike.slug}` },
           ])
         : undefined;
@@ -76,7 +83,7 @@ const BikeDetailPage = ({
         cardTitle,
         bike.engine_size ? `${bike.engine_size}cc` : null,
         bike.condition,
-        'motorcycle Perth',
+        bike.vehicle_type === 'scooter' ? 'scooter Perth' : 'motorcycle Perth',
     ].filter(Boolean).join(' ');
 
     const bikeSubtitle = bike.condition === 'new'
@@ -150,8 +157,8 @@ const BikeDetailPage = ({
                     {bike.status === 'available_soon' && (
                         <p className="mt-3 text-sm text-[var(--text-dark-secondary)] max-w-lg">
                             {bike.condition === 'new'
-                                ? <>This bike is still on its way — feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">reach out</Link> if you're interested.</>
-                                : <>This bike is currently being inspected by our mechanic. It's not quite ready for sale yet — if you're interested feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">get in touch</Link> and we'll keep you in the loop.</>
+                                ? <>This bike is still on its way — feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">reach out</Link> if you&apos;re interested.</>
+                                : <>This bike is currently being inspected by our mechanic. It&apos;s not quite ready for sale yet — if you&apos;re interested feel free to <Link href="/contact" className="text-[var(--highlight)] underline hover:text-[var(--highlight)]">get in touch</Link> and we&apos;ll keep you in the loop.</>
                             }
                         </p>
                     )}
@@ -189,7 +196,7 @@ const BikeDetailPage = ({
                                     Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
                                 </Link>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
-                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch as soon as possible to arrange the rest.
+                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we&apos;ll be in touch as soon as possible to arrange the rest.
                                 </p>
                             </div>
                         )}
@@ -251,10 +258,10 @@ const BikeDetailPage = ({
                     )}
                     {(bike.condition.toLowerCase() === 'used' || bike.condition.toLowerCase() === 'demo') && initialUsedBikes.length > 0 && (
                         <FeaturedBikes
-                            title="Featured Used & Demo Bikes"
+                            title={bike.vehicle_type === 'scooter' ? 'Featured Used Scooters' : 'Featured Used & Demo Motorcycles'}
                             bikes={initialUsedBikes}
                             description="Great value pre-owned and demonstrator bikes."
-                            linkTo="/inventory/motorcycles/used"
+                            linkTo={bike.vehicle_type === 'scooter' ? '/inventory/scooters/used' : '/inventory/motorcycles/used'}
                             linkText="View All Used"
                         />
                     )}
