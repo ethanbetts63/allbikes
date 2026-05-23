@@ -39,13 +39,13 @@ const NavBar = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-10 self-center ml-auto">
+          <Link href="/service" className={NAV_LINK}>Servicing</Link>
+          {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}
           <Link href="/inventory/scooters/new" className={NAV_LINK}>New Scooters</Link>
-          <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Used Motorcycles</Link>
           <Link href="/inventory/scooters/used" className={NAV_LINK}>Used Scooters</Link>
+          <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Used Motorcycles</Link>
           {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK}>E-Scooters</Link>}
           {siteSettings.show_workshop_clearance && <Link href="/inventory/motorcycles/parts" className={NAV_LINK}>Workshop Clearance</Link>}
-          {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}
-          <Link href="/service" className={NAV_LINK}>Servicing</Link>
           <Link href="/contact" className={cn(NAV_LINK, "border border-white/30 px-4 py-2 hover:border-amber-400")}>
             Contact Us
           </Link>
