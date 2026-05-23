@@ -42,9 +42,9 @@ const EScooterMopedsSection = () => {
             quality that comes from being an early innovator.
           </p>
           <p className="text-[var(--text-light-secondary)] text-base leading-relaxed">
-            We've tested a lot of brands, but Segway's electric mopeds impressed us with their build
-            quality, design, and performance. We're confident these are vehicles we can stand behind —
-            and that you'll love riding.
+            We&apos;ve tested a lot of brands, but Segway&apos;s electric mopeds impressed us with their build
+            quality, design, and performance. We&apos;re confident these are vehicles we can stand behind -
+            and that you&apos;ll love riding.
           </p>
           <Link href="/inventory/scooters/new" className="self-start mt-2">
             <Button className="bg-highlight text-[var(--text-dark-primary)] font-bold px-6 py-3 text-sm hover:bg-highlight/80 flex items-center gap-2">
