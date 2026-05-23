@@ -1,11 +1,11 @@
 import { buildMetadata, buildProductListSchema } from '@/lib/seo';
 import { getInitialProductList } from '@/lib/productList';
-import EScooterListPage from '@/page_components/EScooterListPage';
 import type { ListSearchParams } from '@/lib/listQuery';
+import ElectricScootersLandingPage from '@/page_components/ElectricScootersLandingPage';
 
 export const metadata = buildMetadata({
-  title: 'Electric Scooters for Sale Online',
-  description: 'Shop electric scooters online with GST-inclusive pricing, free Australia-wide delivery, and secure Stripe payment.',
+  title: 'Buy Electric Scooters Online | Free AU Delivery',
+  description: 'Shop electric scooters online with free Australia-wide delivery, GST-inclusive pricing, secure Stripe checkout, and 12-month warranty.',
   canonicalPath: '/escooters',
 });
 
@@ -25,7 +25,7 @@ export default async function Page({ searchParams }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildProductListSchema(products, 'Electric Scooters for Sale', '/escooters')) }}
       />
-      <EScooterListPage
+      <ElectricScootersLandingPage
         products={products}
         totalPages={totalPages}
         currentPage={currentPage}

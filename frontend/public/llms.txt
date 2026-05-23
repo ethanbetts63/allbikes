@@ -22,7 +22,6 @@
 
 ## Key Pages
 - /escooters — Segway e-scooter range, free delivery Australia-wide, prices include GST
-- /electric-scooters — Segway e-scooter landing page with product information
 - /inventory/motorcycles/new — New motorcycle and scooter inventory
 - /inventory/motorcycles/used — Used motorcycles and scooters
 - /hire — Motorcycle and scooter hire in Perth (from $36/day; weekly and monthly discounts available)

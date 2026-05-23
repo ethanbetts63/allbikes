@@ -216,7 +216,6 @@ Completed route metadata:
 - `/inventory/motorcycles/[slug]` via `generateMetadata`
 - `/escooters`
 - `/escooters/[slug]` via `generateMetadata`
-- `/electric-scooters`
 - `/contact`
 - `/service`
 - `/tyre-fitting`
@@ -279,11 +278,10 @@ Migration strategy:
 Recommended conversion order:
 1. `/` homepage: featured new bikes, featured used bikes, featured e-scooters. **Done:** `app/page.tsx` now fetches these datasets on the server and passes them into `page_components/HomePage` as initial props. The route revalidates every 5 minutes.
 2. `/inventory/motorcycles/new`, `/used`, `/parts`: first page of list data server-rendered; filters can remain client-side. **Done:** these routes now fetch page 1 on the server, pass `initialBikes` / `initialTotalPages` into `BikeListPage`, and revalidate every 5 minutes.
-3. `/escooters`: first page of product list server-rendered; filters can remain client-side. **Done:** this route now fetches page 1 on the server, passes `initialProducts` / `initialTotalPages` into `EScooterListPage`, and revalidates every 5 minutes.
+3. `/escooters`: e-scooter landing/list page server-rendered; filters can remain client-side. **Done:** this route now fetches page 1 on the server, renders the product list inside `ElectricScootersLandingPage`, and revalidates every 5 minutes. `/electric-scooters` redirects to `/escooters`.
   4. `/inventory/motorcycles/[slug]` and `/escooters/[slug]`: detail data server-rendered and passed into current detail components. **Primary detail data done:** these routes now fetch the bike/product on the server and pass it as `initialBike` / `initialProduct`. Detail components still keep browser fallback fetching, and bike detail still fetches related carousel/deposit data after hydration.
   5. Static content pages (`/service`, `/tyre-fitting`, `/contact`, `/privacy`, `/refunds`, `/security`) now render as plain server components. They no longer need a client wrapper for the route itself; only their interactive child widgets remain hydrated.
   6. Remaining SEO-visible landing pages now fetch their visible content on the server as well:
-     - `/electric-scooters` fetches featured products on the server and passes them into `ElectricScootersLandingPage`.
      - `/hire` fetches the initial hire fleet on the server and passes it into `HireListPage` together with the current start/end query values.
      - `/terms` fetches the latest terms document on the server and passes it into `TermsAndConditionsPage`.
 

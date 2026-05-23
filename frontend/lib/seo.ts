@@ -283,6 +283,11 @@ export function buildLocalBusinessSchema(settings: SiteSettings): object {
     '@type': ['MotorcycleDealer', 'AutoDealer'],
     '@id': `${SITE_URL}/#business`,
     name: SITE_NAME,
+    alternateName: [
+      'ScooterShop Fremantle',
+      'Allbikes and Scooters',
+      'Allbikes Vespa Warehouse',
+    ],
     image: {
       '@type': 'ImageObject',
       url: `${SITE_URL}/logo-512x512.png`,

@@ -1,30 +1,22 @@
-import { buildMetadata } from '@/lib/seo';
-import { getServerProducts } from '@/lib/serverApi';
-import type { Product } from '@/types/Product';
-import ElectricScootersLandingPage from '@/page_components/ElectricScootersLandingPage';
+import { permanentRedirect } from 'next/navigation';
+import type { ListSearchParams } from '@/lib/listQuery';
 
-export const metadata = buildMetadata({
-  title: 'Buy Electric Scooters Online | Free AU Delivery',
-  description: 'Shop electric scooters online with free Australia-wide delivery, GST-inclusive pricing, secure Stripe checkout, and 12-month warranty.',
-  canonicalPath: '/electric-scooters',
-});
-
-export const revalidate = 300;
-
-export default async function Page() {
-  const featuredProducts = await fetchFeaturedProducts();
-
-  return <ElectricScootersLandingPage initialFeaturedProducts={featuredProducts} />;
+interface PageProps {
+  searchParams?: Promise<ListSearchParams>;
 }
 
-async function fetchFeaturedProducts(): Promise<Product[]> {
-  const params = new URLSearchParams({ is_featured: 'true' });
+export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const query = new URLSearchParams();
 
-  try {
-    const response = await getServerProducts(params);
-    return response.results.slice(0, 2);
-  } catch (error) {
-    console.error('Failed to server-render featured e-scooters landing page products:', error);
-    return [];
+  for (const [key, value] of Object.entries(params ?? {})) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => query.append(key, item));
+    } else if (value) {
+      query.set(key, value);
+    }
   }
+
+  const queryString = query.toString();
+  permanentRedirect(queryString ? `/escooters?${queryString}` : '/escooters');
 }
