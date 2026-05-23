@@ -64,32 +64,23 @@ Completed:
 
 ## Open Recommendations
 
-### Keep Service and Tyre Fitting Separate
+### Split Service Intent Without Splitting the Main Nav
 
-`/service` and `/tyre-fitting` should remain separate pages because they match different search intents:
+Google Search Console data for the last 28 days shows `/service` is earning impressions across several service intent zones, especially scooter repair/service and motorcycle mechanic/service terms. The nav should still keep one simple `Servicing` link pointing to `/service`, because most users arriving from the homepage need a general workshop entry point rather than multiple servicing choices.
 
-- General servicing and repair
-- Tyre fitting and tyre repair
+The better structure is a hub-and-spoke service model:
+
+- `/service` remains the main workshop hub and nav destination.
+- `/scooter-repairs` or `/scooter-service`
+- `/motorcycle-repairs` or `/motorcycle-service`
+
+These pages should not be thin duplicates. Each should have its own title, H1, examples of work handled, FAQs, booking CTA, schema, and internal links back to `/service`. The purpose is to let Google match specific search intent while keeping the user-facing navigation simple.
 
 They should link to each other where useful, but one should not absorb the other.
 
 ## Blog Content Role
 
 Blog posts should support the commercial pages, not compete with them.
-
-Good blog topics are informational queries such as:
-
-- `do you need a licence for a scooter in wa`
-- `50cc vs 125cc scooter`
-- `moped vs scooter`
-- `petrol vs electric scooter`
-- `how much does scooter servicing cost`
-- `what scooter can i ride on a car licence in wa`
-- `best scooter for commuting in perth`
-
-Each blog post should link back to the relevant commercial page. For example, a `50cc vs 125cc scooter` guide should link to the new and used scooter inventory pages, not only to the homepage.
-
-Avoid blog posts that directly duplicate commercial page targets, such as a blog post trying to rank for `scooters for sale perth`. That query should belong to an inventory or category page.
 
 ## Next Data Needed
 
