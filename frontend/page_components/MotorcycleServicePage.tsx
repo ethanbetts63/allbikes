@@ -133,7 +133,8 @@ const MotorcycleServicePage = ({ initialUsedMotorcycles }: MotorcycleServicePage
 
             <ServiceAreasSection
                 headingLines={['Serving', 'Perth', 'Motorcycle Riders.']}
-                vehicleType="motorcycle"
+                prose1="Our workshop is in Dianella, making it easy to get to from the northern suburbs and inner city. We regularly work on motorcycles coming in from Morley, Yokine, Inglewood, Mount Lawley, North Perth, Northbridge, and the Perth CBD."
+                prose2="Motorcycle riders also come to us from further out — Scarborough, Osborne Park, Subiaco, Fremantle, and Cottesloe. If you're after a motorcycle mechanic near you, chances are we're not far away."
             />
 
             <MotorcycleMovers />

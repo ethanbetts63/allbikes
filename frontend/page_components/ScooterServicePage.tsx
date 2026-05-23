@@ -134,7 +134,8 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
 
             <ServiceAreasSection
                 headingLines={['Serving', 'Perth', 'Scooter Riders.']}
-                vehicleType="scooter"
+                prose1="Our workshop is in Dianella, putting us within easy reach of the northern suburbs and inner city. We regularly see scooters come in from Morley, Yokine, Inglewood, Mount Lawley, North Perth, Northbridge, and the Perth CBD."
+                prose2="Scooter riders also make the trip from further out — Scarborough, Osborne Park, Subiaco, Fremantle, and Cottesloe. If you're looking for a scooter mechanic near you, we're likely closer than you think."
             />
 
             <MotorcycleMovers
