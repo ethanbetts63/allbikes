@@ -16,7 +16,9 @@
 | `/inventory/scooters/new` | `new scooters for sale perth` | `moped for sale perth`, `buy scooter perth`, `125cc scooter for sale`, `50cc scooter for sale` | Implemented as the canonical new scooter listing page. `/inventory/motorcycles/new` redirects here. |
 | `/escooters` | `electric scooters perth` or `electric moped perth` | `electric scooter shop perth`, `electric scooters near me`, `e scooter perth`, `electric mopeds` | Implemented as the canonical electric scooter page. `/electric-scooters` redirects here. |
 | `/hire` | `motorcycle hire perth` | `moped hire perth`, `moped for rent`, `scooter hire perth`, `motorbike hire perth` | The page is already focused, but should clearly cover each hire/rental wording if those services are offered. |
-| `/service` | `scooter service perth` | `scooter repair perth`, `scooter maintenance`, `e scooter service near me` if accurate | Keep this as the general servicing and repair page. It should link to tyre fitting as a more specific service. |
+| `/service` | `scooter service perth` | `scooter repair perth`, `scooter maintenance`, `e scooter service near me` if accurate | Hub page. Links out to `/scooter-service` and `/motorcycle-service` for specific intent. |
+| `/scooter-service` | `scooter mechanic perth`, `scooter repairs perth` | `vespa service perth`, `piaggio service perth`, `scooter service near me` | Dedicated scooter servicing page. Unique copy, FAQs, schema, sitemap, footer link. Spoke off `/service`. |
+| `/motorcycle-service` | `motorcycle mechanic perth`, `motorcycle service perth` | `motorcycle repairs perth`, `motorcycle mechanic near me` | Dedicated motorcycle servicing page. Unique copy, FAQs, schema, sitemap, footer link. Spoke off `/service`. |
 | `/tyre-fitting` | `motorcycle tyre fitting perth` | `motorcycle tyre repair`, `motorcycle tyre fitting near me`, `scooter tyre fitting perth` | Keep this separate. It already has traction and the intent is specific enough to justify its own page. |
 | `/contact` | `scooter shop fremantle contact` | `scooter shop open now`, location, address, phone, opening-hours queries | Do not stretch this page into a broad SEO landing page. Improve it for trust, location clarity, and conversion. |
 
@@ -40,6 +42,15 @@ Completed:
 The old mixed used inventory experience has been split by `vehicle_type`. The Django model/API/admin now support motorcycle vs scooter classification, the public listing pages fetch the correct vehicle type, and navigation exposes both used inventory pages.
 
 
+### Service Hub-and-Spoke Split
+
+Completed:
+
+- `/scooter-service` and `/motorcycle-service` created as dedicated pages with unique copy, FAQs, schema (breadcrumb + service + FAQ), sitemap entries, and footer quick links.
+- Each page has genuinely differentiated content — different H1, subtitle, service card descriptions, FAQ set, and service area prose. Not thin duplicates.
+- `/service` remains the nav destination and hub; spoke pages link back to it.
+- `/inventory/scooters/new` fixed to show all new bikes (motorcycles + scooters), not scooter-only.
+
 ### Electric Scooter Consolidation
 
 Completed:
@@ -50,20 +61,6 @@ Completed:
 - Navigation points to `/escooters`.
 
 ## Open Recommendations
-
-### Split Service Intent Without Splitting the Main Nav
-
-Google Search Console data for the last 28 days shows `/service` is earning impressions across several service intent zones, especially scooter repair/service and motorcycle mechanic/service terms. The nav should still keep one simple `Servicing` link pointing to `/service`, because most users arriving from the homepage need a general workshop entry point rather than multiple servicing choices.
-
-The better structure is a hub-and-spoke service model:
-
-- `/service` remains the main workshop hub and nav destination.
-- `/scooter-repairs` or `/scooter-service`
-- `/motorcycle-repairs` or `/motorcycle-service`
-
-These pages should not be thin duplicates. Each should have its own title, H1, examples of work handled, FAQs, booking CTA, schema, and internal links back to `/service`. The purpose is to let Google match specific search intent while keeping the user-facing navigation simple.
-
-They should link to each other where useful, but one should not absorb the other.
 
 ## Blog Content Role
 
