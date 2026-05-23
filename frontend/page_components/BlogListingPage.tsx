@@ -1,4 +1,11 @@
 import Link from 'next/link';
+import Hero from '@/components/Hero';
+import HeroImage from '@/assets/IMG_20250730_102056.webp';
+import HeroImage320 from '@/assets/IMG_20250730_102056-320w.webp';
+import HeroImage640 from '@/assets/IMG_20250730_102056-640w.webp';
+import HeroImage768 from '@/assets/IMG_20250730_102056-768w.webp';
+import HeroImage1024 from '@/assets/IMG_20250730_102056-1024w.webp';
+import HeroImage1280 from '@/assets/IMG_20250730_102056-1280w.webp';
 import type { ArticleMeta } from '@/lib/articles';
 
 interface Props {
@@ -6,39 +13,50 @@ interface Props {
 }
 
 export default function BlogListingPage({ articles }: Props) {
-  return (
-    <main className="container mx-auto px-6 py-16 max-w-4xl">
-      <div className="mb-12">
-        <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-          Guides &amp; Articles
-        </p>
-        <h1 className="text-3xl font-bold text-[var(--text-light-primary)] mb-4">
-          Scooter &amp; Motorcycle Guides
-        </h1>
-        <p className="text-[var(--text-light-secondary)] text-base leading-relaxed max-w-2xl">
-          Practical guides on buying, riding, and owning scooters and motorcycles in Perth and Western Australia.
-        </p>
-      </div>
+  const srcSet = [
+    `${HeroImage320.src} 320w`,
+    `${HeroImage640.src} 640w`,
+    `${HeroImage768.src} 768w`,
+    `${HeroImage1024.src} 1024w`,
+    `${HeroImage1280.src} 1280w`,
+  ].join(', ');
 
-      <div className="divide-y divide-stone-800">
-        {articles.map((article) => (
-          <article key={article.slug} className="py-8 group">
-            <Link href={`/blog/${article.slug}`} className="block">
-              <h2 className="text-xl font-semibold text-[var(--text-light-primary)] group-hover:text-[var(--highlight)] transition-colors duration-200 mb-3">
-                {article.title}
-              </h2>
-              {article.excerpt && (
-                <p className="text-[var(--text-light-secondary)] text-sm leading-relaxed mb-4 max-w-2xl">
+  return (
+    <>
+      <Hero
+        title="Guides & Articles"
+        description="Practical guides on buying, riding, and owning scooters and motorcycles in Perth and Western Australia."
+        imageUrl={HeroImage.src}
+        imageSrcSet={srcSet}
+        imageSizes="100vw"
+      />
+
+      <div className="bg-[var(--card)]">
+        <div className="container mx-auto px-4 lg:px-8 py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {articles.map((article) => (
+              <Link
+                key={article.slug}
+                href={`/blog/${article.slug}`}
+                className="group flex flex-col border border-stone-200 rounded-lg p-6 hover:border-[var(--highlight)] hover:shadow-sm transition-all duration-200 bg-white"
+              >
+                <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
+                  Guide
+                </p>
+                <h2 className="text-lg font-semibold text-[var(--text-dark-primary)] group-hover:text-[var(--highlight)] transition-colors duration-200 mb-3 leading-snug">
+                  {article.title}
+                </h2>
+                <p className="text-sm text-[var(--text-dark-secondary)] leading-relaxed mb-5 flex-1">
                   {article.excerpt}
                 </p>
-              )}
-              <span className="text-[var(--highlight)] text-sm font-medium">
-                Read guide →
-              </span>
-            </Link>
-          </article>
-        ))}
+                <span className="text-sm font-medium text-[var(--highlight)]">
+                  Read guide →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
-    </main>
+    </>
   );
 }

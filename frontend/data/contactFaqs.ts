@@ -4,7 +4,7 @@ import type { FaqItem } from '@/types/FaqItem';
 export const contactFaqData: FaqItem[] = [
   {
     question: 'How can I contact you?',
-    answer: `You can contact us by phone on ${siteSettings.phone_number || '{phone}'}, by email at ${siteSettings.email_address || '{email}'}, or via our Contact Us page.`,
+    answer: `You can contact us by phone on ${siteSettings.phone_number || '{phone}'}, by email at ${siteSettings.email_address || '{email}'}.`,
   },
   {
     question: 'What types of motorcycles and scooters do you service?',

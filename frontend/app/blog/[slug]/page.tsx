@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { getAllArticleSlugs, getArticleBySlug } from '@/lib/articles';
-import { buildMetadata, SITE_URL } from '@/lib/seo';
+import { getArticleFaqs } from '@/lib/articleFaqs';
+import { getArticlePageMeta } from '@/lib/articleMeta';
+import { buildMetadata, buildArticleSchema, buildFaqSchema, SITE_URL } from '@/lib/seo';
 import BlogPostPage from '@/page_components/BlogPostPage';
 import type { Metadata } from 'next';
 
@@ -19,15 +21,19 @@ export async function generateMetadata({
   const article = await getArticleBySlug(slug);
   if (!article) return buildMetadata({ title: 'Not Found', noindex: true });
 
+  const pageMeta = getArticlePageMeta(slug);
+  const title = pageMeta?.title ?? article.title;
+  const description = pageMeta?.description ?? article.excerpt;
+
   return {
     ...buildMetadata({
-      title: `${article.title} | ScooterShop`,
-      description: article.excerpt,
+      title,
+      description,
       canonicalPath: `/blog/${slug}`,
     }),
     openGraph: {
-      title: article.title,
-      description: article.excerpt,
+      title,
+      description,
       url: `${SITE_URL}/blog/${slug}`,
       type: 'article',
     },
@@ -43,5 +49,25 @@ export default async function Page({
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  return <BlogPostPage article={article} />;
+  const faqs = getArticleFaqs(slug);
+
+  const structuredData = [
+    buildArticleSchema({
+      title: article.title,
+      description: article.excerpt,
+      slug,
+      dateModified: article.lastModified,
+    }),
+    buildFaqSchema(faqs),
+  ].filter(Boolean) as object[];
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <BlogPostPage article={article} faqs={faqs} />
+    </>
+  );
 }

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
+import { getArticlePageMeta } from '@/lib/articleMeta';
 
 const ARTICLES_DIR = path.join(process.cwd(), '../_docs/articles');
 const EXCLUDED = new Set(['overview.md']);
@@ -54,10 +55,11 @@ export function getAllArticleMeta(): ArticleMeta[] {
     const raw = fs.readFileSync(filepath, 'utf-8');
     const stat = fs.statSync(filepath);
 
+    const pageMeta = getArticlePageMeta(slug);
     return {
       slug,
       title: extractTitle(raw),
-      excerpt: extractExcerpt(raw),
+      excerpt: pageMeta?.description ?? extractExcerpt(raw),
       lastModified: stat.mtime.toISOString().split('T')[0],
     };
   });

@@ -424,6 +424,49 @@ export function buildContactPageSchema(): object {
   };
 }
 
+export function buildArticleSchema(options: {
+  title: string;
+  description: string;
+  slug: string;
+  dateModified: string;
+}): object {
+  const url = `${SITE_URL}/blog/${options.slug}`;
+  const dateIso = `${options.dateModified}T00:00:00+08:00`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: options.title,
+    description: options.description,
+    url,
+    datePublished: dateIso,
+    dateModified: dateIso,
+    author: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    isPartOf: {
+      '@type': 'Blog',
+      url: `${SITE_URL}/blog`,
+      name: `${SITE_NAME} Guides & Articles`,
+    },
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+        { '@type': 'ListItem', position: 2, name: 'Guides', item: `${SITE_URL}/blog` },
+        { '@type': 'ListItem', position: 3, name: options.title, item: url },
+      ],
+    },
+  };
+}
+
 export function buildFaqSchema(faqData: FaqItem[]): object | null {
   if (!faqData.length) return null;
 
