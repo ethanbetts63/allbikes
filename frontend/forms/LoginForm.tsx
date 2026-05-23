@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useAuth } from "@/context/AuthContext";
+import { loginUser } from "@/api";
 import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -21,14 +21,13 @@ export function LoginForm({
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { loginWithPassword } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
     setNotification(null);
     try {
-      await loginWithPassword(email, password);
+      await loginUser(email, password);
       setNotification({ message: "Login successful!", type: 'success' });
       const nextPath = searchParams.get('next');
       router.push(nextPath?.startsWith('/dashboard') ? nextPath : '/dashboard/inventory');

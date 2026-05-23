@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
@@ -34,16 +33,14 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.scootershop.com.au" />
       </head>
       <body>
-        <AuthProvider>
-          <div className="min-h-screen flex flex-col">
-            <NavBar />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
-          <Toaster position="top-center" richColors />
-        </AuthProvider>
+        <div className="min-h-screen flex flex-col">
+          <NavBar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        <Toaster position="top-center" richColors />
         <Analytics />
         <SpeedInsights />
       </body>

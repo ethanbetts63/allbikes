@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { siteSettings } from '@/config/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
 import { assetUrl } from '@/utils/assetUrl';
-import FooterAuthLinks from '@/components/FooterAuthLinks';
 
 const LINK_CLASS = 'text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
 
@@ -59,7 +58,7 @@ const Footer = () => {
             <li><Link href="/terms?type=service" className={LINK_CLASS}>Service Terms</Link></li>
             <li><Link href="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
             <li><Link href="/security" className={LINK_CLASS}>Security Policy</Link></li>
-            <FooterAuthLinks linkClass={LINK_CLASS} />
+            <li><Link href="/login" className={LINK_CLASS}>Login</Link></li>
           </ul>
         </div>
 
