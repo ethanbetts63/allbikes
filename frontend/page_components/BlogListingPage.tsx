@@ -51,7 +51,7 @@ export default function BlogListingPage({ articles }: Props) {
                 className="group flex flex-col border border-stone-200 rounded-lg p-6 hover:border-[var(--highlight)] hover:shadow-sm transition-all duration-200 bg-white"
               >
                 <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-                  Guide | <time dateTime={article.publishedDate}>{publishedDate}</time>
+                  By {article.authorName} | <time dateTime={article.publishedDate}>{publishedDate}</time>
                 </p>
                 <h2 className="text-lg font-semibold text-[var(--text-dark-primary)] group-hover:text-[var(--highlight)] transition-colors duration-200 mb-3 leading-snug">
                   {article.title}

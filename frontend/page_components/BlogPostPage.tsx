@@ -53,7 +53,7 @@ export default function BlogPostPage({ article, faqs }: Props) {
           </nav>
 
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--highlight)] mb-5">
-            Published <time dateTime={article.publishedDate}>{publishedDate}</time>
+            By {article.authorName} | Published <time dateTime={article.publishedDate}>{publishedDate}</time>
           </p>
 
           {/* Article */}

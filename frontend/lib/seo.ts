@@ -428,6 +428,7 @@ export function buildArticleSchema(options: {
   title: string;
   description: string;
   slug: string;
+  authorName: string;
   datePublished: string;
   dateModified: string;
 }): object {
@@ -444,8 +445,8 @@ export function buildArticleSchema(options: {
     datePublished: datePublishedIso,
     dateModified: dateModifiedIso,
     author: {
-      '@type': 'Organization',
-      name: SITE_NAME,
+      '@type': 'Person',
+      name: options.authorName,
       url: SITE_URL,
     },
     publisher: {

@@ -5,11 +5,13 @@ import { getArticlePageMeta } from '@/lib/articleMeta';
 
 const ARTICLES_DIR = path.join(process.cwd(), 'content/articles');
 const EXCLUDED = new Set(['overview.md']);
+const AUTHOR_NAME = 'Ethan Betts-Ingram';
 
 export interface ArticleMeta {
   slug: string;
   title: string;
   excerpt: string;
+  authorName: string;
   publishedDate: string;
   lastModified: string;
 }
@@ -61,6 +63,7 @@ export function getAllArticleMeta(): ArticleMeta[] {
       slug,
       title: pageMeta?.title ?? extractTitle(raw),
       excerpt: pageMeta?.description ?? extractExcerpt(raw),
+      authorName: AUTHOR_NAME,
       publishedDate: pageMeta?.publishedDate ?? stat.birthtime.toISOString().split('T')[0],
       lastModified: stat.mtime.toISOString().split('T')[0],
     };
@@ -89,6 +92,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
     slug,
     title: pageMeta?.title ?? extractTitle(raw),
     excerpt: pageMeta?.description ?? extractExcerpt(raw),
+    authorName: AUTHOR_NAME,
     publishedDate: pageMeta?.publishedDate ?? stat.birthtime.toISOString().split('T')[0],
     lastModified: stat.mtime.toISOString().split('T')[0],
     html,
