@@ -20,6 +20,11 @@ export default function BlogListingPage({ articles }: Props) {
     `${HeroImage1024.src} 1024w`,
     `${HeroImage1280.src} 1280w`,
   ].join(', ');
+  const dateFormatter = new Intl.DateTimeFormat('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   return (
     <>
@@ -34,14 +39,19 @@ export default function BlogListingPage({ articles }: Props) {
       <div className="bg-[var(--card)]">
         <div className="container mx-auto px-4 lg:px-8 py-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {articles.map((article) => (
+            {articles.map((article) => {
+              const publishedDate = dateFormatter.format(
+                new Date(`${article.publishedDate}T00:00:00+08:00`),
+              );
+
+              return (
               <Link
                 key={article.slug}
                 href={`/blog/${article.slug}`}
                 className="group flex flex-col border border-stone-200 rounded-lg p-6 hover:border-[var(--highlight)] hover:shadow-sm transition-all duration-200 bg-white"
               >
                 <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">
-                  Guide
+                  Guide | <time dateTime={article.publishedDate}>{publishedDate}</time>
                 </p>
                 <h2 className="text-lg font-semibold text-[var(--text-dark-primary)] group-hover:text-[var(--highlight)] transition-colors duration-200 mb-3 leading-snug">
                   {article.title}
@@ -53,7 +63,8 @@ export default function BlogListingPage({ articles }: Props) {
                   Read guide →
                 </span>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

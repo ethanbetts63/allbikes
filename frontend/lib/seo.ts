@@ -428,10 +428,12 @@ export function buildArticleSchema(options: {
   title: string;
   description: string;
   slug: string;
+  datePublished: string;
   dateModified: string;
 }): object {
   const url = `${SITE_URL}/blog/${options.slug}`;
-  const dateIso = `${options.dateModified}T00:00:00+08:00`;
+  const datePublishedIso = `${options.datePublished}T00:00:00+08:00`;
+  const dateModifiedIso = `${options.dateModified}T00:00:00+08:00`;
 
   return {
     '@context': 'https://schema.org',
@@ -439,8 +441,8 @@ export function buildArticleSchema(options: {
     headline: options.title,
     description: options.description,
     url,
-    datePublished: dateIso,
-    dateModified: dateIso,
+    datePublished: datePublishedIso,
+    dateModified: dateModifiedIso,
     author: {
       '@type': 'Organization',
       name: SITE_NAME,

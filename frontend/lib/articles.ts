@@ -3,13 +3,14 @@ import path from 'path';
 import { marked } from 'marked';
 import { getArticlePageMeta } from '@/lib/articleMeta';
 
-const ARTICLES_DIR = path.join(process.cwd(), '../_docs/articles');
+const ARTICLES_DIR = path.join(process.cwd(), 'content/articles');
 const EXCLUDED = new Set(['overview.md']);
 
 export interface ArticleMeta {
   slug: string;
   title: string;
   excerpt: string;
+  publishedDate: string;
   lastModified: string;
 }
 
@@ -58,8 +59,9 @@ export function getAllArticleMeta(): ArticleMeta[] {
     const pageMeta = getArticlePageMeta(slug);
     return {
       slug,
-      title: extractTitle(raw),
+      title: pageMeta?.title ?? extractTitle(raw),
       excerpt: pageMeta?.description ?? extractExcerpt(raw),
+      publishedDate: pageMeta?.publishedDate ?? stat.birthtime.toISOString().split('T')[0],
       lastModified: stat.mtime.toISOString().split('T')[0],
     };
   });
@@ -85,8 +87,9 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
   return {
     slug,
-    title: extractTitle(raw),
+    title: pageMeta?.title ?? extractTitle(raw),
     excerpt: pageMeta?.description ?? extractExcerpt(raw),
+    publishedDate: pageMeta?.publishedDate ?? stat.birthtime.toISOString().split('T')[0],
     lastModified: stat.mtime.toISOString().split('T')[0],
     html,
   };

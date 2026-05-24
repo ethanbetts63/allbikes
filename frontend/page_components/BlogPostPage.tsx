@@ -23,6 +23,11 @@ export default function BlogPostPage({ article, faqs }: Props) {
     `${HeroImage1024.src} 1024w`,
     `${HeroImage1280.src} 1280w`,
   ].join(', ');
+  const publishedDate = new Intl.DateTimeFormat('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(`${article.publishedDate}T00:00:00+08:00`));
 
   return (
     <>
@@ -46,6 +51,10 @@ export default function BlogPostPage({ article, faqs }: Props) {
             <span>/</span>
             <span className="text-[var(--highlight)]">{article.title}</span>
           </nav>
+
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--highlight)] mb-5">
+            Published <time dateTime={article.publishedDate}>{publishedDate}</time>
+          </p>
 
           {/* Article */}
           <article

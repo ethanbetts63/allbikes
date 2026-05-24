@@ -56,6 +56,7 @@ export default async function Page({
       title: article.title,
       description: article.excerpt,
       slug,
+      datePublished: article.publishedDate,
       dateModified: article.lastModified,
     }),
     buildFaqSchema(faqs),
