@@ -11,7 +11,7 @@ Before getting into the rules, it's worth understanding that "electric scooter" 
 | Category | What it is | Licence | Registration |
 |---|---|---|---|
 | **eRideable** | Personal e-scooter — the kind you push and step onto | None required | None required |
-| **Electric moped** | Road-registered vehicle, ≤4000W, ≤50 km/h | Car licence or higher | Required |
+| **Electric moped** | Road-registered non-piston-engine moped designed not to exceed 50 km/h | Car licence or higher | Required |
 | **Electric motorcycle** | Registered road vehicle above moped specs | Motorcycle licence (R-E minimum) | Required |
 
 Most people asking about "e-scooter laws" mean eRideables. The rest of this article covers those. See our [WA scooter and motorcycle licence guide](/articles/wa-scooter-motorcycle-licence-guide) for registered electric mopeds and motorcycles.
@@ -55,11 +55,12 @@ Removing or bypassing speed limiters is illegal. A key recommendation from WA's 
 | Bicycle lanes (on roads ≤50 km/h) | Yes | 25 km/h |
 | Roads without a dividing line, ≤50 km/h speed limit | Yes | 25 km/h |
 | Roads with a centre dividing line | **No** | — |
+| One-way roads with more than one marked lane | **No** | — |
 | Roads with a speed limit above 50 km/h | **No** | — |
 | Paths signed "no wheeled devices" | **No** | — |
 | Paths signed "no bicycles" | **No** | — |
 
-The dividing line rule is one that catches people out: even if a road has a 50 km/h speed limit, if it has a painted centre line dividing the carriageway, e-scooters are not permitted on it. Stick to footpaths, shared paths, and quiet residential streets.
+The dividing line rule is one that catches people out: even if a road has a 50 km/h speed limit, if it has a painted centre line dividing the carriageway, e-scooters are not permitted on it. They are also not permitted on one-way roads with more than one marked lane. Stick to footpaths, shared paths, and quiet residential streets.
 
 ---
 
@@ -90,7 +91,7 @@ In mid-2025, WA's Parliament launched a formal inquiry into eRideable and e-bike
 
 The WA Government formally responded in early 2026, supporting 32 of the 33 recommendations.
 
-**Key changes expected or underway:**
+**Key recommendations supported or supported in principle:**
 - Making device tampering (removing speed limiters) a specific offence
 - Mandatory speed-limiting technology standards for devices sold in WA
 - Tighter governance and safety requirements for hire e-scooter schemes
@@ -98,7 +99,7 @@ The WA Government formally responded in early 2026, supporting 32 of the 33 reco
 - Investment in separated cycling and riding infrastructure, particularly in Perth's CBD
 - Better data collection on incidents involving eRideables
 
-None of the supported recommendations change the core rules above — speed limits, where you can ride, and age requirements remain as they are. The reforms are primarily focused on enforcement, hire schemes, and device standards.
+At the time of writing, these supported recommendations do not change the core rules above — speed limits, where you can ride, and age requirements remain as they are. The proposed reforms are primarily focused on enforcement, hire schemes, and device standards.
 
 ---
 
@@ -116,7 +117,7 @@ Perth has shared e-scooter schemes operating in certain areas. These operate und
 - **Helmet?** Yes, mandatory
 - **Minimum age?** 16 (for motor-assisted riding at normal speeds)
 - **Max speed?** 25 km/h (10 km/h on footpaths)
-- **Can I ride on roads?** Only on roads with no dividing line and a speed limit of 50 km/h or less
+- **Can I ride on roads?** Only on roads with no dividing line, no more than one marked lane if one-way, and a speed limit of 50 km/h or less
 - **Can I ride on footpaths?** Yes, at 10 km/h, giving way to pedestrians
 - **Drink riding?** Illegal — same BAC limits as driving
 

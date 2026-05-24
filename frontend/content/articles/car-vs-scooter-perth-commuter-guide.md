@@ -21,7 +21,7 @@ Most people dramatically underestimate what their car costs them. The easy numbe
 
 That parking figure is the one that usually surprises people. Perth CBD parking runs from roughly $20–$36 per day for casual parking, with monthly permits averaging around $370. If you're paying for parking every working day, you're spending more on parking than most people spend on petrol.
 
-The AAA's Transport Affordability Index puts the average annual cost of running a car in Australia at over $23,000 when you include depreciation and finance. Even on a modest small car without depreciation, you're looking at $12,000–$16,000 a year for a CBD commuter — often more.
+The AAA's Transport Affordability Index puts typical Perth household transport costs at more than $24,000 a year when vehicle finance, fuel, insurance, registration, servicing, public transport, and other transport costs are included. Even on a modest small car without depreciation, you're looking at $12,000–$16,000 a year for a CBD commuter — often more.
 
 ---
 
@@ -70,7 +70,7 @@ See our [WA e-scooter laws guide](/articles/wa-e-scooter-laws-2026) for the full
 
 ### Registered electric mopeds and motorcycles
 
-This is the more direct car replacement. A registered electric moped (≤4000W, ≤50 km/h) can be ridden on a car licence, parks free in the CBD, and has near-zero fuel costs.
+This is the more direct car replacement. A registered electric moped designed not to exceed 50 km/h can be ridden on a car licence, parks free in the CBD, and has near-zero fuel costs.
 
 | Cost | Annual estimate |
 |---|---|

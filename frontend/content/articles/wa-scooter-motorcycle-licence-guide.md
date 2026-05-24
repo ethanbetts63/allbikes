@@ -11,7 +11,7 @@ Western Australia's licensing rules differ from other states in a few important 
 | Bike type | Licence needed |
 |---|---|
 | 50cc petrol scooter / moped | Valid WA car licence (or moped licence) |
-| Electric moped (≤4000W, ≤50 km/h) | Valid WA car licence (or moped licence) |
+| Registered electric moped (non-piston engine, ≤50 km/h) | Valid WA car licence (or moped licence) |
 | Scooter or motorcycle above 50cc | Motorcycle licence (R-E class minimum) |
 | Personal electric scooter (eRideable) | No licence required — but rules apply |
 
@@ -22,8 +22,8 @@ Western Australia's licensing rules differ from other states in a few important 
 In Western Australia, if you hold a valid WA driver's licence (not a learner's permit), you can legally ride any moped without needing a separate motorcycle licence.
 
 **A moped is defined as:**
-- A two-wheeled vehicle with a petrol engine of 50cc or less, OR an electric motor of 4000W or less
-- A maximum design speed of 50 km/h
+- A motorcycle designed so it cannot exceed 50 km/h
+- Either a petrol engine of 50cc or less, OR a non-piston power source such as an electric motor
 
 This covers the majority of 50cc petrol scooters. If the scooter is 50cc and can't exceed 50 km/h by design, your car licence is all you need.
 
@@ -71,10 +71,10 @@ While on your learner's permit, you must ride with an approved supervisor at all
 
 ### Stage 2: Provisional Licence (R-E class)
 
-**Minimum age:** 16 years and 6 months  
+**Minimum age:** 16 years and 6 months for the Hazard Perception Test; 17 years for the Practical Driving Assessment  
 **Minimum time on L plates:** 6 months
 
-Once you've held your learner's permit for at least six months and completed the logbook hours (if required), you can progress to your provisional licence.
+Once you've held your learner's permit for at least six months, passed the HPT, reached 17 years old, and completed the logbook hours (if required), you can progress to your provisional licence.
 
 **What you need to do:**
 1. Pass the Hazard Perception Test (HPT) — a computer-based video test assessing hazard awareness
@@ -98,7 +98,7 @@ LAMS stands for Learner Approved Motorcycle Scheme. In WA, a LAMS-approved motor
 - Power-to-weight ratio of **150 kW/t or less**
 - OR, for electric motorcycles: power output of **25kW or less**
 
-This covers a wide range of scooters and motorcycles — including most of the 125cc, 150cc, 300cc, and 400cc models commonly ridden in Perth. You can check whether a specific bike is LAMS-approved using the official LAMS search tool on the NSW Roads and Maritime Services website (used nationally as the reference list).
+This covers a wide range of scooters and motorcycles — including most of the 125cc, 150cc, 300cc, and 400cc models commonly ridden in Perth. You can check whether a specific bike is LAMS-approved using the official LAMS search tool on the Transport for NSW website, which WA uses as its reference list.
 
 ---
 
@@ -147,7 +147,7 @@ If you hold a motorcycle licence from another Australian state or territory, or 
 
 ## Summary: Which Licence Do You Need?
 
-- **50cc scooter or electric moped (≤4000W, ≤50 km/h):** Your car licence is enough.
+- **50cc scooter or registered electric moped designed not to exceed 50 km/h:** Your car licence is enough.
 - **Anything above 50cc:** You need a motorcycle licence, starting with the R-E learner's permit at age 16.
 - **Personal electric scooter (eRideable):** No licence needed — just follow the road rules.
 - **New to riding with no car licence:** You can get a moped-only licence from age 16, or start the full motorcycle licence pathway at 16.
