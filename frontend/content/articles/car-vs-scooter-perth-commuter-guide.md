@@ -40,7 +40,7 @@ A petrol scooter is the most cost-effective commuting vehicle you can buy. The r
 
 ### The fuel difference
 
-A 125cc scooter uses roughly 2.2 litres per 100km in real-world riding. The average Australian car uses around 11 litres per 100km in real-world conditions (ABS Survey of Motor Vehicle Use). That's approximately 5x more fuel-efficient. On a 30km daily commute, that difference in fuel alone saves around $1,500 per year at 2025 Perth fuel prices.
+A 125cc scooter uses roughly 2.2 litres per 100km in real-world riding. The average Australian car uses around 11 litres per 100km in real-world conditions (ABS Survey of Motor Vehicle Use). That's approximately 5x more fuel-efficient. On a 30km daily commute, that difference in fuel alone saves around $1,500 per year at 2025 Perth fuel prices and as we all know 2026 fuel prices aren't looking any better. 
 
 ### Parking in Perth
 
