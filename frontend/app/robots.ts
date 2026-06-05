@@ -10,8 +10,6 @@ const DISALLOWED_ROUTES = [
   '/hire/confirmation',
   '/hire/processing',
   '/hire/book',
-  '/returns_policy',
-  '/terms_of_use',
 ];
 
 export default function robots(): MetadataRoute.Robots {
