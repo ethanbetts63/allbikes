@@ -33,8 +33,7 @@ export const config = {
     '/showroom/:path*',
     '/brand',
     '/brand/:path*',
-    '/blog/latest-news-and-updates',
-    '/blog/latest-news-and-updates/:path*',
+    '/blog/:segment/:path*',
     '/shop-online',
     '/shop-online/:path*',
     '/info',
@@ -45,5 +44,7 @@ export const config = {
     '/security_policy',
     '/returns_policy',
     '/terms_of_use',
+    '/_myacct',
+    '/_myacct/:path*',
   ],
 };
