@@ -176,6 +176,13 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
       )}
       <div className="bg-[var(--card)]">
         <div className="container mx-auto px-4 lg:px-8 py-8">
+          {isNew && (
+            <div className="mb-6 border border-[var(--highlight)] rounded-lg p-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--highlight)] mb-1">SYM Trade-In Offer</p>
+              <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-1">Get $500–$1,000 off when you trade in your current bike.</p>
+              <p className="text-xs text-[var(--text-dark-secondary)]">Any make or model accepted. Must be licensed and running.</p>
+            </div>
+          )}
           <BikeFilterForm basePath={basePath} filters={filters} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
