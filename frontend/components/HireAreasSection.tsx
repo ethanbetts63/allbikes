@@ -9,7 +9,7 @@ const suburbs = [
 
 const HireAreasSection = () => {
   return (
-    <section className="bg-[var(--bg-dark-primary)] py-20 px-4">
+    <section className="bg-foreground py-20 px-4">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 

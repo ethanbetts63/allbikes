@@ -23,7 +23,7 @@ import { buildListHref } from '@/lib/listQuery';
 const faqData = [
   {
     question: 'Can I buy an electric scooter online and have it delivered anywhere in Australia?',
-    answer: 'Yes. We ship Australia-wide with free delivery on every order. Whether you\'re in Perth, Sydney, Melbourne, Brisbane, or a regional area â€” your e-scooter will be delivered to your door at no extra charge.',
+    answer: 'Yes. We ship Australia-wide with free delivery on every order. Whether you\'re in Perth, Sydney, Melbourne, Brisbane, Adelaide or any other city in Australia — your e-scooter will be delivered to your door at no extra charge.',
   },
   {
     question: 'Are your electric scooter prices inclusive of GST?',
@@ -47,7 +47,7 @@ const faqData = [
   },
   {
     question: 'What is the range of an electric scooter?',
-    answer: 'Range depends on the model, rider weight, terrain, and speed. Most of the e-scooters we carry offer a practical range of 25â€“60 km per charge. Check each product listing for specific range specifications.',
+    answer: 'Range depends on the model, rider weight, terrain, and speed. Most of the e-scooters we carry offer a practical range of 25-60 km per charge. Check each product listing for specific range specifications.',
   },
 ];
 

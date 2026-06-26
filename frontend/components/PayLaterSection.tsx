@@ -28,11 +28,11 @@ const providers = [
   },
 ];
 
-const PayLaterSection = () => {
+const PayLaterSection = ({ className = 'bg-foreground' }: { className?: string }) => {
   if (!siteSettings.accept_online_payment) return null;
 
   return (
-    <section className="bg-foreground py-20 px-4">
+    <section className={`${className} py-20 px-4`}>
       <div className="container mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 

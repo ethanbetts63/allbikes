@@ -35,8 +35,8 @@ const DeferredHireSections = ({ faqData }: DeferredHireSectionsProps) => {
 
   return (
     <>
-      <PayLaterSection />
       <HireAreasSection />
+      <PayLaterSection className="bg-[var(--bg-dark-primary)]" />
       <FaqSection title="Hire FAQs" faqData={faqData} />
     </>
   );

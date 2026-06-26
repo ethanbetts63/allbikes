@@ -41,7 +41,8 @@
       "Bash(measure-object)",
       "Bash(select-object -expand Count)",
       "WebSearch",
-      "WebFetch(domain:www.transport.wa.gov.au)"
+      "WebFetch(domain:www.transport.wa.gov.au)",
+      "PowerShell(head *)"
     ]
   }
 }

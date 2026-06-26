@@ -44,8 +44,8 @@ const hireStructuredData = [
 ].filter(Boolean) as object[];
 
 export const metadata = buildMetadata({
-  title: 'Motorcycle Hire Perth | Daily, Weekly & Monthly',
-  description: 'Hire a motorcycle or scooter in Perth with flexible daily, weekly, and monthly rates from a maintained Dianella hire fleet.',
+  title: 'Motorcycle & Moped Hire Perth | From $26/Day',
+  description: 'Hire a motorcycle or scooter in Perth from $26/day. Daily, weekly, and monthly rates available. No motorcycle licence needed for 50cc bikes. Book online.',
   canonicalPath: '/hire',
 });
 
