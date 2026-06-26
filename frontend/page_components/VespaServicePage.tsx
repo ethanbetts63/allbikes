@@ -48,18 +48,18 @@ const vespaFaqs = [
 const services = [
     {
         Icon: AlertCircle,
-        title: 'No-Start Diagnosis & Repair',
-        description: "Vespa won't fire up? We'll identify the root cause — electrical fault, fuel system, or mechanical — and carry out everything needed to get you riding again.",
+        title: 'Vespa No-Start Diagnosis & Repair',
+        description: "Vespa won't fire up? We'll identify the root cause — electrical fault, fuel system, or mechanical — and carry out everything your Vespa needs to get you riding again.",
     },
     {
         Icon: Activity,
-        title: 'Servicing & Running Repairs',
-        description: 'Routine service or something not quite right? We perform a thorough inspection and take care of whatever the bike needs to keep your Vespa running at its best.',
+        title: 'Vespa Servicing & Running Repairs',
+        description: 'Routine Vespa service or something not quite right? We perform a thorough inspection and take care of whatever the bike needs to keep your Vespa running at its best.',
     },
     {
         Icon: CircleDot,
-        title: 'Tyre Fitting',
-        description: 'Supply and fit, or fit-only. We handle tyre changes and wheel balancing across all Vespa models.',
+        title: 'Vespa Tyre Fitting',
+        description: 'Supply and fit, or fit-only. We handle Vespa tyre changes and wheel balancing across all models.',
     },
 ];
 
