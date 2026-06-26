@@ -6,7 +6,7 @@ import logo1024 from "../assets/logo-1024w.webp";
 import logo1280 from "../assets/logo-1280w.webp";
 import { cn } from "@/lib/utils";
 import { siteSettings } from "@/config/siteSettings";
-import { MapPin } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import MobileNavMenu from "@/components/MobileNavMenu";
 
 const NAV_LINK = "text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest hover:text-[var(--highlight)] transition-colors duration-200";
@@ -38,7 +38,7 @@ const NavBar = () => {
           />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-10 self-center ml-auto">
+        <nav className="hidden md:flex items-center justify-between self-center flex-1 pl-10">
           <Link href="/service" className={NAV_LINK}>Servicing</Link>
           {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}
           <Link href="/inventory/scooters/new" className={NAV_LINK}>New Scooters</Link>
@@ -47,8 +47,28 @@ const NavBar = () => {
           {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK}>E-Scooters</Link>}
           {siteSettings.show_workshop_clearance && <Link href="/inventory/motorcycles/parts" className={NAV_LINK}>Workshop Clearance</Link>}
           <Link href="/contact" className={cn(NAV_LINK, "border border-white/30 px-4 py-2 hover:border-amber-400")}>
-            Contact Us
+            Contact
           </Link>
+          <div className="flex flex-col gap-1.5">
+            {(siteSettings.phone_number || siteSettings.mobile_number) && (
+              <a
+                href={`tel:${siteSettings.phone_number || siteSettings.mobile_number}`}
+                className="flex items-center gap-1.5 text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors text-xs"
+              >
+                <Phone className="h-3.5 w-3.5 shrink-0" />
+                {siteSettings.phone_number || siteSettings.mobile_number}
+              </a>
+            )}
+            {siteSettings.email_address && (
+              <a
+                href={`mailto:${siteSettings.email_address}`}
+                className="flex items-center gap-1.5 text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors text-xs"
+              >
+                <Mail className="h-3.5 w-3.5 shrink-0" />
+                {siteSettings.email_address}
+              </a>
+            )}
+          </div>
         </nav>
 
         <MobileNavMenu />
