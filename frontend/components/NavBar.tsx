@@ -25,7 +25,7 @@ const NavBar = () => {
         </div>
       )}
 
-      <div className="container flex h-20 items-stretch justify-between px-6">
+      <div className="container flex h-20 items-stretch px-6">
         <Link href="/" className="shrink-0 flex items-stretch">
           <img
             src={logo1280.src}
@@ -38,7 +38,7 @@ const NavBar = () => {
           />
         </Link>
 
-        <nav className="hidden md:flex items-center justify-between self-center flex-1 pl-10">
+        <nav className="hidden min-[968px]:flex items-center gap-10 self-center ml-auto xl:flex-1 xl:ml-0 xl:pl-10 xl:justify-between xl:gap-0">
           <Link href="/service" className={NAV_LINK}>Servicing</Link>
           {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}
           <Link href="/inventory/scooters/new" className={NAV_LINK}>New Scooters</Link>
@@ -70,9 +70,9 @@ const NavBar = () => {
             )}
           </div>
         </nav>
-
-        <MobileNavMenu />
       </div>
+
+      <MobileNavMenu />
     </header>
   );
 };

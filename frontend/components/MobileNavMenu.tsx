@@ -32,17 +32,19 @@ const MobileNavMenu = () => {
 
   return (
     <>
-      <button
-        ref={buttonRef}
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden self-center p-1.5 text-[var(--text-light-primary)] hover:text-[var(--highlight)] transition-colors duration-200"
-        aria-label="Toggle navigation menu"
-      >
-        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      <div className="min-[968px]:hidden absolute right-[15px] bottom-0 h-20 flex items-center">
+        <button
+          ref={buttonRef}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-1.5 text-[var(--text-light-primary)] hover:text-[var(--highlight)] transition-colors duration-200"
+          aria-label="Toggle navigation menu"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
 
       {isMenuOpen && (
-        <div ref={menuRef} className="absolute left-0 right-0 top-full md:hidden bg-background border-t border-white/10">
+        <div ref={menuRef} className="absolute left-0 right-0 top-full min-[968px]:hidden bg-background border-t border-white/10">
           <nav className="flex flex-col px-6 py-4 gap-5">
             <Link href="/service" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Servicing</Link>
             {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Hire</Link>}
