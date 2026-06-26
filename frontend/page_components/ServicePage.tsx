@@ -32,6 +32,10 @@ const ServiceFaqs = [
     answer: "It depends on the work required. We'll assess your bike and give you an honest timeframe before any work begins. Simple repairs and services are often completed same-day. We'll keep you updated throughout."
   },
   {
+    question: "Do you service Vespa scooters?",
+    answer: "Yes — Vespas are something of a speciality. We were Perth's primary Vespa dealer for years before we moved to focusing on servicing, so we have over 30 years of hands-on Vespa experience. Not only are we the best at working on them, they are also a pleasure to work on. We service and repair all Vespa models."
+  },
+  {
     question: "Can you pick up my bike if I can't ride it in?",
     answer: "Yes. We work closely with Perth Motorcycle and Scooter Movers to arrange affordable pickup and delivery if you can't ride your bike in. All bookings and fees are handled directly with them."
   }

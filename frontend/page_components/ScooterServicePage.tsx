@@ -116,6 +116,10 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
                         <Link href="/tyre-fitting" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
                             scooter tyre fitting
                         </Link>
+                        {'. Have a Vespa? See our '}
+                        <Link href="/vespa-service-perth" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
+                            Vespa service page
+                        </Link>
                         {'. Also see our '}
                         <Link href="/service" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
                             general workshop page
