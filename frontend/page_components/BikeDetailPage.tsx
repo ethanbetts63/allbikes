@@ -14,7 +14,8 @@ import {
     CalendarClock,
     ShieldCheck,
     Mail,
-    Phone
+    Phone,
+    ChevronLeft,
 } from 'lucide-react';
 import clickIcon from '@/assets/click.svg';
 import { siteSettings } from '@/config/siteSettings';
@@ -129,8 +130,16 @@ const BikeDetailPage = ({
 
             <div className="container mx-auto px-4 pb-12 lg:px-8">
 
+                {/* Back link */}
+                <div className="pt-4 mb-2">
+                    <Link href={inventoryPath} className="inline-flex items-center gap-1 text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] transition-colors">
+                        <ChevronLeft className="h-4 w-4" />
+                        {inventoryName}
+                    </Link>
+                </div>
+
                 {/* Title + badges */}
-                <div className="mb-6 pt-4 flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
+                <div className="mb-6 flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
                     <div>
                     <h1 className="text-3xl md:text-4xl font-black text-[var(--text-dark-primary)] leading-tight mb-3">{cardTitle}</h1>
                     <div className="flex flex-wrap items-center gap-2">
