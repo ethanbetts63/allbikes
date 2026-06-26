@@ -4,8 +4,8 @@ import { getInitialBikeList } from '@/lib/inventoryList';
 import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({
-  title: 'New Scooters for Sale Perth',
-  description: 'Browse new scooters for sale in Perth, including petrol and electric models prepared by the workshop and backed by warranty.',
+  title: 'Buy New Scooters in Perth | SYM Petrol & Segway Electric',
+  description: 'Brand-new SYM petrol scooters and Segway electric mopeds for sale in Perth. Workshop-prepared, backed by warranty. Browse online or visit our Dianella store.',
   canonicalPath: '/inventory/scooters/new',
 });
 
