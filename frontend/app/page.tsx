@@ -5,8 +5,8 @@ import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
 
 export const metadata = buildMetadata({
-  title: 'Motorcycles, Scooters & Electric Scooters Perth',
-  description: 'New and used motorcycles, scooters, and electric scooters for sale in Perth, plus servicing, tyre fitting, and free Australia-wide e-scooter delivery.',
+  title: 'Motorcycles, Mopeds & Electric Scooters Perth',
+  description: 'Sales, service, hire and tyre fitting. 30 years of experience working on Motorcycles, Scooters and now E-Scooters.',
   canonicalPath: '/',
 });
 
