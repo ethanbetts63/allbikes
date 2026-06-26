@@ -1,8 +1,8 @@
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata = buildMetadata({
-  title: 'Motorcycle & Scooter Servicing Dianella Perth',
-  description: 'Book motorcycle and scooter servicing, repairs, diagnostics, and tyre fitting at the Dianella workshop in Perth.',
+  title: 'Motorcycle & Scooter Mechanics Perth | Service & Repairs',
+  description: 'Fast online booking for Motorcycle & Scooter servicing, repairs, & tyre fitting. 30+ years mechanic experience. All makes & models. Dianella Workshop.',
   canonicalPath: '/service',
 });
 

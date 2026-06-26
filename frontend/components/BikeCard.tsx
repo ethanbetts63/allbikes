@@ -56,7 +56,7 @@ const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boole
           )}
           {bike.status === 'available_soon' && (
             <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
-              Coming Soon
+              In Preparation
             </span>
           )}
         </div>
