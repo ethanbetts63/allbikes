@@ -167,7 +167,7 @@ def send_service_booking_confirmation(booking_data):
         f"Rego: {booking_data.get('registration_number', '')}\n"
         f"Services: {', '.join(booking_data.get('job_type_names', []))}\n"
         f"Requested drop-off: {booking_data.get('drop_off_time', '')}\n\n"
-        f"Cancellation policy: Cancellations with less than 5 days notice incur an $80 cancellation fee.\n\n"
+        f"Cancellation policy: Cancellations with less than 5 days notice may incur acancellation fee.\n\n"
         f"Unit 5 / 6 Cleveland Street, Dianella WA 6059\n"
         f"admin@scootershop.com.au | 08 9433 4613"
     )

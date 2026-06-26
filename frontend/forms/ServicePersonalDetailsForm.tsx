@@ -57,7 +57,7 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
         </Label>
       </div>
       <p className="text-xs text-[var(--text-dark-secondary)] leading-relaxed -mt-1">
-        Cancellations with less than 5 days notice incur an $80 cancellation fee.
+        Cancellations with less than 5 days notice may incur a cancellation fee.
       </p>
 
       <div className="flex justify-between pt-2">
