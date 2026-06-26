@@ -1,0 +1,62 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}Service booking request received — ScooterShop{% endblock %}
+
+{% block preheader %}We've received your service request for your {{ booking_data.make }} {{ booking_data.model }}. We'll be in touch shortly to confirm your booking.{% endblock %}
+
+{% block content %}
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Booking Request Received</h1>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0 0 24px 0; line-height: 26px;">
+    Hi {{ booking_data.first_name }}, we've received your service request and will be in touch shortly to confirm your drop-off time.
+</p>
+
+<!-- Motorcycle -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 8px 0;">Motorcycle</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ booking_data.make }} {{ booking_data.model }}</p>
+            <p style="margin: 0; color: #78716c;">Rego: {{ booking_data.registration_number }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Services & drop-off -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 8px 0;">Services Requested</p>
+            {% for job in booking_data.job_type_names %}
+            <p style="margin: 0 0 4px 0; color: #1c1917;">{{ job }}</p>
+            {% endfor %}
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 16px 0 8px 0;">Requested Drop-off</p>
+            <p style="margin: 0; color: #1c1917; font-weight: bold;">{{ booking_data.drop_off_time }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Cancellation notice -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fffbeb; border: 1px solid #fbbf24; border-radius: 6px; margin-bottom: 24px;">
+    <tr>
+        <td style="padding: 16px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 22px;">
+            <p style="font-size: 13px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">Cancellation Policy</p>
+            <p style="margin: 0; color: #78716c;">Cancellations with less than 5 days notice incur an $80 cancellation fee. To cancel or reschedule, please contact us as early as possible.</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Location -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 28px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 8px 0;">Workshop</p>
+            <p style="font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">Unit 5 / 6 Cleveland Street, Dianella WA 6059</p>
+            <p style="margin: 0; color: #78716c;">Mon – Fri: 9:00 AM – 5:00 PM &nbsp;|&nbsp; Sat: 10:00 AM – 1:00 PM &nbsp;|&nbsp; Sun: Closed</p>
+        </td>
+    </tr>
+</table>
+
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c; margin: 0; line-height: 24px;">
+    Questions? Contact us at <a href="mailto:admin@scootershop.com.au" style="color: #1c1917;">admin@scootershop.com.au</a> or call <a href="tel:0894334613" style="color: #1c1917;">08 9433 4613</a>.
+</p>
+{% endblock %}

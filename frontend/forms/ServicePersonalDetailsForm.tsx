@@ -56,6 +56,9 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
           <span>I have read and agree to the <Link href="/terms?type=service" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">Service Terms and Conditions</Link>.</span>
         </Label>
       </div>
+      <p className="text-xs text-[var(--text-dark-secondary)] leading-relaxed -mt-1">
+        Cancellations with less than 5 days notice incur an $80 cancellation fee.
+      </p>
 
       <div className="flex justify-between pt-2">
         <button

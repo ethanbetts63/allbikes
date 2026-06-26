@@ -152,6 +152,34 @@ def send_admin_new_hire(booking):
         _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'failed', str(e))
 
 
+def send_service_booking_confirmation(booking_data):
+    to = booking_data.get('email')
+    if not to:
+        return
+    first_name = booking_data.get('first_name', '')
+    make = booking_data.get('make', '')
+    model = booking_data.get('model', '')
+    subject = f"Service booking request received — {make} {model}".strip()
+    text_body = (
+        f"Hi {first_name},\n\n"
+        f"We've received your service request and will be in touch shortly to confirm your drop-off time.\n\n"
+        f"Motorcycle: {make} {model}\n"
+        f"Rego: {booking_data.get('registration_number', '')}\n"
+        f"Services: {', '.join(booking_data.get('job_type_names', []))}\n"
+        f"Requested drop-off: {booking_data.get('drop_off_time', '')}\n\n"
+        f"Cancellation policy: Cancellations with less than 5 days notice incur an $80 cancellation fee.\n\n"
+        f"Unit 5 / 6 Cleveland Street, Dianella WA 6059\n"
+        f"admin@scootershop.com.au | 08 9433 4613"
+    )
+    context = {'booking_data': booking_data}
+    html_body = render_to_string('notifications/emails/service_booking_confirmation.html', context)
+    try:
+        _send_mailgun(to, subject, html_body, text_body)
+        logger.info("Service booking confirmation sent to %s", to)
+    except Exception as e:
+        logger.error("Failed to send service booking confirmation to %s: %s", to, e)
+
+
 def send_admin_new_order(order):
     admin_email = getattr(settings, 'ADMIN_EMAIL', None)
     if not admin_email:
