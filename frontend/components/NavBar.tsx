@@ -49,7 +49,7 @@ const NavBar = () => {
           <Link href="/contact" className={cn(NAV_LINK, "border border-white/30 px-4 py-2 hover:border-amber-400")}>
             Contact
           </Link>
-          <div className="flex flex-col gap-1.5">
+          <div className="hidden xl:flex flex-col gap-1.5">
             {(siteSettings.phone_number || siteSettings.mobile_number) && (
               <a
                 href={`tel:${siteSettings.phone_number || siteSettings.mobile_number}`}
