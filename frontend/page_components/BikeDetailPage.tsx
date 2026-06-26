@@ -203,9 +203,7 @@ const BikeDetailPage = ({
                             <div className="mb-6 border border-[var(--highlight)] rounded-lg p-4">
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--highlight)] mb-1">SYM Trade-In Offer</p>
                                 <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-1">
-                                    {bike.engine_size && bike.engine_size <= 50
-                                        ? 'Get $500 off when you trade in your current bike.'
-                                        : 'Get $1,000 off when you trade in your current bike.'}
+                                    Get $500–$1,000 off when you trade in your current bike.
                                 </p>
                                 <p className="text-xs text-[var(--text-dark-secondary)]">Any make or model accepted. Must be licensed and running.</p>
                             </div>

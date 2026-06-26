@@ -105,7 +105,7 @@ const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boole
           {/* Trade-in offer */}
           {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && (
             <p className="text-xs font-semibold text-[var(--highlight)]">
-              Trade-in offer: {bike.engine_size && bike.engine_size <= 50 ? '$500' : '$1,000'} off — any make or model
+              Trade-in offer: $500–$1,000 off — any make or model
             </p>
           )}
 
