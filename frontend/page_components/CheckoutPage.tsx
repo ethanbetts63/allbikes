@@ -44,7 +44,7 @@ const CheckoutPage = () => {
       if (!bikeId) { router.push('/inventory/scooters/new'); return; }
       Promise.all([getBikeById(bikeId), getDepositSettings()])
         .then(([bikeData, settings]) => {
-          if (bikeData.status !== 'for_sale' || (bikeData.condition !== 'new' && bikeData.condition !== 'demo')) {
+          if (bikeData.status !== 'for_sale' || (bikeData.condition !== 'new' && bikeData.condition !== 'demo' && bikeData.condition !== 'used')) {
             router.push(`/inventory/motorcycles/${slug}`);
             return;
           }
