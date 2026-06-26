@@ -11,7 +11,7 @@ export const siteSettings: SiteSettings = {
   id: 1,
   enable_motorcycle_mover: true,
   enable_banner: true,
-  banner_text: "Formally Scootershop Fremantle. New location, same great service!",
+  banner_text: "Get between $500-$1,000 off when you trade in any running and licensed motorcycle or scooter!",
   phone_number: "(08) 9433 4613",
   mobile_number: "0477700005",
   email_address: "admin@scootershop.com.au",
