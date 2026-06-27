@@ -6,8 +6,30 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 
 from notifications.models import Message
+from notifications.utils import sms_messages
 
 logger = logging.getLogger(__name__)
+
+
+def _send_admin_sms(body):
+    if settings.DEBUG:
+        logger.info("DEBUG mode: skipping admin SMS")
+        return
+    numbers = getattr(settings, 'ADMIN_NUMBERS', [])
+    if not numbers:
+        logger.warning("ADMIN_NUMBERS not configured — skipping admin SMS")
+        return
+    from twilio.rest import Client
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    for number in numbers:
+        try:
+            client.messages.create(
+                body=body,
+                messaging_service_sid=settings.TWILIO_MESSAGING_SERVICE_SID,
+                to=number,
+            )
+        except Exception as e:
+            logger.error("Failed to send admin SMS to %s: %s", number, e)
 
 
 def _send_mailgun(to, subject, html_body, text_body):
@@ -38,11 +60,6 @@ def _admin_recipients():
 
 def _record(obj, message_type, to, subject, body_text, body_html, status, error_message=''):
     try:
-        print(
-            f"[notifications] recording message type={message_type} to={to} status={status} "
-            f"object={obj.__class__.__name__ if obj else 'None'}:{getattr(obj, 'pk', None)}",
-            flush=True,
-        )
         logger.info(
             "Recording message type=%s to=%s status=%s object=%s:%s",
             message_type,
@@ -63,10 +80,8 @@ def _record(obj, message_type, to, subject, body_text, body_html, status, error_
             error_message=error_message,
             sent_at=timezone.now() if status == 'sent' else None,
         )
-        print(f"[notifications] recorded message id={message.pk}", flush=True)
         logger.info("Recorded message id=%s", message.pk)
     except Exception as e:
-        print(f"[notifications] failed to record message type={message_type} to={to}: {e}", flush=True)
         logger.error("Failed to record sent message (%s): %s", message_type, e)
 
 
@@ -177,12 +192,12 @@ def send_admin_new_hire(booking):
         except Exception as e:
             logger.error("Failed to send admin new hire notification for booking %s to %s: %s", booking.booking_reference, to, e)
             _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'failed', str(e))
+    _send_admin_sms(sms_messages.admin_new_hire(booking))
 
 
 def send_service_booking_confirmation(booking_data, booking_log=None):
     to = booking_data.get('email')
     if not to:
-        print("[notifications] service customer email skipped: missing recipient", flush=True)
         logger.warning("Service booking customer email skipped: missing recipient")
         return
     first_name = booking_data.get('first_name', '')
@@ -203,11 +218,6 @@ def send_service_booking_confirmation(booking_data, booking_log=None):
     context = {'booking_data': booking_data}
     html_body = render_to_string('notifications/emails/service_booking_confirmation.html', context)
     try:
-        print(
-            f"[notifications] sending service customer email to={to} "
-            f"booking_log_id={getattr(booking_log, 'pk', None)} subject={subject}",
-            flush=True,
-        )
         logger.info(
             "Sending service customer email to=%s booking_log_id=%s subject=%s",
             to,
@@ -215,11 +225,9 @@ def send_service_booking_confirmation(booking_data, booking_log=None):
             subject,
         )
         _send_mailgun(to, subject, html_body, text_body)
-        print(f"[notifications] mailgun accepted service customer email to={to}", flush=True)
         _record(booking_log, 'service_booking_confirmation', to, subject, text_body, html_body, 'sent')
         logger.info("Service booking confirmation sent to %s", to)
     except Exception as e:
-        print(f"[notifications] service customer email failed to={to}: {e}", flush=True)
         logger.error("Failed to send service booking confirmation to %s: %s", to, e)
         _record(booking_log, 'service_booking_confirmation', to, subject, text_body, html_body, 'failed', str(e))
 
@@ -230,7 +238,6 @@ def send_admin_service_booking(booking_data, booking_log=None):
     registration = booking_data.get('registration_number', '')
 
     if not recipients:
-        print("[notifications] admin service email skipped: no admin recipients", flush=True)
         logger.warning(
             "No admin emails configured - skipping admin service booking notification for %s",
             registration or customer_name or "unknown booking",
@@ -257,11 +264,6 @@ def send_admin_service_booking(booking_data, booking_log=None):
 
     for to in recipients:
         try:
-            print(
-                f"[notifications] sending admin service email to={to} "
-                f"booking_log_id={getattr(booking_log, 'pk', None)} subject={subject}",
-                flush=True,
-            )
             logger.info(
                 "Sending admin service email to=%s booking_log_id=%s subject=%s",
                 to,
@@ -269,12 +271,11 @@ def send_admin_service_booking(booking_data, booking_log=None):
                 subject,
             )
             _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
-            print(f"[notifications] mailgun accepted admin service email to={to}", flush=True)
             _record(booking_log, 'admin_service_booking', to, subject, text_body, html_body, 'sent')
         except Exception as e:
-            print(f"[notifications] admin service email failed to={to}: {e}", flush=True)
             logger.error("Failed to send admin service booking notification to %s: %s", to, e)
             _record(booking_log, 'admin_service_booking', to, subject, text_body, html_body, 'failed', str(e))
+    _send_admin_sms(sms_messages.admin_new_service(booking_data))
 
 
 def send_admin_new_order(order):
@@ -323,3 +324,4 @@ def send_admin_new_order(order):
         except Exception as e:
             logger.error("Failed to send admin new order notification for order %s to %s: %s", order.order_reference, to, e)
             _record(order, 'admin_new_order', to, subject, text_body, html_body, 'failed', str(e))
+    _send_admin_sms(sms_messages.admin_new_order(order))

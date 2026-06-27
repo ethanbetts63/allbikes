@@ -30,7 +30,21 @@ def _email_list(value):
 
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
 ADMIN_EMAILS = _email_list(os.environ.get("ADMIN_EMAILS")) or _email_list(ADMIN_EMAIL)
+
+
+def _phone_list(value):
+    if not value:
+        return []
+    return [phone.strip() for phone in value.split(",") if phone.strip()]
+
+
+ADMIN_NUMBER = os.environ.get("ADMIN_NUMBER")
+ADMIN_NUMBERS = _phone_list(os.environ.get("ADMIN_NUMBERS")) or _phone_list(ADMIN_NUMBER)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@scootershop.com.au")
+
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_MESSAGING_SERVICE_SID = os.environ.get("TWILIO_MESSAGING_SERVICE_SID")
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 

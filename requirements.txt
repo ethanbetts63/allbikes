@@ -13,5 +13,6 @@ factory-boy
 Faker
 django-imagekit
 stripe
+twilio
 xhtml2pdf
 django-cors-headers

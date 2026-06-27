@@ -56,32 +56,18 @@ class CookieTokenObtainPairView(APIView):
     def post(self, request, *args, **kwargs):
         login_identifier = request.data.get('email') or request.data.get('username') or 'unknown'
         remote_addr = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[0]
-        user_agent = request.META.get('HTTP_USER_AGENT', '')
-        print(
-            f"[auth-login] attempt identifier={login_identifier} ip={remote_addr} ua={user_agent[:120]}",
-            flush=True,
-        )
-        logger.warning(
-            "AUTH_LOGIN_ATTEMPT identifier=%s ip=%s ua=%s",
-            login_identifier,
-            remote_addr,
-            user_agent[:120],
-        )
 
         serializer = TokenObtainPairSerializer(data=request.data, context={'request': request})
         try:
             serializer.is_valid(raise_exception=True)
         except Exception:
-            print(f"[auth-login] failed identifier={login_identifier} ip={remote_addr}", flush=True)
-            logger.warning("AUTH_LOGIN_FAILED identifier=%s ip=%s", login_identifier, remote_addr)
+            logger.warning("Login failed identifier=%s ip=%s", login_identifier, remote_addr)
             return Response(
                 {'detail': 'No active account found with the given credentials.'},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
         user = serializer.user
-        print(f"[auth-login] success user_id={user.pk} identifier={login_identifier} ip={remote_addr}", flush=True)
-        logger.warning("AUTH_LOGIN_SUCCESS user_id=%s identifier=%s ip=%s", user.pk, login_identifier, remote_addr)
 
         response = Response({'detail': 'Login successful.'})
         _set_auth_cookies(
@@ -118,12 +104,6 @@ class CookieLogoutView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
-        print("[auth-logout] clearing auth cookies", flush=True)
-        logger.warning(
-            "AUTH_LOGOUT_CLEAR_COOKIES has_access_cookie=%s has_refresh_cookie=%s",
-            settings.AUTH_COOKIE in request.COOKIES,
-            settings.AUTH_COOKIE_REFRESH in request.COOKIES,
-        )
         response = Response({'detail': 'Logged out successfully.'})
         _delete_auth_cookies(response)
         return response

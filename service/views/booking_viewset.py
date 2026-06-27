@@ -56,10 +56,8 @@ class BookingViewSet(viewsets.ViewSet):
 
         try:
             service = MechanicsDeskService()
-            print("[service-booking] sending booking to MechanicsDesk", flush=True)
             logger.info("Sending service booking to MechanicsDesk")
             response_data = service.create_booking(booking_data=validated_data)
-            print(f"[service-booking] MechanicsDesk response={response_data}", flush=True)
             logger.info("MechanicsDesk service booking response=%s", response_data)
 
             log_payload['response_body'] = response_data
@@ -67,26 +65,22 @@ class BookingViewSet(viewsets.ViewSet):
                 log_payload['status'] = 'Failed'
                 log_payload['response_status_code'] = 500
                 booking_log = BookingRequestLog.objects.create(**log_payload)
-                print(f"[service-booking] failed booking log id={booking_log.pk}; skipping emails", flush=True)
                 logger.warning("MechanicsDesk booking failed; booking_log_id=%s; skipping emails", booking_log.pk)
                 return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             log_payload['status'] = 'Success'
             log_payload['response_status_code'] = 200
             booking_log = BookingRequestLog.objects.create(**log_payload)
-            print(f"[service-booking] success booking log id={booking_log.pk}; sending emails", flush=True)
             logger.info("Service booking log id=%s created; sending emails", booking_log.pk)
 
             send_service_booking_confirmation(validated_data, booking_log)
             send_admin_service_booking(validated_data, booking_log)
-            print(f"[service-booking] email calls finished booking log id={booking_log.pk}", flush=True)
             logger.info("Service booking email calls finished booking_log_id=%s", booking_log.pk)
 
             return Response(response_data, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             error_message = str(e)
-            print(f"[service-booking] unexpected error before response: {error_message}", flush=True)
             logger.exception("Unexpected service booking error")
             log_payload['status'] = 'Failed'
             log_payload['response_status_code'] = 500
