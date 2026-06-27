@@ -18,7 +18,7 @@ import {
   Gauge,
   Key,
 } from 'lucide-react';
-import { adminGetDashboard, logoutUser } from '@/api';
+import { adminGetDashboard } from '@/api';
 import type { AdminDashboard } from '@/types/AdminDashboard';
 
 const NavBadge = ({ count }: { count: number }) =>
@@ -35,7 +35,7 @@ const SectionLabel = ({ children }: { children: React.ReactNode }) => (
 );
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
@@ -49,11 +49,11 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     if (!isAuthLoading && !user?.is_staff) {
       router.push('/login');
     }
-  }, [isAuthLoading, user]);
+  }, [isAuthLoading, router, user]);
 
   const handleLogout = async () => {
-    await logoutUser();
-    router.push('/login');
+    await logout();
+    router.replace('/login');
   };
 
   const navItemClass = (href: string, end = false) => {

@@ -2,10 +2,9 @@ from django.conf import settings
 import logging
 from django.middleware.csrf import get_token
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from data_management.authentication import CookieJWTAuthentication
 from data_management.throttling import LoginRateThrottle
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
@@ -40,6 +39,13 @@ def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
             secure=secure,
             samesite=samesite,
         )
+
+
+def _delete_auth_cookies(response):
+    secure = not settings.DEBUG
+    samesite = 'None' if secure else 'Lax'
+    response.delete_cookie(settings.AUTH_COOKIE, samesite=samesite)
+    response.delete_cookie(settings.AUTH_COOKIE_REFRESH, samesite=samesite)
 
 
 class CookieTokenObtainPairView(APIView):
@@ -108,11 +114,16 @@ class CookieTokenRefreshView(APIView):
 
 
 class CookieLogoutView(APIView):
-    authentication_classes = [CookieJWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
+        print("[auth-logout] clearing auth cookies", flush=True)
+        logger.warning(
+            "AUTH_LOGOUT_CLEAR_COOKIES has_access_cookie=%s has_refresh_cookie=%s",
+            settings.AUTH_COOKIE in request.COOKIES,
+            settings.AUTH_COOKIE_REFRESH in request.COOKIES,
+        )
         response = Response({'detail': 'Logged out successfully.'})
-        response.delete_cookie(settings.AUTH_COOKIE)
-        response.delete_cookie(settings.AUTH_COOKIE_REFRESH)
+        _delete_auth_cookies(response)
         return response

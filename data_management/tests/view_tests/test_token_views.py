@@ -163,15 +163,15 @@ class TestCookieLogoutView:
 
         assert response.status_code == 200
 
-    def test_logout_returns_401_when_not_authenticated(self):
+    def test_logout_returns_200_when_not_authenticated(self):
         """
         GIVEN no access_token cookie
         WHEN POST /api/token/logout/
-        THEN 401 is returned.
+        THEN 200 is returned so any stale client cookies can still be cleared.
         """
         response = self.client.post(self.url, format='json')
 
-        assert response.status_code == 401
+        assert response.status_code == 200
 
     def test_logout_clears_access_cookie(self):
         """
