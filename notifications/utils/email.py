@@ -163,7 +163,7 @@ def send_admin_new_hire(booking):
             _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'failed', str(e))
 
 
-def send_service_booking_confirmation(booking_data):
+def send_service_booking_confirmation(booking_data, booking_log=None):
     to = booking_data.get('email')
     if not to:
         return
@@ -186,9 +186,11 @@ def send_service_booking_confirmation(booking_data):
     html_body = render_to_string('notifications/emails/service_booking_confirmation.html', context)
     try:
         _send_mailgun(to, subject, html_body, text_body)
+        _record(booking_log, 'service_booking_confirmation', to, subject, text_body, html_body, 'sent')
         logger.info("Service booking confirmation sent to %s", to)
     except Exception as e:
         logger.error("Failed to send service booking confirmation to %s: %s", to, e)
+        _record(booking_log, 'service_booking_confirmation', to, subject, text_body, html_body, 'failed', str(e))
 
 
 def send_admin_service_booking(booking_data, booking_log=None):

@@ -44,6 +44,7 @@ class TestBookingViewSet:
         mock_service_instance.create_booking.assert_called_once()
         mock_send_service_booking_confirmation.assert_called_once()
         mock_send_admin_service_booking.assert_called_once()
+        assert mock_send_service_booking_confirmation.call_args.args[1] == mock_send_admin_service_booking.call_args.args[1]
 
     @patch('service.views.booking_viewset.send_admin_service_booking')
     @patch('service.views.booking_viewset.send_service_booking_confirmation')

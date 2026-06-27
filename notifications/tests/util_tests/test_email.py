@@ -3,7 +3,12 @@ from unittest.mock import MagicMock
 from django.contrib.contenttypes.models import ContentType
 
 from notifications.models import Message
-from notifications.utils.email import send_admin_service_booking, send_customer_confirmation, send_admin_new_order
+from notifications.utils.email import (
+    send_admin_service_booking,
+    send_customer_confirmation,
+    send_admin_new_order,
+    send_service_booking_confirmation,
+)
 from payments.tests.factories.order_factory import OrderFactory
 from service.tests.factories.booking_request_log_factory import BookingRequestLogFactory
 
@@ -151,6 +156,36 @@ class TestSendAdminServiceBooking:
         booking_log = BookingRequestLogFactory()
         send_admin_service_booking(self._booking_data(), booking_log)
         msg = _messages_for(booking_log, message_type='admin_service_booking').get()
+        assert msg.status == 'failed'
+        assert 'timeout' in msg.error_message
+
+
+@pytest.mark.django_db
+class TestSendServiceBookingConfirmation:
+
+    def _booking_data(self):
+        return {
+            'first_name': 'Jane',
+            'email': 'jane@example.com',
+            'make': 'Vespa',
+            'model': 'GTS',
+            'registration_number': '1ABC123',
+            'drop_off_time': '01/07/2026 09:00',
+            'job_type_names': ['Service'],
+        }
+
+    def test_creates_sent_message_record(self, mock_post):
+        booking_log = BookingRequestLogFactory()
+        send_service_booking_confirmation(self._booking_data(), booking_log)
+        msg = _messages_for(booking_log, message_type='service_booking_confirmation').get()
+        assert msg.status == 'sent'
+        assert msg.to == 'jane@example.com'
+
+    def test_creates_failed_message_on_mailgun_error(self, mocker):
+        mocker.patch('notifications.utils.email.requests.post', side_effect=Exception("timeout"))
+        booking_log = BookingRequestLogFactory()
+        send_service_booking_confirmation(self._booking_data(), booking_log)
+        msg = _messages_for(booking_log, message_type='service_booking_confirmation').get()
         assert msg.status == 'failed'
         assert 'timeout' in msg.error_message
 

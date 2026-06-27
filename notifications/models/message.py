@@ -19,6 +19,7 @@ class Message(models.Model):
         ('admin_new_order', 'Admin New Order'),
         ('admin_reminder', 'Admin Reminder'),
         ('test_email', 'Test Email'),
+        ('service_booking_confirmation', 'Service Booking Confirmation'),
         ('hire_confirmation', 'Hire Confirmation'),
         ('admin_new_hire', 'Admin New Hire Booking'),
         ('admin_service_booking', 'Admin Service Booking'),

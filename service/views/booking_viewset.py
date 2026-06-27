@@ -66,7 +66,7 @@ class BookingViewSet(viewsets.ViewSet):
             log_payload['response_status_code'] = 200
             booking_log = BookingRequestLog.objects.create(**log_payload)
 
-            send_service_booking_confirmation(validated_data)
+            send_service_booking_confirmation(validated_data, booking_log)
             send_admin_service_booking(validated_data, booking_log)
 
             return Response(response_data, status=status.HTTP_201_CREATED)
