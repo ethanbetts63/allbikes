@@ -1,4 +1,5 @@
 from django.conf import settings
+import logging
 from django.middleware.csrf import get_token
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -7,6 +8,8 @@ from rest_framework.views import APIView
 from data_management.authentication import CookieJWTAuthentication
 from data_management.throttling import LoginRateThrottle
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+
+logger = logging.getLogger(__name__)
 
 
 def _set_auth_cookies(response, access_token, refresh_token=None, request=None):
@@ -45,14 +48,34 @@ class CookieTokenObtainPairView(APIView):
     throttle_classes = [LoginRateThrottle]
 
     def post(self, request, *args, **kwargs):
+        login_identifier = request.data.get('email') or request.data.get('username') or 'unknown'
+        remote_addr = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', '')).split(',')[0]
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
+        print(
+            f"[auth-login] attempt identifier={login_identifier} ip={remote_addr} ua={user_agent[:120]}",
+            flush=True,
+        )
+        logger.warning(
+            "AUTH_LOGIN_ATTEMPT identifier=%s ip=%s ua=%s",
+            login_identifier,
+            remote_addr,
+            user_agent[:120],
+        )
+
         serializer = TokenObtainPairSerializer(data=request.data, context={'request': request})
         try:
             serializer.is_valid(raise_exception=True)
         except Exception:
+            print(f"[auth-login] failed identifier={login_identifier} ip={remote_addr}", flush=True)
+            logger.warning("AUTH_LOGIN_FAILED identifier=%s ip=%s", login_identifier, remote_addr)
             return Response(
                 {'detail': 'No active account found with the given credentials.'},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+
+        user = serializer.user
+        print(f"[auth-login] success user_id={user.pk} identifier={login_identifier} ip={remote_addr}", flush=True)
+        logger.warning("AUTH_LOGIN_SUCCESS user_id=%s identifier=%s ip=%s", user.pk, login_identifier, remote_addr)
 
         response = Response({'detail': 'Login successful.'})
         _set_auth_cookies(
