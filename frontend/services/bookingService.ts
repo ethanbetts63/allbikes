@@ -39,6 +39,44 @@ export const getUnavailableDays = async (in_days: number = 30): Promise<{ unavai
     return response.json();
 };
 
+const humanizeField = (field: string): string => {
+    const s = field.replace(/_/g, ' ').trim();
+    return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+/**
+ * Extracts a human-readable message from a failed booking response.
+ * Handles the several shapes the backend can return:
+ *   - { detail: "..." }                         (DRF / generic)
+ *   - { error: "..." }                          (e.g. terms not accepted)
+ *   - { email: ["Enter a valid email..."], ... } (serializer field errors)
+ */
+const parseBookingError = async (response: Response): Promise<string> => {
+    let data: unknown;
+    try {
+        data = await response.json();
+    } catch {
+        return 'Booking creation failed. Please try again.';
+    }
+
+    if (typeof data === 'string') return data;
+
+    if (data && typeof data === 'object') {
+        const obj = data as Record<string, unknown>;
+        if (typeof obj.detail === 'string') return obj.detail;
+        if (typeof obj.error === 'string') return obj.error;
+
+        // DRF serializer field errors: { field: ["msg", ...], ... }
+        const messages = Object.entries(obj).map(([field, value]) => {
+            const text = Array.isArray(value) ? value.join(' ') : String(value);
+            return field === 'non_field_errors' ? text : `${humanizeField(field)}: ${text}`;
+        });
+        if (messages.length) return messages.join('; ');
+    }
+
+    return 'Booking creation failed. Please try again.';
+};
+
 /**
  * Submits the completed booking form data to the backend.
  * @param formData - The booking form data.
@@ -49,9 +87,7 @@ export const createBooking = async (formData: BookingFormData): Promise<any> => 
         body: JSON.stringify(formData),
     });
     if (!response.ok) {
-        // Try to parse the error response from the server
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Booking creation failed');
+        throw new Error(await parseBookingError(response));
     }
     return response.json();
 };

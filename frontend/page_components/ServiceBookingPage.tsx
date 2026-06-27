@@ -69,7 +69,11 @@ const BookingPage = () => {
             router.push('/service-booking/confirmation');
         } catch (error) {
             console.error("Booking submission error:", error);
-            setError("There was an error submitting your booking. Please try again.");
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "There was an error submitting your booking. Please try again."
+            );
             setIsSubmitting(false);
         }
     };
