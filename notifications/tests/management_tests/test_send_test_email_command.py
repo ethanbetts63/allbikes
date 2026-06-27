@@ -22,9 +22,16 @@ class TestSendTestEmailCommand:
         THEN the email is sent to ADMIN_EMAIL.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
+        settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
         call_command('send_test_email')
         call_args = mock_mailgun.call_args[1]['data']
         assert 'admin@scootershop.com.au' in call_args['to']
+
+    def test_sends_to_all_admin_emails_by_default(self, mock_mailgun, settings):
+        settings.ADMIN_EMAILS = ['admin1@example.com', 'admin2@example.com']
+        call_command('send_test_email')
+        recipients = [call.kwargs['data']['to'][0] for call in mock_mailgun.call_args_list]
+        assert recipients == ['admin1@example.com', 'admin2@example.com']
 
     def test_sends_to_explicit_recipient(self, mock_mailgun, settings):
         """
@@ -33,6 +40,7 @@ class TestSendTestEmailCommand:
         THEN the email is sent to that address.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
+        settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
         call_command('send_test_email', to='other@example.com')
         call_args = mock_mailgun.call_args[1]['data']
         assert 'other@example.com' in call_args['to']
@@ -44,6 +52,7 @@ class TestSendTestEmailCommand:
         THEN no email is sent and an error is written to stderr.
         """
         settings.ADMIN_EMAIL = None
+        settings.ADMIN_EMAILS = []
         call_command('send_test_email')
         mock_mailgun.assert_not_called()
         _, err = capsys.readouterr()
@@ -56,6 +65,7 @@ class TestSendTestEmailCommand:
         THEN a Message record with type 'test_email' is created.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
+        settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
         call_command('send_test_email')
         assert Message.objects.filter(message_type='test_email', status='sent').exists()
 
@@ -66,6 +76,7 @@ class TestSendTestEmailCommand:
         THEN a Message record with type 'customer_confirmation' is created.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
+        settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
         call_command('send_test_email', template='customer_confirmation')
         assert Message.objects.filter(message_type='customer_confirmation', status='sent').exists()
 
@@ -76,6 +87,7 @@ class TestSendTestEmailCommand:
         THEN a Message record with type 'admin_new_order' is created.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
+        settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
         call_command('send_test_email', template='admin_new_order')
         assert Message.objects.filter(message_type='admin_new_order', status='sent').exists()
 
@@ -86,6 +98,7 @@ class TestSendTestEmailCommand:
         THEN the error is written to stderr and does not propagate.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
+        settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
         mocker.patch('notifications.utils.email.requests.post', side_effect=Exception('timeout'))
         call_command('send_test_email')
         _, err = capsys.readouterr()

@@ -1,11 +1,10 @@
 from types import SimpleNamespace
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from notifications.utils.email import _send_mailgun, _record
+from notifications.utils.email import _admin_recipients, _send_mailgun, _record
 
 TEMPLATE_CHOICES = ['test', 'customer_confirmation', 'admin_new_order']
 
@@ -56,16 +55,16 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        to = options['to'] or getattr(settings, 'ADMIN_EMAIL', None)
+        recipients = [options['to']] if options['to'] else _admin_recipients()
 
-        if not to:
+        if not recipients:
             self.stderr.write(self.style.ERROR(
-                'No recipient specified and ADMIN_EMAIL is not set. Use --to to provide one.'
+                'No recipient specified and no admin emails are configured. Use --to to provide one.'
             ))
             return
 
         template = options['template']
-        self.stdout.write(f"Sending '{template}' test email to {to}...")
+        self.stdout.write(f"Sending '{template}' test email to {', '.join(recipients)}...")
 
         try:
             if template == 'test':
@@ -87,9 +86,10 @@ class Command(BaseCommand):
                 text_body = f"[TEST] Rendered template: {template}\nOrder: {order.order_reference}"
 
             message_type = 'test_email' if template == 'test' else template
-            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
-            _record(None, message_type, to, subject, text_body, html_body, 'sent')
-            self.stdout.write(self.style.SUCCESS(f"Sent successfully to {to}."))
+            for to in recipients:
+                _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+                _record(None, message_type, to, subject, text_body, html_body, 'sent')
+            self.stdout.write(self.style.SUCCESS(f"Sent successfully to {len(recipients)} recipient(s)."))
 
         except Exception as e:
             self.stderr.write(self.style.ERROR(f"Failed: {e}"))

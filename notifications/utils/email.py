@@ -25,6 +25,17 @@ def _send_mailgun(to, subject, html_body, text_body):
     ).raise_for_status()
 
 
+def _admin_recipients():
+    recipients = getattr(settings, 'ADMIN_EMAILS', None)
+    if isinstance(recipients, str):
+        return [email.strip() for email in recipients.split(',') if email.strip()]
+    if recipients:
+        return [email.strip() for email in recipients if email and email.strip()]
+
+    admin_email = getattr(settings, 'ADMIN_EMAIL', None)
+    return [admin_email.strip()] if admin_email and admin_email.strip() else []
+
+
 def _record(obj, message_type, to, subject, body_text, body_html, status, error_message=''):
     try:
         Message.objects.create(
@@ -120,14 +131,13 @@ def send_hire_confirmation(booking):
 
 
 def send_admin_new_hire(booking):
-    admin_email = getattr(settings, 'ADMIN_EMAIL', None)
-    if not admin_email:
+    recipients = _admin_recipients()
+    if not recipients:
         logger.warning(
             "ADMIN_EMAIL not configured — skipping admin new hire notification for %s",
             booking.booking_reference,
         )
         return
-    to = admin_email
     subject = f"New hire booking — {booking.booking_reference}"
     text_body = (
         f"New hire booking: {booking.booking_reference}\n"
@@ -144,12 +154,13 @@ def send_admin_new_hire(booking):
     )
     context = {'booking': booking}
     html_body = render_to_string('notifications/emails/hire_admin_new_booking.html', context)
-    try:
-        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
-        _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'sent')
-    except Exception as e:
-        logger.error("Failed to send admin new hire notification for booking %s: %s", booking.booking_reference, e)
-        _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'failed', str(e))
+    for to in recipients:
+        try:
+            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'sent')
+        except Exception as e:
+            logger.error("Failed to send admin new hire notification for booking %s to %s: %s", booking.booking_reference, to, e)
+            _record(booking, 'admin_new_hire', to, subject, text_body, html_body, 'failed', str(e))
 
 
 def send_service_booking_confirmation(booking_data):
@@ -180,16 +191,53 @@ def send_service_booking_confirmation(booking_data):
         logger.error("Failed to send service booking confirmation to %s: %s", to, e)
 
 
+def send_admin_service_booking(booking_data, booking_log=None):
+    recipients = _admin_recipients()
+    customer_name = booking_data.get('name') or f"{booking_data.get('first_name', '')} {booking_data.get('last_name', '')}".strip()
+    registration = booking_data.get('registration_number', '')
+
+    if not recipients:
+        logger.warning(
+            "No admin emails configured - skipping admin service booking notification for %s",
+            registration or customer_name or "unknown booking",
+        )
+        return
+
+    make = booking_data.get('make', '')
+    model = booking_data.get('model', '')
+    subject = f"New service booking request - {make} {model}".strip()
+    text_body = (
+        f"New service booking request\n"
+        f"Customer: {customer_name}\n"
+        f"Phone: {booking_data.get('phone', '')}\n"
+        f"Email: {booking_data.get('email', '')}\n\n"
+        f"Motorcycle: {make} {model}\n"
+        f"Rego: {registration}\n"
+        f"Services: {', '.join(booking_data.get('job_type_names', []))}\n"
+        f"Requested drop-off: {booking_data.get('drop_off_time', '')}\n"
+        f"Courtesy vehicle: {booking_data.get('courtesy_vehicle_requested', '')}\n\n"
+        f"Note:\n{booking_data.get('note', '')}"
+    )
+    context = {'booking_data': booking_data, 'customer_name': customer_name}
+    html_body = render_to_string('notifications/emails/admin_service_booking.html', context)
+
+    for to in recipients:
+        try:
+            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            _record(booking_log, 'admin_service_booking', to, subject, text_body, html_body, 'sent')
+        except Exception as e:
+            logger.error("Failed to send admin service booking notification to %s: %s", to, e)
+            _record(booking_log, 'admin_service_booking', to, subject, text_body, html_body, 'failed', str(e))
+
+
 def send_admin_new_order(order):
-    admin_email = getattr(settings, 'ADMIN_EMAIL', None)
-    if not admin_email:
+    recipients = _admin_recipients()
+    if not recipients:
         logger.warning(
             "ADMIN_EMAIL not configured — skipping admin new order notification for %s",
             order.order_reference,
         )
         return
-
-    to = admin_email
 
     if order.payment_type == 'deposit':
         subject = f"New deposit — {order.order_reference}"
@@ -221,9 +269,10 @@ def send_admin_new_order(order):
     context = {'order': order}
     html_body = render_to_string('notifications/emails/admin_new_order.html', context)
 
-    try:
-        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
-        _record(order, 'admin_new_order', to, subject, text_body, html_body, 'sent')
-    except Exception as e:
-        logger.error("Failed to send admin new order notification for order %s: %s", order.order_reference, e)
-        _record(order, 'admin_new_order', to, subject, text_body, html_body, 'failed', str(e))
+    for to in recipients:
+        try:
+            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            _record(order, 'admin_new_order', to, subject, text_body, html_body, 'sent')
+        except Exception as e:
+            logger.error("Failed to send admin new order notification for order %s to %s: %s", order.order_reference, to, e)
+            _record(order, 'admin_new_order', to, subject, text_body, html_body, 'failed', str(e))

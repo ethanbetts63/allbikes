@@ -76,7 +76,8 @@ Follow these instructions to set up a local development environment.
     MAILGUN_API_KEY=your_mailgun_api_key
     MAILGUN_DOMAIN=your_mailgun_domain
     DEFAULT_FROM_EMAIL=noreply@yourdomain.com.au
-    ADMIN_EMAIL=admin@yourdomain.com.au
+    ADMIN_EMAILS=admin@yourdomain.com.au,owner@yourdomain.com.au
+    ADMIN_EMAIL=admin@yourdomain.com.au  # legacy fallback if ADMIN_EMAILS is not set
 
     # MechanicDesk
     MECHANICDESK_BOOKING_TOKEN=your_mechanicdesk_api_token
@@ -156,8 +157,8 @@ The script performs the following actions:
 *   `python manage.py update --archive`: Loads the database from the most recent archive (a destructive operation).
 
 **`notifications`**
-*   `python manage.py send_test_email`: Sends a test email via Mailgun to `ADMIN_EMAIL`. Use `--template customer_confirmation` or `--template admin_new_order` to preview real notification templates with dummy order data. Use `--to` to override the recipient.
-*   `python manage.py send_admin_reminders`: Sends a reminder email to `ADMIN_EMAIL` for every order in `paid` status that has not yet been dispatched. Intended to be run on a schedule (e.g. weekly cron).
+*   `python manage.py send_test_email`: Sends a test email via Mailgun to configured admin emails. Use `--template customer_confirmation` or `--template admin_new_order` to preview real notification templates with dummy order data. Use `--to` to override the recipient.
+*   `python manage.py send_admin_reminders`: Sends a reminder email to configured admin emails for every order in `paid` status that has not yet been dispatched. Intended to be run on a schedule (e.g. weekly cron).
 
 ## External Integrations
 

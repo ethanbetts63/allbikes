@@ -1,9 +1,8 @@
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from notifications.utils.email import _send_mailgun, _record
+from notifications.utils.email import _admin_recipients, _send_mailgun, _record
 from payments.models import Order
 
 
@@ -23,9 +22,9 @@ class Command(BaseCommand):
             self.stdout.write("Not Monday — skipping. Use --force to override.")
             return
 
-        admin_email = getattr(settings, 'ADMIN_EMAIL', None)
-        if not admin_email:
-            self.stderr.write(self.style.ERROR("ADMIN_EMAIL is not configured."))
+        recipients = _admin_recipients()
+        if not recipients:
+            self.stderr.write(self.style.ERROR("No admin emails are configured."))
             return
 
         paid_orders = list(
@@ -58,10 +57,19 @@ class Command(BaseCommand):
             )
         text_body = "\n".join(text_lines)
 
-        try:
-            _send_mailgun(to=admin_email, subject=subject, html_body=html_body, text_body=text_body)
-            _record(None, 'admin_weekly_summary', admin_email, subject, text_body, html_body, 'sent')
-            self.stdout.write(self.style.SUCCESS(f"Sent weekly summary to {admin_email}."))
-        except Exception as e:
-            self.stderr.write(self.style.ERROR(f"Failed to send: {e}"))
-            _record(None, 'admin_weekly_summary', admin_email, subject, text_body, html_body, 'failed', str(e))
+        sent_count = 0
+        failed_count = 0
+        for to in recipients:
+            try:
+                _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+                _record(None, 'admin_weekly_summary', to, subject, text_body, html_body, 'sent')
+                sent_count += 1
+            except Exception as e:
+                self.stderr.write(self.style.ERROR(f"Failed to send to {to}: {e}"))
+                _record(None, 'admin_weekly_summary', to, subject, text_body, html_body, 'failed', str(e))
+                failed_count += 1
+
+        if sent_count:
+            self.stdout.write(self.style.SUCCESS(f"Sent weekly summary to {sent_count} admin email(s)."))
+        if failed_count:
+            self.stderr.write(self.style.ERROR(f"Failed to send weekly summary to {failed_count} admin email(s)."))

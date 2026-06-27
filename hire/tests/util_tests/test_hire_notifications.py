@@ -103,9 +103,18 @@ class TestSendAdminNewHire:
         THEN the email is sent to ADMIN_EMAIL.
         """
         settings.ADMIN_EMAIL = 'admin@example.com'
+        settings.ADMIN_EMAILS = ['admin@example.com']
         booking = HireBookingFactory()
         send_admin_new_hire(booking)
         assert 'admin@example.com' in mock_post.call_args[1]['data']['to']
+
+    def test_sends_to_all_admin_emails(self, mock_post, settings):
+        settings.ADMIN_EMAILS = ['admin1@example.com', 'admin2@example.com']
+        booking = HireBookingFactory()
+        send_admin_new_hire(booking)
+        recipients = [call.kwargs['data']['to'][0] for call in mock_post.call_args_list]
+        assert recipients == ['admin1@example.com', 'admin2@example.com']
+        assert _messages_for(booking, message_type='admin_new_hire').count() == 2
 
     def test_subject_contains_booking_reference(self, mock_post, settings):
         """
@@ -114,6 +123,7 @@ class TestSendAdminNewHire:
         THEN the email subject contains the booking reference.
         """
         settings.ADMIN_EMAIL = 'admin@example.com'
+        settings.ADMIN_EMAILS = ['admin@example.com']
         booking = HireBookingFactory()
         send_admin_new_hire(booking)
         assert booking.booking_reference in mock_post.call_args[1]['data']['subject']
@@ -125,6 +135,7 @@ class TestSendAdminNewHire:
         THEN a Message record with status='sent' is saved.
         """
         settings.ADMIN_EMAIL = 'admin@example.com'
+        settings.ADMIN_EMAILS = ['admin@example.com']
         booking = HireBookingFactory()
         send_admin_new_hire(booking)
         msg = _messages_for(booking, message_type='admin_new_hire').get()
@@ -139,6 +150,7 @@ class TestSendAdminNewHire:
         THEN no email is sent and no Message record is created.
         """
         settings.ADMIN_EMAIL = None
+        settings.ADMIN_EMAILS = []
         booking = HireBookingFactory()
         send_admin_new_hire(booking)
         mock_post.assert_not_called()
@@ -151,6 +163,7 @@ class TestSendAdminNewHire:
         THEN a Message record with status='failed' is saved.
         """
         settings.ADMIN_EMAIL = 'admin@example.com'
+        settings.ADMIN_EMAILS = ['admin@example.com']
         mocker.patch('notifications.utils.email.requests.post', side_effect=Exception('network error'))
         booking = HireBookingFactory()
         send_admin_new_hire(booking)

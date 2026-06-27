@@ -1,0 +1,54 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}New service booking request{% endblock %}
+
+{% block preheader %}New service booking request from {{ customer_name }} for {{ booking_data.make }} {{ booking_data.model }}.{% endblock %}
+
+{% block content %}
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 24px 0; line-height: 1.1;">New Service Booking</h1>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Customer</p>
+            <p style="font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ customer_name }}</p>
+            <p style="margin: 0 0 4px 0;"><a href="tel:{{ booking_data.phone }}" style="color: #1c1917; font-weight: bold;">{{ booking_data.phone }}</a></p>
+            <p style="margin: 0;"><a href="mailto:{{ booking_data.email }}" style="color: #44403c;">{{ booking_data.email }}</a></p>
+        </td>
+    </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Motorcycle</p>
+            <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ booking_data.make }} {{ booking_data.model }}</p>
+            <p style="margin: 0 0 4px 0;">Rego: {{ booking_data.registration_number }}</p>
+            {% if booking_data.year %}<p style="margin: 0 0 4px 0;">Year: {{ booking_data.year }}</p>{% endif %}
+            {% if booking_data.color %}<p style="margin: 0;">Colour: {{ booking_data.color }}</p>{% endif %}
+        </td>
+    </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Booking</p>
+            <p style="margin: 0 0 4px 0;">Requested drop-off: <strong style="color: #1c1917;">{{ booking_data.drop_off_time }}</strong></p>
+            <p style="margin: 0 0 4px 0;">Services: {{ booking_data.job_type_names|join:", " }}</p>
+            <p style="margin: 0;">Courtesy vehicle requested: {{ booking_data.courtesy_vehicle_requested }}</p>
+        </td>
+    </tr>
+</table>
+
+{% if booking_data.note %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 0;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Note</p>
+            <p style="margin: 0; white-space: pre-line;">{{ booking_data.note }}</p>
+        </td>
+    </tr>
+</table>
+{% endif %}
+{% endblock %}

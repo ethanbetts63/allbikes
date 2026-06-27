@@ -20,7 +20,16 @@ STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 MAILGUN_API_KEY = os.environ.get("MAILGUN_API_KEY")
 MAILGUN_DOMAIN = os.environ.get("MAILGUN_DOMAIN")
 MAILGUN_WEBHOOK_SIGNING_KEY = os.environ.get("MAILGUN_WEBHOOK_SIGNING_KEY")
+
+
+def _email_list(value):
+    if not value:
+        return []
+    return [email.strip() for email in value.split(",") if email.strip()]
+
+
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
+ADMIN_EMAILS = _email_list(os.environ.get("ADMIN_EMAILS")) or _email_list(ADMIN_EMAIL)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@scootershop.com.au")
 
 SECRET_KEY = os.environ.get("SECRET_KEY")

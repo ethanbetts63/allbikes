@@ -12,7 +12,8 @@ All in `.env` in the project root, read in `settings.py`:
 |---|---|
 | `MAILGUN_API_KEY` | Mailgun API key |
 | `MAILGUN_DOMAIN` | Mailgun sending domain (sandbox or verified) |
-| `ADMIN_EMAIL` | Where admin notifications are sent |
+| `ADMIN_EMAILS` | Comma-separated admin notification recipients |
+| `ADMIN_EMAIL` | Legacy single admin notification recipient, used when `ADMIN_EMAILS` is not set |
 | `DEFAULT_FROM_EMAIL` | The `from` address on all outgoing emails (defaults to `noreply@scootershop.com.au`) |
 
 ---
@@ -26,7 +27,9 @@ Three notification types, two delivery timings:
 | Notification | Recipient | Trigger |
 |---|---|---|
 | Customer order confirmation | `order.customer_email` | `payment_intent.succeeded` webhook |
-| Admin new order alert | `ADMIN_EMAIL` | `payment_intent.succeeded` webhook |
+| Admin new order alert | `ADMIN_EMAILS` | `payment_intent.succeeded` webhook |
+| Admin new hire alert | `ADMIN_EMAILS` | `payment_intent.succeeded` webhook |
+| Admin service booking alert | `ADMIN_EMAILS` | Successful MechanicDesk booking request |
 
 Both are called in `payments/utils/webhook_handlers.py` immediately **after** the database transaction commits — order is already `paid` before the emails go out.
 
@@ -34,7 +37,7 @@ Both are called in `payments/utils/webhook_handlers.py` immediately **after** th
 
 | Notification | Recipient | Trigger |
 |---|---|---|
-| Admin unfulfilled order reminder | `ADMIN_EMAIL` | `python manage.py send_admin_reminders` |
+| Admin unfulfilled order reminder | `ADMIN_EMAILS` | `python manage.py send_admin_reminders` |
 
 ---
 
@@ -75,7 +78,7 @@ Message.objects.filter(content_type=ct, object_id=order.pk)
 All functions live in `notifications/utils/email.py`. They share the same contract:
 
 - Never raise — exceptions from Mailgun are caught, logged, and recorded as a `failed` Message
-- If `ADMIN_EMAIL` is not set, admin-targeted functions log a warning and return without sending
+- If no admin emails are configured, admin-targeted functions log a warning and return without sending
 - Each successful send creates a `Message` record with `status='sent'` and `sent_at` populated
 - Each failed send creates a `Message` record with `status='failed'`
 - `_record()` is itself wrapped in a try/except — a DB failure writing the audit record won't surface to the caller
@@ -92,15 +95,19 @@ Context passed to template: the full `order` object.
 
 ### `send_admin_new_order(order)`
 
-Sends a new order alert to `ADMIN_EMAIL`. Called by the webhook handler immediately after `send_customer_confirmation`.
+Sends a new order alert to each configured admin email. Called by the webhook handler immediately after `send_customer_confirmation`.
 
 Branches on `order.payment_type`:
 - **`deposit`**: Subject "New deposit — {ref}". Shows motorcycle name + deposit amount. Customer phone is shown first (as a `tel:` link) since admin needs to call the customer to organise pickup.
 - **`full`**: Subject "New ScooterShop order — {ref}". Shows product, price, customer details, and delivery address.
 
+### `send_admin_service_booking(booking_data, booking_log=None)`
+
+Sends a new service booking alert to each configured admin email. Called after a successful MechanicDesk booking request and after the `BookingRequestLog` row is created.
+
 ### `send_admin_reminder(order)`
 
-Sends an unfulfilled order reminder to `ADMIN_EMAIL`. Called by the `send_admin_reminders` management command.
+Sends an unfulfilled order reminder to each configured admin email. Called by the `send_admin_reminders` management command.
 
 ---
 

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .mechanics_desk_service import MechanicsDeskService
 from ..serializers import BookingSerializer, ServiceSettingsSerializer
 from ..models import ServiceSettings, BookingRequestLog, JobType
-from notifications.utils.email import send_service_booking_confirmation
+from notifications.utils.email import send_admin_service_booking, send_service_booking_confirmation
 
 class BookingViewSet(viewsets.ViewSet):
     """
@@ -64,9 +64,10 @@ class BookingViewSet(viewsets.ViewSet):
 
             log_payload['status'] = 'Success'
             log_payload['response_status_code'] = 200
-            BookingRequestLog.objects.create(**log_payload)
+            booking_log = BookingRequestLog.objects.create(**log_payload)
 
             send_service_booking_confirmation(validated_data)
+            send_admin_service_booking(validated_data, booking_log)
 
             return Response(response_data, status=status.HTTP_201_CREATED)
 

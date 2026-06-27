@@ -21,6 +21,9 @@ const TYPE_LABELS: Record<string, string> = {
   customer_confirmation: 'Customer Confirmation',
   admin_new_order:       'Admin New Order',
   admin_reminder:        'Admin Reminder',
+  hire_confirmation:     'Hire Confirmation',
+  admin_new_hire:        'Admin New Hire',
+  admin_service_booking: 'Admin Service Booking',
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => (

@@ -11,8 +11,16 @@ def api_client():
 
 @pytest.mark.django_db
 class TestBookingViewSet:
+    @patch('service.views.booking_viewset.send_admin_service_booking')
+    @patch('service.views.booking_viewset.send_service_booking_confirmation')
     @patch('service.views.booking_viewset.MechanicsDeskService')
-    def test_create_booking_success(self, mock_mechanics_desk_service, api_client):
+    def test_create_booking_success(
+        self,
+        mock_mechanics_desk_service,
+        mock_send_service_booking_confirmation,
+        mock_send_admin_service_booking,
+        api_client,
+    ):
         """
         GIVEN valid booking data
         WHEN a POST request is made to the create booking endpoint
@@ -34,9 +42,19 @@ class TestBookingViewSet:
 
         assert response.status_code == status.HTTP_201_CREATED
         mock_service_instance.create_booking.assert_called_once()
+        mock_send_service_booking_confirmation.assert_called_once()
+        mock_send_admin_service_booking.assert_called_once()
 
+    @patch('service.views.booking_viewset.send_admin_service_booking')
+    @patch('service.views.booking_viewset.send_service_booking_confirmation')
     @patch('service.views.booking_viewset.MechanicsDeskService')
-    def test_create_booking_failure(self, mock_mechanics_desk_service, api_client):
+    def test_create_booking_failure(
+        self,
+        mock_mechanics_desk_service,
+        mock_send_service_booking_confirmation,
+        mock_send_admin_service_booking,
+        api_client,
+    ):
         """
         GIVEN the external service returns an error
         WHEN a POST request is made to create a booking
@@ -57,6 +75,8 @@ class TestBookingViewSet:
 
         assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
         assert 'error' in response.data
+        mock_send_service_booking_confirmation.assert_not_called()
+        mock_send_admin_service_booking.assert_not_called()
 
     def test_returns_400_when_terms_not_accepted(self, api_client):
         """
