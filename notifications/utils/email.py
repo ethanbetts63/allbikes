@@ -38,7 +38,20 @@ def _admin_recipients():
 
 def _record(obj, message_type, to, subject, body_text, body_html, status, error_message=''):
     try:
-        Message.objects.create(
+        print(
+            f"[notifications] recording message type={message_type} to={to} status={status} "
+            f"object={obj.__class__.__name__ if obj else 'None'}:{getattr(obj, 'pk', None)}",
+            flush=True,
+        )
+        logger.info(
+            "Recording message type=%s to=%s status=%s object=%s:%s",
+            message_type,
+            to,
+            status,
+            obj.__class__.__name__ if obj else 'None',
+            getattr(obj, 'pk', None),
+        )
+        message = Message.objects.create(
             content_object=obj,
             message_type=message_type,
             channel='email',
@@ -50,7 +63,10 @@ def _record(obj, message_type, to, subject, body_text, body_html, status, error_
             error_message=error_message,
             sent_at=timezone.now() if status == 'sent' else None,
         )
+        print(f"[notifications] recorded message id={message.pk}", flush=True)
+        logger.info("Recorded message id=%s", message.pk)
     except Exception as e:
+        print(f"[notifications] failed to record message type={message_type} to={to}: {e}", flush=True)
         logger.error("Failed to record sent message (%s): %s", message_type, e)
 
 
@@ -166,6 +182,8 @@ def send_admin_new_hire(booking):
 def send_service_booking_confirmation(booking_data, booking_log=None):
     to = booking_data.get('email')
     if not to:
+        print("[notifications] service customer email skipped: missing recipient", flush=True)
+        logger.warning("Service booking customer email skipped: missing recipient")
         return
     first_name = booking_data.get('first_name', '')
     make = booking_data.get('make', '')
@@ -185,10 +203,23 @@ def send_service_booking_confirmation(booking_data, booking_log=None):
     context = {'booking_data': booking_data}
     html_body = render_to_string('notifications/emails/service_booking_confirmation.html', context)
     try:
+        print(
+            f"[notifications] sending service customer email to={to} "
+            f"booking_log_id={getattr(booking_log, 'pk', None)} subject={subject}",
+            flush=True,
+        )
+        logger.info(
+            "Sending service customer email to=%s booking_log_id=%s subject=%s",
+            to,
+            getattr(booking_log, 'pk', None),
+            subject,
+        )
         _send_mailgun(to, subject, html_body, text_body)
+        print(f"[notifications] mailgun accepted service customer email to={to}", flush=True)
         _record(booking_log, 'service_booking_confirmation', to, subject, text_body, html_body, 'sent')
         logger.info("Service booking confirmation sent to %s", to)
     except Exception as e:
+        print(f"[notifications] service customer email failed to={to}: {e}", flush=True)
         logger.error("Failed to send service booking confirmation to %s: %s", to, e)
         _record(booking_log, 'service_booking_confirmation', to, subject, text_body, html_body, 'failed', str(e))
 
@@ -199,6 +230,7 @@ def send_admin_service_booking(booking_data, booking_log=None):
     registration = booking_data.get('registration_number', '')
 
     if not recipients:
+        print("[notifications] admin service email skipped: no admin recipients", flush=True)
         logger.warning(
             "No admin emails configured - skipping admin service booking notification for %s",
             registration or customer_name or "unknown booking",
@@ -225,9 +257,22 @@ def send_admin_service_booking(booking_data, booking_log=None):
 
     for to in recipients:
         try:
+            print(
+                f"[notifications] sending admin service email to={to} "
+                f"booking_log_id={getattr(booking_log, 'pk', None)} subject={subject}",
+                flush=True,
+            )
+            logger.info(
+                "Sending admin service email to=%s booking_log_id=%s subject=%s",
+                to,
+                getattr(booking_log, 'pk', None),
+                subject,
+            )
             _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            print(f"[notifications] mailgun accepted admin service email to={to}", flush=True)
             _record(booking_log, 'admin_service_booking', to, subject, text_body, html_body, 'sent')
         except Exception as e:
+            print(f"[notifications] admin service email failed to={to}: {e}", flush=True)
             logger.error("Failed to send admin service booking notification to %s: %s", to, e)
             _record(booking_log, 'admin_service_booking', to, subject, text_body, html_body, 'failed', str(e))
 
