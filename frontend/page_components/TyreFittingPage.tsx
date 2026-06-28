@@ -79,7 +79,18 @@ const TyreFittingPage = () => {
         <div>
             <StructuredDataScript structuredData={structuredData} />
 
-            <ServiceCTAV2 />
+            <ServiceCTAV2
+                headingLines={['Motorcycle', 'Tyre Fitting', 'Perth.']}
+                subtitle="Motorcycle and motorbike tyre fitting, scooter and moped tyre change, puncture repair, and flat tire repair — all done at our Dianella workshop. Supply and fit, or bring your own tyres."
+                checkItems={[
+                    'Motorcycle & motorbike tyre fitting — supply and fit, or fit-only',
+                    'Scooter & moped tyre fitting near Perth',
+                    'Tyre change & wheel balancing included as standard',
+                    'Puncture repair & flat tire (tyre) repair',
+                    'Motorcycle tyre replacement — all makes & sizes',
+                    'Scooter tyre replacement — Vespa, Piaggio & more',
+                ]}
+            />
 
             {/* Tyre Services */}
             <div className="bg-background pt-8 pb-16">
