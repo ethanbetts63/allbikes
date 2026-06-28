@@ -48,8 +48,8 @@ const tyreServices = [
   },
   {
     Icon: Wrench,
-    title: 'Puncture Repair & Flat Tyre Repair',
-    description: 'Flat tyre repair and puncture repair carried out in our Dianella workshop. If you can\'t ride the bike in, we can arrange pickup through our movers contact.',
+    title: 'Puncture Repair & Flat Tire Repair',
+    description: 'Flat tire repair and puncture repair carried out in our Dianella workshop. If you can\'t ride the bike in, we can arrange pickup through our movers contact.',
   },
   {
     Icon: CheckCircle2,
@@ -81,12 +81,12 @@ const TyreFittingPage = () => {
 
             <ServiceCTAV2
                 headingLines={['Motorcycle', 'Tyre Fitting', 'Perth.']}
-                subtitle="Motorcycle and motorbike tyre fitting, scooter and moped tyre change, puncture repair, and flat tire repair — all done at our Dianella workshop. Supply and fit, or bring your own tyres."
+                subtitle="Motorcycle and moped tyre fitting and puncture repair, done at our Dianella workshop. Supply and fit, or bring your own tyres."
                 checkItems={[
-                    'Motorcycle & motorbike tyre fitting — supply and fit, or fit-only',
+                    'Motorcycle/motorbike tire fitting — supply and fit, or fit-only',
                     'Scooter & moped tyre fitting near Perth',
-                    'Tyre change & wheel balancing included as standard',
-                    'Puncture repair & flat tire (tyre) repair',
+                    'Tire change & wheel balancing',
+                    'Puncture repair & flat tire repair',
                     'Motorcycle tyre replacement — all makes & sizes',
                     'Scooter tyre replacement — Vespa, Piaggio & more',
                 ]}
@@ -108,7 +108,7 @@ const TyreFittingPage = () => {
                         ))}
                     </div>
                     <p className="mt-8 text-center text-[var(--text-light-secondary)] text-lg">
-                        Ready to organise a tyre change, puncture repair, or wheel balancing?{' '}
+                        Ready to organise a tire change, puncture repair, or wheel balancing?{' '}
                         <Link href="/service-booking" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
                             Book online
                         </Link>
@@ -129,7 +129,7 @@ const TyreFittingPage = () => {
             {/* Motorcycle Movers */}
             <MotorcycleMovers />
 
-            <FaqSection title="Tyre Fitting FAQ" faqData={TyreFittingFaqs} />
+            <FaqSection title="Motorcycle Tyre Fitting FAQ" faqData={TyreFittingFaqs} />
 
             <FloatingActionButton />
         </div>
