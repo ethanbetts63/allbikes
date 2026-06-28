@@ -19,7 +19,7 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/scooter-service`, lastModified: '2026-05-23' },
   { url: `${SITE_URL}/motorcycle-service`, lastModified: '2026-05-23' },
   { url: `${SITE_URL}/service-booking`, lastModified: '2026-05-22' },
-  { url: `${SITE_URL}/tyre-fitting`, lastModified: '2026-05-22' },
+  { url: `${SITE_URL}/tyre-fitting`, lastModified: '2026-06-28' },
   { url: `${SITE_URL}/contact`, lastModified: '2026-05-22' },
 ];
 
