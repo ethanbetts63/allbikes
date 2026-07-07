@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from data_management.tests.factories.user_factory import UserFactory
+from pipeline.tests.factories.user_factory import UserFactory
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
 
 

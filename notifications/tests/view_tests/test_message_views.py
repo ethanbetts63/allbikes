@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from notifications.tests.factories.notification_factory import MessageFactory
-from data_management.tests.factories.user_factory import UserFactory
+from pipeline.tests.factories.user_factory import UserFactory
 
 
 @pytest.fixture

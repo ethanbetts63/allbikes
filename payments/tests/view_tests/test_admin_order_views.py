@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from payments.tests.factories.order_factory import OrderFactory
-from data_management.tests.factories.user_factory import UserFactory
+from pipeline.tests.factories.user_factory import UserFactory
 
 
 @pytest.fixture

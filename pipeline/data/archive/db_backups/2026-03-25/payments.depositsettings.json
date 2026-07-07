@@ -1,0 +1,10 @@
+[
+{
+  "model": "payments.depositsettings",
+  "pk": 1,
+  "fields": {
+    "deposit_amount": "550.00",
+    "updated_at": "2026-03-16T10:13:28.803Z"
+  }
+}
+]

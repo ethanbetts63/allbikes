@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponseGone
-from data_management.views.token_views import (
+from pipeline.views.token_views import (
     CookieTokenObtainPairView,
     CookieTokenRefreshView,
     CookieLogoutView,

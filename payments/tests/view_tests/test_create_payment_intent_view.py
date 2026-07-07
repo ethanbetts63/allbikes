@@ -8,7 +8,7 @@ from payments.models import Payment
 from payments.tests.factories.order_factory import OrderFactory
 from payments.tests.factories.payment_factory import PaymentFactory
 from product.tests.factories.product_factory import ProductFactory
-from data_management.tests.factories.user_factory import UserFactory
+from pipeline.tests.factories.user_factory import UserFactory
 
 
 @pytest.fixture
