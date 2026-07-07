@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Case, When, Value, IntegerField
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -90,8 +91,17 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
             else:
                 queryset = queryset.order_by('-date_posted')
         else:
-            queryset = queryset.order_by('-popular', '-date_posted')
-            
+            # Default sort: for-sale bikes first, sold bikes last, everything
+            # else in between; within each group, popular then newest.
+            queryset = queryset.annotate(
+                status_rank=Case(
+                    When(status='for_sale', then=Value(0)),
+                    When(status='sold', then=Value(2)),
+                    default=Value(1),
+                    output_field=IntegerField(),
+                )
+            ).order_by('status_rank', '-popular', '-date_posted')
+
         return queryset
 
     def get_permissions(self):
