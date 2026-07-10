@@ -8,8 +8,47 @@ import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
 import FeaturedBikes from '@/components/FeaturedBikesLazy';
+import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 import type { Bike } from '@/types/Bike';
+
+const scooterReviews: Review[] = [
+    {
+        pk: 301,
+        author_name: 'Teagan Hersh',
+        text: 'Frank has been super helpful on a few occasions. Has given me a hand with my older scooter as someone who is a bit mechanically challenged, and all has been done it for a fair price. Will definitely be coming back for regular services and any other issues I might experience.',
+        date: '',
+        display_order: 0,
+    },
+    {
+        pk: 302,
+        author_name: 'Amy Johnson',
+        text: "Couldn't be more impressed with this place. So much knowledge and got all the help and advise I needed. Thank you again! Will defo be back with anything scooter related help I need.",
+        date: '',
+        display_order: 1,
+    },
+    {
+        pk: 303,
+        author_name: 'Riley Hay',
+        text: 'Was having some issues with my moped, knew the problem straight away, and fixed it for me within 2 minutes, no charge.',
+        date: '',
+        display_order: 2,
+    },
+    {
+        pk: 304,
+        author_name: 'Jason Byway',
+        text: 'Thanks for great customer service Dan and the team. Helped me arrange an instructor and a test ride while my scooter was ordered in. Fast and efficient service and very friendly team.',
+        date: '',
+        display_order: 3,
+    },
+    {
+        pk: 305,
+        author_name: 'A Forsco',
+        text: 'Great service and advice. Dan was excellent; knowledgable, friendly and efficient. Highly recommend.',
+        date: '',
+        display_order: 4,
+    },
+];
 
 const scooterCheckItems = [
     'Full scooter servicing & repairs',
@@ -95,6 +134,8 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
                 checkItems={scooterCheckItems}
                 subtitle="Scooter specialists with decades of experience keeping Perth riders on the road. Book your service online in minutes."
             />
+
+            <ReviewCarousel reviews={scooterReviews} />
 
             {/* Services */}
             <div className="bg-background pt-8 pb-16">

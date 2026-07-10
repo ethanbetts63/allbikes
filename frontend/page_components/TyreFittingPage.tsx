@@ -7,7 +7,46 @@ import { Button } from '@/components/ui/button';
 import { CircleDot, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
+import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
+
+const tyreReviews: Review[] = [
+  {
+    pk: 501,
+    author_name: 'Gilbert Flynn',
+    text: 'After picking up a nail I needed a new tyre; and I was assisted from beginning to end, including advice as to how to get the Vespa there without needing transport, to a prompt replacement, a convenient pick-up, and further advice on ongoing maintenance. An excellent experience and recommended - plus unlike many specialist scooter service centres, it is located close to the city.',
+    date: '',
+    display_order: 0,
+  },
+  {
+    pk: 502,
+    author_name: 'Tim Fraser',
+    text: "Frank is an excellent scooter technician, and I have a freshly sorted px200 to prove it!\n\nI came in needing new tyres and left with a seemingly unsolvable electrical problem solved. Actually, Frank found that there were three problems. Kinda five, really.\n\nWhat's more, he is a really top bloke.\n\nThank you Frank.",
+    date: '',
+    display_order: 1,
+  },
+  {
+    pk: 503,
+    author_name: 'Szy and Nina Lance',
+    text: 'We bought a scooter from here a few years ago, dropped it off with a service related issue. He was quick to fit me in, and had it running as good as the day we picked it up. Freshly serviced and very well priced for the work he had carried out.\nWell worth the travel time for us, especially after no-one local to me wanted to tackle it.',
+    date: '',
+    display_order: 2,
+  },
+  {
+    pk: 504,
+    author_name: 'Michael Ryan',
+    text: 'I recently had my Scooter serviced at the Scooter Shop. I was treated like a VIP from the time that I booked my scooter in to the time I was handed back the keys. The details of the service were explained to me in full. If you want someone you can trust to service your scooter, then take it to the Scooter Shop. You will not be disappointed.',
+    date: '',
+    display_order: 3,
+  },
+  {
+    pk: 505,
+    author_name: 'David Kew',
+    text: 'Friendly, helpful staff both on sales (Dan) and service (Chris). Always happy to help out.',
+    date: '',
+    display_order: 4,
+  },
+];
 
 const TyreFittingFaqs = [
   {
@@ -91,6 +130,8 @@ const TyreFittingPage = () => {
                     'Scooter tyre replacement — Vespa, Piaggio & more',
                 ]}
             />
+
+            <ReviewCarousel reviews={tyreReviews} />
 
             {/* Tyre Services */}
             <div className="bg-background pt-8 pb-16">

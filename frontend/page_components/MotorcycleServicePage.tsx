@@ -8,8 +8,47 @@ import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
 import FeaturedBikes from '@/components/FeaturedBikesLazy';
+import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 import type { Bike } from '@/types/Bike';
+
+const motorcycleReviews: Review[] = [
+    {
+        pk: 201,
+        author_name: 'AC6059',
+        text: "Chris and Franco are absolute legends for helping me out when I pulled in during their lunchtime for a bit of an issue with my motorcycle while around town. Despite not being one of their customers or one of their bikes, they dropped everything and did some work on my bike and got me going again. They did it all in the spirit of helping another biker, can't rate them high enough as great human beings. Keep it up boys",
+        date: '',
+        display_order: 0,
+    },
+    {
+        pk: 202,
+        author_name: 'Kevin Mahony',
+        text: 'I have been dealing with with Frank for 15 years his knowledge of scooters and motorcycles is unreal,he has looked after our family very well,runs a very good business and knows his craft.',
+        date: '',
+        display_order: 1,
+    },
+    {
+        pk: 203,
+        author_name: 'Rhys Knapton-Lonsdale',
+        text: "Frank knows his stuff, fixed my bike in under half an hour. Best service I've had",
+        date: '',
+        display_order: 2,
+    },
+    {
+        pk: 204,
+        author_name: 'Two Wheel Wreckers',
+        text: "Frank is a wealth of knowledge having worked in the industry for an age. Previously the best place in Freo, he's now worth the mission to Dianella.",
+        date: '',
+        display_order: 3,
+    },
+    {
+        pk: 205,
+        author_name: 'AJ Aristei',
+        text: 'A top rated motor scooter shop located in Freo.They sell new and second-hand scooters, mopeds and all sorts of accessories, including helmets.They even do servicing...so they cover your moped needs from A to Z!!The proprietor has been operating from his shop in Freo. for at least 30 years...so he certainly knows his business, and is very friendly and helpful!',
+        date: '',
+        display_order: 4,
+    },
+];
 
 const motorcycleCheckItems = [
     'Full motorcycle servicing & repairs',
@@ -94,6 +133,8 @@ const MotorcycleServicePage = ({ initialUsedMotorcycles }: MotorcycleServicePage
                 checkItems={motorcycleCheckItems}
                 subtitle="Experienced motorcycle mechanics who have been keeping Perth riders on the road for decades. Book your service online in minutes."
             />
+
+            <ReviewCarousel reviews={motorcycleReviews} />
 
             {/* Services */}
             <div className="bg-background pt-8 pb-16">
