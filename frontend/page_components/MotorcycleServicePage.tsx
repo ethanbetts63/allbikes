@@ -44,7 +44,7 @@ const motorcycleReviews: Review[] = [
     {
         pk: 205,
         author_name: 'AJ Aristei',
-        text: 'A top rated motor scooter shop located in Freo.They sell new and second-hand scooters, mopeds and all sorts of accessories, including helmets.They even do servicing...so they cover your moped needs from A to Z!!The proprietor has been operating from his shop in Freo. for at least 30 years...so he certainly knows his business, and is very friendly and helpful!',
+        text: 'A top rated motor scooter shop located in Dianella. They sell new and second-hand scooters, mopeds and all sorts of accessories, including helmets. They even do servicing...so they cover your moped needs from A to Z!! The proprietor has been operating from his shop in Freo. for at least 30 years...so he certainly knows his business, and is very friendly and helpful!',
         date: '',
         display_order: 4,
     },
