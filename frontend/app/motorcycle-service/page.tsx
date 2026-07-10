@@ -5,7 +5,7 @@ import type { Bike } from '@/types/Bike';
 
 export const metadata = buildMetadata({
   title: 'Motorcycle Service & Repairs Perth | Dianella Workshop',
-  description: 'Motorcycle servicing, repairs, and tyre fitting in Perth. Honda, Yamaha, Kawasaki, Suzuki, Ducati, and all major brands. Book online.',
+  description: '(08) 9433 4613. Motorcycle servicing, repairs, and tyre fitting in Perth. Honda, Yamaha, Kawasaki, Suzuki, Ducati, and all major brands. Book online.',
   canonicalPath: '/motorcycle-service',
 });
 

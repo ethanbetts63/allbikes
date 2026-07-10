@@ -5,7 +5,7 @@ import type { Bike } from '@/types/Bike';
 
 export const metadata = buildMetadata({
   title: 'Scooter Repairs & Servicing Perth | Dianella Workshop',
-  description: 'Scooter servicing, repairs, and tyre fitting in Perth. Vespa, Piaggio, Aprilia, Honda, Yamaha, and all major brands. Book online.',
+  description: '(08) 9433 4613. Scooter servicing, repairs, and tyre fitting in Perth. Vespa, Piaggio, Aprilia, Honda, Yamaha, and all major brands. Book online.',
   canonicalPath: '/scooter-service',
 });
 

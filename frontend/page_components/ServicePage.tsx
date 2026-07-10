@@ -7,8 +7,53 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
-import ReviewCarousel from '@/components/ReviewCarousel';
+import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
+
+const serviceReviews: Review[] = [
+  {
+    pk: 101,
+    author_name: 'Teagan Hersh',
+    text: 'Frank has been super helpful on a few occasions. Has given me a hand with my older scooter as someone who is a bit mechanically challenged, and all has been done it for a fair price. Will definitely be coming back for regular services and any other issues I might experience.',
+    date: '',
+    display_order: 0,
+  },
+  {
+    pk: 102,
+    author_name: 'Sam',
+    text: 'Frank is an absolute perfectionist!\nJust chatting with Frank about scooters especially old school 2 strokes you can see how passionate he is about his work.\nI couldnt take my Bee Wee away until I had properly riden her and Frank had gone over her again and again😂.\nAt the Scooter Shop they care about reputation.\nCheers Frank, another happy customer😊',
+    date: '',
+    display_order: 1,
+  },
+  {
+    pk: 103,
+    author_name: 'Trevor John Whitton',
+    text: "Frank always has a solution to any scooter probs and he goes out of his way to help out.\nHe does the best services and he shares his rather vast knowledge of scooters and takes his time to explain the why and what he has done on your motor.\nFriendly and great service. He's a keeper! Well for scootering anyway!\nMost generous with his time a rarity these days.",
+    date: '',
+    display_order: 2,
+  },
+  {
+    pk: 104,
+    author_name: 'Szy and Nina Lance',
+    text: 'We bought a scooter from here a few years ago, dropped it off with a service related issue. He was quick to fit me in, and had it running as good as the day we picked it up. Freshly serviced and very well priced for the work he had carried out.\nWell worth the travel time for us, especially after no-one local to me wanted to tackle it.',
+    date: '',
+    display_order: 3,
+  },
+  {
+    pk: 105,
+    author_name: 'Gilbert Flynn',
+    text: 'After picking up a nail I needed a new tyre; and I was assisted from beginning to end, including advice as to how to get the Vespa there without needing transport, to a prompt replacement, a convenient pick-up, and further advice on ongoing maintenance. An excellent experience and recommended - plus unlike many specialist scooter service centres, it is located close to the city.',
+    date: '',
+    display_order: 4,
+  },
+  {
+    pk: 106,
+    author_name: 'AC6059',
+    text: "Chris and Franco are absolute legends for helping me out when I pulled in during their lunchtime for a bit of an issue with my motorcycle while around town. Despite not being one of their customers or one of their bikes, they dropped everything and did some work on my bike and got me going again. They did it all in the spirit of helping another biker, can't rate them high enough as great human beings. Keep it up boys",
+    date: '',
+    display_order: 5,
+  },
+];
 
 const ServiceFaqs = [
   {
@@ -81,7 +126,7 @@ const ServicePage = () => {
 
             <ServiceCTAV2 subtitle="Expert scooter repairs and servicing in Perth. Our experienced mechanics have been keeping local riders on the road for decades — book your service online in minutes." />
 
-            <ReviewCarousel />
+            <ReviewCarousel reviews={serviceReviews} />
 
             {/* Services */}
             <div className="bg-background pt-8 pb-16">

@@ -2,7 +2,7 @@ import { buildMetadata } from '@/lib/seo';
 
 export const metadata = buildMetadata({
   title: 'Motorcycle & Scooter Mechanics Perth | Service & Repairs',
-  description: 'Fast online booking for Motorcycle & Scooter servicing, repairs, & tyre fitting. Vespa, Piaggio & all major brands. 30+ years experience. Dianella Workshop.',
+  description: '(08) 9433 4613. Fast online booking for Motorcycle & Scooter servicing, repairs, & tyre fitting. Vespa, Piaggio & all major brands. 30+ years experience. Dianella Workshop.',
   canonicalPath: '/service',
 });
 
