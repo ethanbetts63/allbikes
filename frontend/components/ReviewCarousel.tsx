@@ -85,8 +85,7 @@ const reviewCarouselStyle = `
     will-change: transform;
   }
 
-  .review-carousel:hover .review-carousel-track,
-  .review-carousel:focus-within .review-carousel-track {
+  .review-carousel:hover .review-carousel-track {
     animation-play-state: paused;
   }
 `;
