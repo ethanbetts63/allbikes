@@ -24,7 +24,7 @@ const ServiceBookingHero = ({
 }: ServiceBookingHeroProps) => {
     return (
         <section id="book" className="bg-[var(--bg-dark-primary)] pt-12 pb-0 lg:py-20 lg:px-4 scroll-mt-20">
-            <div className="container mx-auto">
+            <div className="max-w-none lg:container lg:mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
 
                     {/* Left — bold typographic block */}

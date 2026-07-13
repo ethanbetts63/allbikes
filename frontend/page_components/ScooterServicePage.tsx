@@ -2,7 +2,6 @@ import Link from 'next/link';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
-import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceBookingHero from '@/components/ServiceBookingHero';
@@ -202,8 +201,6 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
             )}
 
             <FaqSection title="Scooter Servicing FAQ" faqData={scooterFaqs} />
-
-            <FloatingActionButton href="/service#book" />
         </div>
     );
 };

@@ -2,7 +2,6 @@ import Link from 'next/link';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import MotorcycleMovers from "@/components/MotorcycleMovers";
 import { FaqSection } from "@/components/FaqSection";
-import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Button } from '@/components/ui/button';
 import { CircleDot, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
 import ServiceBookingHero from '@/components/ServiceBookingHero';
@@ -172,8 +171,6 @@ const TyreFittingPage = () => {
             <MotorcycleMovers />
 
             <FaqSection title="Motorcycle Tyre Fitting FAQ" faqData={TyreFittingFaqs} />
-
-            <FloatingActionButton href="/service#book" />
         </div>
     );
 };
