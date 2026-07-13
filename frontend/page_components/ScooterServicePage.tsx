@@ -203,7 +203,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
 
             <FaqSection title="Scooter Servicing FAQ" faqData={scooterFaqs} />
 
-            <FloatingActionButton href="#book" />
+            <FloatingActionButton href="/service#book" />
         </div>
     );
 };

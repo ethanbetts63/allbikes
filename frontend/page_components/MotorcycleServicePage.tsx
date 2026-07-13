@@ -194,7 +194,7 @@ const MotorcycleServicePage = ({ initialUsedMotorcycles }: MotorcycleServicePage
 
             <FaqSection title="Motorcycle Servicing FAQ" faqData={motorcycleFaqs} />
 
-            <FloatingActionButton href="#book" />
+            <FloatingActionButton href="/service#book" />
         </div>
     );
 };

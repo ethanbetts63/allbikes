@@ -197,7 +197,7 @@ const VespaServicePage = () => {
 
             <FaqSection title="Vespa Service FAQ" faqData={vespaFaqs} />
 
-            <FloatingActionButton href="#book" />
+            <FloatingActionButton href="/service#book" />
         </div>
     );
 };

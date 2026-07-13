@@ -173,7 +173,7 @@ const TyreFittingPage = () => {
 
             <FaqSection title="Motorcycle Tyre Fitting FAQ" faqData={TyreFittingFaqs} />
 
-            <FloatingActionButton href="#book" />
+            <FloatingActionButton href="/service#book" />
         </div>
     );
 };

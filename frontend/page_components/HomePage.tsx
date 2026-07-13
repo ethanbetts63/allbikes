@@ -125,7 +125,7 @@ const HomePage = ({
         <div className="defer-section">
           <FaqSection title="Frequently Asked Questions" faqData={faqData} />
         </div>
-        <FloatingActionButton /> 
+        <FloatingActionButton href="/service#book" />
     </div>
   );
 };
