@@ -7,7 +7,7 @@ from io import BytesIO
 
 from inventory.models import Motorcycle
 from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
-from pipeline.tests.factories.user_factory import UserFactory
+from data_management.tests.factories.user_factory import UserFactory
 
 @pytest.fixture
 def api_client():

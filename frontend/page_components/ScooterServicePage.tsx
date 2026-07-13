@@ -5,7 +5,7 @@ import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
-import ServiceCTAV2 from '@/components/ServiceCTAV2';
+import ServiceBookingHero from '@/components/ServiceBookingHero';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
 import FeaturedBikes from '@/components/FeaturedBikesLazy';
 import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
@@ -129,7 +129,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
         <div>
             <StructuredDataScript structuredData={structuredData} />
 
-            <ServiceCTAV2
+            <ServiceBookingHero
                 headingLines={['Get Your', 'Scooter', 'Sorted.']}
                 checkItems={scooterCheckItems}
                 subtitle="Scooter specialists with decades of experience keeping Perth riders on the road. Book your service online in minutes."
@@ -168,7 +168,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
                         .
                     </p>
                     <div className="text-center mt-10">
-                        <Link href="/service-booking">
+                        <Link href="#book">
                             <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>
@@ -203,7 +203,7 @@ const ScooterServicePage = ({ initialUsedScooters }: ScooterServicePageProps) =>
 
             <FaqSection title="Scooter Servicing FAQ" faqData={scooterFaqs} />
 
-            <FloatingActionButton />
+            <FloatingActionButton href="#book" />
         </div>
     );
 };

@@ -6,7 +6,7 @@ from rest_framework.test import APIClient
 from product.models import Product
 from product.tests.factories.product_factory import ProductFactory
 from product.tests.factories.product_image_factory import ProductImageFactory
-from pipeline.tests.factories.user_factory import UserFactory
+from data_management.tests.factories.user_factory import UserFactory
 
 
 @pytest.fixture

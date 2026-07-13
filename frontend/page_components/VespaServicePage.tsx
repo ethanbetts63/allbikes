@@ -5,7 +5,7 @@ import { FaqSection } from '@/components/FaqSection';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight, Award } from 'lucide-react';
-import ServiceCTAV2 from '@/components/ServiceCTAV2';
+import ServiceBookingHero from '@/components/ServiceBookingHero';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
 import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
@@ -123,7 +123,7 @@ const VespaServicePage = () => {
         <div>
             <StructuredDataScript structuredData={structuredData} />
 
-            <ServiceCTAV2
+            <ServiceBookingHero
                 headingLines={['Get Your', 'Vespa', 'Sorted.']}
                 checkItems={vespaCheckItems}
                 subtitle="30+ years of hands-on Vespa experience. Perth's Vespa specialists, operating out of our Dianella workshop."
@@ -174,7 +174,7 @@ const VespaServicePage = () => {
                         .
                     </p>
                     <div className="text-center mt-10">
-                        <Link href="/service-booking">
+                        <Link href="#book">
                             <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>
@@ -197,7 +197,7 @@ const VespaServicePage = () => {
 
             <FaqSection title="Vespa Service FAQ" faqData={vespaFaqs} />
 
-            <FloatingActionButton />
+            <FloatingActionButton href="#book" />
         </div>
     );
 };

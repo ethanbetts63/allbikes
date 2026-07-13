@@ -5,7 +5,7 @@ import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Button } from '@/components/ui/button';
 import { CircleDot, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
-import ServiceCTAV2 from '@/components/ServiceCTAV2';
+import ServiceBookingHero from '@/components/ServiceBookingHero';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
 import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
@@ -118,7 +118,7 @@ const TyreFittingPage = () => {
         <div>
             <StructuredDataScript structuredData={structuredData} />
 
-            <ServiceCTAV2
+            <ServiceBookingHero
                 headingLines={['Motorcycle', 'Tyre Fitting', 'Perth.']}
                 subtitle="Motorcycle and moped tyre fitting and puncture repair, done at our Dianella workshop. Supply and fit, or bring your own tyres."
                 checkItems={[
@@ -129,6 +129,7 @@ const TyreFittingPage = () => {
                     'Motorcycle tyre replacement — all makes & sizes',
                     'Scooter tyre replacement — Vespa, Piaggio & more',
                 ]}
+                defaultJobTypeName="Tyre Fitting"
             />
 
             <ReviewCarousel reviews={tyreReviews} />
@@ -150,13 +151,13 @@ const TyreFittingPage = () => {
                     </div>
                     <p className="mt-8 text-center text-[var(--text-light-secondary)] text-lg">
                         Ready to organise a tire change, puncture repair, or wheel balancing?{' '}
-                        <Link href="/service-booking" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
+                        <Link href="#book" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
                             Book online
                         </Link>
                         {' '}and we&apos;ll confirm the job with you.
                     </p>
                     <div className="text-center mt-10">
-                        <Link href="/service-booking">
+                        <Link href="#book">
                             <Button className="bg-highlight1 text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg hover:bg-highlight1/90 inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>
@@ -172,7 +173,7 @@ const TyreFittingPage = () => {
 
             <FaqSection title="Motorcycle Tyre Fitting FAQ" faqData={TyreFittingFaqs} />
 
-            <FloatingActionButton />
+            <FloatingActionButton href="#book" />
         </div>
     );
 };

@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from service.models import JobType
 from service.tests.factories import JobTypeFactory
-from pipeline.tests.factories.user_factory import UserFactory
+from data_management.tests.factories.user_factory import UserFactory
 
 @pytest.fixture
 def api_client():

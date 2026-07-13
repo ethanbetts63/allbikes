@@ -5,7 +5,7 @@ import { FaqSection } from "@/components/FaqSection";
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
-import ServiceCTAV2 from '@/components/ServiceCTAV2';
+import ServiceBookingHero from '@/components/ServiceBookingHero';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
 import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
@@ -124,7 +124,7 @@ const ServicePage = () => {
         <div>
             <StructuredDataScript structuredData={structuredData} />
 
-            <ServiceCTAV2 subtitle="Expert scooter repairs and servicing in Perth. Our experienced mechanics have been keeping local riders on the road for decades — book your service online in minutes." />
+            <ServiceBookingHero subtitle="Expert scooter repairs and servicing in Perth. Our experienced mechanics have been keeping local riders on the road for decades — book your service online in minutes." />
 
             <ReviewCarousel reviews={serviceReviews} />
 
@@ -155,7 +155,7 @@ const ServicePage = () => {
                         .
                     </p>
                     <div className="text-center mt-10">
-                        <Link href="/service-booking">
+                        <Link href="#book">
                             <Button className="bg-highlight1 hover:bg-highlight1/80 text-[var(--text-light-primary)] font-bold px-8 py-5 text-lg inline-flex items-center gap-2">
                                 Book Online <ArrowRight className="h-5 w-5" />
                             </Button>
@@ -171,7 +171,7 @@ const ServicePage = () => {
 
             <FaqSection title="Workshop FAQ" faqData={ServiceFaqs} />
 
-            <FloatingActionButton />
+            <FloatingActionButton href="#book" />
         </div>
     );
 };

@@ -38,7 +38,7 @@ const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = default
                         <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
                             {subtitle}
                         </p>
-                        <Link href="/service-booking">
+                        <Link href="/service">
                             <Button
                                 size="lg"
                                 className="bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold px-8 text-base group"

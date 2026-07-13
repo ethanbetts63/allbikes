@@ -2,55 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Check } from 'lucide-react';
 import { createBooking } from '@/services/bookingService';
-import BookingDetailsForm from '@/forms/ServiceBookingDetailsForm';
 import BikeDetailsForm from '@/forms/ServiceBikeDetailsForm';
 import PersonalDetailsForm from '@/forms/ServicePersonalDetailsForm';
+import {
+    BOOKING_PROGRESS_STORAGE_KEY,
+    hasStep1Data,
+    useBookingProgress,
+} from '@/lib/serviceBookingProgress';
 
-const LOCAL_STORAGE_KEY = 'bookingFormProgress';
 const CONFIRMATION_STORAGE_KEY = 'serviceBookingConfirmation';
 
-const initialFormData = {
-    // Personal
-    first_name: '',
-    last_name: '',
-    phone: '',
-    email: '',
-    // Bike
-    registration_number: '',
-    make: '',
-    model: '',
-    // Booking
-    job_type_names: [],
-    drop_off_time: '',
-    courtesy_vehicle_requested: false,
-    note: '',
-    terms_accepted: false
-};
-
+// Step 1 (Booking Details) lives on /service. This page handles steps 2–3.
 const STEPS = ['Booking Details', 'Bike Details', 'Your Details'];
 
 const BookingPage = () => {
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(2);
     const router = useRouter();
-    const [formData, setFormData] = useState(() => {
-        if (typeof window === 'undefined') return initialFormData;
-        try {
-            const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-            return savedData ? JSON.parse(savedData) : initialFormData;
-        } catch (error) {
-            console.error("Error reading from localStorage", error);
-            return initialFormData;
-        }
-    });
+    const { formData, setFormData, hydrated } = useBookingProgress();
 
+    // Guard: without step-1 data there is nothing to continue — send the user to /service.
+    // Steps 2–3 never edit the step-1 fields, so this stays satisfied while filling them in.
+    const canContinue = hydrated && hasStep1Data(formData);
     useEffect(() => {
-        try {
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData));
-        } catch (error) {
-            console.error("Error writing to localStorage", error);
+        if (hydrated && !canContinue) {
+            router.replace('/service');
         }
-    }, [formData]);
+    }, [hydrated, canContinue, router]);
 
     const nextStep = () => setStep(prev => prev + 1);
     const prevStep = () => setStep(prev => prev - 1);
@@ -65,7 +45,7 @@ const BookingPage = () => {
         try {
             await createBooking(formData);
             sessionStorage.setItem(CONFIRMATION_STORAGE_KEY, JSON.stringify(formData));
-            localStorage.removeItem(LOCAL_STORAGE_KEY);
+            localStorage.removeItem(BOOKING_PROGRESS_STORAGE_KEY);
             router.push('/service-booking/confirmation');
         } catch (error) {
             console.error("Booking submission error:", error);
@@ -80,10 +60,8 @@ const BookingPage = () => {
 
     const renderStep = () => {
         switch (step) {
-            case 1:
-                return <BookingDetailsForm formData={formData} setFormData={setFormData} nextStep={nextStep} />;
             case 2:
-                return <BikeDetailsForm formData={formData} setFormData={setFormData} nextStep={nextStep} prevStep={prevStep} />;
+                return <BikeDetailsForm formData={formData} setFormData={setFormData} nextStep={nextStep} prevStep={() => router.push('/service#book')} />;
             case 3:
                 return <PersonalDetailsForm formData={formData} setFormData={setFormData} prevStep={prevStep} handleSubmit={handleSubmit} isSubmitting={isSubmitting} error={error} />;
             default:
@@ -100,20 +78,27 @@ const BookingPage = () => {
                         Request a Service
                     </h1>
 
-                    {/* Step indicator */}
+                    {/* Step indicator — step 1 is completed on /service and links back for edits */}
                     <div className="flex items-center gap-2 mb-8">
                         {STEPS.map((label, i) => {
                             const n = i + 1;
                             const active = n === step;
                             const done = n < step;
+                            const indicator = (
+                                <div className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest ${active ? 'text-[var(--text-dark-primary)]' : done ? 'text-highlight' : 'text-[var(--text-dark-secondary)]'}`}>
+                                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${active ? 'bg-[var(--text-dark-primary)] text-[var(--bg-light-primary)]' : done ? 'bg-highlight text-[var(--text-dark-primary)]' : 'bg-[var(--border-light)] text-[var(--text-dark-secondary)]'}`}>
+                                        {done ? <Check className="h-3 w-3" /> : n}
+                                    </span>
+                                    <span className="hidden sm:inline">{label}</span>
+                                </div>
+                            );
                             return (
                                 <div key={n} className="flex items-center gap-2">
-                                    <div className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest ${active ? 'text-[var(--text-dark-primary)]' : done ? 'text-highlight' : 'text-[var(--text-dark-secondary)]'}`}>
-                                        <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${active ? 'bg-[var(--text-dark-primary)] text-[var(--bg-light-primary)]' : done ? 'bg-highlight text-[var(--text-dark-primary)]' : 'bg-[var(--border-light)] text-[var(--text-dark-secondary)]'}`}>
-                                            {n}
-                                        </span>
-                                        <span className="hidden sm:inline">{label}</span>
-                                    </div>
+                                    {n === 1 ? (
+                                        <Link href="/service#book" title="Edit booking details" className="hover:opacity-80 transition-opacity">
+                                            {indicator}
+                                        </Link>
+                                    ) : indicator}
                                     {i < STEPS.length - 1 && (
                                         <span className="text-[var(--border-light)] text-xs">—</span>
                                     )}
@@ -122,7 +107,7 @@ const BookingPage = () => {
                         })}
                     </div>
 
-                    {renderStep()}
+                    {canContinue && renderStep()}
 
                 </div>
             </div>

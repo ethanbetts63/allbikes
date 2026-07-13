@@ -3,7 +3,8 @@ import { getJobTypes, getUnavailableDays, getServiceSettings } from '@/services/
 import type { ServiceSettings } from '@/types/ServiceSettings';
 import type { EnrichedJobType } from '@/types/EnrichedJobType';
 import type { BookingDetailsFormProps } from '@/types/BookingDetailsFormProps';
-import { format, add, parse } from 'date-fns';
+import { format, add, parse, startOfDay } from 'date-fns';
+import { formatDropOffTime, parseDropOffTime } from '@/lib/serviceBookingProgress';
 
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,14 +16,25 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
 
+// Rehydrate the date/time pickers from a previously saved drop_off_time,
+// discarding stale progress whose date is already in the past.
+const parseSavedDropOff = (dropOffTime: string): { date: Date | undefined; time: string } => {
+    const parsed = parseDropOffTime(dropOffTime);
+    if (!parsed || parsed < startOfDay(new Date())) return { date: undefined, time: '' };
+    return { date: parsed, time: format(parsed, 'HH:mm') };
+};
+
 const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsFormProps) => {
     const [jobTypes, setJobTypes] = useState<EnrichedJobType[]>([]);
     const [unavailableDays, setUnavailableDays] = useState<string[]>([]);
     const [serviceSettings, setServiceSettings] = useState<ServiceSettings | null>(null);
     const [isLoadingUnavailableDays, setIsLoadingUnavailableDays] = useState(true);
+    const [fetchFailed, setFetchFailed] = useState(false);
+    const [fetchAttempt, setFetchAttempt] = useState(0);
 
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-    const [selectedTime, setSelectedTime] = useState<string>('');
+    const [savedDropOff] = useState(() => parseSavedDropOff(formData.drop_off_time));
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(savedDropOff.date);
+    const [selectedTime, setSelectedTime] = useState<string>(savedDropOff.time);
     const timeSlots = useMemo(() => {
         if (!serviceSettings || !selectedDate) return [];
 
@@ -40,6 +52,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
     useEffect(() => {
         const fetchData = async () => {
             setIsLoadingUnavailableDays(true);
+            setFetchFailed(false);
             try {
                 const [jobs, unavailable, settings] = await Promise.all([
                     getJobTypes(),
@@ -51,16 +64,17 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                 setServiceSettings(settings);
             } catch (error) {
                 console.error("Failed to fetch booking details data", error);
+                setFetchFailed(true);
             } finally {
                 setIsLoadingUnavailableDays(false);
             }
         };
         fetchData();
-    }, []);
+    }, [fetchAttempt]);
 
     useEffect(() => {
         if (selectedDate && selectedTime) {
-            const combined = `${format(selectedDate, 'dd/MM/yyyy')} ${selectedTime}`;
+            const combined = formatDropOffTime(selectedDate, selectedTime);
             setFormData((prev: any) => ({ ...prev, drop_off_time: combined }));
         }
     }, [selectedDate, selectedTime, setFormData]);
@@ -84,12 +98,48 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
         return unavailableDays.includes(formattedDate);
     };
 
+    // A rehydrated date can have become unbookable since it was saved (advance
+    // notice window moved, day marked unavailable). Re-check it once the
+    // availability data arrives and clear it if it no longer qualifies.
+    useEffect(() => {
+        if (!serviceSettings || !selectedDate) return;
+        if (isDateDisabled(selectedDate)) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSelectedDate(undefined);
+            setSelectedTime('');
+            setFormData((prev: any) => ({ ...prev, drop_off_time: '' }));
+        }
+        // Only re-run when the availability data changes, not on every render.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [serviceSettings, unavailableDays]);
+
     const canProceed = selectedDate && selectedTime && formData.job_type_names?.length > 0;
+
+    if (fetchFailed) {
+        return (
+            <div className="p-6 border border-[var(--border-light)] rounded-lg text-center space-y-3">
+                <p className="font-semibold text-[var(--text-dark-primary)]">
+                    We couldn&apos;t load the booking calendar.
+                </p>
+                <p className="text-sm text-[var(--text-dark-secondary)]">
+                    Please try again, or call us on{' '}
+                    <a href="tel:0894334613" className="font-semibold underline underline-offset-4">
+                        (08) 9433 4613
+                    </a>{' '}
+                    to book over the phone.
+                </p>
+                <button
+                    onClick={() => setFetchAttempt((n) => n + 1)}
+                    className="py-2.5 px-6 rounded-lg text-sm font-bold uppercase tracking-widest transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
+                >
+                    Retry
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">Step 1 — Booking Details</p>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                     <Label htmlFor="date">Drop-off Date *</Label>
@@ -176,7 +226,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                     disabled={!canProceed}
                     className="py-3 px-8 rounded-lg text-sm font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
                 >
-                    Next
+                    Next: Bike Details
                 </button>
             </div>
         </div>

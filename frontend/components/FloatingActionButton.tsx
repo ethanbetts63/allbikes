@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { Wrench } from 'lucide-react';
 
-export const FloatingActionButton = () => {
+export const FloatingActionButton = ({ href = '/service' }: { href?: string }) => {
   return (
     <Link
-      href="/service-booking"
+      href={href}
       className="fixed bottom-8 right-8 z-50
                  bg-highlight1 text-[var(--text-light-primary)]
                  rounded-full shadow-md

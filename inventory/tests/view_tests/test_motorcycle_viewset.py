@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from inventory.models import Motorcycle
 from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 from inventory.tests.factories.motorcycle_image_factory import MotorcycleImageFactory
-from pipeline.tests.factories.user_factory import UserFactory
+from data_management.tests.factories.user_factory import UserFactory
 
 @pytest.fixture
 def api_client():
