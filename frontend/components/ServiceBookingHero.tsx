@@ -23,12 +23,12 @@ const ServiceBookingHero = ({
     defaultJobTypeName,
 }: ServiceBookingHeroProps) => {
     return (
-        <section id="book" className="bg-[var(--bg-dark-primary)] py-12 lg:py-20 px-4 scroll-mt-20">
+        <section id="book" className="bg-[var(--bg-dark-primary)] pt-12 pb-0 lg:py-20 lg:px-4 scroll-mt-20">
             <div className="container mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
 
                     {/* Left — bold typographic block */}
-                    <div className="lg:sticky lg:top-24">
+                    <div className="px-4 lg:px-0 lg:sticky lg:top-24">
                         <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em] mb-6">
                             ScooterShop · Perth
                         </p>

@@ -16,7 +16,7 @@ const BookingStarterCard = ({ defaultJobTypeName }: BookingStarterCardProps) => 
     const nextStep = () => router.push('/service-booking/details');
 
     return (
-        <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] rounded-xl p-5 sm:p-7 shadow-xl shadow-black/30">
+        <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] rounded-none lg:rounded-xl p-5 sm:p-7 shadow-xl shadow-black/30">
             <div className="border-b border-[var(--border-light)] pb-4 mb-5">
                 <h2 className="text-2xl font-black uppercase tracking-wide">Book Your Service</h2>
                 <p className="text-sm text-[var(--text-dark-secondary)] mt-1">
