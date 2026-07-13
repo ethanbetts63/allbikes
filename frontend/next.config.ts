@@ -49,6 +49,19 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  async redirects() {
+    return [
+      // Step 1 of the booking flow moved onto /service; the wizard's remaining
+      // steps live at /service-booking/details (noindexed). 301 the old
+      // booking URL so its links and index entry transfer to /service.
+      {
+        source: "/service-booking",
+        destination: "/service",
+        permanent: true,
+      },
+    ];
+  },
+
   async rewrites() {
     return [
       {

@@ -13,7 +13,7 @@ const BookingStarterCard = ({ defaultJobTypeName }: BookingStarterCardProps) => 
     const router = useRouter();
     const { formData, setFormData, hydrated } = useBookingProgress(defaultJobTypeName);
 
-    const nextStep = () => router.push('/service-booking');
+    const nextStep = () => router.push('/service-booking/details');
 
     return (
         <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] rounded-xl p-5 sm:p-7 shadow-xl shadow-black/30">
