@@ -118,7 +118,7 @@ const TyreFittingPage = () => {
             <StructuredDataScript structuredData={structuredData} />
 
             <ServiceBookingHero
-                headingLines={['Motorcycle', 'Tyre Fitting', 'Perth.']}
+                headingLines={['Fast Motorcycle', '& Moped', 'Tyre Fitting']}
                 subtitle="Motorcycle and moped tyre fitting and puncture repair, done at our Dianella workshop. Supply and fit, or bring your own tyres."
                 checkItems={[
                     'Motorcycle/motorbike tire fitting — supply and fit, or fit-only',
