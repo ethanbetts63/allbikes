@@ -31,9 +31,17 @@ class Booking(models.Model):
     customer_phone = models.CharField(max_length=30, blank=True)
     customer_email = models.EmailField(blank=True)
 
+    # Customer address (optional)
+    street_address = models.CharField(max_length=255, blank=True)
+    suburb = models.CharField(max_length=100, blank=True)
+    postcode = models.CharField(max_length=10, blank=True)
+
     # Vehicle (freeform)
-    bike_name = models.CharField(max_length=255, blank=True, help_text="e.g. 'Vespa GTS 300' or free text.")
     registration = models.CharField(max_length=20, blank=True)
+    make = models.CharField(max_length=100, blank=True)
+    model = models.CharField(max_length=100, blank=True)
+    year = models.CharField(max_length=10, blank=True)
+    odometer = models.CharField(max_length=20, blank=True)
 
     # Job
     job_description = models.TextField(blank=True, help_text="What the job involves.")
@@ -70,5 +78,10 @@ class Booking(models.Model):
             'created_at',
         ]
 
+    @property
+    def vehicle_label(self):
+        """Composed vehicle name for display, e.g. '2016 Vespa GTS 300'."""
+        return ' '.join(part for part in [self.year, self.make, self.model] if part).strip()
+
     def __str__(self):
-        return f"{self.customer_name} — {self.bike_name or 'vehicle'} on {self.drop_off_date}"
+        return f"{self.customer_name} — {self.vehicle_label or 'vehicle'} on {self.drop_off_date}"

@@ -300,7 +300,7 @@ def send_service_reminder(booking):
         f"Hi {booking.customer_name},\n\n"
         f"This is a reminder about your upcoming service booking at ScooterShop.\n\n"
         f"Drop-off: {when}\n"
-        + (f"Motorcycle: {booking.bike_name}" + (f" ({booking.registration})" if booking.registration else "") + "\n" if booking.bike_name else "")
+        + (f"Motorcycle: {booking.vehicle_label}" + (f" ({booking.registration})" if booking.registration else "") + "\n" if booking.vehicle_label else "")
         + (f"Service: {booking.job_description}\n" if booking.job_description else "")
         + "\n"
         f"Unit 5 / 6 Cleveland Street, Dianella WA 6059\n"

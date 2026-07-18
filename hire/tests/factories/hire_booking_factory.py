@@ -24,7 +24,7 @@ class HireBookingFactory(DjangoModelFactory):
     effective_daily_rate = '100.00'
     total_hire_amount = '300.00'
     bond_amount = '500.00'
-    customer_name = factory.LazyFunction(fake.name)
+    customer_name = factory.Sequence(lambda n: f"Test Customer {n}")
     customer_email = factory.LazyFunction(fake.email)
     customer_phone = factory.LazyFunction(lambda: fake.phone_number()[:20])
     status = 'confirmed'

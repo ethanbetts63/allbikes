@@ -63,22 +63,49 @@ const BookingForm = ({ value, onChange, showStatus = true }: BookingFormProps) =
       )}
 
       {/* Vehicle */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="bike_name">Bike (make / model)</Label>
-          <Input
-            id="bike_name"
-            placeholder="e.g. Vespa GTS 300"
-            value={value.bike_name ?? ''}
-            onChange={e => set('bike_name', e.target.value)}
-          />
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="registration">Registration</Label>
           <Input
             id="registration"
             value={value.registration ?? ''}
             onChange={e => set('registration', e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="make">Make</Label>
+          <Input
+            id="make"
+            placeholder="e.g. Vespa"
+            value={value.make ?? ''}
+            onChange={e => set('make', e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="model">Model</Label>
+          <Input
+            id="model"
+            placeholder="e.g. GTS 300"
+            value={value.model ?? ''}
+            onChange={e => set('model', e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="year">Year</Label>
+          <Input
+            id="year"
+            placeholder="e.g. 2016"
+            value={value.year ?? ''}
+            onChange={e => set('year', e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="odometer">Odometer</Label>
+          <Input
+            id="odometer"
+            placeholder="e.g. 12000"
+            value={value.odometer ?? ''}
+            onChange={e => set('odometer', e.target.value)}
           />
         </div>
       </div>
@@ -108,6 +135,37 @@ const BookingForm = ({ value, onChange, showStatus = true }: BookingFormProps) =
             type="email"
             value={value.customer_email ?? ''}
             onChange={e => set('customer_email', e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Address (optional) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="space-y-2 sm:col-span-1">
+          <Label htmlFor="street_address">Street address</Label>
+          <Input
+            id="street_address"
+            placeholder="Optional"
+            value={value.street_address ?? ''}
+            onChange={e => set('street_address', e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="suburb">Suburb</Label>
+          <Input
+            id="suburb"
+            placeholder="Optional"
+            value={value.suburb ?? ''}
+            onChange={e => set('suburb', e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="postcode">Postcode</Label>
+          <Input
+            id="postcode"
+            placeholder="Optional"
+            value={value.postcode ?? ''}
+            onChange={e => set('postcode', e.target.value)}
           />
         </div>
       </div>

@@ -9,7 +9,7 @@ class BookingRequestLogFactory(DjangoModelFactory):
     class Meta:
         model = BookingRequestLog
 
-    customer_name = factory.LazyFunction(fake.name)
+    customer_name = factory.Sequence(lambda n: f"Test Customer {n}")
     customer_email = factory.LazyFunction(fake.email)
     vehicle_registration = factory.LazyFunction(lambda: fake.bothify(text='??####??').upper())
     request_payload = factory.LazyFunction(lambda: {'data': fake.pydict(nb_elements=5, variable_nb_elements=True, value_types=['str', 'int', 'float', 'bool'])})

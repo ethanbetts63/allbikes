@@ -26,7 +26,8 @@ class TestBookingModel:
         assert ordered[2] == no_time
         assert ordered[3] == later
 
-    def test_str(self):
-        booking = BookingFactory(customer_name="Jane", bike_name="Vespa", drop_off_date=date(2026, 1, 1))
+    def test_str_and_vehicle_label(self):
+        booking = BookingFactory(customer_name="Jane", year="2016", make="Vespa", model="GTS 300", drop_off_date=date(2026, 1, 1))
+        assert booking.vehicle_label == "2016 Vespa GTS 300"
         assert "Jane" in str(booking)
         assert "Vespa" in str(booking)

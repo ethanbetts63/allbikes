@@ -13,8 +13,14 @@ export interface Booking {
   customer_name: string;
   customer_phone: string;
   customer_email: string;
-  bike_name: string;
+  street_address: string;
+  suburb: string;
+  postcode: string;
   registration: string;
+  make: string;
+  model: string;
+  year: string;
+  odometer: string;
   job_description: string;
   status: BookingStatus;
   status_display: string;
@@ -33,8 +39,14 @@ export interface BookingInput {
   customer_name: string;
   customer_phone?: string;
   customer_email?: string;
-  bike_name?: string;
+  street_address?: string;
+  suburb?: string;
+  postcode?: string;
   registration?: string;
+  make?: string;
+  model?: string;
+  year?: string;
+  odometer?: string;
   job_description?: string;
   status?: BookingStatus;
 }

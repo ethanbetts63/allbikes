@@ -39,8 +39,8 @@ def _create_local_booking(validated_data, booking_log):
             return None
 
         job_names = validated_data.get('job_type_names', [])
-        make = validated_data.get('make', '')
-        model = validated_data.get('model', '')
+        year = validated_data.get('year')
+        odometer = validated_data.get('odometer')
 
         return Booking.objects.create(
             drop_off_date=drop_off_date,
@@ -48,8 +48,14 @@ def _create_local_booking(validated_data, booking_log):
             customer_name=validated_data.get('name') or f"{validated_data.get('first_name', '')} {validated_data.get('last_name', '')}".strip(),
             customer_phone=validated_data.get('phone', ''),
             customer_email=validated_data.get('email', ''),
-            bike_name=f"{make} {model}".strip(),
+            street_address=validated_data.get('street_line', ''),
+            suburb=validated_data.get('suburb', ''),
+            postcode=validated_data.get('postcode', ''),
             registration=validated_data.get('registration_number', ''),
+            make=validated_data.get('make', ''),
+            model=validated_data.get('model', ''),
+            year=str(year) if year not in (None, '') else '',
+            odometer=str(odometer) if odometer not in (None, '') else '',
             job_description=', '.join(job_names) if job_names else '',
             status=Booking.Status.REQUESTED,
             source=Booking.Source.WEBSITE,

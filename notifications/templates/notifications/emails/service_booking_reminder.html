@@ -2,7 +2,7 @@
 
 {% block title %}Reminder: your service booking — ScooterShop{% endblock %}
 
-{% block preheader %}A reminder about your upcoming service booking for your {{ booking.bike_name }}.{% endblock %}
+{% block preheader %}A reminder about your upcoming service booking for your {{ booking.vehicle_label }}.{% endblock %}
 
 {% block content %}
 <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Booking Reminder</h1>
@@ -16,7 +16,7 @@
         <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 8px 0;">Drop-off</p>
             <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ booking.drop_off_date|date:"l, j M Y" }}{% if booking.drop_off_time %} at {{ booking.drop_off_time|time:"g:i A" }}{% endif %}</p>
-            {% if booking.bike_name %}<p style="margin: 8px 0 0 0; color: #78716c;">Motorcycle: {{ booking.bike_name }}{% if booking.registration %} ({{ booking.registration }}){% endif %}</p>{% endif %}
+            {% if booking.vehicle_label %}<p style="margin: 8px 0 0 0; color: #78716c;">Motorcycle: {{ booking.vehicle_label }}{% if booking.registration %} ({{ booking.registration }}){% endif %}</p>{% endif %}
             {% if booking.job_description %}<p style="margin: 4px 0 0 0; color: #78716c;">Service: {{ booking.job_description }}</p>{% endif %}
         </td>
     </tr>

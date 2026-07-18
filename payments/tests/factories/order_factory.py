@@ -16,7 +16,7 @@ class OrderFactory(DjangoModelFactory):
         model = Order
 
     product = factory.SubFactory(ProductFactory)
-    customer_name = factory.LazyFunction(fake.name)
+    customer_name = factory.Sequence(lambda n: f"Test Customer {n}")
     customer_email = factory.LazyFunction(fake.email)
     customer_phone = factory.LazyFunction(lambda: fake.phone_number()[:20])
     address_line1 = factory.LazyFunction(fake.street_address)
@@ -36,7 +36,7 @@ class MotorcycleOrderFactory(DjangoModelFactory):
     product = None
     motorcycle = factory.SubFactory(MotorcycleFactory, condition='new', status='for_sale')
     payment_type = 'deposit'
-    customer_name = factory.LazyFunction(fake.name)
+    customer_name = factory.Sequence(lambda n: f"Test Customer {n}")
     customer_email = factory.LazyFunction(fake.email)
     customer_phone = factory.LazyFunction(lambda: fake.phone_number()[:20])
     address_line1 = ''

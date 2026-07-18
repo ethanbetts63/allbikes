@@ -46,12 +46,19 @@ class TestBookingAdminViewSet:
             'drop_off_date': '2026-01-10',
             'drop_off_time': '09:30:00',
             'customer_name': 'Walk In',
-            'bike_name': 'Honda CB125',
+            'make': 'Honda',
+            'model': 'CB125',
+            'street_address': '1 Test St',
+            'suburb': 'Dianella',
+            'postcode': '6059',
         }
         response = admin_client.post('/api/service/admin/bookings/', payload, format='json')
         assert response.status_code == status.HTTP_201_CREATED
         booking = Booking.objects.get(pk=response.data['id'])
         assert booking.source == Booking.Source.MANUAL
+        assert booking.make == 'Honda'
+        assert booking.model == 'CB125'
+        assert booking.suburb == 'Dianella'
         # Model default status applies when not supplied.
         assert booking.status == Booking.Status.NOT_STARTED
 

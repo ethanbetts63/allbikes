@@ -35,9 +35,13 @@ const formatTime = (t: string | null) => {
   return `${h12}:${m} ${period}`;
 };
 
-const BookingTile = ({ booking, onClick }: { booking: Booking; onClick: () => void }) => {
+const vehicleLabel = (b: Booking) =>
+  [b.year, b.make, b.model].filter(Boolean).join(' ').trim();
+
+const BookingTile = ({ booking, onClick }: { booking: Booking; onClick: (e: React.MouseEvent) => void }) => {
   const style = STATUS_STYLES[booking.status];
   const time = formatTime(booking.drop_off_time);
+  const bike = vehicleLabel(booking);
   return (
     <button
       onClick={onClick}
@@ -47,9 +51,9 @@ const BookingTile = ({ booking, onClick }: { booking: Booking; onClick: () => vo
         <span className={`h-2 w-2 rounded-full shrink-0 ${style.dot}`} />
         <span className="text-xs font-bold text-gray-800">{time ?? 'No time'}</span>
       </div>
-      {(booking.bike_name || booking.registration) && (
+      {(bike || booking.registration) && (
         <p className="text-xs font-semibold text-gray-900 leading-snug">
-          {booking.bike_name}
+          {bike}
           {booking.registration && <span className="font-mono font-normal text-gray-600"> · {booking.registration}</span>}
         </p>
       )}
@@ -226,13 +230,21 @@ const AdminServiceDiaryPage = () => {
                   )}
                 </div>
 
-                {/* Tiles — flush to the column edges to maximise space */}
-                <div className="flex-1 overflow-y-auto">
+                {/* Tiles — flush to the column edges to maximise space.
+                    Clicking empty space (not a tile) opens the block menu. */}
+                <div
+                  className="flex-1 overflow-y-auto cursor-pointer"
+                  onClick={() => setMenuDate(menuDate === dayStr ? null : dayStr)}
+                >
                   {isLoading ? (
                     <p className="text-xs text-gray-400 text-center pt-4">Loading…</p>
                   ) : dayBookings.length ? (
                     dayBookings.map(b => (
-                      <BookingTile key={b.id} booking={b} onClick={() => router.push(`/dashboard/service-diary/${b.id}`)} />
+                      <BookingTile
+                        key={b.id}
+                        booking={b}
+                        onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/service-diary/${b.id}`); }}
+                      />
                     ))
                   ) : (
                     !isGreyed && <p className="text-xs text-gray-300 text-center pt-4">No jobs</p>

@@ -13,7 +13,9 @@ class BookingFactory(DjangoModelFactory):
     customer_name = factory.Sequence(lambda n: f"Customer {n}")
     customer_phone = "0400000000"
     customer_email = factory.Sequence(lambda n: f"customer{n}@example.com")
-    bike_name = "Vespa GTS 300"
+    make = "Vespa"
+    model = "GTS 300"
+    year = "2016"
     registration = "1ABC234"
     job_description = "Tyre fitting"
     status = Booking.Status.NOT_STARTED

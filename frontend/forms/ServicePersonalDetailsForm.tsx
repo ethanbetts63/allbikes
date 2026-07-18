@@ -45,6 +45,21 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
         <Input id="phone" type="tel" value={formData.phone || ''} onChange={handleChange} placeholder="0412 345 678" />
       </div>
 
+      <div className="space-y-1.5">
+        <Label htmlFor="street_line">Street Address <span className="text-[var(--text-dark-secondary)] font-normal">(optional)</span></Label>
+        <Input id="street_line" value={formData.street_line || ''} onChange={handleChange} placeholder="12 Cleveland Street" />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="suburb">Suburb <span className="text-[var(--text-dark-secondary)] font-normal">(optional)</span></Label>
+          <Input id="suburb" value={formData.suburb || ''} onChange={handleChange} placeholder="Dianella" />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="postcode">Postcode <span className="text-[var(--text-dark-secondary)] font-normal">(optional)</span></Label>
+          <Input id="postcode" value={formData.postcode || ''} onChange={handleChange} placeholder="6059" />
+        </div>
+      </div>
+
       <div className="flex items-start gap-3 pt-1">
         <Checkbox
           id="terms_accepted"
