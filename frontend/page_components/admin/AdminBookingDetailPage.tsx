@@ -7,7 +7,7 @@ import { adminGetBooking, adminUpdateBooking, adminDeleteBooking } from '@/api';
 import type { Booking, BookingInput } from '@/types/Booking';
 import BookingForm from '@/forms/BookingForm';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 
@@ -77,20 +77,13 @@ const AdminBookingDetailPage = () => {
   if (!booking || !value) return <div className="p-6 text-destructive">{error ?? 'Booking not found.'}</div>;
 
   return (
-    <div className="p-4 md:p-6 max-w-3xl">
+    <div className="p-4 md:p-6">
       <button
         onClick={() => router.push('/dashboard/service-diary')}
         className="flex items-center gap-1 text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] mb-4"
       >
         <ArrowLeft className="h-4 w-4" /> Back to diary
       </button>
-
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-        <h1 className="text-2xl font-bold text-[var(--text-dark-primary)]">Booking</h1>
-        <Badge variant="outline" className="text-[var(--text-dark-secondary)] border-gray-400">
-          {booking.source_display}
-        </Badge>
-      </div>
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -102,17 +95,25 @@ const AdminBookingDetailPage = () => {
       )}
 
       <Card>
-        <CardContent className="pt-6">
-          <BookingForm value={value} onChange={setValue} />
-          <div className="flex items-center justify-between mt-6">
-            <Button variant="ghost" onClick={handleDelete} className="text-destructive hover:bg-red-50 hover:text-destructive">
-              <Trash2 className="h-4 w-4 mr-1" /> Delete
-            </Button>
-            <Button onClick={handleSave} disabled={saving}>
-              {saving ? 'Saving…' : 'Save Changes'}
-            </Button>
+        <CardHeader>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <CardTitle>Edit Booking</CardTitle>
+            <Badge variant="outline" className="text-[var(--text-dark-secondary)] border-gray-400">
+              {booking.source_display}
+            </Badge>
           </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <BookingForm value={value} onChange={setValue} />
         </CardContent>
+        <CardFooter className="flex items-center justify-between">
+          <Button variant="ghost" onClick={handleDelete} className="text-destructive hover:bg-red-50 hover:text-destructive">
+            <Trash2 className="h-4 w-4 mr-1" /> Delete
+          </Button>
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? 'Saving…' : 'Save Changes'}
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

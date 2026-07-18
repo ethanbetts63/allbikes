@@ -140,6 +140,10 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               <CalendarRange className="h-4 w-4 shrink-0" />
               Diary
             </Link>
+            <Link href="/dashboard/service-diary/new" className={subNavItemClass('/dashboard/service-diary/new')}>
+              <PlusCircle className="h-3.5 w-3.5 shrink-0" />
+              Add Booking
+            </Link>
             <Link href="/dashboard/service-bookings" className={navItemClass('/dashboard/service-bookings')}>
               <CalendarCheck className="h-4 w-4 shrink-0" />
               Booking Logs

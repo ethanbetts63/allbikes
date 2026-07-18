@@ -7,7 +7,7 @@ import { adminCreateBooking } from '@/api';
 import type { BookingInput } from '@/types/Booking';
 import BookingForm from '@/forms/BookingForm';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const emptyBooking: BookingInput = {
@@ -47,15 +47,13 @@ const AddBookingPage = () => {
   };
 
   return (
-    <div className="p-4 md:p-6 max-w-3xl">
+    <div className="p-4 md:p-6">
       <button
         onClick={() => router.push('/dashboard/service-diary')}
         className="flex items-center gap-1 text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] mb-4"
       >
         <ArrowLeft className="h-4 w-4" /> Back to diary
       </button>
-
-      <h1 className="text-2xl font-bold text-[var(--text-dark-primary)] mb-4">Add Booking</h1>
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -64,17 +62,17 @@ const AddBookingPage = () => {
       )}
 
       <Card>
-        <CardContent className="pt-6">
+        <CardHeader>
+          <CardTitle>Add Booking</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <BookingForm value={value} onChange={setValue} />
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="outline" onClick={() => router.push('/dashboard/service-diary')} className="text-[var(--text-dark-primary)]">
-              Cancel
-            </Button>
-            <Button onClick={handleSave} disabled={saving || !canSave}>
-              {saving ? 'Saving…' : 'Create Booking'}
-            </Button>
-          </div>
         </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button onClick={handleSave} disabled={saving || !canSave}>
+            {saving ? 'Saving…' : 'Create Booking'}
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

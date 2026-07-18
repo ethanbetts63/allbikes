@@ -41,24 +41,24 @@ const BookingTile = ({ booking, onClick }: { booking: Booking; onClick: () => vo
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left rounded-md border p-2 mb-2 transition-colors ${style.tile}`}
+      className={`w-full text-left border-b border-black/10 p-2.5 transition-colors ${style.tile}`}
     >
       <div className="flex items-center gap-1.5 mb-1">
         <span className={`h-2 w-2 rounded-full shrink-0 ${style.dot}`} />
         <span className="text-xs font-bold text-gray-800">{time ?? 'No time'}</span>
       </div>
       {(booking.bike_name || booking.registration) && (
-        <p className="text-xs font-semibold text-gray-900 leading-tight truncate">
+        <p className="text-xs font-semibold text-gray-900 leading-snug">
           {booking.bike_name}
           {booking.registration && <span className="font-mono font-normal text-gray-600"> · {booking.registration}</span>}
         </p>
       )}
-      <p className="text-xs text-gray-700 leading-tight truncate">
+      <p className="text-xs text-gray-700 leading-snug">
         {booking.customer_name}
         {booking.customer_phone && <span className="text-gray-500"> · {booking.customer_phone}</span>}
       </p>
       {booking.job_description && (
-        <p className="text-[11px] text-gray-500 leading-tight mt-1 line-clamp-2">{booking.job_description}</p>
+        <p className="text-[11px] text-gray-500 leading-snug mt-1">{booking.job_description}</p>
       )}
     </button>
   );
@@ -179,7 +179,7 @@ const AdminServiceDiaryPage = () => {
 
       {/* Week grid */}
       <div className="overflow-x-auto">
-        <div className="grid grid-cols-7 gap-2 min-w-[900px]">
+        <div className="grid grid-cols-7 min-w-[900px] border border-[var(--border-light)] rounded-lg overflow-hidden">
           {days.map(day => {
             const dayStr = format(day, 'yyyy-MM-dd');
             const isGreyed = unavailableDays.has(dayStr);       // matches the booking form
@@ -189,8 +189,8 @@ const AdminServiceDiaryPage = () => {
             return (
               <div
                 key={dayStr}
-                className={`rounded-lg border min-h-[400px] flex flex-col ${
-                  isGreyed ? 'bg-gray-200 border-gray-300' : 'bg-white border-[var(--border-light)]'
+                className={`min-h-[400px] flex flex-col border-r border-[var(--border-light)] last:border-r-0 ${
+                  isGreyed ? 'bg-gray-200' : 'bg-white'
                 }`}
               >
                 {/* Day header */}
@@ -205,11 +205,6 @@ const AdminServiceDiaryPage = () => {
                     <p className={`text-lg font-bold ${isToday ? 'text-[var(--highlight)]' : 'text-gray-800'}`}>
                       {format(day, 'd MMM')}
                     </p>
-                    {isGreyed && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-600 mt-0.5">
-                        <Ban className="h-3 w-3" /> Unavailable
-                      </span>
-                    )}
                   </button>
 
                   {menuDate === dayStr && (
@@ -231,8 +226,8 @@ const AdminServiceDiaryPage = () => {
                   )}
                 </div>
 
-                {/* Tiles */}
-                <div className="flex-1 p-2 overflow-y-auto">
+                {/* Tiles — flush to the column edges to maximise space */}
+                <div className="flex-1 overflow-y-auto">
                   {isLoading ? (
                     <p className="text-xs text-gray-400 text-center pt-4">Loading…</p>
                   ) : dayBookings.length ? (
