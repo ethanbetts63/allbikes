@@ -179,7 +179,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
           {isNew && (
             <div className="mb-6 border border-[var(--highlight)] rounded-lg p-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--highlight)] mb-1">SYM Trade-In Offer</p>
-              <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-1">Get minimum $500 off when you trade in your current bike licenced and running, any make and model.</p>
+              <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-1">Get minimum $500 off new SYM's when you trade in your current bike.</p>
               <p className="text-xs text-[var(--text-dark-secondary)]">Any make or model accepted. Must be licensed and running.</p>
             </div>
           )}
