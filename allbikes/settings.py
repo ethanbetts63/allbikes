@@ -68,6 +68,18 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+# Production TLS/cookie hardening. Gated on DEBUG so local dev over plain HTTP
+# still works. HTTP->HTTPS redirect itself is handled by PythonAnywhere's
+# "Force HTTPS" toggle, so SECURE_SSL_REDIRECT is intentionally left off.
+if not DEBUG:
+    # PythonAnywhere terminates TLS and forwards the original scheme here, so
+    # Django can tell a request was HTTPS (needed for HSTS and Secure cookies).
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 63072000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
