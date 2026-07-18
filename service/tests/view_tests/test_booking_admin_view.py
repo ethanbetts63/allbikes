@@ -78,3 +78,25 @@ class TestBookingAdminViewSet:
         response = admin_client.delete(f'/api/service/admin/bookings/{booking.id}/')
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert not Booking.objects.filter(pk=booking.id).exists()
+
+    def test_search_matches_across_fields_and_ignores_date_window(self, admin_client):
+        target = BookingFactory(
+            customer_name='Priya Nair', registration='9XYZ887',
+            drop_off_date=date(2020, 1, 1),  # far outside any week window
+        )
+        BookingFactory(customer_name='Someone Else', registration='1AAA111')
+
+        # Match by name
+        r1 = admin_client.get('/api/service/admin/bookings/?search=priya')
+        assert r1.status_code == status.HTTP_200_OK
+        assert [b['id'] for b in r1.data] == [target.id]
+
+        # Match by registration, case-insensitive, even with a date window set
+        r2 = admin_client.get('/api/service/admin/bookings/?search=9xyz&start=2026-01-01&end=2026-01-07')
+        assert [b['id'] for b in r2.data] == [target.id]
+
+    def test_search_no_matches_returns_empty(self, admin_client):
+        BookingFactory(customer_name='Priya Nair')
+        response = admin_client.get('/api/service/admin/bookings/?search=zzzznomatch')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == []

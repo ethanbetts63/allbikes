@@ -406,10 +406,11 @@ export async function adminDeleteBookingLog(id: number): Promise<void> {
 
 // --- Service Diary: Bookings ---
 
-export async function adminGetBookings(options: { start?: string; end?: string } = {}): Promise<Booking[]> {
+export async function adminGetBookings(options: { start?: string; end?: string; search?: string } = {}): Promise<Booking[]> {
     const params = new URLSearchParams();
     if (options.start) params.append('start', options.start);
     if (options.end) params.append('end', options.end);
+    if (options.search) params.append('search', options.search);
     const qs = params.toString();
     const response = await authedFetch(`/api/service/admin/bookings/${qs ? `?${qs}` : ''}`);
     return handleResponse(response);

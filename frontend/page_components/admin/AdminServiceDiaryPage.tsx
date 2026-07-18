@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { addDays, startOfWeek, format, isSameDay } from 'date-fns';
-import { ChevronLeft, ChevronRight, Plus, Ban, CalendarCheck } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Ban, CalendarCheck, Search, X } from 'lucide-react';
 import {
   adminGetBookings,
   adminGetBlockedDates,
@@ -14,6 +14,7 @@ import {
 } from '@/api';
 import type { Booking, BookingStatus, BlockedDate } from '@/types/Booking';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 // Tile styling per job status. Colours follow the MechanicDesk diary:
@@ -68,6 +69,57 @@ const BookingTile = ({ booking, onClick }: { booking: Booking; onClick: (e: Reac
   );
 };
 
+const SearchResultsList = ({
+  results,
+  isSearching,
+  onOpen,
+}: {
+  results: Booking[];
+  isSearching: boolean;
+  onOpen: (id: number) => void;
+}) => {
+  if (isSearching && results.length === 0) {
+    return <p className="text-sm text-[var(--text-dark-secondary)] py-8 text-center">Searching…</p>;
+  }
+  if (results.length === 0) {
+    return <p className="text-sm text-[var(--text-dark-secondary)] py-8 text-center">No bookings match your search.</p>;
+  }
+  return (
+    <div className="border border-[var(--border-light)] rounded-lg overflow-hidden bg-white">
+      {results.map(b => {
+        const style = STATUS_STYLES[b.status];
+        const bike = vehicleLabel(b);
+        return (
+          <button
+            key={b.id}
+            onClick={() => onOpen(b.id)}
+            className="w-full text-left flex items-start gap-3 px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50"
+          >
+            <span className={`h-2.5 w-2.5 rounded-full shrink-0 mt-1.5 ${style.dot}`} />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-baseline gap-x-2">
+                <span className="text-sm font-semibold text-gray-900">{b.customer_name}</span>
+                {b.customer_phone && <span className="text-xs text-gray-500">{b.customer_phone}</span>}
+              </div>
+              {(bike || b.registration) && (
+                <p className="text-xs text-gray-700">
+                  {bike}
+                  {b.registration && <span className="font-mono text-gray-500"> · {b.registration}</span>}
+                </p>
+              )}
+              {b.job_description && <p className="text-xs text-gray-500 truncate">{b.job_description}</p>}
+            </div>
+            <div className="text-right shrink-0">
+              <p className="text-xs font-medium text-gray-800">{format(new Date(b.drop_off_date + 'T00:00:00'), 'EEE d MMM yyyy')}</p>
+              <p className="text-xs text-gray-500">{formatTime(b.drop_off_time) ?? 'No time'} · {style.label}</p>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 const AdminServiceDiaryPage = () => {
   const router = useRouter();
   const [weekStart, setWeekStart] = useState<Date>(() => startOfWeek(new Date(), { weekStartsOn: 1 }));
@@ -79,6 +131,13 @@ const AdminServiceDiaryPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [menuDate, setMenuDate] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Search — when the query is non-empty the diary shows a flat results list
+  // instead of the weekly grid.
+  const [search, setSearch] = useState('');
+  const [searchResults, setSearchResults] = useState<Booking[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const searching = search.trim().length > 0;
 
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const rangeStart = format(weekStart, 'yyyy-MM-dd');
@@ -110,6 +169,30 @@ const AdminServiceDiaryPage = () => {
     load();
     return () => { cancelled = true; };
   }, [rangeStart, rangeEnd]);
+
+  // Debounced booking search.
+  useEffect(() => {
+    const q = search.trim();
+    let cancelled = false;
+    const run = async () => {
+      if (!q) {
+        setSearchResults([]);
+        setIsSearching(false);
+        return;
+      }
+      setIsSearching(true);
+      try {
+        const results = await adminGetBookings({ search: q });
+        if (!cancelled) setSearchResults(results);
+      } catch {
+        if (!cancelled) setError('Search failed.');
+      } finally {
+        if (!cancelled) setIsSearching(false);
+      }
+    };
+    const t = setTimeout(run, q ? 300 : 0);
+    return () => { cancelled = true; clearTimeout(t); };
+  }, [search]);
 
   // Close the day menu on outside click.
   useEffect(() => {
@@ -171,9 +254,31 @@ const AdminServiceDiaryPage = () => {
         </div>
       </div>
 
-      <p className="text-sm text-[var(--text-dark-secondary)] mb-4">
-        {format(weekStart, 'd MMM')} – {format(addDays(weekStart, 6), 'd MMM yyyy')}
-      </p>
+      {/* Search */}
+      <div className="relative mb-4 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search bookings — name, rego, phone, make…"
+          className="pl-9 pr-9 bg-white text-black"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+            aria-label="Clear search"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
+      {!searching && (
+        <p className="text-sm text-[var(--text-dark-secondary)] mb-4">
+          {format(weekStart, 'd MMM')} – {format(addDays(weekStart, 6), 'd MMM yyyy')}
+        </p>
+      )}
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -181,6 +286,14 @@ const AdminServiceDiaryPage = () => {
         </Alert>
       )}
 
+      {searching ? (
+        <SearchResultsList
+          results={searchResults}
+          isSearching={isSearching}
+          onOpen={(id) => router.push(`/dashboard/service-diary/${id}`)}
+        />
+      ) : (
+      <>
       {/* Week grid */}
       <div className="overflow-x-auto">
         <div className="grid grid-cols-7 min-w-[900px] border border-[var(--border-light)] rounded-lg overflow-hidden">
@@ -268,6 +381,8 @@ const AdminServiceDiaryPage = () => {
           <span className="h-3 w-3 rounded-sm bg-gray-300" /> Unavailable / blocked
         </span>
       </div>
+      </>
+      )}
     </div>
   );
 };
