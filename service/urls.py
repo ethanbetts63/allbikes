@@ -6,6 +6,7 @@ from .views.job_type_admin_view import JobTypeAdminViewSet
 from .views.booking_request_log_admin_view import BookingRequestLogListView, BookingRequestLogDetailView
 from .views.booking_admin_view import BookingAdminViewSet
 from .views.blocked_date_view import BlockedDateViewSet
+from .views.diary_unavailable_days_view import DiaryUnavailableDaysView
 
 app_name = 'service_api'
 
@@ -33,6 +34,7 @@ urlpatterns = [
     # Admin APIs
     path('service-settings/', service_settings_admin_view, name='service-settings-admin'),
     path('admin/', include(admin_router.urls)),
+    path('admin/unavailable-days/', DiaryUnavailableDaysView.as_view(), name='diary-unavailable-days'),
     path('admin/booking-logs/', BookingRequestLogListView.as_view(), name='booking-log-list'),
     path('admin/booking-logs/<int:pk>/', BookingRequestLogDetailView.as_view(), name='booking-log-detail'),
 ]

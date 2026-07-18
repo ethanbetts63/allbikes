@@ -13,6 +13,7 @@ import type { AdminDashboard } from '@/types/AdminDashboard';
 import type { SentMessage } from '@/types/SentMessage';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import type { Booking, BookingInput, BlockedDate } from '@/types/Booking';
+import type { ServiceSettings } from '@/types/ServiceSettings';
 import type { HireBooking, HireSettings } from '@/types/HireBooking';
 
 /**
@@ -465,6 +466,20 @@ export async function adminUnblockDate(date: string): Promise<void> {
         body: JSON.stringify({ date }),
     });
     if (!response.ok) throw new Error('Failed to unblock date.');
+}
+
+// Unavailable days for the diary over an explicit range, respecting the
+// MechanicDesk-blocked-dates toggle server-side. Returns YYYY-MM-DD strings.
+export async function adminGetDiaryUnavailableDays(start: string, end: string): Promise<string[]> {
+    const params = new URLSearchParams({ start, end });
+    const response = await authedFetch(`/api/service/admin/unavailable-days/?${params.toString()}`);
+    const data = await handleResponse<{ unavailable_days: string[] }>(response);
+    return data.unavailable_days ?? [];
+}
+
+export async function adminGetServiceSettings(): Promise<ServiceSettings> {
+    const response = await authedFetch(`/api/service/service-settings/`);
+    return handleResponse(response);
 }
 
 // --- Hire ---

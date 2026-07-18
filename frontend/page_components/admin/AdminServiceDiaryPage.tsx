@@ -9,6 +9,8 @@ import {
   adminGetBlockedDates,
   adminBlockDate,
   adminUnblockDate,
+  adminGetDiaryUnavailableDays,
+  adminGetServiceSettings,
 } from '@/api';
 import type { Booking, BookingStatus, BlockedDate } from '@/types/Booking';
 import { Button } from '@/components/ui/button';
@@ -67,6 +69,8 @@ const AdminServiceDiaryPage = () => {
   const [weekStart, setWeekStart] = useState<Date>(() => startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [blockedDates, setBlockedDates] = useState<BlockedDate[]>([]);
+  const [unavailableDays, setUnavailableDays] = useState<Set<string>>(new Set());
+  const [mdMode, setMdMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [menuDate, setMenuDate] = useState<string | null>(null);
@@ -82,13 +86,17 @@ const AdminServiceDiaryPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const [b, blocked] = await Promise.all([
+        const [b, blocked, unavailable, settings] = await Promise.all([
           adminGetBookings({ start: rangeStart, end: rangeEnd }),
           adminGetBlockedDates({ start: rangeStart, end: rangeEnd }),
+          adminGetDiaryUnavailableDays(rangeStart, rangeEnd),
+          adminGetServiceSettings(),
         ]);
         if (cancelled) return;
         setBookings(b);
         setBlockedDates(blocked);
+        setUnavailableDays(new Set(unavailable));
+        setMdMode(settings.use_mechanic_desk_blocked_dates);
       } catch {
         if (!cancelled) setError('Failed to load the diary.');
       } finally {
@@ -124,6 +132,10 @@ const AdminServiceDiaryPage = () => {
         const created = await adminBlockDate(dayStr);
         setBlockedDates(prev => [...prev.filter(bd => bd.date !== dayStr), created]);
       }
+      // Greying is derived server-side (advance notice + weekdays + blocks), so
+      // re-fetch it to reflect the change immediately.
+      const refreshed = await adminGetDiaryUnavailableDays(rangeStart, rangeEnd);
+      setUnavailableDays(new Set(refreshed));
     } catch {
       setError('Failed to update blocked day.');
     }
@@ -145,9 +157,6 @@ const AdminServiceDiaryPage = () => {
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => setWeekStart(w => addDays(w, -7))} className={navBtnClass}>
             <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))} className={navBtnClass}>
-            Today
           </Button>
           <Button variant="outline" size="sm" onClick={() => setWeekStart(w => addDays(w, 7))} className={navBtnClass}>
             <ChevronRight className="h-4 w-4" />
@@ -173,15 +182,15 @@ const AdminServiceDiaryPage = () => {
         <div className="grid grid-cols-7 gap-2 min-w-[900px]">
           {days.map(day => {
             const dayStr = format(day, 'yyyy-MM-dd');
-            const blocked = blockedForDay(day);
-            const isBlocked = !!blocked;
+            const isGreyed = unavailableDays.has(dayStr);       // matches the booking form
+            const hasLocalBlock = !!blockedForDay(day);          // a one-off block we can toggle
             const dayBookings = bookingsForDay(day);
             const isToday = isSameDay(day, today);
             return (
               <div
                 key={dayStr}
                 className={`rounded-lg border min-h-[400px] flex flex-col ${
-                  isBlocked ? 'bg-gray-200 border-gray-300' : 'bg-white border-[var(--border-light)]'
+                  isGreyed ? 'bg-gray-200 border-gray-300' : 'bg-white border-[var(--border-light)]'
                 }`}
               >
                 {/* Day header */}
@@ -196,22 +205,28 @@ const AdminServiceDiaryPage = () => {
                     <p className={`text-lg font-bold ${isToday ? 'text-[var(--highlight)]' : 'text-gray-800'}`}>
                       {format(day, 'd MMM')}
                     </p>
-                    {isBlocked && (
+                    {isGreyed && (
                       <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-600 mt-0.5">
-                        <Ban className="h-3 w-3" /> Blocked
+                        <Ban className="h-3 w-3" /> Unavailable
                       </span>
                     )}
                   </button>
 
                   {menuDate === dayStr && (
-                    <div ref={menuRef} className="absolute z-10 left-2 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg py-1 w-40">
-                      <button
-                        onClick={() => handleToggleBlock(dayStr, isBlocked)}
-                        className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                      >
-                        <Ban className="h-4 w-4" />
-                        {isBlocked ? 'Unblock this day' : 'Block this day'}
-                      </button>
+                    <div ref={menuRef} className="absolute z-10 left-2 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg py-1 w-52">
+                      {mdMode ? (
+                        <p className="px-3 py-2 text-xs text-gray-500 leading-snug">
+                          Blocked days are managed in MechanicDesk while it&rsquo;s the active source.
+                        </p>
+                      ) : (
+                        <button
+                          onClick={() => handleToggleBlock(dayStr, hasLocalBlock)}
+                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                        >
+                          <Ban className="h-4 w-4" />
+                          {hasLocalBlock ? 'Unblock this day' : 'Block this day'}
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -225,7 +240,7 @@ const AdminServiceDiaryPage = () => {
                       <BookingTile key={b.id} booking={b} onClick={() => router.push(`/dashboard/service-diary/${b.id}`)} />
                     ))
                   ) : (
-                    !isBlocked && <p className="text-xs text-gray-300 text-center pt-4">No jobs</p>
+                    !isGreyed && <p className="text-xs text-gray-300 text-center pt-4">No jobs</p>
                   )}
                 </div>
               </div>
@@ -243,7 +258,7 @@ const AdminServiceDiaryPage = () => {
           </span>
         ))}
         <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-sm bg-gray-300" /> Blocked day
+          <span className="h-3 w-3 rounded-sm bg-gray-300" /> Unavailable / blocked
         </span>
       </div>
     </div>

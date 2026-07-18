@@ -5,6 +5,7 @@ from .job_type_admin_view import JobTypeAdminViewSet
 from .booking_request_log_admin_view import BookingRequestLogListView, BookingRequestLogDetailView
 from .booking_admin_view import BookingAdminViewSet
 from .blocked_date_view import BlockedDateViewSet
+from .diary_unavailable_days_view import DiaryUnavailableDaysView
 
 __all__ = [
     'BookingViewSet',
@@ -15,4 +16,5 @@ __all__ = [
     'BookingRequestLogDetailView',
     'BookingAdminViewSet',
     'BlockedDateViewSet',
+    'DiaryUnavailableDaysView',
 ]
