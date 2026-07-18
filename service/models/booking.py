@@ -21,6 +21,7 @@ class Booking(models.Model):
     class Source(models.TextChoices):
         WEBSITE = 'website', 'Website'
         MANUAL = 'manual', 'Manually added'
+        IMPORTED = 'imported', 'Imported (MechanicDesk)'
 
     # Scheduling — start (drop-off) time only; no end time / duration is tracked.
     drop_off_date = models.DateField(help_text="The day this job sits on in the diary.")
@@ -52,6 +53,10 @@ class Booking(models.Model):
     source = models.CharField(
         max_length=10, choices=Source.choices, default=Source.MANUAL
     )
+
+    # MechanicDesk Job Number, set only on imported bookings. Used to make the
+    # CSV import idempotent (re-running never duplicates a job).
+    md_job_number = models.CharField(max_length=50, blank=True, db_index=True)
 
     # Link back to the MechanicDesk request this booking came from, if any.
     booking_log = models.ForeignKey(
