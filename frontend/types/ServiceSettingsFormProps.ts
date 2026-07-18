@@ -7,4 +7,5 @@ export interface ServiceSettingsFormProps {
   successMessage: string | null;
   handleSubmit: (e: React.FormEvent) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setField: <K extends keyof ServiceSettings>(name: K, value: ServiceSettings[K]) => void;
 }

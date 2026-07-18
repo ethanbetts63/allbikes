@@ -2,7 +2,27 @@ import type { ServiceSettingsFormProps } from '@/types/ServiceSettingsFormProps'
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+const WEEKDAYS = [
+    { value: 0, label: 'Mon' },
+    { value: 1, label: 'Tue' },
+    { value: 2, label: 'Wed' },
+    { value: 3, label: 'Thu' },
+    { value: 4, label: 'Fri' },
+    { value: 5, label: 'Sat' },
+    { value: 6, label: 'Sun' },
+];
+
+const parseWeekdays = (csv: string): Set<number> => {
+    const set = new Set<number>();
+    (csv || '').split(',').forEach(p => {
+        const n = parseInt(p.trim(), 10);
+        if (!Number.isNaN(n)) set.add(n);
+    });
+    return set;
+};
 
 const ServiceSettingsForm = ({
     settings,
@@ -10,7 +30,17 @@ const ServiceSettingsForm = ({
     successMessage,
     handleSubmit,
     handleChange,
+    setField,
 }: ServiceSettingsFormProps) => {
+    const selectedWeekdays = parseWeekdays(settings.always_blocked_weekdays);
+
+    const toggleWeekday = (value: number) => {
+        const next = new Set(selectedWeekdays);
+        if (next.has(value)) next.delete(value);
+        else next.add(value);
+        setField('always_blocked_weekdays', Array.from(next).sort((a, b) => a - b).join(','));
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex justify-between items-center mb-4">
@@ -59,12 +89,94 @@ const ServiceSettingsForm = ({
                         </div>
                         <div>
                             <Label htmlFor="drop_off_end_time" className="block mb-2">Drop-off End Time</Label>
-                            <Input 
-                                id="drop_off_end_time" 
-                                name="drop_off_end_time" 
-                                type="time" 
-                                value={settings.drop_off_end_time} 
-                                onChange={handleChange} 
+                            <Input
+                                id="drop_off_end_time"
+                                name="drop_off_end_time"
+                                type="time"
+                                value={settings.drop_off_end_time}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Blocked Days */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Blocked Days</CardTitle>
+                        <CardDescription>How unavailable days are determined for the public booking form.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                                <Label className="block mb-1">Use MechanicDesk blocked dates</Label>
+                                <p className="text-xs text-[var(--text-dark-secondary)]">
+                                    When on, unavailable days come from MechanicDesk. Turn off to use the rules below.
+                                </p>
+                            </div>
+                            <Switch
+                                checked={settings.use_mechanic_desk_blocked_dates}
+                                onCheckedChange={v => setField('use_mechanic_desk_blocked_dates', v)}
+                            />
+                        </div>
+
+                        <div className={settings.use_mechanic_desk_blocked_dates ? 'opacity-50 pointer-events-none' : ''}>
+                            <Label className="block mb-2">Weekdays always closed</Label>
+                            <div className="flex flex-wrap gap-2">
+                                {WEEKDAYS.map(d => {
+                                    const active = selectedWeekdays.has(d.value);
+                                    return (
+                                        <button
+                                            key={d.value}
+                                            type="button"
+                                            onClick={() => toggleWeekday(d.value)}
+                                            className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
+                                                active
+                                                    ? 'bg-primary text-white border-primary'
+                                                    : 'bg-transparent text-[var(--text-dark-primary)] border-input hover:bg-gray-100'
+                                            }`}
+                                        >
+                                            {d.label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            <p className="text-xs text-[var(--text-dark-secondary)] mt-2">
+                                Minimum advance notice is controlled by &ldquo;Booking Advance Notice&rdquo; above. Block one-off dates by
+                                clicking a day in the Service Diary.
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Reminder Emails */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Reminder Emails</CardTitle>
+                        <CardDescription>Automated reminders sent to customers before their drop-off.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
+                        <div className="flex items-start justify-between gap-4">
+                            <div>
+                                <Label className="block mb-1">Send reminder emails</Label>
+                                <p className="text-xs text-[var(--text-dark-secondary)]">
+                                    Keep off while MechanicDesk is still sending its own reminders, to avoid duplicates.
+                                </p>
+                            </div>
+                            <Switch
+                                checked={settings.reminder_emails_enabled}
+                                onCheckedChange={v => setField('reminder_emails_enabled', v)}
+                            />
+                        </div>
+                        <div className={settings.reminder_emails_enabled ? '' : 'opacity-50 pointer-events-none'}>
+                            <Label htmlFor="reminder_days_before" className="block mb-2">Days before drop-off</Label>
+                            <Input
+                                id="reminder_days_before"
+                                name="reminder_days_before"
+                                type="number"
+                                min={0}
+                                value={settings.reminder_days_before}
+                                onChange={handleChange}
                             />
                         </div>
                     </CardContent>

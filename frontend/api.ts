@@ -12,6 +12,7 @@ import type { Order } from '@/types/Order';
 import type { AdminDashboard } from '@/types/AdminDashboard';
 import type { SentMessage } from '@/types/SentMessage';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
+import type { Booking, BookingInput, BlockedDate } from '@/types/Booking';
 import type { HireBooking, HireSettings } from '@/types/HireBooking';
 
 /**
@@ -400,6 +401,70 @@ export async function adminGetBookingLog(id: number): Promise<BookingRequestLog>
 export async function adminDeleteBookingLog(id: number): Promise<void> {
     const response = await authedFetch(`/api/service/admin/booking-logs/${id}/`, { method: 'DELETE' });
     if (!response.ok) throw new Error('Failed to delete booking log.');
+}
+
+// --- Service Diary: Bookings ---
+
+export async function adminGetBookings(options: { start?: string; end?: string } = {}): Promise<Booking[]> {
+    const params = new URLSearchParams();
+    if (options.start) params.append('start', options.start);
+    if (options.end) params.append('end', options.end);
+    const qs = params.toString();
+    const response = await authedFetch(`/api/service/admin/bookings/${qs ? `?${qs}` : ''}`);
+    return handleResponse(response);
+}
+
+export async function adminGetBooking(id: number): Promise<Booking> {
+    const response = await authedFetch(`/api/service/admin/bookings/${id}/`);
+    return handleResponse(response);
+}
+
+export async function adminCreateBooking(data: BookingInput): Promise<Booking> {
+    const response = await authedFetch(`/api/service/admin/bookings/`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function adminUpdateBooking(id: number, data: Partial<BookingInput>): Promise<Booking> {
+    const response = await authedFetch(`/api/service/admin/bookings/${id}/`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+}
+
+export async function adminDeleteBooking(id: number): Promise<void> {
+    const response = await authedFetch(`/api/service/admin/bookings/${id}/`, { method: 'DELETE' });
+    if (!response.ok) throw new Error('Failed to delete booking.');
+}
+
+// --- Service Diary: Blocked Dates ---
+
+export async function adminGetBlockedDates(options: { start?: string; end?: string } = {}): Promise<BlockedDate[]> {
+    const params = new URLSearchParams();
+    if (options.start) params.append('start', options.start);
+    if (options.end) params.append('end', options.end);
+    const qs = params.toString();
+    const response = await authedFetch(`/api/service/admin/blocked-dates/${qs ? `?${qs}` : ''}`);
+    return handleResponse(response);
+}
+
+export async function adminBlockDate(date: string, reason = ''): Promise<BlockedDate> {
+    const response = await authedFetch(`/api/service/admin/blocked-dates/`, {
+        method: 'POST',
+        body: JSON.stringify({ date, reason }),
+    });
+    return handleResponse(response);
+}
+
+export async function adminUnblockDate(date: string): Promise<void> {
+    const response = await authedFetch(`/api/service/admin/blocked-dates/unblock/`, {
+        method: 'POST',
+        body: JSON.stringify({ date }),
+    });
+    if (!response.ok) throw new Error('Failed to unblock date.');
 }
 
 // --- Hire ---

@@ -4,12 +4,16 @@ from .views.booking_viewset import BookingViewSet
 from .views.service_settings_view import ServiceSettingsViewSet
 from .views.job_type_admin_view import JobTypeAdminViewSet
 from .views.booking_request_log_admin_view import BookingRequestLogListView, BookingRequestLogDetailView
+from .views.booking_admin_view import BookingAdminViewSet
+from .views.blocked_date_view import BlockedDateViewSet
 
 app_name = 'service_api'
 
 # Router for admin viewsets
 admin_router = DefaultRouter()
 admin_router.register(r'job-types', JobTypeAdminViewSet, basename='job-type-admin')
+admin_router.register(r'bookings', BookingAdminViewSet, basename='booking-admin')
+admin_router.register(r'blocked-dates', BlockedDateViewSet, basename='blocked-date-admin')
 
 
 # Manually map methods for the admin-only ServiceSettings singleton endpoint

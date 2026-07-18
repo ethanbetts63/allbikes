@@ -278,6 +278,47 @@ def send_admin_service_booking(booking_data, booking_log=None):
     _send_admin_sms(sms_messages.admin_new_service(booking_data))
 
 
+def send_service_reminder(booking):
+    """
+    Send a customer reminder for an upcoming diary Booking.
+
+    `booking` is a service.models.Booking instance. Never raises — records the
+    attempt as a Message either way. The caller (management command) is
+    responsible for stamping reminder_sent_at only on success.
+    Returns True if sent, False on failure or missing recipient.
+    """
+    to = booking.customer_email
+    if not to:
+        logger.warning("Service reminder skipped for booking %s: no email", booking.pk)
+        return False
+
+    when = booking.drop_off_date.strftime('%A, %d %b %Y')
+    if booking.drop_off_time:
+        when += booking.drop_off_time.strftime(' at %I:%M %p').replace(' 0', ' ')
+    subject = f"Reminder: your service booking — {when}"
+    text_body = (
+        f"Hi {booking.customer_name},\n\n"
+        f"This is a reminder about your upcoming service booking at ScooterShop.\n\n"
+        f"Drop-off: {when}\n"
+        + (f"Motorcycle: {booking.bike_name}" + (f" ({booking.registration})" if booking.registration else "") + "\n" if booking.bike_name else "")
+        + (f"Service: {booking.job_description}\n" if booking.job_description else "")
+        + "\n"
+        f"Unit 5 / 6 Cleveland Street, Dianella WA 6059\n"
+        f"Need to reschedule? admin@scootershop.com.au | 08 9433 4613"
+    )
+    context = {'booking': booking}
+    html_body = render_to_string('notifications/emails/service_booking_reminder.html', context)
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(booking, 'service_booking_reminder', to, subject, text_body, html_body, 'sent')
+        logger.info("Service reminder sent to %s for booking %s", to, booking.pk)
+        return True
+    except Exception as e:
+        logger.error("Failed to send service reminder for booking %s to %s: %s", booking.pk, to, e)
+        _record(booking, 'service_booking_reminder', to, subject, text_body, html_body, 'failed', str(e))
+        return False
+
+
 def send_admin_new_order(order):
     recipients = _admin_recipients()
     if not recipients:

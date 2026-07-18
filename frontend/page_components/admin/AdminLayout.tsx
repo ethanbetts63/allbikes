@@ -12,6 +12,7 @@ import {
   ClipboardList,
   Mail,
   CalendarCheck,
+  CalendarRange,
   Settings,
   Tag,
   LogOut,
@@ -135,9 +136,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             </Link>
 
             <SectionLabel>Service</SectionLabel>
+            <Link href="/dashboard/service-diary" className={navItemClass('/dashboard/service-diary')}>
+              <CalendarRange className="h-4 w-4 shrink-0" />
+              Diary
+            </Link>
             <Link href="/dashboard/service-bookings" className={navItemClass('/dashboard/service-bookings')}>
               <CalendarCheck className="h-4 w-4 shrink-0" />
-              Bookings
+              Booking Logs
             </Link>
             <Link href="/dashboard/service-settings" className={navItemClass('/dashboard/service-settings')}>
               <Settings className="h-4 w-4 shrink-0" />

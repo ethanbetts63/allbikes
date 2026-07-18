@@ -2,14 +2,62 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from datetime import datetime
 import logging
 
 from .mechanics_desk_service import MechanicsDeskService
 from ..serializers import BookingSerializer, ServiceSettingsSerializer
-from ..models import ServiceSettings, BookingRequestLog, JobType
+from ..models import ServiceSettings, BookingRequestLog, JobType, Booking
+from ..utils.blocked_days import compute_local_unavailable_days
 from notifications.utils.email import send_admin_service_booking, send_service_booking_confirmation
 
 logger = logging.getLogger(__name__)
+
+
+def _create_local_booking(validated_data, booking_log):
+    """
+    Persist a local diary Booking alongside the MechanicDesk request.
+
+    Website submissions land as `requested` (staff confirm them on the diary).
+    Never raises — a local-persist failure must not break the customer's
+    booking, which has already succeeded in MechanicDesk.
+    """
+    try:
+        drop_off_raw = validated_data.get('drop_off_time', '')
+        drop_off_date = None
+        drop_off_time = None
+        try:
+            parsed = datetime.strptime(drop_off_raw, '%d/%m/%Y %H:%M')
+            drop_off_date = parsed.date()
+            drop_off_time = parsed.time()
+        except (ValueError, TypeError):
+            logger.warning("Could not parse drop_off_time '%s' for local booking", drop_off_raw)
+
+        if drop_off_date is None:
+            # Without a date there is nowhere to place the tile; skip local record.
+            logger.warning("Skipping local booking creation: no parseable drop-off date")
+            return None
+
+        job_names = validated_data.get('job_type_names', [])
+        make = validated_data.get('make', '')
+        model = validated_data.get('model', '')
+
+        return Booking.objects.create(
+            drop_off_date=drop_off_date,
+            drop_off_time=drop_off_time,
+            customer_name=validated_data.get('name') or f"{validated_data.get('first_name', '')} {validated_data.get('last_name', '')}".strip(),
+            customer_phone=validated_data.get('phone', ''),
+            customer_email=validated_data.get('email', ''),
+            bike_name=f"{make} {model}".strip(),
+            registration=validated_data.get('registration_number', ''),
+            job_description=', '.join(job_names) if job_names else '',
+            status=Booking.Status.REQUESTED,
+            source=Booking.Source.WEBSITE,
+            booking_log=booking_log,
+        )
+    except Exception:
+        logger.exception("Failed to create local diary booking; continuing")
+        return None
 
 class BookingViewSet(viewsets.ViewSet):
     """
@@ -72,6 +120,11 @@ class BookingViewSet(viewsets.ViewSet):
             log_payload['response_status_code'] = 200
             booking_log = BookingRequestLog.objects.create(**log_payload)
             logger.info("Service booking log id=%s created; sending emails", booking_log.pk)
+
+            # Dual-write: also persist a local diary booking (status 'requested').
+            local_booking = _create_local_booking(validated_data, booking_log)
+            if local_booking:
+                logger.info("Local diary booking id=%s created", local_booking.pk)
 
             send_service_booking_confirmation(validated_data, booking_log)
             send_admin_service_booking(validated_data, booking_log)
@@ -138,11 +191,19 @@ class BookingViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def unavailable_days(self, request):
         """
-        Fetches the list of unavailable days from MechanicsDesk.
+        Fetches the list of unavailable days.
+
+        Sourced from MechanicDesk while use_mechanic_desk_blocked_dates is on;
+        computed from our own rules/blocked dates once it is switched off.
         Maps to GET /api/service/booking/unavailable_days/
         """
-        service = MechanicsDeskService()
         in_days = request.query_params.get('in_days', 30)
+
+        settings = ServiceSettings.load()
+        if not settings.use_mechanic_desk_blocked_dates:
+            return Response(compute_local_unavailable_days(in_days=in_days), status=status.HTTP_200_OK)
+
+        service = MechanicsDeskService()
         unavailable_days = service.get_unavailable_days(in_days=in_days)
         if "error" in unavailable_days:
             return Response(unavailable_days, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

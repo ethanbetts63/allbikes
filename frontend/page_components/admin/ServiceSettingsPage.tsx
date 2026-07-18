@@ -33,6 +33,10 @@ const ServiceSettingsPage = () => {
         setSettings({ ...settings, [name]: type === 'number' ? parseInt(value, 10) : value });
     };
 
+    const setField = <K extends keyof ServiceSettings>(name: K, value: ServiceSettings[K]) => {
+        setSettings(prev => (prev ? { ...prev, [name]: value } : prev));
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (!settings) return;
@@ -78,6 +82,7 @@ const ServiceSettingsPage = () => {
             successMessage={successMessage}
             handleSubmit={handleSubmit}
             handleChange={handleChange}
+            setField={setField}
         />
         </div>
     );
