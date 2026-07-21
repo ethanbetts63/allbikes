@@ -237,7 +237,7 @@ const BikeDetailPage = ({
                                     Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
                                 </Link>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
-                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we&apos;ll be in touch as soon as possible to arrange the rest.
+                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we&apos;ll be in touch to arrange the rest.
                                 </p>
                             </div>
                         )}
