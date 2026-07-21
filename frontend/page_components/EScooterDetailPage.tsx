@@ -11,7 +11,7 @@ import MediaGallery from '@/components/MediaGallery';
 import PriceDisplay from '@/components/PriceDisplay';
 import { ErrorScreen } from '@/components/DetailPageStates';
 import { getYouTubeVideoId } from '@/utils/youtube';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Globe } from 'lucide-react';
 import { assetUrl } from '@/utils/assetUrl';
 import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/utils/vehicleImages';
 import { buildBreadcrumbSchema } from '@/lib/seo';
@@ -87,6 +87,12 @@ const EScooterDetailPage = ({ initialProduct }: EScooterDetailPageProps) => {
                             discount_price={product.discount_price}
                             subtitle={<p className="text-sm text-[var(--text-dark-secondary)]">Price includes GST · Free delivery Australia-wide</p>}
                         />
+
+                        {/* Online-only note — e-scooters aren't stocked in store */}
+                        <p className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-dark-primary)] mb-6">
+                            <Globe className="h-4 w-4 shrink-0 text-[var(--highlight1)]" />
+                            Online only — not stocked in store, purchase online.
+                        </p>
 
                         {/* Description */}
                         {product.description && (

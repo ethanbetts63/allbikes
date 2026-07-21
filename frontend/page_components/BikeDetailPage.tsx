@@ -16,6 +16,7 @@ import {
     Mail,
     Phone,
     ChevronLeft,
+    Globe,
 } from 'lucide-react';
 import clickIcon from '@/assets/click.svg';
 import { siteSettings } from '@/config/siteSettings';
@@ -197,6 +198,14 @@ const BikeDetailPage = ({
                             discount_price={bike.discount_price}
                             subtitle={bikeSubtitle}
                         />
+
+                        {/* Online-only note — new e-scooters aren't stocked in store */}
+                        {bike.condition === 'new' && bike.vehicle_type === 'scooter' && (
+                            <p className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-dark-primary)] mb-6">
+                                <Globe className="h-4 w-4 shrink-0 text-[var(--highlight1)]" />
+                                Online only — not stocked in store, purchase online.
+                            </p>
+                        )}
 
                         {/* SYM trade-in offer */}
                         {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && (

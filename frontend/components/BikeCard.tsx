@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import NextImage from 'next/image';
-import { Wrench, Cog, Gauge, Flame } from "lucide-react";
+import { Wrench, Cog, Gauge, Flame, Globe } from "lucide-react";
 import type { BikeCardProps } from "@/types/BikeCardProps";
 import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
@@ -30,6 +30,13 @@ const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boole
           <span className="absolute bottom-2 left-2 bg-black/60 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded capitalize">
             {bike.condition}
           </span>
+          {/* Online-only pill — new e-scooters are sold online, not stocked in store */}
+          {bike.condition === 'new' && bike.vehicle_type === 'scooter' && (
+            <span className="absolute top-3 left-1/2 -translate-x-1/2 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full backdrop-blur-sm flex items-center gap-1">
+              <Globe className="h-3 w-3" />
+              Online only
+            </span>
+          )}
           {/* LAMS pill */}
           {bike.is_lams_approved && (
             <span className="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded">

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import NextImage from 'next/image';
-import { Truck, ShieldCheck, Flame } from 'lucide-react';
+import { Truck, ShieldCheck, Flame, Globe } from 'lucide-react';
 import type { ProductCardProps } from '@/types/ProductCardProps';
 import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
@@ -27,6 +27,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </div>
           )}
 
+          {/* Online-only pill — e-scooters are sold online, not stocked in store */}
+          <span className="absolute top-3 left-1/2 -translate-x-1/2 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full backdrop-blur-sm flex items-center gap-1">
+            <Globe className="h-3 w-3" />
+            Online only
+          </span>
           {/* Popular pill */}
           {product.popular && (
             <span className="absolute top-3 right-3 bg-[var(--highlight)] text-[var(--text-dark-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1">
