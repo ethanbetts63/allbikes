@@ -63,6 +63,48 @@ class TestDiaryUnavailableDaysView:
         assert in_range in response.data['unavailable_days']
         assert out_of_range not in response.data['unavailable_days']
 
+    def test_force_open_override_ungrays_day_in_local_mode(self, admin_client):
+        ServiceSettingsFactory(
+            use_mechanic_desk_blocked_dates=False,
+            booking_advance_notice=3,
+            always_blocked_weekdays="",
+        )
+        today = timezone.localdate()
+        exception_day = today + timedelta(days=1)  # inside advance-notice window
+        start = today.isoformat()
+        end = (today + timedelta(days=6)).isoformat()
+
+        # Greyed before the override.
+        before = admin_client.get(f'/api/service/admin/unavailable-days/?start={start}&end={end}')
+        assert exception_day.isoformat() in before.data['unavailable_days']
+
+        # Admin forces the day open.
+        create = admin_client.post(
+            '/api/service/admin/blocked-dates/',
+            {'date': exception_day.isoformat(), 'available': True},
+            format='json',
+        )
+        assert create.status_code in (status.HTTP_200_OK, status.HTTP_201_CREATED)
+        assert create.data['available'] is True
+
+        after = admin_client.get(f'/api/service/admin/unavailable-days/?start={start}&end={end}')
+        assert exception_day.isoformat() not in after.data['unavailable_days']
+
+    def test_posting_same_date_upserts_the_single_row(self, admin_client):
+        ServiceSettingsFactory(use_mechanic_desk_blocked_dates=False)
+        today = timezone.localdate()
+        day = (today + timedelta(days=10)).isoformat()
+
+        r1 = admin_client.post('/api/service/admin/blocked-dates/', {'date': day, 'available': False}, format='json')
+        assert r1.status_code == status.HTTP_201_CREATED
+        # Flip the same day to force-open — must update, not 400 on the unique date.
+        r2 = admin_client.post('/api/service/admin/blocked-dates/', {'date': day, 'available': True}, format='json')
+        assert r2.status_code == status.HTTP_200_OK
+        assert r2.data['available'] is True
+
+        listing = admin_client.get(f'/api/service/admin/blocked-dates/?start={day}&end={day}')
+        assert len(listing.data) == 1
+
     @patch('service.views.diary_unavailable_days_view.MechanicsDeskService')
     def test_md_error_greys_nothing(self, mock_md, admin_client):
         ServiceSettingsFactory(use_mechanic_desk_blocked_dates=True)

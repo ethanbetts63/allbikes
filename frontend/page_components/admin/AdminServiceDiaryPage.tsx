@@ -8,6 +8,7 @@ import {
   adminGetBookings,
   adminGetBlockedDates,
   adminBlockDate,
+  adminMakeDateAvailable,
   adminUnblockDate,
   adminGetDiaryUnavailableDays,
   adminGetServiceSettings,
@@ -206,25 +207,39 @@ const AdminServiceDiaryPage = () => {
   const bookingsForDay = (day: Date) =>
     bookings.filter(b => isSameDay(new Date(b.drop_off_date + 'T00:00:00'), day));
 
-  const blockedForDay = (day: Date) =>
+  // The one-off override row for a day, if any (available=true forces it open,
+  // available=false forces it closed).
+  const overrideForDay = (day: Date) =>
     blockedDates.find(bd => bd.date === format(day, 'yyyy-MM-dd'));
 
-  const handleToggleBlock = async (dayStr: string, currentlyBlocked: boolean) => {
+  // Greying is derived server-side (advance notice + weekdays + overrides), so
+  // re-fetch it after any change to reflect it immediately.
+  const refreshUnavailable = async () => {
+    const refreshed = await adminGetDiaryUnavailableDays(rangeStart, rangeEnd);
+    setUnavailableDays(new Set(refreshed));
+  };
+
+  // Force a day open (exception to the rules) or closed.
+  const handleSetOverride = async (dayStr: string, available: boolean) => {
     setMenuDate(null);
     try {
-      if (currentlyBlocked) {
-        await adminUnblockDate(dayStr);
-        setBlockedDates(prev => prev.filter(bd => bd.date !== dayStr));
-      } else {
-        const created = await adminBlockDate(dayStr);
-        setBlockedDates(prev => [...prev.filter(bd => bd.date !== dayStr), created]);
-      }
-      // Greying is derived server-side (advance notice + weekdays + blocks), so
-      // re-fetch it to reflect the change immediately.
-      const refreshed = await adminGetDiaryUnavailableDays(rangeStart, rangeEnd);
-      setUnavailableDays(new Set(refreshed));
+      const row = available ? await adminMakeDateAvailable(dayStr) : await adminBlockDate(dayStr);
+      setBlockedDates(prev => [...prev.filter(bd => bd.date !== dayStr), row]);
+      await refreshUnavailable();
     } catch {
-      setError('Failed to update blocked day.');
+      setError('Failed to update the day.');
+    }
+  };
+
+  // Clear an override, returning the day to the default rules.
+  const handleResetOverride = async (dayStr: string) => {
+    setMenuDate(null);
+    try {
+      await adminUnblockDate(dayStr);
+      setBlockedDates(prev => prev.filter(bd => bd.date !== dayStr));
+      await refreshUnavailable();
+    } catch {
+      setError('Failed to reset the day.');
     }
   };
 
@@ -300,7 +315,7 @@ const AdminServiceDiaryPage = () => {
           {days.map(day => {
             const dayStr = format(day, 'yyyy-MM-dd');
             const isGreyed = unavailableDays.has(dayStr);       // matches the booking form
-            const hasLocalBlock = !!blockedForDay(day);          // a one-off block we can toggle
+            const hasOverride = !!overrideForDay(day);           // an explicit exception we can clear
             const dayBookings = bookingsForDay(day);
             const isToday = isSameDay(day, today);
             return (
@@ -331,13 +346,34 @@ const AdminServiceDiaryPage = () => {
                           Blocked days are managed in MechanicDesk while it&rsquo;s the active source.
                         </p>
                       ) : (
-                        <button
-                          onClick={() => handleToggleBlock(dayStr, hasLocalBlock)}
-                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-                        >
-                          <Ban className="h-4 w-4" />
-                          {hasLocalBlock ? 'Unblock this day' : 'Block this day'}
-                        </button>
+                        <>
+                          {isGreyed ? (
+                            <button
+                              onClick={() => handleSetOverride(dayStr, true)}
+                              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                            >
+                              <CalendarCheck className="h-4 w-4" />
+                              Make available (exception)
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleSetOverride(dayStr, false)}
+                              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                            >
+                              <Ban className="h-4 w-4" />
+                              Block this day
+                            </button>
+                          )}
+                          {hasOverride && (
+                            <button
+                              onClick={() => handleResetOverride(dayStr)}
+                              className="w-full text-left px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 flex items-center gap-2"
+                            >
+                              <X className="h-4 w-4" />
+                              Reset to default
+                            </button>
+                          )}
+                        </>
                       )}
                     </div>
                   )}

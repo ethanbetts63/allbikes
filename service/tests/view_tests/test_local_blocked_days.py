@@ -49,6 +49,48 @@ class TestLocalUnavailableDays:
         for sunday in sundays:
             assert sunday in result['unavailable_days']
 
+    def test_force_open_override_beats_advance_notice(self):
+        # Admin makes an exception on a day inside the advance-notice window.
+        ServiceSettingsFactory(
+            use_mechanic_desk_blocked_dates=False,
+            booking_advance_notice=3,
+            always_blocked_weekdays="",
+        )
+        today = timezone.localdate()
+        exception_day = today + timedelta(days=1)  # normally greyed by advance notice
+        BlockedDateFactory(date=exception_day, available=True)
+
+        days = compute_local_unavailable_days(in_days=30)['unavailable_days']
+        assert exception_day.isoformat() not in days
+        # Other in-window days remain blocked.
+        assert today.isoformat() in days
+
+    def test_force_open_override_beats_weekday_rule(self):
+        ServiceSettingsFactory(
+            use_mechanic_desk_blocked_dates=False,
+            booking_advance_notice=0,
+            always_blocked_weekdays="6",  # Sundays
+        )
+        today = timezone.localdate()
+        next_sunday = today + timedelta(days=(6 - today.weekday()) % 7)
+        BlockedDateFactory(date=next_sunday, available=True)
+
+        days = compute_local_unavailable_days(in_days=30)['unavailable_days']
+        assert next_sunday.isoformat() not in days
+
+    def test_force_closed_override_blocks_an_otherwise_open_day(self):
+        ServiceSettingsFactory(
+            use_mechanic_desk_blocked_dates=False,
+            booking_advance_notice=0,
+            always_blocked_weekdays="",
+        )
+        today = timezone.localdate()
+        closed_day = today + timedelta(days=5)  # otherwise bookable
+        BlockedDateFactory(date=closed_day, available=False)
+
+        days = compute_local_unavailable_days(in_days=30)['unavailable_days']
+        assert closed_day.isoformat() in days
+
     @patch('service.views.booking_viewset.MechanicsDeskService')
     def test_endpoint_uses_local_when_toggle_off(self, mock_md):
         client = APIClient()

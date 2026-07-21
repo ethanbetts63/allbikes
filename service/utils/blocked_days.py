@@ -15,7 +15,11 @@ def compute_local_unavailable_days_range(start, end):
       - it falls inside the minimum advance-notice window (booking_advance_notice,
         measured from today)
       - its weekday is in always_blocked_weekdays
-      - it has an explicit BlockedDate row
+      - it has an explicit force-closed BlockedDate row (available=False)
+
+    ...unless it has a force-open override (BlockedDate with available=True),
+    which an admin sets to make an exception. A force-open override beats the
+    advance-notice and weekday rules, so the day is bookable regardless.
     """
     if end < start:
         return []
@@ -25,15 +29,16 @@ def compute_local_unavailable_days_range(start, end):
     cutoff = today + timedelta(days=settings.booking_advance_notice)
     blocked_weekdays = settings.get_always_blocked_weekdays()
 
-    explicit = set(
-        BlockedDate.objects.filter(date__gte=start, date__lte=end)
-        .values_list('date', flat=True)
-    )
+    overrides = BlockedDate.objects.filter(date__gte=start, date__lte=end)
+    forced_open = {o.date for o in overrides if o.available}
+    forced_closed = {o.date for o in overrides if not o.available}
 
     unavailable = []
     day = start
     while day <= end:
-        if day < cutoff or day.weekday() in blocked_weekdays or day in explicit:
+        if day in forced_closed:
+            unavailable.append(day.isoformat())
+        elif day not in forced_open and (day < cutoff or day.weekday() in blocked_weekdays):
             unavailable.append(day.isoformat())
         day += timedelta(days=1)
     return unavailable

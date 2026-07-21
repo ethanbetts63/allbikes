@@ -54,6 +54,7 @@ export interface BookingInput {
 export interface BlockedDate {
   id: number;
   date: string; // YYYY-MM-DD
+  available: boolean; // true = force-open override, false = force-closed block
   reason: string;
   created_at: string;
 }

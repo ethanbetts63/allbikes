@@ -453,20 +453,32 @@ export async function adminGetBlockedDates(options: { start?: string; end?: stri
     return handleResponse(response);
 }
 
-export async function adminBlockDate(date: string, reason = ''): Promise<BlockedDate> {
+// Upsert a one-off day override. `available: false` force-closes the day;
+// `available: true` force-opens it, overriding the advance-notice/weekday rules
+// so an admin can make an exception. Posting the same date flips the row.
+export async function adminSetDateOverride(date: string, available: boolean, reason = ''): Promise<BlockedDate> {
     const response = await authedFetch(`/api/service/admin/blocked-dates/`, {
         method: 'POST',
-        body: JSON.stringify({ date, reason }),
+        body: JSON.stringify({ date, available, reason }),
     });
     return handleResponse(response);
 }
 
+export async function adminBlockDate(date: string, reason = ''): Promise<BlockedDate> {
+    return adminSetDateOverride(date, false, reason);
+}
+
+export async function adminMakeDateAvailable(date: string, reason = ''): Promise<BlockedDate> {
+    return adminSetDateOverride(date, true, reason);
+}
+
+// Clears any override for the date, returning it to the default rules.
 export async function adminUnblockDate(date: string): Promise<void> {
     const response = await authedFetch(`/api/service/admin/blocked-dates/unblock/`, {
         method: 'POST',
         body: JSON.stringify({ date }),
     });
-    if (!response.ok) throw new Error('Failed to unblock date.');
+    if (!response.ok) throw new Error('Failed to reset date.');
 }
 
 // Unavailable days for the diary over an explicit range, respecting the
