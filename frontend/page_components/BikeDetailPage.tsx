@@ -211,7 +211,7 @@ const BikeDetailPage = ({
                         {bike.make?.toLowerCase() === 'sym' && (
                             <p className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-dark-primary)] mb-6">
                                 <ShieldCheck className="h-4 w-4 shrink-0 text-[var(--highlight1)]" />
-                                Backed by the SYM <a href="https://scoota.com.au/warranty/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">warranty</a>.
+                                <span>Backed by the SYM <a href="https://scoota.com.au/warranty/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">warranty</a>.</span>
                             </p>
                         )}
 
