@@ -30,6 +30,7 @@ const CheckoutPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [warrantyAccepted, setWarrantyAccepted] = useState(false);
 
   const productId = slug ? Number(slug.split('-').pop()) : null;
 
@@ -273,10 +274,24 @@ const CheckoutPage = () => {
               </Label>
             </div>
 
+            {checkoutType === 'deposit' && (
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="warranty_accepted"
+                  checked={warrantyAccepted}
+                  onCheckedChange={(checked) => setWarrantyAccepted(!!checked)}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="warranty_accepted" className="text-sm leading-snug cursor-pointer">
+                  <span>I understand the <a href="https://scoota.com.au/warranty/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">warranty</a> and live in Western Australia.</span>
+                </Label>
+              </div>
+            )}
+
             <div className="pt-2 space-y-3">
               <button
                 type="submit"
-                disabled={isSubmitting || !termsAccepted}
+                disabled={isSubmitting || !termsAccepted || (checkoutType === 'deposit' && !warrantyAccepted)}
                 className="w-full py-4 px-6 rounded-lg text-base font-bold uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)]"
               >
                 {isSubmitting ? 'Please wait...' : 'Continue to Payment'}

@@ -207,6 +207,14 @@ const BikeDetailPage = ({
                             </p>
                         )}
 
+                        {/* SYM warranty link */}
+                        {bike.make?.toLowerCase() === 'sym' && (
+                            <p className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-dark-primary)] mb-6">
+                                <ShieldCheck className="h-4 w-4 shrink-0 text-[var(--highlight1)]" />
+                                Backed by the SYM <a href="https://scoota.com.au/warranty/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">warranty</a>.
+                            </p>
+                        )}
+
                         {/* SYM trade-in offer */}
                         {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && (
                             <div className="mb-6 border border-[var(--highlight)] rounded-lg p-4">

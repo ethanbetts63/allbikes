@@ -32,7 +32,7 @@ const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boole
           </span>
           {/* Online-only pill — new e-scooters are sold online, not stocked in store */}
           {bike.condition === 'new' && bike.vehicle_type === 'scooter' && (
-            <span className="absolute top-3 left-1/2 -translate-x-1/2 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full backdrop-blur-sm flex items-center gap-1">
+            <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full backdrop-blur-sm flex items-center gap-1">
               <Globe className="h-3 w-3" />
               Online only
             </span>
