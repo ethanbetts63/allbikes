@@ -46,7 +46,7 @@ const DepositSettingsPanel = () => {
         <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light p-4 mb-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-0.5">Motorcycle Deposit Amount</p>
+                    <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-0.5">Bike Deposit Amount</p>
                     <p className="text-xs text-[var(--text-dark-secondary)]">Flat deposit charged when a customer reserves a new scooter.</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
@@ -80,7 +80,13 @@ const DepositSettingsPanel = () => {
 const InventoryManagementPage = () => {
     return (
         <div className="p-4 md:p-6">
-            <h1 className="text-2xl font-bold mb-4 text-[var(--text-dark-primary)]">Inventory Management</h1>
+            <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-[var(--text-dark-primary)]">Inventory</h1>
+                    <p className="mt-1 text-sm text-[var(--text-dark-secondary)]">Manage listings, availability and how stock appears on the website.</p>
+                </div>
+                <Button onClick={() => window.location.assign('/dashboard/add-motorcycle')} className="mt-2 sm:mt-0">Add inventory</Button>
+            </div>
             <DepositSettingsPanel />
             <InventoryTable />
         </div>

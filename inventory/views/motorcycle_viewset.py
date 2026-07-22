@@ -44,6 +44,13 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
             vehicle_types = [v for v in vehicle_type.split(',') if v in valid_vehicle_types]
             if vehicle_types:
                 queryset = queryset.filter(vehicle_type__in=vehicle_types)
+
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            valid_statuses = {choice[0] for choice in Motorcycle.STATUS_CHOICES}
+            statuses = [value for value in status_filter.split(',') if value in valid_statuses]
+            if statuses:
+                queryset = queryset.filter(status__in=statuses)
             
         # Filtering by featured status
         is_featured = self.request.query_params.get('is_featured')
@@ -84,6 +91,18 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
                 'year_desc': '-year',
                 'engine_size_asc': 'engine_size',
                 'engine_size_desc': '-engine_size',
+                'make_asc': 'make',
+                'make_desc': '-make',
+                'model_asc': 'model',
+                'model_desc': '-model',
+                'condition_asc': 'condition',
+                'condition_desc': '-condition',
+                'vehicle_type_asc': 'vehicle_type',
+                'vehicle_type_desc': '-vehicle_type',
+                'status_asc': 'status',
+                'status_desc': '-status',
+                'date_posted_asc': 'date_posted',
+                'date_posted_desc': '-date_posted',
             }
             ordering_field = ordering_map.get(ordering)
             if ordering_field:

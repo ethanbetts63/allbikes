@@ -119,8 +119,10 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
         condition,
         vehicle_type,
         page = 1,
+        page_size,
         is_featured,
         is_hire,
+        status,
         ordering,
         min_price,
         max_price,
@@ -136,15 +138,17 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
 
     if (condition) params.append('condition', condition);
     if (vehicle_type) params.append('vehicle_type', vehicle_type);
+    if (status) params.append('status', status);
+    if (page_size) params.append('page_size', String(page_size));
     if (is_featured) params.append('is_featured', 'true');
     if (is_hire) params.append('is_hire', 'true');
     if (ordering) params.append('ordering', ordering);
-    if (min_price) params.append('min_price', String(min_price));
-    if (max_price) params.append('max_price', String(max_price));
-    if (min_year) params.append('min_year', String(min_year));
-    if (max_year) params.append('max_year', String(max_year));
-    if (min_engine_size) params.append('min_engine_size', String(min_engine_size));
-    if (max_engine_size) params.append('max_engine_size', String(max_engine_size));
+    if (min_price !== undefined) params.append('min_price', String(min_price));
+    if (max_price !== undefined) params.append('max_price', String(max_price));
+    if (min_year !== undefined) params.append('min_year', String(min_year));
+    if (max_year !== undefined) params.append('max_year', String(max_year));
+    if (min_engine_size !== undefined) params.append('min_engine_size', String(min_engine_size));
+    if (max_engine_size !== undefined) params.append('max_engine_size', String(max_engine_size));
 
     const response = await fetch(`/api/inventory/bikes/?${params.toString()}`, {
         method: 'GET',

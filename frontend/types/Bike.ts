@@ -8,7 +8,7 @@ export type Bike = {
   year: number;
   price: string;
   discount_price?: string;
-  condition: 'new' | 'used' | 'demo';
+  condition: 'new' | 'used' | 'demo' | 'parts';
   vehicle_type: 'motorcycle' | 'scooter';
   status: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'unavailable';
   is_featured?: boolean;
