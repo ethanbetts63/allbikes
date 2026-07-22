@@ -8,6 +8,7 @@ import type { Bike } from "@/types/Bike";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -62,6 +63,7 @@ export default function InventoryTable() {
   const vehicleType = queryValue(params, "vehicle_type", vehicleTypeValues);
   const status = queryValue(params, "status", statusValues);
   const hire = params.get("hire") === "true";
+  const search = params.get("search") ?? "";
   const sort = queryValue(params, "sort", sortFields) as SortField || "date_posted";
   const direction = params.get("direction") === "asc" ? "asc" : "desc";
   const requestedPage = Math.max(1, Number.parseInt(params.get("page") ?? "1", 10) || 1);
@@ -82,6 +84,7 @@ export default function InventoryTable() {
       vehicle_type: vehicleType as Bike["vehicle_type"] || undefined,
       status: status as Bike["status"] || undefined,
       is_hire: hire || undefined,
+      search: search || undefined,
       ordering: `${sort}_${direction}`,
       page,
       page_size: PAGE_SIZE,
@@ -93,12 +96,12 @@ export default function InventoryTable() {
       if (active) setNotification({ message: "Could not load inventory. Please try again.", type: "error" });
     }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [condition, direction, hire, page, params, refreshKey, sort, status, vehicleType]);
+  }, [condition, direction, hire, page, params, refreshKey, search, sort, status, vehicleType]);
 
   const updateFilter = (key: string, value: string) => setQuery({ [key]: value || null, page: null });
   const toggleSort = (field: SortField) => setQuery({ sort: field, direction: sort === field && direction === "asc" ? "desc" : "asc", page: null });
   const clearFilters = () => router.replace(pathname, { scroll: false });
-  const activeFilters = [condition, vehicleType, status, hire ? "hire" : ""].filter(Boolean).length;
+  const activeFilters = [condition, vehicleType, status, hire ? "hire" : "", search].filter(Boolean).length;
 
   const removeBike = async (bike: Bike) => {
     if (!window.confirm(`Delete ${bike.year ?? ""} ${bike.make} ${bike.model}? This cannot be undone.`)) return;
@@ -120,14 +123,14 @@ export default function InventoryTable() {
             <p className="mt-1 text-sm text-slate-500">{total.toLocaleString("en-AU")} {total === 1 ? "item" : "items"} matching this view</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" onClick={() => setQuery({ hire: hire ? null : "true", page: null })} className={hire ? "border-violet-300 bg-violet-50 text-violet-900" : "bg-white"}>Hire fleet</Button>
             {activeFilters > 0 && <Button variant="ghost" size="sm" onClick={clearFilters} className="text-slate-600"><X className="mr-1 h-3.5 w-3.5" /> Clear filters</Button>}
           </div>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Select value={condition || "all"} onValueChange={value => updateFilter("condition", value === "all" ? "" : value)}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All conditions" /></SelectTrigger><SelectContent><SelectItem value="all">All conditions</SelectItem>{conditionValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}</SelectContent></Select>
+          <Select value={hire ? "hire" : condition || "all"} onValueChange={value => value === "hire" ? setQuery({ condition: null, hire: "true", page: null }) : setQuery({ condition: value === "all" ? null : value, hire: null, page: null })}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All conditions" /></SelectTrigger><SelectContent><SelectItem value="all">All conditions</SelectItem>{conditionValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}<SelectItem value="hire">Hire fleet</SelectItem></SelectContent></Select>
           <Select value={vehicleType || "all"} onValueChange={value => updateFilter("vehicle_type", value === "all" ? "" : value)}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All vehicle types" /></SelectTrigger><SelectContent><SelectItem value="all">All vehicle types</SelectItem>{vehicleTypeValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}</SelectContent></Select>
           <Select value={status || "all"} onValueChange={value => updateFilter("status", value === "all" ? "" : value)}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All sale statuses" /></SelectTrigger><SelectContent><SelectItem value="all">All sale statuses</SelectItem>{statusValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}</SelectContent></Select>
+          <form className="sm:col-span-2 lg:col-span-3" onSubmit={event => { event.preventDefault(); const value = new FormData(event.currentTarget).get("search"); setQuery({ search: typeof value === "string" ? value.trim() || null : null, page: null }); }}><div className="flex gap-2"><Input key={`search-${search}`} name="search" type="search" defaultValue={search} placeholder="Search make, model, stock number, rego or VIN" aria-label="Search inventory" className="bg-white" /><Button type="submit" variant="outline" className="shrink-0 border-slate-300 bg-white text-slate-900 hover:bg-slate-100"><Search className="mr-1.5 h-4 w-4" /> Search</Button></div></form>
         </div>
       </div>
 

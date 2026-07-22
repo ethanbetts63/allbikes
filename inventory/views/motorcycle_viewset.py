@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Case, When, Value, IntegerField
+from django.db.models import Case, When, Value, IntegerField, Q
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -51,6 +51,16 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
             statuses = [value for value in status_filter.split(',') if value in valid_statuses]
             if statuses:
                 queryset = queryset.filter(status__in=statuses)
+
+        search = (self.request.query_params.get('search') or '').strip()
+        if search:
+            queryset = queryset.filter(
+                Q(make__icontains=search)
+                | Q(model__icontains=search)
+                | Q(stock_number__icontains=search)
+                | Q(rego__icontains=search)
+                | Q(vin__icontains=search)
+            )
             
         # Filtering by featured status
         is_featured = self.request.query_params.get('is_featured')

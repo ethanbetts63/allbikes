@@ -4,6 +4,7 @@ export interface GetBikesOptions {
   page?: number;
   is_featured?: boolean;
   is_hire?: boolean;
+  search?: string;
   status?: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'unavailable';
   ordering?: string;
   page_size?: number;
