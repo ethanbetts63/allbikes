@@ -64,6 +64,7 @@ export default function InventoryTable() {
   const status = queryValue(params, "status", statusValues);
   const hire = params.get("hire") === "true";
   const search = params.get("search") ?? "";
+  const [searchDraft, setSearchDraft] = useState(search);
   const sort = queryValue(params, "sort", sortFields) as SortField || "date_posted";
   const direction = params.get("direction") === "asc" ? "asc" : "desc";
   const requestedPage = Math.max(1, Number.parseInt(params.get("page") ?? "1", 10) || 1);
@@ -100,7 +101,10 @@ export default function InventoryTable() {
 
   const updateFilter = (key: string, value: string) => setQuery({ [key]: value || null, page: null });
   const toggleSort = (field: SortField) => setQuery({ sort: field, direction: sort === field && direction === "asc" ? "desc" : "asc", page: null });
-  const clearFilters = () => router.replace(pathname, { scroll: false });
+  const clearFilters = () => {
+    setSearchDraft("");
+    router.replace(pathname, { scroll: false });
+  };
   const activeFilters = [condition, vehicleType, status, hire ? "hire" : "", search].filter(Boolean).length;
 
   const removeBike = async (bike: Bike) => {
@@ -130,7 +134,7 @@ export default function InventoryTable() {
           <Select value={hire ? "hire" : condition || "all"} onValueChange={value => value === "hire" ? setQuery({ condition: null, hire: "true", page: null }) : setQuery({ condition: value === "all" ? null : value, hire: null, page: null })}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All conditions" /></SelectTrigger><SelectContent><SelectItem value="all">All conditions</SelectItem>{conditionValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}<SelectItem value="hire">Hire fleet</SelectItem></SelectContent></Select>
           <Select value={vehicleType || "all"} onValueChange={value => updateFilter("vehicle_type", value === "all" ? "" : value)}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All vehicle types" /></SelectTrigger><SelectContent><SelectItem value="all">All vehicle types</SelectItem>{vehicleTypeValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}</SelectContent></Select>
           <Select value={status || "all"} onValueChange={value => updateFilter("status", value === "all" ? "" : value)}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All sale statuses" /></SelectTrigger><SelectContent><SelectItem value="all">All sale statuses</SelectItem>{statusValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}</SelectContent></Select>
-          <form className="sm:col-span-2 lg:col-span-3" onSubmit={event => { event.preventDefault(); const value = new FormData(event.currentTarget).get("search"); setQuery({ search: typeof value === "string" ? value.trim() || null : null, page: null }); }}><div className="flex gap-2"><Input key={`search-${search}`} name="search" type="search" defaultValue={search} placeholder="Search make, model, stock number, rego or VIN" aria-label="Search inventory" className="bg-white" /><Button type="submit" variant="outline" className="shrink-0 border-slate-300 bg-white text-slate-900 hover:bg-slate-100"><Search className="mr-1.5 h-4 w-4" /> Search</Button></div></form>
+          <form className="sm:col-span-2 lg:col-span-3" onSubmit={event => { event.preventDefault(); setQuery({ search: searchDraft.trim() || null, page: null }); }}><div className="flex gap-2"><Input name="search" type="search" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} placeholder="Search make, model, stock number, rego or VIN" aria-label="Search inventory" className="bg-white" /><Button type="submit" variant="outline" className="shrink-0 border-slate-300 bg-white text-slate-900 hover:bg-slate-100"><Search className="mr-1.5 h-4 w-4" /> Search</Button></div>{search && <p className="mt-2 text-xs text-slate-500">Showing results for <span className="font-medium text-slate-700">“{search}”</span>.</p>}</form>
         </div>
       </div>
 
