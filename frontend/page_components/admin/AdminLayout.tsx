@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui/spinner';
 import {
-  LayoutDashboard,
+  Bell,
   PlusCircle,
   ShoppingBag,
   ClipboardList,
@@ -19,8 +19,8 @@ import {
   Gauge,
   Key,
 } from 'lucide-react';
-import { adminGetDashboard } from '@/api';
-import type { AdminDashboard } from '@/types/AdminDashboard';
+import { adminGetNotifications } from '@/api';
+import type { AdminNotifications } from '@/types/AdminNotifications';
 
 const NavBadge = ({ count }: { count: number }) =>
   count > 0 ? (
@@ -39,11 +39,11 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading: isAuthLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
+  const [notifications, setNotifications] = useState<AdminNotifications | null>(null);
 
   useEffect(() => {
     if (!user?.is_staff) return;
-    adminGetDashboard().then(setDashboard).catch(() => {});
+    adminGetNotifications().then(setNotifications).catch(() => {});
   }, [user?.is_staff]);
 
   useEffect(() => {
@@ -103,16 +103,16 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           {/* Nav */}
           <nav className="flex-1 px-2 py-3 overflow-y-auto">
 
-            <Link href="/dashboard" className={navItemClass('/dashboard', true)}>
-              <LayoutDashboard className="h-4 w-4 shrink-0" />
-              Dashboard
+            <Link href="/dashboard/notifications" className={navItemClass('/dashboard/notifications')}>
+              <Bell className="h-4 w-4 shrink-0" />
+              Notifications
             </Link>
 
             <SectionLabel>Inventory</SectionLabel>
             <Link href="/dashboard/inventory" className={navItemClass('/dashboard/inventory')}>
               <Gauge className="h-4 w-4 shrink-0" />
               <span className="flex-1">Inventory</span>
-              <NavBadge count={dashboard?.reserved_bikes.length ?? 0} />
+              <NavBadge count={notifications?.reserved_bikes.length ?? 0} />
             </Link>
             <Link href="/dashboard/add-motorcycle" className={subNavItemClass('/dashboard/add-motorcycle')}>
               <PlusCircle className="h-3.5 w-3.5 shrink-0" />
@@ -123,12 +123,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <Link href="/dashboard/orders" className={navItemClass('/dashboard/orders')}>
               <ClipboardList className="h-4 w-4 shrink-0" />
               <span className="flex-1">Orders</span>
-              <NavBadge count={dashboard?.paid_orders.length ?? 0} />
+              <NavBadge count={notifications?.paid_orders.length ?? 0} />
             </Link>
             <Link href="/dashboard/products" className={navItemClass('/dashboard/products')}>
               <ShoppingBag className="h-4 w-4 shrink-0" />
               <span className="flex-1">Products</span>
-              <NavBadge count={dashboard?.attention_products.length ?? 0} />
+              <NavBadge count={notifications?.attention_products.length ?? 0} />
             </Link>
             <Link href="/dashboard/products/new" className={subNavItemClass('/dashboard/products/new')}>
               <PlusCircle className="h-3.5 w-3.5 shrink-0" />
@@ -161,7 +161,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <Link href="/dashboard/hire" className={navItemClass('/dashboard/hire')}>
               <Key className="h-4 w-4 shrink-0" />
               <span className="flex-1">Hire Bookings</span>
-              <NavBadge count={dashboard?.active_hire_bookings.length ?? 0} />
+              <NavBadge count={notifications?.active_hire_bookings.length ?? 0} />
             </Link>
             <Link href="/dashboard/hire-settings" className={navItemClass('/dashboard/hire-settings')}>
               <Settings className="h-4 w-4 shrink-0" />

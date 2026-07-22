@@ -1,32 +1,40 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { addDays, startOfWeek, format, isSameDay } from 'date-fns';
-import { ChevronLeft, ChevronRight, Plus, Ban, CalendarCheck, Search, X } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { addDays, startOfWeek, format, isSameDay, isValid } from 'date-fns';
+import { ChevronLeft, ChevronRight, Plus, Ban, CalendarCheck, Search, X, Pencil, Trash2 } from 'lucide-react';
 import {
   adminGetBookings,
-  adminGetBlockedDates,
   adminBlockDate,
   adminMakeDateAvailable,
-  adminUnblockDate,
   adminGetDiaryUnavailableDays,
   adminGetServiceSettings,
+  adminUpdateBooking,
+  adminDeleteBooking,
 } from '@/api';
-import type { Booking, BookingStatus, BlockedDate } from '@/types/Booking';
+import type { Booking, BookingStatus } from '@/types/Booking';
+import { BOOKING_STATUSES, STATUS_STYLES } from '@/lib/bookingStatus';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Tile styling per job status. Colours follow the MechanicDesk diary:
-// requested = awaiting confirmation, grey = not started, blue = in progress,
-// green = finished & paid.
-const STATUS_STYLES: Record<BookingStatus, { tile: string; dot: string; label: string }> = {
-  requested:     { tile: 'bg-amber-50 border-amber-300 hover:bg-amber-100',   dot: 'bg-amber-400',   label: 'Requested' },
-  not_started:   { tile: 'bg-gray-100 border-gray-300 hover:bg-gray-200',     dot: 'bg-gray-400',    label: 'Not started' },
-  in_progress:   { tile: 'bg-blue-50 border-blue-300 hover:bg-blue-100',      dot: 'bg-blue-500',    label: 'In progress' },
-  finished_paid: { tile: 'bg-green-50 border-green-300 hover:bg-green-100',    dot: 'bg-green-500',   label: 'Finished & paid' },
+export const DIARY_PATH = '/dashboard/service-diary';
+
+// Link to the diary showing the week that contains `date`.
+export const diaryWeekHref = (date: Date | string) => {
+  const d = typeof date === 'string' ? new Date(date + 'T00:00:00') : date;
+  const base = isValid(d) ? d : new Date();
+  return `${DIARY_PATH}?week=${format(startOfWeek(base, { weekStartsOn: 1 }), 'yyyy-MM-dd')}`;
 };
+
+// Which popover is open, if any. Day menus are anchored to their column header;
+// booking menus are positioned at the click point because the tile list
+// scrolls and would clip an absolutely-positioned child.
+type OpenMenu =
+  | { kind: 'day'; date: string }
+  | { kind: 'booking'; id: number; x: number; y: number }
+  | null;
 
 const formatTime = (t: string | null) => {
   if (!t) return null;
@@ -44,17 +52,20 @@ const BookingTile = ({ booking, onClick }: { booking: Booking; onClick: (e: Reac
   const style = STATUS_STYLES[booking.status];
   const time = formatTime(booking.drop_off_time);
   const bike = vehicleLabel(booking);
+  const cancelled = booking.status === 'cancelled';
   return (
     <button
       onClick={onClick}
+      aria-haspopup="menu"
       className={`w-full text-left border-b border-black/10 p-2.5 transition-colors ${style.tile}`}
     >
       <div className="flex items-center gap-1.5 mb-1">
         <span className={`h-2 w-2 rounded-full shrink-0 ${style.dot}`} />
-        <span className="text-xs font-bold text-gray-800">{time ?? 'No time'}</span>
+        <span className={`text-xs font-bold text-gray-800 ${cancelled ? 'line-through' : ''}`}>{time ?? 'No time'}</span>
+        {cancelled && <span className="text-[10px] uppercase tracking-wide text-gray-500 font-semibold">Cancelled</span>}
       </div>
       {(bike || booking.registration) && (
-        <p className="text-xs font-semibold text-gray-900 leading-snug">
+        <p className={`text-xs font-semibold text-gray-900 leading-snug ${cancelled ? 'line-through' : ''}`}>
           {bike}
           {booking.registration && <span className="font-mono font-normal text-gray-600"> · {booking.registration}</span>}
         </p>
@@ -67,6 +78,70 @@ const BookingTile = ({ booking, onClick }: { booking: Booking; onClick: (e: Reac
         <p className="text-[11px] text-gray-500 leading-snug mt-1">{booking.job_description}</p>
       )}
     </button>
+  );
+};
+
+// Quick actions for a job tile. Rendered fixed-position at the click point so
+// it escapes the scrolling day column.
+const BookingActionMenu = ({
+  booking,
+  x,
+  y,
+  menuRef,
+  onEdit,
+  onSetStatus,
+  onDelete,
+}: {
+  booking: Booking;
+  x: number;
+  y: number;
+  menuRef: React.RefObject<HTMLDivElement | null>;
+  onEdit: () => void;
+  onSetStatus: (status: BookingStatus) => void;
+  onDelete: () => void;
+}) => {
+  const itemClass =
+    'w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2';
+  return (
+    <div
+      ref={menuRef}
+      role="menu"
+      style={{ left: x, top: y }}
+      className="fixed z-50 bg-white border border-gray-200 rounded-md shadow-lg py-1 w-56"
+    >
+      <button role="menuitem" onClick={onEdit} className={`${itemClass} font-medium`}>
+        <Pencil className="h-4 w-4" /> Edit
+      </button>
+
+      <div className="my-1 border-t border-gray-100" />
+
+      {BOOKING_STATUSES.map(s => {
+        const current = s.value === booking.status;
+        return (
+          <button
+            key={s.value}
+            role="menuitem"
+            disabled={current}
+            onClick={() => onSetStatus(s.value)}
+            className={`${itemClass} ${current ? 'opacity-50 cursor-default hover:bg-transparent' : ''}`}
+          >
+            <span className={`h-2.5 w-2.5 rounded-full shrink-0 ${s.dot}`} />
+            Make {s.label.toLowerCase()}
+            {current && <span className="ml-auto text-xs text-gray-400">current</span>}
+          </button>
+        );
+      })}
+
+      <div className="my-1 border-t border-gray-100" />
+
+      <button
+        role="menuitem"
+        onClick={onDelete}
+        className="w-full text-left px-3 py-2 text-sm text-destructive hover:bg-red-50 flex items-center gap-2"
+      >
+        <Trash2 className="h-4 w-4" /> Delete
+      </button>
+    </div>
   );
 };
 
@@ -123,15 +198,29 @@ const SearchResultsList = ({
 
 const AdminServiceDiaryPage = () => {
   const router = useRouter();
-  const [weekStart, setWeekStart] = useState<Date>(() => startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const searchParams = useSearchParams();
+
+  // The visible week lives in the URL (?week=YYYY-MM-DD) so it can be linked to
+  // and stepped through with the back button — and so creating a booking can
+  // land back on the week that booking belongs to. Absent/invalid falls back to
+  // the current week.
+  const weekParam = searchParams.get('week');
+  const weekStart = useMemo(() => {
+    const parsed = weekParam ? new Date(weekParam + 'T00:00:00') : null;
+    return startOfWeek(parsed && isValid(parsed) ? parsed : new Date(), { weekStartsOn: 1 });
+  }, [weekParam]);
+  const goToWeek = (date: Date) => router.push(diaryWeekHref(date));
+
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [blockedDates, setBlockedDates] = useState<BlockedDate[]>([]);
   const [unavailableDays, setUnavailableDays] = useState<Set<string>>(new Set());
   const [mdMode, setMdMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [menuDate, setMenuDate] = useState<string | null>(null);
+  const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuDate = openMenu?.kind === 'day' ? openMenu.date : null;
+  const menuBooking =
+    openMenu?.kind === 'booking' ? bookings.find(b => b.id === openMenu.id) ?? null : null;
 
   // Search — when the query is non-empty the diary shows a flat results list
   // instead of the weekly grid.
@@ -150,15 +239,13 @@ const AdminServiceDiaryPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const [b, blocked, unavailable, settings] = await Promise.all([
+        const [b, unavailable, settings] = await Promise.all([
           adminGetBookings({ start: rangeStart, end: rangeEnd }),
-          adminGetBlockedDates({ start: rangeStart, end: rangeEnd }),
           adminGetDiaryUnavailableDays(rangeStart, rangeEnd),
           adminGetServiceSettings(),
         ]);
         if (cancelled) return;
         setBookings(b);
-        setBlockedDates(blocked);
         setUnavailableDays(new Set(unavailable));
         setMdMode(settings.use_mechanic_desk_blocked_dates);
       } catch {
@@ -195,22 +282,24 @@ const AdminServiceDiaryPage = () => {
     return () => { cancelled = true; clearTimeout(t); };
   }, [search]);
 
-  // Close the day menu on outside click.
+  // Close whichever menu is open on outside click or Escape.
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuDate(null);
+    const onMouseDown = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpenMenu(null);
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpenMenu(null);
+    };
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
   }, []);
 
   const bookingsForDay = (day: Date) =>
     bookings.filter(b => isSameDay(new Date(b.drop_off_date + 'T00:00:00'), day));
-
-  // The one-off override row for a day, if any (available=true forces it open,
-  // available=false forces it closed).
-  const overrideForDay = (day: Date) =>
-    blockedDates.find(bd => bd.date === format(day, 'yyyy-MM-dd'));
 
   // Greying is derived server-side (advance notice + weekdays + overrides), so
   // re-fetch it after any change to reflect it immediately.
@@ -219,27 +308,53 @@ const AdminServiceDiaryPage = () => {
     setUnavailableDays(new Set(refreshed));
   };
 
-  // Force a day open (exception to the rules) or closed.
-  const handleSetOverride = async (dayStr: string, available: boolean) => {
-    setMenuDate(null);
+  // Open the tile action menu at the click point, clamped to stay on screen.
+  const openBookingMenu = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    const MENU_W = 224;
+    const MENU_H = 320;
+    setOpenMenu({
+      kind: 'booking',
+      id,
+      x: Math.max(8, Math.min(e.clientX, window.innerWidth - MENU_W - 8)),
+      y: Math.max(8, Math.min(e.clientY, window.innerHeight - MENU_H - 8)),
+    });
+  };
+
+  // Status changes apply straight away — the tile recolours optimistically and
+  // rolls back if the request fails.
+  const handleSetStatus = async (id: number, status: BookingStatus) => {
+    setOpenMenu(null);
+    const previous = bookings;
+    setBookings(bs => bs.map(b => (b.id === id ? { ...b, status } : b)));
     try {
-      const row = available ? await adminMakeDateAvailable(dayStr) : await adminBlockDate(dayStr);
-      setBlockedDates(prev => [...prev.filter(bd => bd.date !== dayStr), row]);
-      await refreshUnavailable();
+      const updated = await adminUpdateBooking(id, { status });
+      setBookings(bs => bs.map(b => (b.id === id ? updated : b)));
     } catch {
-      setError('Failed to update the day.');
+      setBookings(previous);
+      setError('Failed to update the job status.');
     }
   };
 
-  // Clear an override, returning the day to the default rules.
-  const handleResetOverride = async (dayStr: string) => {
-    setMenuDate(null);
+  const handleDeleteBooking = async (id: number) => {
+    setOpenMenu(null);
+    if (!confirm('Delete this booking? This cannot be undone.')) return;
     try {
-      await adminUnblockDate(dayStr);
-      setBlockedDates(prev => prev.filter(bd => bd.date !== dayStr));
+      await adminDeleteBooking(id);
+      setBookings(bs => bs.filter(b => b.id !== id));
+    } catch {
+      setError('Failed to delete the booking.');
+    }
+  };
+
+  // Force a day open (exception to the rules) or closed.
+  const handleSetOverride = async (dayStr: string, available: boolean) => {
+    setOpenMenu(null);
+    try {
+      await (available ? adminMakeDateAvailable(dayStr) : adminBlockDate(dayStr));
       await refreshUnavailable();
     } catch {
-      setError('Failed to reset the day.');
+      setError('Failed to update the day.');
     }
   };
 
@@ -257,10 +372,10 @@ const AdminServiceDiaryPage = () => {
           <CalendarCheck className="h-6 w-6" /> Service Diary
         </h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => setWeekStart(w => addDays(w, -7))} className={navBtnClass}>
+          <Button variant="outline" size="sm" onClick={() => goToWeek(addDays(weekStart, -7))} className={navBtnClass}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setWeekStart(w => addDays(w, 7))} className={navBtnClass}>
+          <Button variant="outline" size="sm" onClick={() => goToWeek(addDays(weekStart, 7))} className={navBtnClass}>
             <ChevronRight className="h-4 w-4" />
           </Button>
           <Button size="sm" onClick={() => router.push('/dashboard/service-diary/new')} className="ml-2">
@@ -315,7 +430,6 @@ const AdminServiceDiaryPage = () => {
           {days.map(day => {
             const dayStr = format(day, 'yyyy-MM-dd');
             const isGreyed = unavailableDays.has(dayStr);       // matches the booking form
-            const hasOverride = !!overrideForDay(day);           // an explicit exception we can clear
             const dayBookings = bookingsForDay(day);
             const isToday = isSameDay(day, today);
             return (
@@ -328,7 +442,7 @@ const AdminServiceDiaryPage = () => {
                 {/* Day header */}
                 <div className="relative border-b border-[var(--border-light)] px-2 py-2">
                   <button
-                    onClick={() => setMenuDate(menuDate === dayStr ? null : dayStr)}
+                    onClick={() => setOpenMenu(menuDate === dayStr ? null : { kind: 'day', date: dayStr })}
                     className="w-full text-left"
                   >
                     <p className={`text-xs uppercase tracking-wide ${isToday ? 'text-[var(--highlight)] font-bold' : 'text-gray-500'}`}>
@@ -353,7 +467,7 @@ const AdminServiceDiaryPage = () => {
                               className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
                             >
                               <CalendarCheck className="h-4 w-4" />
-                              Make available (exception)
+                              Unblock
                             </button>
                           ) : (
                             <button
@@ -362,15 +476,6 @@ const AdminServiceDiaryPage = () => {
                             >
                               <Ban className="h-4 w-4" />
                               Block this day
-                            </button>
-                          )}
-                          {hasOverride && (
-                            <button
-                              onClick={() => handleResetOverride(dayStr)}
-                              className="w-full text-left px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 flex items-center gap-2"
-                            >
-                              <X className="h-4 w-4" />
-                              Reset to default
                             </button>
                           )}
                         </>
@@ -383,7 +488,7 @@ const AdminServiceDiaryPage = () => {
                     Clicking empty space (not a tile) opens the block menu. */}
                 <div
                   className="flex-1 overflow-y-auto cursor-pointer"
-                  onClick={() => setMenuDate(menuDate === dayStr ? null : dayStr)}
+                  onClick={() => setOpenMenu(menuDate === dayStr ? null : { kind: 'day', date: dayStr })}
                 >
                   {isLoading ? (
                     <p className="text-xs text-gray-400 text-center pt-4">Loading…</p>
@@ -392,7 +497,7 @@ const AdminServiceDiaryPage = () => {
                       <BookingTile
                         key={b.id}
                         booking={b}
-                        onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/service-diary/${b.id}`); }}
+                        onClick={(e) => openBookingMenu(e, b.id)}
                       />
                     ))
                   ) : (
@@ -407,10 +512,10 @@ const AdminServiceDiaryPage = () => {
 
       {/* Legend */}
       <div className="flex flex-wrap gap-4 mt-4 text-xs text-[var(--text-dark-secondary)]">
-        {(Object.keys(STATUS_STYLES) as BookingStatus[]).map(s => (
-          <span key={s} className="flex items-center gap-1.5">
-            <span className={`h-3 w-3 rounded-full ${STATUS_STYLES[s].dot}`} />
-            {STATUS_STYLES[s].label}
+        {BOOKING_STATUSES.map(s => (
+          <span key={s.value} className="flex items-center gap-1.5">
+            <span className={`h-3 w-3 rounded-full ${s.dot}`} />
+            {s.label}
           </span>
         ))}
         <span className="flex items-center gap-1.5">
@@ -418,6 +523,18 @@ const AdminServiceDiaryPage = () => {
         </span>
       </div>
       </>
+      )}
+
+      {menuBooking && openMenu?.kind === 'booking' && (
+        <BookingActionMenu
+          booking={menuBooking}
+          x={openMenu.x}
+          y={openMenu.y}
+          menuRef={menuRef}
+          onEdit={() => { setOpenMenu(null); router.push(`${DIARY_PATH}/${menuBooking.id}`); }}
+          onSetStatus={(s) => handleSetStatus(menuBooking.id, s)}
+          onDelete={() => handleDeleteBooking(menuBooking.id)}
+        />
       )}
     </div>
   );

@@ -10,11 +10,11 @@ from service.models import Booking
 
 # MechanicDesk job status -> our diary status.
 STATUS_MAP = {
-    'finished': Booking.Status.FINISHED_PAID,
-    'new': Booking.Status.NOT_STARTED,
-    'preparing': Booking.Status.IN_PROGRESS,
+    'finished': Booking.Status.FINISHED,
+    'new': Booking.Status.ACCEPTED,
+    'preparing': Booking.Status.STARTED,
 }
-DEFAULT_STATUS = Booking.Status.NOT_STARTED
+DEFAULT_STATUS = Booking.Status.ACCEPTED
 
 DEFAULT_DATA_DIR = os.path.join(
     settings.BASE_DIR, 'data_management', 'data', 'mechanics_desk_data'

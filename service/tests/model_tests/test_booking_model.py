@@ -9,7 +9,7 @@ class TestBookingModel:
     def test_defaults(self):
         booking = BookingFactory()
         assert booking.pk is not None
-        assert booking.status == Booking.Status.NOT_STARTED
+        assert booking.status == Booking.Status.ACCEPTED
         assert booking.source == Booking.Source.MANUAL
         assert booking.reminder_sent_at is None
 

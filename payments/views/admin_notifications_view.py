@@ -8,7 +8,10 @@ from product.models import Product
 from hire.models import HireBooking
 
 
-class AdminDashboardView(APIView):
+class AdminNotificationsView(APIView):
+    """Outstanding items needing staff attention, shown on the admin
+    Notifications page."""
+
     permission_classes = [IsAdminUser]
 
     def get(self, request):

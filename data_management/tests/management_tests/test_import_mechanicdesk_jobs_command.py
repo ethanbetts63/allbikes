@@ -71,7 +71,7 @@ class TestImportMechanicdeskJobs:
         assert Booking.objects.filter(source=Booking.Source.IMPORTED).count() == 2
 
         b1 = Booking.objects.get(md_job_number='101')
-        assert b1.status == Booking.Status.FINISHED_PAID
+        assert b1.status == Booking.Status.FINISHED
         assert b1.customer_name == 'Jane Doe'
         assert b1.make == 'Vespa'
         assert b1.model == 'GTS 300'
@@ -85,7 +85,7 @@ class TestImportMechanicdeskJobs:
         assert str(b1.drop_off_date) == '2021-08-31'
 
         b2 = Booking.objects.get(md_job_number='102')
-        assert b2.status == Booking.Status.NOT_STARTED   # 'new'
+        assert b2.status == Booking.Status.ACCEPTED   # 'new'
         assert b2.customer_email == ''
         assert b2.job_description == 'Service'
 

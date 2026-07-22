@@ -18,5 +18,5 @@ class BookingFactory(DjangoModelFactory):
     year = "2016"
     registration = "1ABC234"
     job_description = "Tyre fitting"
-    status = Booking.Status.NOT_STARTED
+    status = Booking.Status.ACCEPTED
     source = Booking.Source.MANUAL

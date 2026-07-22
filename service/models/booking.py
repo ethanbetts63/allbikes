@@ -13,10 +13,11 @@ class Booking(models.Model):
     """
 
     class Status(models.TextChoices):
-        REQUESTED = 'requested', 'Requested'          # submitted online, awaiting confirmation
-        NOT_STARTED = 'not_started', 'Not started'    # confirmed, not yet worked on
-        IN_PROGRESS = 'in_progress', 'In progress'
-        FINISHED_PAID = 'finished_paid', 'Finished & paid'
+        REQUESTED = 'requested', 'Requested'    # submitted online, awaiting confirmation
+        ACCEPTED = 'accepted', 'Accepted'       # confirmed, not yet worked on
+        STARTED = 'started', 'Started'
+        FINISHED = 'finished', 'Finished'
+        CANCELLED = 'cancelled', 'Cancelled'    # called off; kept on the diary, greyed
 
     class Source(models.TextChoices):
         WEBSITE = 'website', 'Website'
@@ -48,7 +49,7 @@ class Booking(models.Model):
     job_description = models.TextField(blank=True, help_text="What the job involves.")
 
     status = models.CharField(
-        max_length=20, choices=Status.choices, default=Status.NOT_STARTED
+        max_length=20, choices=Status.choices, default=Status.ACCEPTED
     )
     source = models.CharField(
         max_length=10, choices=Source.choices, default=Source.MANUAL

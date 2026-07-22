@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { adminCreateBooking } from '@/api';
 import type { BookingInput } from '@/types/Booking';
 import BookingForm from '@/forms/BookingForm';
+import { DIARY_PATH, diaryWeekHref } from '@/page_components/admin/AdminServiceDiaryPage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -25,7 +26,7 @@ const emptyBooking: BookingInput = {
   year: '',
   odometer: '',
   job_description: '',
-  status: 'not_started',
+  status: 'accepted',
 };
 
 const AddBookingPage = () => {
@@ -44,8 +45,9 @@ const AddBookingPage = () => {
     setSaving(true);
     setError(null);
     try {
-      await adminCreateBooking(value);
-      router.push('/dashboard/service-diary');
+      const created = await adminCreateBooking(value);
+      // Land on the week the job was booked into, not whichever week is current.
+      router.push(diaryWeekHref(created.drop_off_date));
     } catch {
       setError('Failed to create booking.');
       setSaving(false);
@@ -55,7 +57,7 @@ const AddBookingPage = () => {
   return (
     <div className="p-4 md:p-6">
       <button
-        onClick={() => router.push('/dashboard/service-diary')}
+        onClick={() => router.push(DIARY_PATH)}
         className="flex items-center gap-1 text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] mb-4"
       >
         <ArrowLeft className="h-4 w-4" /> Back to diary

@@ -1,4 +1,4 @@
-export interface DashboardOrder {
+export interface NotificationOrder {
   id: number;
   order_reference: string;
   payment_type: 'full' | 'deposit';
@@ -6,7 +6,7 @@ export interface DashboardOrder {
   created_at: string;
 }
 
-export interface DashboardBike {
+export interface NotificationBike {
   id: number;
   slug: string;
   make: string;
@@ -14,7 +14,7 @@ export interface DashboardBike {
   year: number | null;
 }
 
-export interface DashboardProduct {
+export interface NotificationProduct {
   id: number;
   slug: string;
   name: string;
@@ -23,7 +23,7 @@ export interface DashboardProduct {
   low_stock: boolean;
 }
 
-export interface DashboardHireBooking {
+export interface NotificationHireBooking {
   id: number;
   booking_reference: string;
   motorcycle_name: string;
@@ -33,9 +33,9 @@ export interface DashboardHireBooking {
   status: string;
 }
 
-export interface AdminDashboard {
-  paid_orders: DashboardOrder[];
-  reserved_bikes: DashboardBike[];
-  attention_products: DashboardProduct[];
-  active_hire_bookings: DashboardHireBooking[];
+export interface AdminNotifications {
+  paid_orders: NotificationOrder[];
+  reserved_bikes: NotificationBike[];
+  attention_products: NotificationProduct[];
+  active_hire_bookings: NotificationHireBooking[];
 }

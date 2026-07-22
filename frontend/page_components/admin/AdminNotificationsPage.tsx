@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { adminGetDashboard } from '@/api';
-import type { AdminDashboard } from '@/types/AdminDashboard';
+import { adminGetNotifications } from '@/api';
+import type { AdminNotifications } from '@/types/AdminNotifications';
 import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -15,29 +15,29 @@ const HIRE_STATUS_BADGE: Record<string, string> = {
   active: 'border-blue-500 text-blue-700',
 };
 
-const AdminHomePage = () => {
+const AdminNotificationsPage = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const [dashboard, setDashboard] = useState<AdminDashboard | null>(null);
+  const [notifications, setNotifications] = useState<AdminNotifications | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
-    adminGetDashboard()
-      .then(setDashboard)
+    adminGetNotifications()
+      .then(setNotifications)
       .catch(() => {})
       .finally(() => setIsLoading(false));
   }, [user]);
 
-  const allClear = dashboard &&
-    dashboard.paid_orders.length === 0 &&
-    dashboard.reserved_bikes.length === 0 &&
-    dashboard.attention_products.length === 0 &&
-    dashboard.active_hire_bookings.length === 0;
+  const allClear = notifications &&
+    notifications.paid_orders.length === 0 &&
+    notifications.reserved_bikes.length === 0 &&
+    notifications.attention_products.length === 0 &&
+    notifications.active_hire_bookings.length === 0;
 
   return (
     <div className="p-4 md:p-6">
-      <h1 className="text-2xl font-bold mb-1 text-[var(--text-dark-primary)]">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-1 text-[var(--text-dark-primary)]">Notifications</h1>
       <p className="text-[var(--text-dark-secondary)] text-sm mb-8">
         Welcome back, {user?.first_name || user?.email}.
       </p>
@@ -56,14 +56,14 @@ const AdminHomePage = () => {
         </div>
       )}
 
-      {!isLoading && dashboard && !allClear && (
+      {!isLoading && notifications && !allClear && (
         <div className="space-y-8">
 
           {/* Orders to action */}
-          {dashboard.paid_orders.length > 0 && (
+          {notifications.paid_orders.length > 0 && (
             <section>
               <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
-                Orders to action — {dashboard.paid_orders.length}
+                Orders to action — {notifications.paid_orders.length}
               </h2>
               <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light overflow-hidden">
                 <table className="w-full text-sm">
@@ -75,7 +75,7 @@ const AdminHomePage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-stone-100">
-                    {dashboard.paid_orders.map(order => (
+                    {notifications.paid_orders.map(order => (
                       <tr
                         key={order.id}
                         onClick={() => router.push(`/dashboard/orders/${order.id}`)}
@@ -104,13 +104,13 @@ const AdminHomePage = () => {
           )}
 
           {/* Reserved motorcycles */}
-          {dashboard.reserved_bikes.length > 0 && (
+          {notifications.reserved_bikes.length > 0 && (
             <section>
               <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
-                Reserved motorcycles — {dashboard.reserved_bikes.length}
+                Reserved motorcycles — {notifications.reserved_bikes.length}
               </h2>
               <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light divide-y divide-stone-100">
-                {dashboard.reserved_bikes.map(bike => (
+                {notifications.reserved_bikes.map(bike => (
                   <Link
                     key={bike.id}
                     href="/dashboard/inventory"
@@ -127,10 +127,10 @@ const AdminHomePage = () => {
           )}
 
           {/* Active hire bookings */}
-          {dashboard.active_hire_bookings.length > 0 && (
+          {notifications.active_hire_bookings.length > 0 && (
             <section>
               <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
-                Hire bookings — {dashboard.active_hire_bookings.length}
+                Hire bookings — {notifications.active_hire_bookings.length}
               </h2>
               <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light overflow-hidden">
                 <table className="w-full text-sm">
@@ -144,7 +144,7 @@ const AdminHomePage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-stone-100">
-                    {dashboard.active_hire_bookings.map(booking => (
+                    {notifications.active_hire_bookings.map(booking => (
                       <tr
                         key={booking.id}
                         onClick={() => router.push(`/dashboard/hire/${booking.id}`)}
@@ -172,13 +172,13 @@ const AdminHomePage = () => {
           )}
 
           {/* Attention products */}
-          {dashboard.attention_products.length > 0 && (
+          {notifications.attention_products.length > 0 && (
             <section>
               <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
-                Product stock — {dashboard.attention_products.length}
+                Product stock — {notifications.attention_products.length}
               </h2>
               <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light divide-y divide-stone-100">
-                {dashboard.attention_products.map(product => (
+                {notifications.attention_products.map(product => (
                   <Link
                     key={product.id}
                     href="/dashboard/products"
@@ -204,4 +204,4 @@ const AdminHomePage = () => {
   );
 };
 
-export default AdminHomePage;
+export default AdminNotificationsPage;

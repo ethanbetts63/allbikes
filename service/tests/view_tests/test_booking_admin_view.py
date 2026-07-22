@@ -60,18 +60,18 @@ class TestBookingAdminViewSet:
         assert booking.model == 'CB125'
         assert booking.suburb == 'Dianella'
         # Model default status applies when not supplied.
-        assert booking.status == Booking.Status.NOT_STARTED
+        assert booking.status == Booking.Status.ACCEPTED
 
     def test_update_status(self, admin_client):
-        booking = BookingFactory(status=Booking.Status.NOT_STARTED)
+        booking = BookingFactory(status=Booking.Status.ACCEPTED)
         response = admin_client.patch(
             f'/api/service/admin/bookings/{booking.id}/',
-            {'status': 'finished_paid'},
+            {'status': 'finished'},
             format='json',
         )
         assert response.status_code == status.HTTP_200_OK
         booking.refresh_from_db()
-        assert booking.status == Booking.Status.FINISHED_PAID
+        assert booking.status == Booking.Status.FINISHED
 
     def test_delete(self, admin_client):
         booking = BookingFactory()

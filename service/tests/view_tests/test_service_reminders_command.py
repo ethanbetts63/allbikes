@@ -38,11 +38,11 @@ class TestServiceRemindersCommand:
             call_command('send_service_reminders')
             mock_send.assert_not_called()
 
-    def test_excludes_finished_paid(self):
+    def test_excludes_finished(self):
         ServiceSettingsFactory(reminder_emails_enabled=True, reminder_days_before=1)
         BookingFactory(
             drop_off_date=timezone.localdate() + timedelta(days=1),
-            status=Booking.Status.FINISHED_PAID,
+            status=Booking.Status.FINISHED,
         )
         with patch('notifications.management.commands.send_service_reminders.send_service_reminder') as mock_send:
             call_command('send_service_reminders')

@@ -18,7 +18,7 @@ class BookingAdminViewSet(viewsets.ModelViewSet):
     dates (the `start`/`end` window is ignored) and returns the most recent
     matches first, so staff can find a booking without paging to its week.
 
-    Bookings created here default to `not_started` / `manual` (staff are adding
+    Bookings created here default to `accepted` / `manual` (staff are adding
     them deliberately) unless the payload overrides the status.
     """
     serializer_class = BookingAdminSerializer

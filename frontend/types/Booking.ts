@@ -1,8 +1,9 @@
 export type BookingStatus =
   | 'requested'
-  | 'not_started'
-  | 'in_progress'
-  | 'finished_paid';
+  | 'accepted'
+  | 'started'
+  | 'finished'
+  | 'cancelled';
 
 export type BookingSource = 'website' | 'manual';
 

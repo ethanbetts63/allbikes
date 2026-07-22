@@ -1,16 +1,10 @@
 "use client";
 
 import type { BookingInput, BookingStatus } from '@/types/Booking';
+import { BOOKING_STATUSES } from '@/lib/bookingStatus';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-
-const STATUS_OPTIONS: { value: BookingStatus; label: string }[] = [
-  { value: 'requested', label: 'Requested' },
-  { value: 'not_started', label: 'Not started' },
-  { value: 'in_progress', label: 'In progress' },
-  { value: 'finished_paid', label: 'Finished & paid' },
-];
 
 interface BookingFormProps {
   value: BookingInput;
@@ -51,11 +45,11 @@ const BookingForm = ({ value, onChange, showStatus = true }: BookingFormProps) =
           <Label htmlFor="status">Status</Label>
           <select
             id="status"
-            value={value.status ?? 'not_started'}
+            value={value.status ?? 'accepted'}
             onChange={e => set('status', e.target.value as BookingStatus)}
             className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
-            {STATUS_OPTIONS.map(o => (
+            {BOOKING_STATUSES.map(o => (
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>

@@ -30,11 +30,12 @@ class Command(BaseCommand):
 
         target_date = timezone.localdate() + timedelta(days=settings.reminder_days_before)
 
-        # Only remind for jobs still on the books (not finished), not already reminded.
+        # Only remind for jobs still on the books (not finished or cancelled),
+        # not already reminded.
         bookings = Booking.objects.filter(
             drop_off_date=target_date,
             reminder_sent_at__isnull=True,
-        ).exclude(status=Booking.Status.FINISHED_PAID)
+        ).exclude(status__in=[Booking.Status.FINISHED, Booking.Status.CANCELLED])
 
         if not bookings:
             self.stdout.write(f"No bookings needing a reminder for {target_date}.")
