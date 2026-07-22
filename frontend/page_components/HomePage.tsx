@@ -92,12 +92,11 @@ const HomePage = ({
           />
         </div>
         
-        {siteSettings.show_hire && (
-          <div className="defer-section-sm">
-            <HireCTASection />
-          </div>
-        )}
-        
+        <div className="defer-section">
+          <ServiceCTAV2 />
+        </div>
+
+
         <div className="defer-section-sm">
           <FeaturedBikes
             title="Featured Used Bikes"
@@ -108,11 +107,11 @@ const HomePage = ({
           />
         </div>
 
-        <div className="defer-section">
-          <ServiceCTAV2 />
-        </div>
-
-
+        {siteSettings.show_hire && (
+          <div className="defer-section-sm">
+            <HireCTASection />
+          </div>
+        )}
 
         <div className="defer-section">
           <PayLaterSection />
