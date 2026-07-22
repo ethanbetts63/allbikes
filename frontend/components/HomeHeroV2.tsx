@@ -7,12 +7,10 @@ import type { HomeHeroProps } from "@/types/HomeHeroProps";
 import { ArrowRight, Phone, Mail } from 'lucide-react';
 import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
-// Import default images
-import defaultNewImage from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ.webp';
+// Import fallback and campaign images
 import defaultUsedImage from '@/assets/IMG_20250730_102056.webp';
 import symWarrantyImage from '@/assets/sym_warranty_image.png';
 
-const defaultNewImageSrc = defaultNewImage.src;
 const defaultUsedImageSrc = defaultUsedImage.src;
 const symWarrantyImageSrc = symWarrantyImage.src;
 
@@ -35,7 +33,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
   // local asset, so it provides a dependable priority-loaded initial render;
   // the current featured scooters follow in the existing carousel.
   const newBikeImageUrls = useMemo(
-    () => [symWarrantyImageSrc, ...getBikeImageUrls(newBikes, defaultNewImageSrc)],
+    () => [symWarrantyImageSrc, ...getBikeImageUrls(newBikes, symWarrantyImageSrc)],
     [newBikes],
   );
   const usedBikeImageUrls = useMemo(() => getBikeImageUrls(usedBikes, defaultUsedImageSrc), [usedBikes]);
