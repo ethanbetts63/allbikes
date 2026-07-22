@@ -10,9 +10,11 @@ import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 // Import default images
 import defaultNewImage from '@/assets/b5axm1pizbgkl4xj3b1u_I1x6JsQ.webp';
 import defaultUsedImage from '@/assets/IMG_20250730_102056.webp';
+import symWarrantyImage from '@/assets/sym_warranty_image.png';
 
 const defaultNewImageSrc = defaultNewImage.src;
 const defaultUsedImageSrc = defaultUsedImage.src;
+const symWarrantyImageSrc = symWarrantyImage.src;
 
 interface SlotState {
   a: string;
@@ -29,7 +31,13 @@ const getBikeImageUrls = (bikes: HomeHeroProps['newBikes'], fallback: string) =>
 };
 
 const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, emailAddress }: HomeHeroProps) => {
-  const newBikeImageUrls = useMemo(() => getBikeImageUrls(newBikes, defaultNewImageSrc), [newBikes]);
+  // The SYM warranty campaign is intentionally the first hero frame. It is a
+  // local asset, so it provides a dependable priority-loaded initial render;
+  // the current featured scooters follow in the existing carousel.
+  const newBikeImageUrls = useMemo(
+    () => [symWarrantyImageSrc, ...getBikeImageUrls(newBikes, defaultNewImageSrc)],
+    [newBikes],
+  );
   const usedBikeImageUrls = useMemo(() => getBikeImageUrls(usedBikes, defaultUsedImageSrc), [usedBikes]);
   const [shouldCycleImages, setShouldCycleImages] = useState(false);
   const currentNewIndexRef = useRef(0);
@@ -144,7 +152,7 @@ const HomeHeroV2 = ({ newBikes, usedBikes, error, phoneNumber, mobileNumber, ema
         />
       </span>
       <span className="absolute inset-0 hidden md:block">
-        {renderCrossfadeImages(newSlots)}
+        {renderCrossfadeImages(newSlots, true)}
       </span>
     </>
   );
