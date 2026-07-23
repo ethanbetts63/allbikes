@@ -7,6 +7,7 @@ import type { PublicHireSettings } from '@/types/PublicHireSettings';
 
 interface HireListPageProps {
   initialBikes?: Bike[];
+  hasHireFleet?: boolean;
   bargainBikes?: Bike[];
   initialStartDate?: string;
   initialEndDate?: string;
@@ -16,6 +17,7 @@ interface HireListPageProps {
 
 const HireListPage = ({
   initialBikes,
+  hasHireFleet = true,
   bargainBikes = [],
   initialStartDate,
   initialEndDate,
@@ -25,6 +27,7 @@ const HireListPage = ({
   <>
     <HireAvailabilitySection
       initialBikes={initialBikes}
+      hasHireFleet={hasHireFleet}
       initialStartDate={initialStartDate}
       initialEndDate={initialEndDate}
       initialHireSettings={initialHireSettings}
@@ -36,7 +39,7 @@ const HireListPage = ({
               Sorry, Our Hire Bikes Are Fully Booked Right Now.
             </h2>
             <p className="text-lg text-[var(--text-dark-secondary)]">
-              You might be interested in one of these bargain deals instead.
+              You might be interested in one of these bargain deals below instead.
             </p>
           </div>
           <FeaturedBikes

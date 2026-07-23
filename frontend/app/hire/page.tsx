@@ -60,8 +60,13 @@ export default async function Page({ searchParams }: HirePageProps) {
   const params = await searchParams;
   const startDate = typeof params?.start === 'string' ? params.start : '';
   const endDate = typeof params?.end === 'string' ? params.end : '';
-  const [bikes, bargainBikes, hireSettings, blockedDates] = await Promise.all([
-    fetchInitialHireBikes(startDate, endDate),
+  const fullHireFleetPromise = fetchInitialHireBikes('', '');
+  const selectedHireBikesPromise = startDate && endDate
+    ? fetchInitialHireBikes(startDate, endDate)
+    : fullHireFleetPromise;
+  const [bikes, fullHireFleet, bargainBikes, hireSettings, blockedDates] = await Promise.all([
+    selectedHireBikesPromise,
+    fullHireFleetPromise,
     fetchBargainBikes(),
     fetchInitialHireSettings(),
     fetchInitialBlockedDates(),
@@ -75,6 +80,7 @@ export default async function Page({ searchParams }: HirePageProps) {
       />
       <HireListPage
         initialBikes={bikes}
+        hasHireFleet={fullHireFleet.length > 0}
         bargainBikes={bargainBikes}
         initialStartDate={startDate}
         initialEndDate={endDate}

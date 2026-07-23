@@ -19,6 +19,7 @@ import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
 interface HireAvailabilitySectionProps {
   initialBikes?: Bike[];
+  hasHireFleet?: boolean;
   initialStartDate?: string;
   initialEndDate?: string;
   initialHireSettings?: PublicHireSettings | null;
@@ -28,6 +29,7 @@ interface HireAvailabilitySectionProps {
 
 const HireAvailabilitySection = ({
   initialBikes,
+  hasHireFleet = true,
   initialStartDate,
   initialEndDate,
   initialHireSettings,
@@ -92,6 +94,11 @@ const HireAvailabilitySection = ({
   };
 
   const isBlockedSelection = Boolean(startDate && endDate && isRangeBlocked(startDate, endDate));
+  const showGeneralEmptyState = !isLoading
+    && !displayError
+    && !isBlockedSelection
+    && bikes.length === 0
+    && Boolean(emptyState);
 
   return (
     <>
@@ -106,7 +113,7 @@ const HireAvailabilitySection = ({
             </h1>
           </div>
 
-          <div className="w-full bg-white/5 border border-white/10 rounded-lg p-5">
+          <div className={`w-full bg-white/5 border border-white/10 rounded-lg p-5 transition-opacity ${hasHireFleet ? '' : 'opacity-60'}`}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5 text-left">
                 <Label htmlFor="start_date" className="text-[var(--text-light-secondary)] text-xs uppercase tracking-widest">
@@ -118,13 +125,14 @@ const HireAvailabilitySection = ({
                   min={minStartDate}
                   max={maxStartDate}
                   value={startDate}
+                  disabled={!hasHireFleet}
                   onChange={(e) => {
                     const val = e.target.value;
                     setStartDate(val);
                     if (endDate && val > endDate) setEndDate('');
                     setBlockedDateError(endDate && val ? (isRangeBlocked(val, endDate) ? 'These dates include a period when the shop is closed. Please choose different dates.' : null) : null);
                   }}
-                  className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
+                  className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark] disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
               <div className="flex flex-col gap-1.5 text-left">
@@ -137,17 +145,22 @@ const HireAvailabilitySection = ({
                   min={startDate || minStartDate}
                   max={maxStartDate}
                   value={endDate}
+                  disabled={!hasHireFleet}
                   onChange={(e) => {
                     const val = e.target.value;
                     setEndDate(val);
                     setBlockedDateError(startDate && val ? (isRangeBlocked(startDate, val) ? 'These dates include a period when the shop is closed. Please choose different dates.' : null) : null);
                   }}
-                  className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark]"
+                  className="bg-white/10 border-white/20 text-[var(--text-light-primary)] [color-scheme:dark] disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
             </div>
             {blockedDateError ? (
               <p className="text-red-400 text-xs mt-3 text-center">{blockedDateError}</p>
+            ) : !hasHireFleet ? (
+              <p className="text-[var(--text-light-secondary)] text-xs mt-3 text-center">
+                Date selection is unavailable while the hire fleet is fully booked.
+              </p>
             ) : (!startDate || !endDate) && (
               <p className="text-[var(--text-light-secondary)] text-xs mt-3 text-center">
                 Select dates to check availability
@@ -158,7 +171,7 @@ const HireAvailabilitySection = ({
       </section>
 
       <div className="bg-[var(--card)]">
-        <div className="container mx-auto px-4 lg:px-8 py-8">
+        <div className={`container mx-auto px-4 lg:px-8 ${showGeneralEmptyState ? 'py-0' : 'py-8'}`}>
           {isLoading && (
             <div className="flex justify-center items-center h-64">
               <Spinner className="h-12 w-12" />
@@ -249,7 +262,7 @@ const HireAvailabilitySection = ({
                   );
                 })
               ) : (
-                startDate && endDate ? (
+                showGeneralEmptyState ? null : startDate && endDate ? (
                   <p className="col-span-3 py-16 text-center text-lg text-[var(--text-dark-secondary)]">
                     No bikes are available for those dates. Try different dates.
                   </p>
@@ -264,7 +277,7 @@ const HireAvailabilitySection = ({
         </div>
       </div>
 
-      {!isLoading && !displayError && !isBlockedSelection && bikes.length === 0 && !startDate && !endDate && emptyState}
+      {showGeneralEmptyState && emptyState}
     </>
   );
 };
