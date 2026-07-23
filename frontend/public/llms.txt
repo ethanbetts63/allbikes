@@ -1,36 +1,23 @@
 # ScooterShop Perth
 
-> ScooterShop is a licensed motorcycle and scooter dealer and repair workshop in Dianella, Perth, Western Australia. The business sells new and used scooters and motorcycles, provides workshop servicing and tyre fitting, and offers motorcycle and scooter hire.
+> ScooterShop is a licensed motorcycle and scooter dealer and repair workshop in Dianella, Perth, Western Australia. The business sells new and used scooters and motorcycles, provides workshop servicing, and offers motorcycle and scooter hire.
 
-ScooterShop has more than 30 years of motorcycle and scooter industry experience. The workshop supports petrol and electric models and has particular experience with Vespa, Piaggio, SYM and other established scooter brands.
+ScooterShop has more than 30 years of motorcycle and scooter industry experience. The workshop supports petrol and electric models.
 
-## Sales and Inventory
+## Main Navigation
 
-- [ScooterShop homepage](https://www.scootershop.com.au/): Overview of motorcycle and scooter sales, workshop services and hire in Perth.
-- [New scooters for sale](https://www.scootershop.com.au/inventory/scooters/new): Current new scooter inventory from the brands ScooterShop sells and supports.
-- [Used scooters for sale](https://www.scootershop.com.au/inventory/scooters/used): Current pre-owned scooters and mopeds available in Perth.
-- [Used motorcycles for sale](https://www.scootershop.com.au/inventory/motorcycles/used): Current pre-owned motorcycle inventory.
-- [50cc scooters in Perth](https://www.scootershop.com.au/50cc-scooters-perth): New and used scooters up to 50cc, with WA moped-licence guidance.
-- [Used Vespa scooters in Perth](https://www.scootershop.com.au/vespa-perth): Used Vespa inventory, buying information and specialist workshop support.
-- [Electric scooters](https://www.scootershop.com.au/escooters): Electric kick scooters sold online with Australia-wide delivery when stock is available.
+- [ScooterShop homepage](https://www.scootershop.com.au/): Motorcycle and scooter sales, workshop services and hire in Perth.
+- [Servicing](https://www.scootershop.com.au/service): Motorcycle and scooter workshop servicing, repairs and online booking.
+- [Hire](https://www.scootershop.com.au/hire): Current motorcycle and scooter hire availability and booking information.
+- [New scooters](https://www.scootershop.com.au/inventory/scooters/new): Current new scooter inventory.
+- [Used scooters](https://www.scootershop.com.au/inventory/scooters/used): Current pre-owned scooters and mopeds.
+- [Used motorcycles](https://www.scootershop.com.au/inventory/motorcycles/used): Current pre-owned motorcycle inventory.
+- [E-Scooters](https://www.scootershop.com.au/escooters): Electric kick scooters sold online when stock is available.
+- [Contact](https://www.scootershop.com.au/contact): Address, telephone, email, opening hours and directions.
 
-## Workshop Services
+## Articles
 
-- [Motorcycle and scooter servicing](https://www.scootershop.com.au/service): General workshop servicing, repairs and online booking.
-- [Scooter service and repairs](https://www.scootershop.com.au/scooter-service): Scooter maintenance, diagnosis, repairs and tyres.
-- [Motorcycle service and repairs](https://www.scootershop.com.au/motorcycle-service): Motorcycle maintenance and mechanical repairs.
-- [Vespa service in Perth](https://www.scootershop.com.au/vespa-service-perth): Specialist servicing and repairs for modern and classic Vespa models.
-- [Motorcycle and scooter tyre fitting](https://www.scootershop.com.au/tyre-fitting): Tyre supply, fitting, balancing and puncture repair.
-
-## Hire and Rider Guides
-
-- [Motorcycle and scooter hire](https://www.scootershop.com.au/hire): Current Perth hire fleet, availability and booking information.
-- [WA scooter and motorcycle licence guide](https://www.scootershop.com.au/blog/wa-scooter-motorcycle-licence-guide): Plain-English overview of WA moped and motorcycle licence requirements.
-- [Buying a used scooter in Perth](https://www.scootershop.com.au/blog/buying-used-scooter-perth): Inspection and buying guidance from the ScooterShop workshop.
-- [WA electric scooter laws](https://www.scootershop.com.au/blog/wa-e-scooter-laws-2026): Guidance for personal electric scooter riders, with links to official authorities for current rules.
-
-## Business Information
-
-- [Contact ScooterShop](https://www.scootershop.com.au/contact): Address, telephone, email, opening hours and directions to the Dianella premises.
-
-ScooterShop is located at Unit 5/6 Cleveland Street, Dianella WA 6059. The business holds WA Motor Dealer Licence MD28276 and Motor Vehicle Repairer's Business Licence MRB5092.
+- [Buying a Used Scooter in Perth 2026](https://www.scootershop.com.au/blog/buying-used-scooter-perth): What to inspect, which brands to consider, PPSR checks and private-market warning signs.
+- [Car vs Scooter in Perth: The Real Costs 2026](https://www.scootershop.com.au/blog/car-vs-scooter-perth-commuter-guide): Annual commuting costs for cars, petrol scooters, electric mopeds and motorcycles in Perth.
+- [E-Scooter Laws in WA 2026](https://www.scootershop.com.au/blog/wa-e-scooter-laws-2026): WA speed limits, permitted riding areas, helmet rules and safety requirements.
+- [WA Scooter and Motorcycle Licence Guide 2026](https://www.scootershop.com.au/blog/wa-scooter-motorcycle-licence-guide): WA licence requirements from qualifying mopeds through to unrestricted motorcycles.
