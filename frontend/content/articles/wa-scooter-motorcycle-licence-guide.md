@@ -27,6 +27,8 @@ In Western Australia, if you hold a valid WA driver's licence (not a learner's p
 
 This covers the majority of 50cc petrol scooters. If the scooter is 50cc and can't exceed 50 km/h by design, your car licence is all you need.
 
+You can also [browse our current 50cc scooters in Perth](/50cc-scooters-perth), with new and used qualifying stock shown first.
+
 **Important:** the 50cc / 50 km/h limit is strict. If the scooter is 125cc, or if it's capable of going faster than 50 km/h, you need a motorcycle licence regardless of what you're riding it at on the road.
 
 ### WA's unique moped-only licence

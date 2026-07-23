@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight } from 'lucide-react';
 import ServiceBookingHero from '@/components/ServiceBookingHero';
 import ServiceAreasSection from '@/components/ServiceAreasSection';
-import FeaturedBikes from '@/components/FeaturedBikesLazy';
+import FeaturedBikes from '@/components/FeaturedBikes';
 import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 import type { Bike } from '@/types/Bike';

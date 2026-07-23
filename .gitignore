@@ -42,3 +42,6 @@ data_management/data/archive/
 
 # Claude Code
 .claude/
+
+# Local SEO analysis cache
+.seo-cache/

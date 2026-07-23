@@ -13,13 +13,23 @@ const defaultCheckItems = [
 
 const defaultHeadingLines = ['Get Your', 'Bike', 'Sorted.'];
 
-interface ServiceCTAV2Props {
+export interface ServiceCTAV2Props {
+    eyebrow?: string;
     headingLines?: string[];
     checkItems?: string[];
     subtitle?: string;
+    href?: string;
+    buttonText?: string;
 }
 
-const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = defaultCheckItems, subtitle = "Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes." }: ServiceCTAV2Props) => {
+const ServiceCTAV2 = ({
+    eyebrow = 'ScooterShop · Perth',
+    headingLines = defaultHeadingLines,
+    checkItems = defaultCheckItems,
+    subtitle = "Our experienced mechanics have been keeping Perth riders on the road for decades. Book your service online in minutes.",
+    href = '/service',
+    buttonText = 'Book Online',
+}: ServiceCTAV2Props) => {
     return (
         <section className="bg-[var(--bg-dark-primary)] py-20 px-4">
             <div className="container mx-auto">
@@ -28,7 +38,7 @@ const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = default
                     {/* Left — bold typographic block */}
                     <div>
                         <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em] mb-6">
-                            ScooterShop · Perth
+                            {eyebrow}
                         </p>
                         <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-light-primary)] leading-none mb-6 uppercase italic">
                             {headingLines.map((line, i) => (
@@ -38,12 +48,12 @@ const ServiceCTAV2 = ({ headingLines = defaultHeadingLines, checkItems = default
                         <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm mb-10">
                             {subtitle}
                         </p>
-                        <Link href="/service">
+                        <Link href={href}>
                             <Button
                                 size="lg"
                                 className="bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold px-8 text-base group"
                             >
-                                Book Online
+                                {buttonText}
                                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                             </Button>
                         </Link>

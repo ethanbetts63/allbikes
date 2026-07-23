@@ -9,7 +9,7 @@ import ServiceAreasSection from '@/components/ServiceAreasSection';
 import ReviewCarousel, { type Review } from '@/components/ReviewCarousel';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 
-const vespaReviews: Review[] = [
+export const vespaReviews: Review[] = [
     {
         pk: 401,
         author_name: 'carwyn church',
@@ -162,7 +162,11 @@ const VespaServicePage = () => {
                         ))}
                     </div>
                     <p className="mt-8 text-center text-[var(--text-light-secondary)] text-lg">
-                        Also see our{' '}
+                        Looking to buy? See our{' '}
+                        <Link href="/vespa-perth" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
+                            used Vespa scooters in Perth
+                        </Link>
+                        . For related workshop services, see our{' '}
                         <Link href="/scooter-service" className="text-highlight1 font-semibold underline underline-offset-4 hover:text-highlight1/80">
                             scooter repairs page
                         </Link>

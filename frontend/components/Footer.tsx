@@ -48,6 +48,8 @@ const Footer = () => {
             {siteSettings.show_hire && <li><Link href="/hire" className={LINK_CLASS}>Motorcycle Hire Perth</Link></li>}
             <li><Link href="/inventory/scooters/new" className={LINK_CLASS}>New Scooters</Link></li>
             <li><Link href="/inventory/scooters/used" className={LINK_CLASS}>Used Scooters</Link></li>
+            <li><Link href="/50cc-scooters-perth" className={LINK_CLASS}>50cc Scooters Perth</Link></li>
+            <li><Link href="/vespa-perth" className={LINK_CLASS}>Used Vespa Scooters Perth</Link></li>
             <li><Link href="/inventory/motorcycles/used" className={LINK_CLASS}>Used Motorcycles</Link></li>
             {!siteSettings.hide_escooters && <li><Link href="/escooters" className={LINK_CLASS}>E-Scooters</Link></li>}
             {siteSettings.show_workshop_clearance && <li><Link href="/inventory/motorcycles/parts" className={LINK_CLASS}>Workshop Clearance</Link></li>}

@@ -2,7 +2,7 @@ import StructuredDataScript from '@/components/StructuredDataScript';
 import HomeHeroV2 from '@/components/HomeHeroV2';
 import ReviewCarousel from "@/components/ReviewCarousel";
 import BrandsSection from '@/components/BrandsSection';
-import FeaturedBikes from '@/components/FeaturedBikesLazy';
+import FeaturedBikes from '@/components/FeaturedBikes';
 import { FaqSection } from '@/components/FaqSection';
 import type { Bike } from "@/types/Bike";
 import type { Product } from "@/types/Product";

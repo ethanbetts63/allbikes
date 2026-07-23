@@ -3,7 +3,7 @@ import type { Bike } from '@/types/Bike';
 import type { Specification } from '@/types/Specification';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import DesktopOnly from '@/components/DesktopOnly';
-import FeaturedBikes from '@/components/FeaturedBikesLazy';
+import FeaturedBikes from '@/components/FeaturedBikes';
 import {
     Hash,
     Gauge,

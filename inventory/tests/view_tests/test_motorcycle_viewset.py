@@ -90,6 +90,27 @@ class TestMotorcycleViewSetList:
         assert response.data['count'] == 1
         assert response.data['results'][0]['price'] == "2500.00"
 
+    def test_filter_by_max_engine_size_is_inclusive_and_ignores_nulls(self, api_client):
+        """
+        GIVEN motorcycles with 49cc, 50cc, 51cc and unknown engine sizes
+        WHEN filtering with max_engine_size=50
+        THEN 49cc and 50cc are returned, while 51cc and unknown are excluded.
+        """
+        under_limit = MotorcycleFactory(engine_size=49)
+        at_limit = MotorcycleFactory(engine_size=50)
+        MotorcycleFactory(engine_size=51)
+        MotorcycleFactory(engine_size=None)
+        url = reverse("inventory:motorcycle-list")
+
+        response = api_client.get(url, {'max_engine_size': 50})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == 2
+        assert {bike['id'] for bike in response.data['results']} == {
+            under_limit.id,
+            at_limit.id,
+        }
+
     def test_ordering_by_price_asc(self, api_client):
         """
         GIVEN two motorcycles with different prices

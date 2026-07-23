@@ -7,4 +7,6 @@ export interface BrandProps {
   subtitle: string;
   description: string;
   imageLeft?: boolean;
+  href?: string;
+  buttonText?: string;
 }

@@ -74,7 +74,7 @@ const usedScooterFaqs = [
   },
   {
     question: 'Can I ride a used scooter on a car licence in WA?',
-    answer: 'You can ride anything up to 50cc on a car licence in Western Australia, so all used scooters we sell that are 50cc or under can be ridden on a car licence. Check the individual scooter listing for its engine size and details.'
+    answer: 'An unrestricted WA car licence permits you to ride a moped: a scooter or motorcycle with an engine no larger than 50cc that is designed not to exceed 50 km/h. Engine size alone does not make every 50cc scooter car-licence legal, so check the vehicle classification before buying.'
   },
   {
     question: 'Can I view used scooters in Perth?',
@@ -168,7 +168,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
         <div className="bg-[var(--card)] border-b border-stone-200">
           <div className="container mx-auto px-4 lg:px-8 py-3 text-sm text-[var(--text-dark-secondary)]">
             {isUsedScooters
-              ? <>Looking for a used motorcycle? <Link href="/inventory/motorcycles/used" className="text-[var(--highlight)] font-medium hover:underline">Browse used motorcycles →</Link></>
+              ? <>Looking for a particular scooter? <Link href="/vespa-perth" className="text-[var(--highlight)] font-medium hover:underline">Explore used Vespas</Link>{' · '}<Link href="/inventory/motorcycles/used" className="text-[var(--highlight)] font-medium hover:underline">Browse used motorcycles</Link></>
               : <>Looking for a used scooter? <Link href="/inventory/scooters/used" className="text-[var(--highlight)] font-medium hover:underline">Browse used scooters →</Link></>
             }
           </div>
