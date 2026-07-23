@@ -113,7 +113,8 @@ function CyclingImage({
           sizes="100vw"
           alt={config.alt}
           fill
-          priority={priority}
+          loading={priority ? 'eager' : undefined}
+          fetchPriority={priority ? 'high' : undefined}
           className={fitClass}
         />
       </span>
@@ -123,7 +124,8 @@ function CyclingImage({
           sizes={sizes}
           alt={config.alt}
           fill
-          priority={priority}
+          loading={priority ? 'eager' : undefined}
+          fetchPriority={priority ? 'high' : undefined}
           className={`${fitClass} transition-opacity duration-1000 ease-in-out ${slots.active === 'a' ? 'opacity-100' : 'opacity-0'}`}
         />
         <NextImage
@@ -340,6 +342,7 @@ export default function HomeHeroV2({
           <InventoryPanel
             bikes={usedBikes}
             config={usedPanel}
+            priority
             className="min-h-[260px] md:min-h-[300px] lg:flex-1"
             titleSize="text-2xl md:text-3xl lg:text-2xl xl:text-3xl"
             sizes="(max-width: 1024px) 100vw, 38vw"
