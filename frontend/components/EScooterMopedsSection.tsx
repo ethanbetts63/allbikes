@@ -1,15 +1,9 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 import segwayImage from '@/assets/segway_1.webp';
-import segwayImage320 from '@/assets/segway_1-320w.webp';
-import segwayImage640 from '@/assets/segway_1-640w.webp';
-import segwayImage768 from '@/assets/segway_1-768w.webp';
-import segwayImage1024 from '@/assets/segway_1-1024w.webp';
-import segwayImage1280 from '@/assets/segway_1-1280w.webp';
-
-const segwaySrcSet = `${segwayImage320.src} 320w, ${segwayImage640.src} 640w, ${segwayImage768.src} 768w, ${segwayImage1024.src} 1024w, ${segwayImage1280.src} 1280w`;
 
 const EScooterMopedsSection = () => {
   return (
@@ -17,14 +11,13 @@ const EScooterMopedsSection = () => {
       <div className="flex flex-col md:flex-row-reverse min-h-[420px]">
 
         {/* Image */}
-        <div className="w-full md:w-1/2 overflow-hidden">
-          <img
-            src={segwayImage.src}
-            srcSet={segwaySrcSet}
+        <div className="relative h-64 w-full overflow-hidden md:h-auto md:w-1/2">
+          <NextImage
+            src={segwayImage}
+            fill
             sizes="(max-width: 768px) 100vw, 50vw"
             alt="Segway electric moped"
-            className="w-full h-64 md:h-full object-cover"
-            loading="lazy"
+            className="object-cover"
           />
         </div>
 

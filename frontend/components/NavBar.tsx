@@ -1,9 +1,6 @@
 import Link from "next/link";
-import logo320 from "../assets/logo-320w.webp";
-import logo640 from "../assets/logo-640w.webp";
-import logo768 from "../assets/logo-768w.webp";
-import logo1024 from "../assets/logo-1024w.webp";
-import logo1280 from "../assets/logo-1280w.webp";
+import NextImage from "next/image";
+import logoImage from "../assets/logo.webp";
 import { cn } from "@/lib/utils";
 import { siteSettings } from "@/config/siteSettings";
 import { MapPin, Phone, Mail } from "lucide-react";
@@ -27,13 +24,11 @@ const NavBar = () => {
 
       <div className="container flex h-20 items-stretch px-6">
         <Link href="/" className="shrink-0 flex items-stretch">
-          <img
-            src={logo1280.src}
-            srcSet={`${logo320.src} 320w, ${logo640.src} 640w, ${logo768.src} 768w, ${logo1024.src} 1024w, ${logo1280.src} 1280w`}
+          <NextImage
+            src={logoImage}
             sizes="175px"
-            width="1756"
-            height="810"
             alt="ScooterShop Logo"
+            loading="eager"
             className="h-full w-auto object-contain"
           />
         </Link>

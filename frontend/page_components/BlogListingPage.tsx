@@ -1,11 +1,6 @@
 import Link from 'next/link';
 import Hero from '@/components/Hero';
 import HeroImage from '@/assets/sym_22.webp';
-import HeroImage320 from '@/assets/sym_22-320w.webp';
-import HeroImage640 from '@/assets/sym_22-640w.webp';
-import HeroImage768 from '@/assets/sym_22-768w.webp';
-import HeroImage1024 from '@/assets/sym_22-1024w.webp';
-import HeroImage1280 from '@/assets/sym_22-1280w.webp';
 import type { ArticleMeta } from '@/lib/articles';
 
 interface Props {
@@ -13,13 +8,6 @@ interface Props {
 }
 
 export default function BlogListingPage({ articles }: Props) {
-  const srcSet = [
-    `${HeroImage320.src} 320w`,
-    `${HeroImage640.src} 640w`,
-    `${HeroImage768.src} 768w`,
-    `${HeroImage1024.src} 1024w`,
-    `${HeroImage1280.src} 1280w`,
-  ].join(', ');
   const dateFormatter = new Intl.DateTimeFormat('en-AU', {
     day: 'numeric',
     month: 'long',
@@ -31,9 +19,7 @@ export default function BlogListingPage({ articles }: Props) {
       <Hero
         title="Guides & Articles"
         description="Practical guides on buying, riding, and owning scooters and motorcycles in Perth and Western Australia."
-        imageUrl={HeroImage.src}
-        imageSrcSet={srcSet}
-        imageSizes="100vw"
+        image={HeroImage}
       />
 
       <div className="bg-[var(--card)]">

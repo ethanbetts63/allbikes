@@ -2,11 +2,6 @@ import Link from 'next/link';
 import Hero from '@/components/Hero';
 import { FaqSection } from '@/components/FaqSection';
 import HeroImage from '@/assets/sym_22.webp';
-import HeroImage320 from '@/assets/sym_22-320w.webp';
-import HeroImage640 from '@/assets/sym_22-640w.webp';
-import HeroImage768 from '@/assets/sym_22-768w.webp';
-import HeroImage1024 from '@/assets/sym_22-1024w.webp';
-import HeroImage1280 from '@/assets/sym_22-1280w.webp';
 import type { Article } from '@/lib/articles';
 import type { FaqItem } from '@/types/FaqItem';
 
@@ -16,13 +11,6 @@ interface Props {
 }
 
 export default function BlogPostPage({ article, faqs }: Props) {
-  const srcSet = [
-    `${HeroImage320.src} 320w`,
-    `${HeroImage640.src} 640w`,
-    `${HeroImage768.src} 768w`,
-    `${HeroImage1024.src} 1024w`,
-    `${HeroImage1280.src} 1280w`,
-  ].join(', ');
   const publishedDate = new Intl.DateTimeFormat('en-AU', {
     day: 'numeric',
     month: 'long',
@@ -34,9 +22,7 @@ export default function BlogPostPage({ article, faqs }: Props) {
       <Hero
         title={article.title}
         description={article.excerpt}
-        imageUrl={HeroImage.src}
-        imageSrcSet={srcSet}
-        imageSizes="100vw"
+        image={HeroImage}
         centered
       />
 

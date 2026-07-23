@@ -1,10 +1,9 @@
 import type React from 'react';
+import type { StaticImageData } from 'next/image';
 
 export interface HeroProps {
   title: React.ReactNode;
   description: string;
-  imageUrl: string;
-  imageSrcSet?: string;
-  imageSizes?: string;
+  image: StaticImageData;
   centered?: boolean;
 }
