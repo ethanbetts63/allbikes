@@ -246,6 +246,25 @@ function TextPanel({
   );
 }
 
+function ServiceStrip({ config }: { config: HomeHeroServiceConfig }) {
+  return (
+    <div className="bg-[var(--bg-dark-primary)] flex flex-col sm:flex-row items-center justify-between gap-4 px-8 py-4 md:px-10">
+      <div>
+        <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">{config.eyebrow}</p>
+        <h2 className="text-[var(--text-light-primary)] text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">{config.heading}</h2>
+        <p className="text-[var(--text-light-secondary)] text-sm leading-relaxed max-w-sm">{config.description}</p>
+      </div>
+      <Link
+        href={config.href}
+        className="shrink-0 inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
+      >
+        {config.linkText}
+        <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
+  );
+}
+
 export default function HomeHeroV2({
   newBikes,
   usedBikes,
@@ -276,7 +295,7 @@ export default function HomeHeroV2({
     return (
       <div className="w-full flex flex-col lg:flex-row min-h-[540px] lg:min-h-[600px]">
         <div className="order-1 lg:order-2 lg:w-[38%] flex">{textPanel}</div>
-        <div className="order-2 lg:order-1 lg:flex-1 flex">
+        <div className="order-2 lg:order-1 lg:flex-1 flex flex-col">
           {!error ? (
             <InventoryPanel
               bikes={usedBikes}
@@ -291,6 +310,7 @@ export default function HomeHeroV2({
               Could not load images.
             </div>
           )}
+          {servicePanel && <ServiceStrip config={servicePanel} />}
         </div>
       </div>
     );
@@ -332,22 +352,7 @@ export default function HomeHeroV2({
           </div>
         )}
 
-        {servicePanel && (
-          <div className="bg-[var(--bg-dark-primary)] flex flex-col sm:flex-row items-center justify-between gap-4 px-8 py-4 md:px-10">
-            <div>
-              <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-3">{servicePanel.eyebrow}</p>
-              <h2 className="text-[var(--text-light-primary)] text-2xl md:text-3xl font-black uppercase italic leading-none mb-2">{servicePanel.heading}</h2>
-              <p className="text-[var(--text-light-secondary)] text-sm leading-relaxed max-w-sm">{servicePanel.description}</p>
-            </div>
-            <Link
-              href={servicePanel.href}
-              className="shrink-0 inline-flex items-center gap-2 bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-200 whitespace-nowrap"
-            >
-              {servicePanel.linkText}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        )}
+        {servicePanel && <ServiceStrip config={servicePanel} />}
       </div>
     </div>
   );

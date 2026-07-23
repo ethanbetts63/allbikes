@@ -89,7 +89,13 @@ export default async function VespaPerthPage() {
           fallbackImage: vespaHero.src,
           imageFit: 'cover',
         },
-        servicePanel: false,
+        servicePanel: {
+          eyebrow: 'Vespa Workshop · Perth',
+          heading: 'Get Your Vespa Serviced.',
+          description: 'Specialist servicing, tyres, diagnosis and repairs for modern and classic Vespas.',
+          href: '/vespa-service-perth',
+          linkText: 'Book Online',
+        },
       }}
       newCarousel={{
         title: 'Featured New Scooters',

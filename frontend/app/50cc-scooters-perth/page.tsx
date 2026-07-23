@@ -20,7 +20,7 @@ const usedInventoryPath = '/inventory/scooters/used?max_engine_size=50';
 
 export const metadata = buildMetadata({
   title: '50cc Scooters for Sale Perth | New & Used Mopeds',
-  description: 'Shop new and used 50cc scooters in Perth. View current stock, learn which mopeds can be ridden on a WA car licence, or book workshop servicing.',
+  description: 'Shop new and used 50cc scooters and mopeds in Perth. View current stock, learn which mopeds can be ridden on a WA car licence, or book workshop servicing.',
   canonicalPath: path,
   image: croxLifestyle.src,
 });
@@ -33,7 +33,7 @@ const faqData = [
     answer: 'An unrestricted WA car licence permits you to ride a moped: a scooter or motorcycle with an engine no larger than 50cc that is designed not to exceed 50 km/h. Engine size alone does not make every 50cc model car-licence legal, so check the vehicle classification before buying.',
   },
   {
-    question: 'Do you sell both new and used 50cc scooters?',
+    question: 'Do you sell both new and used 50cc scooters/mopeds?',
     answer: 'Yes. This page puts our current new and used petrol scooters up to 50cc first. If stock is limited, the carousels continue with other featured scooters so you can compare alternatives.',
   },
   {
@@ -78,7 +78,7 @@ export default async function FiftyCcScootersPage() {
         mobileNumber: siteSettings.mobile_number,
         emailAddress: siteSettings.email_address,
         headingLines: ["Perth's", '50cc Scooter', 'Specialists'],
-        description: 'New and used 50cc scooters, practical buying advice, and workshop support from a Dianella team with over 30 years of experience.',
+        description: 'New and used 50cc scooters and mopeds, practical buying advice, and workshop support from a Dianella team with over 30 years of experience.',
         newPanel: {
           eyebrow: 'Current 50cc Stock',
           titleLines: ['New', '50cc Scooters'],
