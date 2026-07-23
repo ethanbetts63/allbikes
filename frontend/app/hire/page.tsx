@@ -1,5 +1,5 @@
 import { buildFaqSchema, buildBreadcrumbSchema, buildServiceSchema, buildMetadata } from '@/lib/seo';
-import { getServerHireBikes, getServerHireBlockedDates, getServerPublicHireSettings } from '@/lib/serverApi';
+import { getServerBikes, getServerHireBikes, getServerHireBlockedDates, getServerPublicHireSettings } from '@/lib/serverApi';
 import type { Bike } from '@/types/Bike';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { PublicHireSettings } from '@/types/PublicHireSettings';
@@ -60,8 +60,9 @@ export default async function Page({ searchParams }: HirePageProps) {
   const params = await searchParams;
   const startDate = typeof params?.start === 'string' ? params.start : '';
   const endDate = typeof params?.end === 'string' ? params.end : '';
-  const [bikes, hireSettings, blockedDates] = await Promise.all([
+  const [bikes, bargainBikes, hireSettings, blockedDates] = await Promise.all([
     fetchInitialHireBikes(startDate, endDate),
+    fetchBargainBikes(),
     fetchInitialHireSettings(),
     fetchInitialBlockedDates(),
   ]);
@@ -74,6 +75,7 @@ export default async function Page({ searchParams }: HirePageProps) {
       />
       <HireListPage
         initialBikes={bikes}
+        bargainBikes={bargainBikes}
         initialStartDate={startDate}
         initialEndDate={endDate}
         initialHireSettings={hireSettings}
@@ -89,6 +91,30 @@ async function fetchInitialHireBikes(startDate: string, endDate: string): Promis
     return await getServerHireBikes(startDate || undefined, endDate || undefined);
   } catch (error) {
     console.error('Failed to server-render hire bikes:', error);
+    return [];
+  }
+}
+
+async function fetchBargainBikes(): Promise<Bike[]> {
+  const params = new URLSearchParams({
+    condition: 'new,used',
+    status: 'for_sale',
+    ordering: 'price_asc',
+    page_size: '100',
+  });
+
+  try {
+    const response = await getServerBikes(params);
+    return response.results
+      .filter((bike) => !bike.is_hire)
+      .sort((a, b) => {
+        const aPrice = Number(a.discount_price) > 0 ? Number(a.discount_price) : Number(a.price);
+        const bPrice = Number(b.discount_price) > 0 ? Number(b.discount_price) : Number(b.price);
+        return aPrice - bPrice;
+      })
+      .slice(0, 8);
+  } catch (error) {
+    console.error('Failed to server-render bargain bikes:', error);
     return [];
   }
 }

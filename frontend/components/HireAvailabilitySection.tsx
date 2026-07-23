@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import NextImage from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -23,6 +23,7 @@ interface HireAvailabilitySectionProps {
   initialEndDate?: string;
   initialHireSettings?: PublicHireSettings | null;
   initialBlockedDates?: HireBlockedDate[];
+  emptyState?: ReactNode;
 }
 
 const HireAvailabilitySection = ({
@@ -31,6 +32,7 @@ const HireAvailabilitySection = ({
   initialEndDate,
   initialHireSettings,
   initialBlockedDates = [],
+  emptyState,
 }: HireAvailabilitySectionProps) => {
   const router = useRouter();
   const hasInitialBikes = initialBikes !== undefined;
@@ -165,7 +167,7 @@ const HireAvailabilitySection = ({
 
           {displayError && <p className="text-destructive text-center">{displayError}</p>}
 
-          {!isLoading && !displayError && !isBlockedSelection && (
+          {!isLoading && !displayError && !isBlockedSelection && bikes.length > 0 && (
             <div className="flex items-baseline justify-between gap-4 mb-6">
               <h2 className="text-lg font-black uppercase italic text-[var(--text-dark-primary)]">
                 {startDate && endDate ? 'Available Bikes' : 'Our Hire Fleet'}
@@ -247,16 +249,22 @@ const HireAvailabilitySection = ({
                   );
                 })
               ) : (
-                <p className="col-span-3 py-16 text-center text-[var(--text-dark-secondary)]">
-                  {startDate && endDate
-                    ? 'No bikes are available for those dates. Try different dates.'
-                    : 'No hire bikes are currently available. Check back soon.'}
-                </p>
+                startDate && endDate ? (
+                  <p className="col-span-3 py-16 text-center text-lg text-[var(--text-dark-secondary)]">
+                    No bikes are available for those dates. Try different dates.
+                  </p>
+                ) : !emptyState ? (
+                  <p className="col-span-3 py-16 text-center text-2xl font-black uppercase italic text-[var(--text-dark-primary)]">
+                    Sorry, our hire bikes are fully booked right now.
+                  </p>
+                ) : null
               )}
             </div>
           )}
         </div>
       </div>
+
+      {!isLoading && !displayError && !isBlockedSelection && bikes.length === 0 && !startDate && !endDate && emptyState}
     </>
   );
 };

@@ -294,7 +294,23 @@ export default function HomeHeroV2({
   if (layout === 'single') {
     return (
       <div className="w-full flex flex-col lg:flex-row min-h-[540px] lg:min-h-[600px]">
-        <div className="order-1 lg:order-2 lg:w-[38%] flex">{textPanel}</div>
+        <div className="order-1 lg:order-2 lg:w-[38%] flex flex-col">
+          {textPanel}
+          {!error ? (
+            <InventoryPanel
+              bikes={newBikes}
+              config={newPanel}
+              className="min-h-[260px] md:min-h-[300px] lg:flex-1"
+              titleSize="text-2xl md:text-3xl lg:text-2xl xl:text-3xl"
+              sizes="(max-width: 1024px) 100vw, 38vw"
+              variant="small"
+            />
+          ) : (
+            <div className="flex-1 min-h-[200px] flex items-center justify-center bg-[var(--bg-dark-secondary)] text-[var(--text-light-secondary)] text-sm p-4 text-center">
+              Could not load images.
+            </div>
+          )}
+        </div>
         <div className="order-2 lg:order-1 lg:flex-1 flex flex-col">
           {!error ? (
             <InventoryPanel

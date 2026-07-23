@@ -1,6 +1,7 @@
 import vespaHero from '@/assets/IMG_20250730_102056.webp';
-import vespaWorkshopImage from '@/assets/motorcycle_images/vespa-px-150-2013/IMG_20250730_102025.jpg';
-import vespaStoryImage from '@/assets/motorcycle_images/vespa-px-150-2013/IMG_20250730_102056.jpg';
+import vespaHistoryImage from '@/assets/nhan-nguyen-Gaxd2A8EsHw-unsplash.jpg';
+import vespaSupportImage from '@/assets/tao-xanh-kim-5oRaXQqV6CM-unsplash.jpg';
+import symImage from '@/assets/sym_22.webp';
 import { siteSettings } from '@/config/siteSettings';
 import {
   activeLandingBikes,
@@ -72,7 +73,7 @@ export default async function VespaPerthPage() {
       reviews={vespaReviews}
       hero={{
         layout: 'single',
-        newBikes: [],
+        newBikes: activeLandingBikes(featuredNew),
         usedBikes: activeLandingBikes(vespas),
         error: null,
         phoneNumber: siteSettings.phone_number,
@@ -80,6 +81,15 @@ export default async function VespaPerthPage() {
         emailAddress: siteSettings.email_address,
         headingLines: ["Perth's", 'Vespa', 'Specialists'],
         description: 'Browse used Vespas and get specialist workshop support from a Perth team with more than 30 years of hands-on Vespa experience.',
+        newPanel: {
+          eyebrow: 'Browse Current Inventory',
+          titleLines: ['New', 'Scooters'],
+          href: '/inventory/scooters/new',
+          linkText: 'See New Scooters',
+          alt: 'New scooters for sale at ScooterShop Perth',
+          fallbackImage: symImage.src,
+          imageFit: 'contain',
+        },
         usedPanel: {
           eyebrow: 'Browse Current Inventory',
           titleLines: ['Used', 'Vespa Scooters'],
@@ -128,7 +138,7 @@ export default async function VespaPerthPage() {
       }}
       storyCards={[
         {
-          image: vespaStoryImage,
+          image: vespaHistoryImage,
           alt: 'Classic Vespa at ScooterShop Perth',
           title: 'A Long History with Vespa',
           subtitle: 'Perth Vespa Knowledge Since the 1990s',
@@ -138,7 +148,7 @@ export default async function VespaPerthPage() {
           buttonText: 'Our Vespa Workshop',
         },
         {
-          image: vespaWorkshopImage,
+          image: vespaSupportImage,
           alt: 'Used Vespa scooter inspected in Perth',
           title: 'Used Vespas with Workshop Support',
           subtitle: 'Buy, Maintain and Enjoy',
