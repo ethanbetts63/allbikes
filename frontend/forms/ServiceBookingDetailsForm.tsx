@@ -75,7 +75,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
     useEffect(() => {
         if (selectedDate && selectedTime) {
             const combined = formatDropOffTime(selectedDate, selectedTime);
-            setFormData((prev: any) => ({ ...prev, drop_off_time: combined }));
+            setFormData((prev) => ({ ...prev, drop_off_time: combined }));
         }
     }, [selectedDate, selectedTime, setFormData]);
 
@@ -107,7 +107,7 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setSelectedDate(undefined);
             setSelectedTime('');
-            setFormData((prev: any) => ({ ...prev, drop_off_time: '' }));
+            setFormData((prev) => ({ ...prev, drop_off_time: '' }));
         }
         // Only re-run when the availability data changes, not on every render.
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,10 +142,12 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                    <Label htmlFor="date">Drop-off Date *</Label>
+                    <Label id="dropoff-date-label" htmlFor="date">Drop-off Date *</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                             <button
+                                id="date"
+                                aria-labelledby="dropoff-date-label"
                                 disabled={isLoadingUnavailableDays}
                                 className={cn(
                                     "flex h-9 w-full items-center rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50",
@@ -173,9 +175,9 @@ const BookingDetailsForm = ({ formData, setFormData, nextStep }: BookingDetailsF
                     </Popover>
                 </div>
                 <div className="space-y-1.5">
-                    <Label htmlFor="time">Preferred Drop-off Time *</Label>
+                    <Label id="dropoff-time-label" htmlFor="time">Preferred Drop-off Time *</Label>
                     <Select onValueChange={setSelectedTime} value={selectedTime} disabled={!selectedDate}>
-                        <SelectTrigger>
+                        <SelectTrigger id="time" aria-labelledby="dropoff-time-label">
                             <SelectValue placeholder="Select a time" />
                         </SelectTrigger>
                         <SelectContent>
