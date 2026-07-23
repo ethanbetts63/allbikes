@@ -37,14 +37,7 @@ const tyreReviews: Review[] = [
     text: 'I recently had my Scooter serviced at the Scooter Shop. I was treated like a VIP from the time that I booked my scooter in to the time I was handed back the keys. The details of the service were explained to me in full. If you want someone you can trust to service your scooter, then take it to the Scooter Shop. You will not be disappointed.',
     date: '',
     display_order: 3,
-  },
-  {
-    pk: 505,
-    author_name: 'David Kew',
-    text: 'Friendly, helpful staff both on sales (Dan) and service (Chris). Always happy to help out.',
-    date: '',
-    display_order: 4,
-  },
+  }
 ];
 
 const TyreFittingFaqs = [
