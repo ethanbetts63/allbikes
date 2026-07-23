@@ -38,7 +38,7 @@ const faqData = [
   },
   {
     question: 'Are 50cc scooters suitable for Perth commuting?',
-    answer: 'They can be an economical choice for short, lower-speed urban trips. Their speed and road suitability vary by model, so we can help match a scooter to your route and licence.',
+    answer: 'They can be an economical choice for short, lower-speed urban trips. Their speed and road suitability vary by model, so we can help match a scooter to your route and licence. Above all, people love them becuase they are cheap. Cheap on fuel, cheap on insurance, cheap to park, cheap to maintain, and cheap to buy. If you are looking for a cheap way to get around Perth, a 50cc scooter is a great option.',
   },
   {
     question: 'Do you service 50cc scooters?',
