@@ -38,6 +38,7 @@ export default function PartsSectionPage({ section }: { section: SectionDetail }
                 width={800}
                 height={600}
                 sizes="(max-width: 1024px) 100vw, 50vw"
+                unoptimized
                 onClick={() => setZoomed((z) => !z)}
                 className={`mx-auto h-auto w-full cursor-zoom-in transition-transform origin-top ${
                   zoomed ? 'scale-150 cursor-zoom-out' : ''

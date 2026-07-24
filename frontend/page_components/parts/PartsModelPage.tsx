@@ -54,6 +54,7 @@ function SectionGroup({
                   alt={`${section.name} diagram`}
                   fill
                   sizes="(max-width: 640px) 50vw, 25vw"
+                  unoptimized
                   className="object-contain p-2"
                 />
               ) : (
