@@ -16,3 +16,6 @@ stripe
 twilio
 xhtml2pdf
 django-cors-headers
+xlrd
+olefile
+beautifulsoup4

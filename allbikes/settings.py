@@ -98,6 +98,7 @@ INSTALLED_APPS = [
     "payments",
     "notifications",
     "hire",
+    "parts",
     "imagekit",
 ]
 
@@ -250,6 +251,11 @@ LOGGING = {
             'propagate': False,
         },
         'notifications': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'parts': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
