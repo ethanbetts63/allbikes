@@ -8,6 +8,8 @@ from notifications.utils.email import (
     send_admin_new_order,
     send_hire_confirmation,
     send_admin_new_hire,
+    send_parts_customer_confirmation,
+    send_parts_admin_new_order,
 )
 from product.models import Product
 
@@ -71,9 +73,8 @@ def handle_payment_intent_succeeded(payment_intent):
         send_hire_confirmation(payment.hire_booking)
         send_admin_new_hire(payment.hire_booking)
     elif payment.parts_order_id:
-        # Parts notifications (customer confirmation, admin email + SMS) are wired
-        # in phase 4. The order is already marked paid above.
-        pass
+        send_parts_customer_confirmation(payment.parts_order)
+        send_parts_admin_new_order(payment.parts_order)
     else:
         send_customer_confirmation(payment.order)
         send_admin_new_order(payment.order)

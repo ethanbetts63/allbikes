@@ -30,6 +30,16 @@ def admin_new_hire(booking):
     )
 
 
+def admin_new_parts_order(order):
+    count = order.items.count()
+    backorder = " (has backorder)" if order.has_backorder else ""
+    return (
+        f"New parts order: {order.order_reference} — "
+        f"{count} item{'s' if count != 1 else ''} — ${order.total}{backorder}. "
+        f"Customer: {order.customer_name} {order.customer_phone or ''}".strip()
+    )
+
+
 def admin_new_service(booking_data):
     customer_name = booking_data.get('name') or (
         f"{booking_data.get('first_name', '')} {booking_data.get('last_name', '')}".strip()

@@ -24,6 +24,9 @@ class Message(models.Model):
         ('admin_new_hire', 'Admin New Hire Booking'),
         ('admin_service_booking', 'Admin Service Booking'),
         ('service_booking_reminder', 'Service Booking Reminder'),
+        ('parts_customer_confirmation', 'Parts Customer Confirmation'),
+        ('parts_admin_new_order', 'Parts Admin New Order'),
+        ('parts_wholesaler_dispatch', 'Parts Wholesaler Dispatch'),
     ]
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)

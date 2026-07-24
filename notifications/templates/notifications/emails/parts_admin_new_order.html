@@ -1,0 +1,61 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}New parts order — {{ order.order_reference }}{% endblock %}
+
+{% block preheader %}New SYM parts order {{ order.order_reference }} — ${{ order.total }}.{% endblock %}
+
+{% block content %}
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 4px 0; line-height: 1.1;">New Parts Order</h1>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #78716c; margin: 0 0 20px 0;">
+    {{ order.order_reference }} &middot; {{ order.created_at }}
+    {% if order.has_backorder %}<span style="display: inline-block; margin-left: 6px; padding: 1px 6px; border: 1px solid #b45309; border-radius: 3px; color: #b45309; font-size: 11px; font-weight: bold;">HAS BACKORDER</span>{% endif %}
+</p>
+
+<!-- Items -->
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 8px 0;">Items to order</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #44403c; margin-bottom: 16px;">
+    {% for item in order.items.all %}
+    <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e7e5e4; vertical-align: top;">
+            <span style="font-family: 'Courier New', Courier, monospace; color: #1c1917; font-weight: bold;">{{ item.part_number }}</span>
+            {% if item.colour_name %}<span style="color: #78716c;"> · {{ item.colour_name }}</span>{% endif %}
+            {% if item.backordered %}<span style="display: inline-block; margin-left: 6px; padding: 1px 6px; border: 1px solid #b45309; border-radius: 3px; color: #b45309; font-size: 11px; font-weight: bold;">BACKORDER</span>{% endif %}<br>
+            <span style="color: #78716c;">{{ item.description }}</span><br>
+            <span style="color: #a8a29e; font-size: 12px;">{{ item.model_name }} &middot; {{ item.section_code }} #{{ item.ref_number }} &middot; qty {{ item.quantity }} &middot; ${{ item.unit_price }} ea</span>
+        </td>
+        <td align="right" style="padding: 10px 0; border-bottom: 1px solid #e7e5e4; vertical-align: top; white-space: nowrap; font-weight: bold; color: #1c1917;">${{ item.line_total }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td style="padding: 10px 0 2px 0; color: #78716c;">Subtotal</td>
+        <td align="right" style="padding: 10px 0 2px 0; color: #1c1917;">${{ order.subtotal }}</td>
+    </tr>
+    <tr>
+        <td style="padding: 2px 0; color: #78716c;">Shipping</td>
+        <td align="right" style="padding: 2px 0; color: #1c1917;">${{ order.shipping }}</td>
+    </tr>
+    <tr>
+        <td style="padding: 8px 0 0 0; font-weight: bold; font-size: 15px; color: #1c1917;">Total paid</td>
+        <td align="right" style="padding: 8px 0 0 0; font-weight: bold; font-size: 15px; color: #1c1917;">${{ order.amount_paid|default:order.total }}</td>
+    </tr>
+</table>
+
+<!-- Customer + ship-to -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Customer</p>
+            <p style="margin: 0 0 12px 0;">{{ order.customer_name }}<br>
+            {{ order.customer_email }}{% if order.customer_phone %}<br>{{ order.customer_phone }}{% endif %}</p>
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Ship To</p>
+            <p style="margin: 0;">{{ order.customer_name }}<br>
+            {{ order.address_line1 }}{% if order.address_line2 %}<br>{{ order.address_line2 }}{% endif %}<br>
+            {{ order.suburb }} {{ order.state }} {{ order.postcode }}<br>{{ order.country }}</p>
+        </td>
+    </tr>
+</table>
+
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #78716c; margin: 0; line-height: 22px;">
+    Manage this order in the <a href="https://www.scootershop.com.au/dashboard/parts-orders" style="color: #1c1917;">dashboard</a>.
+</p>
+{% endblock %}

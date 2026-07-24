@@ -1,0 +1,100 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}Order confirmed — {{ order.order_reference }}{% endblock %}
+
+{% block preheader %}Your SYM parts order {{ order.order_reference }} is confirmed.{% endblock %}
+
+{% block content %}
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Order Confirmed</h1>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0 0 24px 0; line-height: 26px;">
+    Hi {{ order.customer_name }}, your payment was received and your SYM parts order is confirmed.
+</p>
+
+<!-- Order reference -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1c1917; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td align="center" style="padding: 16px 24px;">
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.2em; margin: 0 0 6px 0;">Order Reference</p>
+            <p style="font-family: 'Courier New', Courier, monospace; font-size: 22px; font-weight: bold; color: #ffffff; letter-spacing: 0.1em; margin: 0;">{{ order.order_reference }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Items -->
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 8px 0 8px 0;">Items</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #44403c; margin-bottom: 16px;">
+    {% for item in order.items.all %}
+    <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e7e5e4; vertical-align: top;">
+            <span style="font-family: 'Courier New', Courier, monospace; color: #1c1917;">{{ item.part_number }}</span>
+            {% if item.colour_name %}<span style="color: #78716c;"> · {{ item.colour_name }}</span>{% endif %}<br>
+            <span style="color: #78716c;">{{ item.description }}</span><br>
+            <span style="color: #a8a29e; font-size: 12px;">Qty {{ item.quantity }}</span>
+            {% if item.backordered %}
+            <span style="display: inline-block; margin-left: 6px; padding: 1px 6px; border: 1px solid #b45309; border-radius: 3px; color: #b45309; font-size: 11px; font-weight: bold;">BACKORDER</span>
+            {% else %}
+            <span style="color: #16a34a; font-size: 12px; margin-left: 6px;">In stock</span>
+            {% endif %}
+        </td>
+        <td align="right" style="padding: 10px 0; border-bottom: 1px solid #e7e5e4; vertical-align: top; white-space: nowrap; font-weight: bold; color: #1c1917;">
+            ${{ item.line_total }}
+        </td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td style="padding: 10px 0 2px 0; color: #78716c;">Subtotal (incl. GST)</td>
+        <td align="right" style="padding: 10px 0 2px 0; color: #1c1917;">${{ order.subtotal }}</td>
+    </tr>
+    <tr>
+        <td style="padding: 2px 0; color: #78716c;">Shipping</td>
+        <td align="right" style="padding: 2px 0; color: #1c1917;">${{ order.shipping }}</td>
+    </tr>
+    <tr>
+        <td style="padding: 8px 0 0 0; font-weight: bold; font-size: 15px; color: #1c1917;">Total</td>
+        <td align="right" style="padding: 8px 0 0 0; font-weight: bold; font-size: 15px; color: #1c1917;">${{ order.total }}</td>
+    </tr>
+</table>
+
+{% if order.has_backorder %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #92400e; line-height: 22px;">
+            <strong>Some items are on backorder.</strong> Backordered parts (marked above) are held for up to 14 days.
+            If we can&rsquo;t secure shipment within 14 days, that part is refunded.
+        </td>
+    </tr>
+</table>
+{% endif %}
+
+<!-- Ship to -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Ship To</p>
+            <p style="margin: 0;">{{ order.customer_name }}<br>
+            {{ order.address_line1 }}{% if order.address_line2 %}<br>{{ order.address_line2 }}{% endif %}<br>
+            {{ order.suburb }} {{ order.state }} {{ order.postcode }}<br>{{ order.country }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Contact -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 24px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Your Details</p>
+            <p style="margin: 0;">{{ order.customer_email }}{% if order.customer_phone %}<br>{{ order.customer_phone }}{% endif %}</p>
+        </td>
+    </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #1c1917; border-radius: 6px;">
+    <tr>
+        <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #1c1917; line-height: 24px;">
+            <strong>Please email us from your order email.</strong><br>
+            Email <a href="mailto:admin@scootershop.com.au" style="color: #1c1917;">admin@scootershop.com.au</a>
+            from {{ order.customer_email }} and quote {{ order.order_reference }} so we can link this order to your email.
+        </td>
+    </tr>
+</table>
+{% endblock %}

@@ -321,6 +321,103 @@ def send_service_reminder(booking):
         return False
 
 
+def _parts_items_text(parts_order):
+    lines = []
+    for item in parts_order.items.all():
+        colour = f" ({item.colour_name})" if item.colour_name else ""
+        status = "BACKORDER" if item.backordered else "in stock"
+        lines.append(
+            f"  {item.part_number}{colour} — {item.description}\n"
+            f"    qty {item.quantity} · ${item.unit_price} ea · ${item.line_total} · {status}"
+        )
+    return "\n".join(lines)
+
+
+def _parts_ship_to(parts_order):
+    parts = [parts_order.address_line1]
+    if parts_order.address_line2:
+        parts.append(parts_order.address_line2)
+    parts.append(f"{parts_order.suburb} {parts_order.state} {parts_order.postcode}")
+    parts.append(parts_order.country)
+    return "\n".join(parts)
+
+
+def send_parts_customer_confirmation(parts_order):
+    to = parts_order.customer_email
+    subject = f"Order confirmed — {parts_order.order_reference}"
+
+    backorder_note = ""
+    if parts_order.has_backorder:
+        backorder_note = (
+            "\nSome items are on backorder. Backordered parts are held for up to 14 days; "
+            "if we can't secure shipment within 14 days, that part is refunded.\n"
+        )
+
+    text_body = (
+        f"Hi {parts_order.customer_name},\n\n"
+        f"Your payment was received and your SYM parts order is confirmed.\n\n"
+        f"Order reference: {parts_order.order_reference}\n\n"
+        f"ITEMS\n{_parts_items_text(parts_order)}\n\n"
+        f"Subtotal (incl. GST): ${parts_order.subtotal}\n"
+        f"Shipping: ${parts_order.shipping}\n"
+        f"Total: ${parts_order.total}\n"
+        f"{backorder_note}\n"
+        f"SHIP TO\n{parts_order.customer_name}\n{_parts_ship_to(parts_order)}\n\n"
+        f"YOUR DETAILS\n{parts_order.customer_email}"
+        + (f"\n{parts_order.customer_phone}" if parts_order.customer_phone else "")
+        + "\n\n"
+        f"Please email admin@scootershop.com.au from {parts_order.customer_email} and quote "
+        f"{parts_order.order_reference} so we can link this order to your email.\n"
+    )
+    html_body = render_to_string('notifications/emails/parts_customer_confirmation.html', {'order': parts_order})
+
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(parts_order, 'parts_customer_confirmation', to, subject, text_body, html_body, 'sent')
+    except Exception as e:
+        logger.error("Failed to send parts customer confirmation for %s: %s", parts_order.order_reference, e)
+        _record(parts_order, 'parts_customer_confirmation', to, subject, text_body, html_body, 'failed', str(e))
+
+
+def send_parts_admin_new_order(parts_order):
+    recipients = _admin_recipients()
+    if not recipients:
+        logger.warning("No admin emails configured — skipping parts admin notification for %s", parts_order.order_reference)
+        return
+
+    subject = f"New parts order — {parts_order.order_reference}"
+    item_lines = []
+    for item in parts_order.items.all():
+        colour = f" ({item.colour_name})" if item.colour_name else ""
+        flag = " [BACKORDER]" if item.backordered else ""
+        item_lines.append(
+            f"  {item.part_number}{colour}{flag} — {item.description}\n"
+            f"    {item.model_name} · {item.section_code} #{item.ref_number} · qty {item.quantity} · ${item.line_total}"
+        )
+    text_body = (
+        f"New parts order: {parts_order.order_reference}\n"
+        f"Date: {timezone.localtime(parts_order.created_at).strftime('%d %b %Y, %I:%M %p')} AWST\n"
+        + ("Has backorder: yes\n" if parts_order.has_backorder else "")
+        + f"\nITEMS TO ORDER\n" + "\n".join(item_lines) + "\n\n"
+        f"Subtotal: ${parts_order.subtotal}\n"
+        f"Shipping: ${parts_order.shipping}\n"
+        f"Total paid: ${parts_order.amount_paid or parts_order.total}\n\n"
+        f"CUSTOMER\n{parts_order.customer_name}\n{parts_order.customer_email}\n"
+        + (f"{parts_order.customer_phone}\n" if parts_order.customer_phone else "")
+        + f"\nSHIP TO\n{parts_order.customer_name}\n{_parts_ship_to(parts_order)}\n"
+    )
+    html_body = render_to_string('notifications/emails/parts_admin_new_order.html', {'order': parts_order})
+
+    for to in recipients:
+        try:
+            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            _record(parts_order, 'parts_admin_new_order', to, subject, text_body, html_body, 'sent')
+        except Exception as e:
+            logger.error("Failed to send parts admin notification for %s to %s: %s", parts_order.order_reference, to, e)
+            _record(parts_order, 'parts_admin_new_order', to, subject, text_body, html_body, 'failed', str(e))
+    _send_admin_sms(sms_messages.admin_new_parts_order(parts_order))
+
+
 def send_admin_new_order(order):
     recipients = _admin_recipients()
     if not recipients:
