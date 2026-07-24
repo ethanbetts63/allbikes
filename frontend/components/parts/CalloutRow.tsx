@@ -18,10 +18,10 @@ export default function CalloutRow({ callout, section }: Props) {
   return (
     <li className="border-b border-gray-100 py-3">
       <div className="mb-1 flex items-baseline gap-2">
-        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-900 text-xs font-bold text-white">
+        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-xs font-bold text-white">
           {callout.ref_number}
         </span>
-        <span className="font-medium text-gray-800">{callout.callout_label}</span>
+        <span className="font-medium text-black">{callout.callout_label}</span>
       </div>
       <div className="space-y-2 pl-8">
         {callout.variants.map((v) => (
@@ -44,19 +44,19 @@ function ColourCallout({ callout, section }: Props) {
   return (
     <li className="border-b border-gray-100 py-3">
       <div className="mb-1 flex items-baseline gap-2">
-        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-900 text-xs font-bold text-white">
+        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-xs font-bold text-white">
           {callout.ref_number}
         </span>
-        <span className="font-medium text-gray-800">{callout.callout_label}</span>
+        <span className="font-medium text-black">{callout.callout_label}</span>
       </div>
       <div className="pl-8">
-        <label className="mb-2 block text-xs text-gray-500">
+        <label className="mb-2 block text-xs text-gray-600">
           Colour — pick the one matching your bike. Unsure of the code? We&apos;ll confirm before dispatch.
         </label>
         <select
           value={index}
           onChange={(e) => setIndex(Number(e.target.value))}
-          className="mb-2 w-full max-w-xs rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+          className="mb-2 w-full max-w-xs rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black"
         >
           {callout.variants.map((v, i) => (
             <option key={v.part_number} value={i}>
@@ -103,22 +103,22 @@ function VariantLine({
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-gray-50 px-3 py-2">
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-gray-200 px-3 py-2">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm text-gray-700">{variant.part_number}</span>
+          <span className="font-mono text-sm text-black">{variant.part_number}</span>
           {showLabel && variant.variant_label && (
-            <span className="rounded bg-gray-200 px-1.5 py-0.5 text-xs text-gray-600">
+            <span className="rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-700">
               {variant.variant_label}
             </span>
           )}
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs">
           {variant.orderable ? (
             variant.backorder ? (
-              <span className="text-amber-600">Backorder — ships when restocked</span>
+              <span className="font-medium text-black">Backorder — ships when restocked</span>
             ) : (
-              <span className="text-green-600">In stock</span>
+              <span className="text-gray-600">In stock</span>
             )
           ) : (
             <span className="text-gray-400">Not available</span>
@@ -126,14 +126,14 @@ function VariantLine({
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-sm font-semibold text-gray-900">
+        <span className="text-sm font-semibold text-black">
           {variant.price ? `$${variant.price}` : '—'}
         </span>
         <button
           type="button"
           onClick={add}
           disabled={!variant.orderable}
-          className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+          className="rounded-md bg-black px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
         >
           Add
         </button>

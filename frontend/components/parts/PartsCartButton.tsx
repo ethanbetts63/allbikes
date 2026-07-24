@@ -8,10 +8,10 @@ export default function PartsCartButton() {
   return (
     <Link
       href="/parts/cart"
-      className="inline-flex items-center gap-2 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
+      className="inline-flex items-center gap-2 rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
     >
       <span>Cart</span>
-      <span className="inline-flex min-w-[1.5rem] justify-center rounded-full bg-white/20 px-2 text-xs">
+      <span className="inline-flex min-w-[1.5rem] justify-center rounded-full bg-white/25 px-2 text-xs">
         {count}
       </span>
       {subtotal > 0 && <span className="hidden sm:inline">${subtotal.toFixed(2)}</span>}

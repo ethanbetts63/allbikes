@@ -8,16 +8,16 @@ export default function PartsModelPage({ model }: { model: PartsModelDetail }) {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <nav className="mb-4 text-sm text-gray-500">
+      <nav className="mb-4 text-sm text-gray-600">
         <Link href="/parts" className="hover:underline">
           SYM Parts
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-gray-800">{model.name}</span>
+        <span className="text-black">{model.name}</span>
       </nav>
 
-      <h1 className="text-2xl font-bold text-gray-900">
-        {model.name} <span className="text-gray-400">({model.model_code})</span>
+      <h1 className="text-2xl font-bold text-black">
+        {model.name} <span className="text-gray-500">({model.model_code})</span>
       </h1>
       <p className="mt-2 text-gray-600">Choose a section to see its exploded diagram and parts.</p>
 
@@ -39,13 +39,13 @@ function SectionGroup({
   if (sections.length === 0) return null;
   return (
     <section className="mt-8">
-      <h2 className="mb-3 text-lg font-semibold text-gray-800">{title}</h2>
+      <h2 className="mb-3 text-lg font-semibold text-black">{title}</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {sections.map((section) => (
           <Link
             key={section.id}
             href={`/parts/${slug}/${section.id}`}
-            className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:border-gray-400 hover:shadow"
+            className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-black"
           >
             <div className="relative flex h-32 items-center justify-center bg-white">
               {section.diagram_thumb ? (
@@ -62,8 +62,8 @@ function SectionGroup({
               )}
             </div>
             <div className="border-t border-gray-100 px-3 py-2">
-              <span className="block text-xs font-mono text-gray-400">{section.code}</span>
-              <span className="block text-sm font-medium text-gray-800">{section.name}</span>
+              <span className="block font-mono text-xs text-gray-500">{section.code}</span>
+              <span className="block text-sm font-medium text-black">{section.name}</span>
             </div>
           </Link>
         ))}

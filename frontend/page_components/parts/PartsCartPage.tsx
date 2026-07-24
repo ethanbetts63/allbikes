@@ -9,10 +9,10 @@ export default function PartsCartPage() {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Your parts cart is empty</h1>
+        <h1 className="text-2xl font-bold text-black">Your parts cart is empty</h1>
         <Link
           href="/parts"
-          className="mt-4 inline-block rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
+          className="mt-4 inline-block rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
         >
           Browse parts
         </Link>
@@ -22,27 +22,27 @@ export default function PartsCartPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Your parts cart</h1>
+      <h1 className="mb-6 text-2xl font-bold text-black">Your parts cart</h1>
 
       <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
         {items.map((item) => (
           <li key={item.part_number} className="flex flex-wrap items-center gap-3 p-4">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-sm text-gray-800">{item.part_number}</span>
+                <span className="font-mono text-sm text-black">{item.part_number}</span>
                 {item.colour_name && (
-                  <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
+                  <span className="rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-700">
                     {item.colour_name}
                   </span>
                 )}
                 {item.backorder && (
-                  <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-700">
+                  <span className="rounded border border-black px-1.5 py-0.5 text-xs font-medium text-black">
                     Backorder
                   </span>
                 )}
               </div>
-              <div className="text-sm text-gray-500">{item.description}</div>
-              <div className="text-xs text-gray-400">
+              <div className="text-sm text-gray-600">{item.description}</div>
+              <div className="text-xs text-gray-500">
                 {item.model_name} · {item.section_code} · #{item.ref_number}
               </div>
             </div>
@@ -52,16 +52,16 @@ export default function PartsCartPage() {
               min={1}
               value={item.quantity}
               onChange={(e) => updateQuantity(item.part_number, Math.max(1, Number(e.target.value)))}
-              className="w-16 rounded-md border border-gray-300 px-2 py-1 text-sm"
+              className="w-16 rounded-md border border-gray-300 px-2 py-1 text-sm text-black"
               aria-label={`Quantity for ${item.part_number}`}
             />
-            <div className="w-20 text-right text-sm font-semibold text-gray-900">
+            <div className="w-20 text-right text-sm font-semibold text-black">
               ${(Number(item.unit_price) * item.quantity).toFixed(2)}
             </div>
             <button
               type="button"
               onClick={() => removeItem(item.part_number)}
-              className="text-sm text-gray-400 hover:text-red-600"
+              className="text-sm text-gray-500 underline-offset-2 hover:text-black hover:underline"
               aria-label={`Remove ${item.part_number}`}
             >
               Remove
@@ -71,19 +71,19 @@ export default function PartsCartPage() {
       </ul>
 
       <div className="mt-6 flex items-center justify-between">
-        <span className="text-lg font-semibold text-gray-900">
-          Subtotal: ${subtotal.toFixed(2)} <span className="text-sm font-normal text-gray-500">incl. GST</span>
+        <span className="text-lg font-semibold text-black">
+          Subtotal: ${subtotal.toFixed(2)} <span className="text-sm font-normal text-gray-600">incl. GST</span>
         </span>
         <button
           type="button"
           disabled
           title="Checkout is being finalised"
-          className="cursor-not-allowed rounded-md bg-gray-300 px-5 py-2.5 text-sm font-medium text-white"
+          className="cursor-not-allowed rounded-md bg-gray-200 px-5 py-2.5 text-sm font-medium text-gray-500"
         >
           Checkout (coming soon)
         </button>
       </div>
-      <p className="mt-2 text-right text-xs text-gray-400">
+      <p className="mt-2 text-right text-xs text-gray-500">
         Shipping is calculated at checkout. Backordered items ship when restocked.
       </p>
     </div>

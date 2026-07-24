@@ -24,7 +24,7 @@ export default function PartsSearchBar() {
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search part number, description or model…"
         aria-label="Search parts"
-        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-gray-500 focus:outline-none"
+        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black placeholder:text-gray-500 focus:border-black focus:outline-none"
       />
     </form>
   );
