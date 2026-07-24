@@ -1,7 +1,7 @@
 # ③ Cart + Stripe Checkout — Design
 
 **Date:** 2026-07-24 · **Subsystem 3 of 5** · **Depends on:** ② (catalog API), `payments`
-**Parent:** `2026-07-24-parts-00-overview-design.md`
+**Parent:** `sym_parts_00_overview.md`
 
 ## 1. Purpose & scope
 

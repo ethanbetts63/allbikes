@@ -84,11 +84,11 @@ and send functions. Frontend adds a parts catalog + checkout section under
 
 | # | Subsystem | Spec file | Depends on |
 |---|-----------|-----------|-----------|
-| ① | Data pipeline | `2026-07-24-parts-01-data-pipeline-design.md` | — |
-| ② | Catalog API + browse UI | `2026-07-24-parts-02-catalog-browse-design.md` | ① |
-| ③ | Cart + Stripe checkout | `2026-07-24-parts-03-cart-checkout-design.md` | ②, payments |
-| ④ | Notifications | `2026-07-24-parts-04-notifications-design.md` | ③, notifications |
-| ⑤ | Wholesaler dispatch | `2026-07-24-parts-05-wholesaler-dispatch-design.md` | ③, ④ |
+| ① | Data pipeline | `sym_parts_01_data_pipeline.md` | — |
+| ② | Catalog API + browse UI | `sym_parts_02_catalog_browse.md` | ① |
+| ③ | Cart + Stripe checkout | `sym_parts_03_cart_checkout.md` | ②, payments |
+| ④ | Notifications | `sym_parts_04_notifications.md` | ③, notifications |
+| ⑤ | Wholesaler dispatch | `sym_parts_05_wholesaler_dispatch.md` | ③, ④ |
 
 Each subsystem is specced, planned, and implemented independently, in the order
 above. ① is foundational and already de-risked by the extraction spike.

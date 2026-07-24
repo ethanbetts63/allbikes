@@ -1,7 +1,7 @@
 # ② Catalog API + Browse UI — Design
 
 **Date:** 2026-07-24 · **Subsystem 2 of 5** · **Depends on:** ① (catalog data)
-**Parent:** `2026-07-24-parts-00-overview-design.md`
+**Parent:** `sym_parts_00_overview.md`
 
 ## 1. Purpose & scope
 

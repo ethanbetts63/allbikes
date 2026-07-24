@@ -1,7 +1,7 @@
 # ⑤ Wholesaler Dispatch — Design
 
 **Date:** 2026-07-24 · **Subsystem 5 of 5** · **Depends on:** ③ (PartsOrder), ④ (senders)
-**Parent:** `2026-07-24-parts-00-overview-design.md`
+**Parent:** `sym_parts_00_overview.md`
 **Build order:** LAST — "once everything is perfect" (per the brief).
 
 ## 1. Purpose & scope
