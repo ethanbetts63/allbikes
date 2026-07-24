@@ -121,6 +121,32 @@ class TestCheckoutViews:
         assert resp.json()['clientSecret'] == 'cs_test'
         assert Payment.objects.filter(parts_order=order, status='pending').count() == 1
 
+    @patch('parts.views.checkout_views.stripe')
+    def test_reuses_existing_pending_payment(self, mock_stripe, client, settings_fixture):
+        mock_stripe.PaymentIntent.retrieve.return_value = MagicMock(client_secret='cs_existing')
+        p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
+        SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
+        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+        Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_x', amount=order.total, status='pending')
+        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference}, format='json')
+        assert resp.status_code == 200
+        assert resp.json()['clientSecret'] == 'cs_existing'
+        mock_stripe.PaymentIntent.create.assert_not_called()
+        assert Payment.objects.filter(parts_order=order).count() == 1
+
+    @patch('parts.views.checkout_views.stripe')
+    def test_retry_after_failed_payment_no_duplicate(self, mock_stripe, client, settings_fixture):
+        # A failed Payment occupies the OneToOne slot; a retry must replace it, not 500.
+        mock_stripe.PaymentIntent.create.return_value = MagicMock(id='pi_new', client_secret='cs_new')
+        p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
+        SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
+        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+        Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_old', amount=order.total, status='failed')
+        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference}, format='json')
+        assert resp.status_code == 200
+        assert resp.json()['clientSecret'] == 'cs_new'
+        assert Payment.objects.filter(parts_order=order).count() == 1  # replaced, not duplicated
+
 
 class TestWebhookPartsBranch:
     def test_paid_marks_order_and_backorder_clock(self, settings_fixture):
