@@ -2,13 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
 import CalloutRow from '@/components/parts/CalloutRow';
 import type { SectionDetail } from '@/types/parts';
 
 export default function PartsSectionPage({ section }: { section: SectionDetail }) {
-  const [zoomed, setZoomed] = useState(false);
-
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <nav className="mb-4 text-sm text-gray-600">
@@ -39,10 +36,7 @@ export default function PartsSectionPage({ section }: { section: SectionDetail }
                 height={600}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 unoptimized
-                onClick={() => setZoomed((z) => !z)}
-                className={`mx-auto h-auto w-full cursor-zoom-in origin-top transition-transform ${
-                  zoomed ? 'scale-150 cursor-zoom-out' : ''
-                }`}
+                className="mx-auto h-auto w-full"
               />
             </div>
           ) : (
@@ -50,7 +44,6 @@ export default function PartsSectionPage({ section }: { section: SectionDetail }
               Diagram not available — use the parts list.
             </div>
           )}
-          <p className="mt-1 text-center text-xs text-gray-500">Click the diagram to zoom.</p>
         </div>
 
         <div>

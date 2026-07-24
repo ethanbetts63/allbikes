@@ -44,11 +44,11 @@ const NavBar = () => {
           <Link href="/contact" className={cn(NAV_LINK, "border border-white/30 px-4 py-2 hover:border-amber-400")}>
             Contact
           </Link>
-          <div className="hidden xl:flex flex-col gap-2">
+          <div className="hidden xl:flex flex-col justify-center gap-1.5">
             {(siteSettings.phone_number || siteSettings.mobile_number) && (
               <a
                 href={`tel:${siteSettings.phone_number || siteSettings.mobile_number}`}
-                className="flex min-h-10 items-center gap-1.5 text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors text-xs"
+                className="flex items-center gap-1.5 text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors text-xs"
               >
                 <Phone className="h-3.5 w-3.5 shrink-0" />
                 {siteSettings.phone_number || siteSettings.mobile_number}
@@ -57,7 +57,7 @@ const NavBar = () => {
             {siteSettings.email_address && (
               <a
                 href={`mailto:${siteSettings.email_address}`}
-                className="flex min-h-10 items-center gap-1.5 text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors text-xs"
+                className="flex items-center gap-1.5 text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors text-xs"
               >
                 <Mail className="h-3.5 w-3.5 shrink-0" />
                 {siteSettings.email_address}
