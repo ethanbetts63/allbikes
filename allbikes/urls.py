@@ -26,6 +26,7 @@ urlpatterns += [
     path("api/payments/", include("payments.urls")),
     path("api/hire/", include("hire.urls")),
     path("api/notifications/", include("notifications.urls")),
+    path("api/parts/", include("parts.urls")),
 
     # JWT Token Authentication Endpoints
     path('api/token/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),

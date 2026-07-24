@@ -1,0 +1,135 @@
+from datetime import date
+from decimal import Decimal
+
+import pytest
+from rest_framework.test import APIClient
+
+from parts.models import PartsSettings
+from parts.tests.factories import (
+    PartFactory,
+    PartSectionFactory,
+    PartsModelFactory,
+    SectionPartFactory,
+)
+
+pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def client():
+    return APIClient()
+
+
+@pytest.fixture
+def settings_20pct():
+    s = PartsSettings.get()
+    s.markup_percentage = Decimal("20")
+    s.save()
+    return s
+
+
+class TestModelList:
+    def test_lists_active_models(self, client):
+        PartsModelFactory(name="Classic 150", cc_class="100_165")
+        PartsModelFactory(name="Old Model", is_active=False)
+        resp = client.get("/api/parts/models/")
+        assert resp.status_code == 200
+        names = [m["name"] for m in resp.json()]
+        assert "Classic 150" in names
+        assert "Old Model" not in names
+
+    def test_cc_class_filter(self, client):
+        PartsModelFactory(cc_class="50")
+        PartsModelFactory(cc_class="atv")
+        resp = client.get("/api/parts/models/?cc_class=atv")
+        assert all(m["cc_class"] == "atv" for m in resp.json())
+        assert len(resp.json()) == 1
+
+
+class TestModelDetail:
+    def test_returns_sections(self, client):
+        model = PartsModelFactory()
+        PartSectionFactory(parts_model=model, code="E01", name="Shroud Assy")
+        resp = client.get(f"/api/parts/models/{model.slug}/")
+        assert resp.status_code == 200
+        assert resp.json()["sections"][0]["name"] == "Shroud Assy"
+
+    def test_404_for_inactive(self, client):
+        model = PartsModelFactory(is_active=False)
+        assert client.get(f"/api/parts/models/{model.slug}/").status_code == 404
+
+
+class TestSectionDetail:
+    def test_colour_axis_and_markup(self, client, settings_20pct):
+        section = PartSectionFactory()
+        base = "53205-ALA-000"
+        red = PartFactory(part_number=f"{base}-RD", base_part_number=base, colour_suffix="RD",
+                          colour_name="Red", wholesale_price_incl_gst=Decimal("100.00"), available_qty=3)
+        blk = PartFactory(part_number=f"{base}-KG", base_part_number=base, colour_suffix="KG",
+                          colour_name="Black", wholesale_price_incl_gst=Decimal("100.00"), available_qty=1)
+        SectionPartFactory(section=section, ref_number="6", part=red, description="FR Handle Cover")
+        SectionPartFactory(section=section, ref_number="6", part=blk, description="FR Handle Cover")
+
+        resp = client.get(f"/api/parts/sections/{section.id}/")
+        callout = next(c for c in resp.json()["callouts"] if c["ref_number"] == "6")
+        assert callout["variant_axis"] == "colour"
+        assert len(callout["variants"]) == 2
+        prices = {v["colour_name"]: v["price"] for v in callout["variants"]}
+        assert prices["Red"] == "120.00"  # 100 * 1.20
+        # wholesale price is never exposed
+        assert "wholesale_price_incl_gst" not in callout["variants"][0]
+
+    def test_backorder_flag(self, client, settings_20pct):
+        section = PartSectionFactory()
+        part = PartFactory(wholesale_price_incl_gst=Decimal("10"), available_qty=0, in_pa_feed=True)
+        SectionPartFactory(section=section, ref_number="1", part=part, quantity=1)
+        resp = client.get(f"/api/parts/sections/{section.id}/")
+        variant = resp.json()["callouts"][0]["variants"][0]
+        assert variant["orderable"] is True
+        assert variant["backorder"] is True
+
+    def test_not_in_feed_is_unorderable(self, client, settings_20pct):
+        section = PartSectionFactory()
+        part = PartFactory(in_pa_feed=False, wholesale_price_incl_gst=None, available_qty=None)
+        SectionPartFactory(section=section, ref_number="1", part=part)
+        resp = client.get(f"/api/parts/sections/{section.id}/")
+        variant = resp.json()["callouts"][0]["variants"][0]
+        assert variant["orderable"] is False
+        assert variant["price"] is None
+
+    def test_date_axis(self, client, settings_20pct):
+        section = PartSectionFactory()
+        old = PartFactory(part_number="18241-H4C-000", wholesale_price_incl_gst=Decimal("9"))
+        new = PartFactory(part_number="18241-F6S-000", wholesale_price_incl_gst=Decimal("9"))
+        SectionPartFactory(section=section, ref_number="6", part=old, effective_date=None)
+        SectionPartFactory(section=section, ref_number="6", part=new, effective_date=date(2013, 5, 1))
+        resp = client.get(f"/api/parts/sections/{section.id}/")
+        callout = next(c for c in resp.json()["callouts"] if c["ref_number"] == "6")
+        assert callout["variant_axis"] == "date"
+        labels = [v["variant_label"] for v in callout["variants"]]
+        assert "original" in labels
+        assert any("from" in lbl for lbl in labels)
+
+
+class TestSearch:
+    def test_part_number_match(self, client, settings_20pct):
+        section = PartSectionFactory()
+        part = PartFactory(part_number="53205-ALA-000-RD", description="FR Handle Cover",
+                           wholesale_price_incl_gst=Decimal("100"))
+        SectionPartFactory(section=section, ref_number="6", part=part)
+        resp = client.get("/api/parts/search/?q=53205")
+        assert resp.status_code == 200
+        pns = [p["part_number"] for p in resp.json()["parts"]]
+        assert "53205-ALA-000-RD" in pns
+        hit = next(p for p in resp.json()["parts"] if p["part_number"] == "53205-ALA-000-RD")
+        assert hit["price"] == "120.00"
+        assert hit["sections"][0]["section_id"] == section.id
+
+    def test_model_match(self, client):
+        PartsModelFactory(name="Classic 150", model_code="AX15W2-6")
+        resp = client.get("/api/parts/search/?q=classic")
+        assert any(m["name"] == "Classic 150" for m in resp.json()["models"])
+
+    def test_short_query_returns_empty(self, client):
+        resp = client.get("/api/parts/search/?q=a")
+        assert resp.json()["parts"] == [] and resp.json()["models"] == []
