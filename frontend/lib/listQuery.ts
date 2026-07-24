@@ -3,6 +3,7 @@ import type { FilterSortOptions } from '@/types/FilterSortOptions';
 export type ListSearchParams = Record<string, string | string[] | undefined>;
 
 const BIKE_FILTER_KEYS = [
+  'make',
   'ordering',
   'min_price',
   'max_price',
@@ -69,6 +70,15 @@ function buildListQuery(
   for (const key of allowedFilterKeys) {
     const value = firstParam(searchParams[key]);
     if (!value) continue;
+
+    if (key === 'make') {
+      const make = value.trim();
+      if (make) {
+        filters.make = make;
+        params.set(key, make);
+      }
+      continue;
+    }
 
     if (key === 'ordering') {
       filters.ordering = value;

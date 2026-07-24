@@ -1,4 +1,5 @@
 export interface FilterSortOptions {
+  make?: string;
   ordering?: string;
   min_price?: number;
   max_price?: number;

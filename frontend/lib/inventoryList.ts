@@ -1,5 +1,5 @@
 import type { Bike } from '@/types/Bike';
-import { getServerBikes } from '@/lib/serverApi';
+import { getServerBikeMakes, getServerBikes } from '@/lib/serverApi';
 import { buildBikeListQuery, type ListSearchParams } from '@/lib/listQuery';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 import { INVENTORY_PAGE_SIZE } from '@/config/siteSettings';
@@ -9,6 +9,7 @@ export interface InitialBikeList {
   totalPages: number;
   currentPage: number;
   filters: FilterSortOptions;
+  makes: string[];
 }
 
 export async function getInitialBikeList(
@@ -17,14 +18,19 @@ export async function getInitialBikeList(
   fixedParams: Record<string, string> = {}
 ): Promise<InitialBikeList> {
   const query = buildBikeListQuery(condition, searchParams, fixedParams);
+  const makeParams = new URLSearchParams({ condition, ...fixedParams });
 
   try {
-    const response = await getServerBikes(query.params);
+    const [response, makes] = await Promise.all([
+      getServerBikes(query.params),
+      getServerBikeMakes(makeParams),
+    ]);
     return {
       bikes: response.results,
       totalPages: Math.ceil(response.count / INVENTORY_PAGE_SIZE),
       currentPage: query.page,
       filters: query.filters,
+      makes,
     };
   } catch (error) {
     console.error(`Failed to server-render ${condition} bike list:`, error);
@@ -33,6 +39,7 @@ export async function getInitialBikeList(
       totalPages: 0,
       currentPage: query.page,
       filters: query.filters,
+      makes: [],
     };
   }
 }

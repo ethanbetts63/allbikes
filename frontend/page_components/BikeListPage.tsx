@@ -101,7 +101,7 @@ const partsBikeFaqs = [
   },
 ];
 
-const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage, filters }: BikeListPageProps) => {
+const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage, filters, makes }: BikeListPageProps) => {
   const isNew = bikeCondition === 'new,demo';
   const isParts = bikeCondition === 'parts';
   const resolvedPageType = pageType ?? (isNew ? 'new' : isParts ? 'parts' : 'used-motorcycles');
@@ -183,7 +183,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
               <p className="text-xs text-[var(--text-dark-secondary)]">Any make or model accepted. Must be licensed and running.</p>
             </div>
           )}
-          <BikeFilterForm basePath={basePath} filters={filters} />
+          <BikeFilterForm basePath={basePath} filters={filters} makes={makes} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {bikes.length > 0 ? (

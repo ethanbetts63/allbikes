@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Motorcycles, Scooters & Servicing Perth",
@@ -42,7 +41,6 @@ export default function RootLayout({
           <Footer />
         </div>
         <Toaster position="top-center" richColors />
-        <GoogleAnalytics />
         <Analytics />
         <SpeedInsights />
       </body>

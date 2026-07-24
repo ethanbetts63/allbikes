@@ -5,12 +5,28 @@ import type { FilterSortOptions } from '@/types/FilterSortOptions';
 interface BikeFilterFormProps {
   basePath: string;
   filters: FilterSortOptions;
+  makes?: string[];
 }
 
-export default function BikeFilterForm({ basePath, filters }: BikeFilterFormProps) {
+export default function BikeFilterForm({ basePath, filters, makes }: BikeFilterFormProps) {
   return (
     <form action={basePath} method="GET" className="bg-[var(--bg-light-primary)] border border-border-light rounded-lg p-4 mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+      <div className={`grid grid-cols-1 md:grid-cols-3 ${makes ? 'lg:grid-cols-6' : 'lg:grid-cols-5'} gap-4 items-end`}>
+        {makes && (
+          <div className="flex flex-col gap-1">
+            <label htmlFor="bike-make" className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">Brand</label>
+            <select
+              id="bike-make"
+              name="make"
+              defaultValue={filters.make ?? ''}
+              className="border-border-light text-[var(--text-dark-primary)] text-sm h-9 w-full rounded-md border bg-transparent px-3 py-2 shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+            >
+              <option value="">All brands</option>
+              {makes.map((make) => <option key={make} value={make}>{make}</option>)}
+            </select>
+          </div>
+        )}
+
         <div className="flex flex-col gap-1">
           <label htmlFor="bike-ordering" className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-dark-secondary)]">Sort By</label>
           <select

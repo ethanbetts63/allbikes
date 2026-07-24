@@ -59,6 +59,30 @@ class TestMotorcycleViewSetList:
         assert response.data['count'] == 1
         assert response.data['results'][0]['vehicle_type'] == 'scooter'
 
+    def test_filter_by_make_is_case_insensitive(self, api_client):
+        honda = MotorcycleFactory(make='Honda')
+        MotorcycleFactory(make='Yamaha')
+        url = reverse("inventory:motorcycle-list")
+
+        response = api_client.get(url, {'make': 'honda'})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == 1
+        assert response.data['results'][0]['id'] == honda.id
+
+    def test_makes_returns_unique_sorted_makes_for_the_requested_category(self, api_client):
+        MotorcycleFactory(make='Honda', condition='used', vehicle_type='scooter')
+        MotorcycleFactory(make=' honda ', condition='used', vehicle_type='scooter')
+        MotorcycleFactory(make='Vespa', condition='used', vehicle_type='scooter')
+        MotorcycleFactory(make='Yamaha', condition='used', vehicle_type='motorcycle')
+        MotorcycleFactory(make='SYM', condition='new', vehicle_type='scooter')
+        url = reverse("inventory:motorcycle-makes")
+
+        response = api_client.get(url, {'condition': 'used', 'vehicle_type': 'scooter'})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == ['Honda', 'Vespa']
+
     def test_filter_by_featured(self, api_client):
         """
         GIVEN a featured and a non-featured motorcycle

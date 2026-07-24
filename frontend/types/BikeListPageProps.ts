@@ -8,4 +8,5 @@ export interface BikeListPageProps {
   totalPages: number;
   currentPage: number;
   filters: FilterSortOptions;
+  makes?: string[];
 }

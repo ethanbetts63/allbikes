@@ -61,6 +61,10 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
                 | Q(rego__icontains=search)
                 | Q(vin__icontains=search)
             )
+
+        make = (self.request.query_params.get('make') or '').strip()
+        if make:
+            queryset = queryset.filter(make__iexact=make)
             
         # Filtering by featured status
         is_featured = self.request.query_params.get('is_featured')
@@ -133,12 +137,28 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+    @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny], pagination_class=None)
+    def makes(self, request):
+        """Return the distinct makes available for the supplied inventory category."""
+        unique_makes = {}
+        for make in self.get_queryset().values_list('make', flat=True):
+            normalized_make = make.strip()
+            if normalized_make:
+                key = normalized_make.casefold()
+                whitespace_score = int(make != normalized_make)
+                existing = unique_makes.get(key)
+                if existing is None or whitespace_score < existing[1]:
+                    unique_makes[key] = (normalized_make, whitespace_score)
+
+        makes = [make for make, _ in unique_makes.values()]
+        return Response(sorted(makes, key=str.casefold))
+
     def get_permissions(self):
         """
         Instantiates and returns the list of permissions that this view requires.
         Allows public read-only access, but requires admin privileges for write operations.
         """
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'makes']:
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAdminUser]

@@ -17,7 +17,7 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
-  const { bikes, totalPages, currentPage, filters } = await getInitialBikeList('used', params, { vehicle_type: 'motorcycle' });
+  const { bikes, totalPages, currentPage, filters, makes } = await getInitialBikeList('used', params, { vehicle_type: 'motorcycle' });
 
   return (
     <>
@@ -32,6 +32,7 @@ export default async function Page({ searchParams }: PageProps) {
         totalPages={totalPages}
         currentPage={currentPage}
         filters={filters}
+        makes={makes}
       />
     </>
   );

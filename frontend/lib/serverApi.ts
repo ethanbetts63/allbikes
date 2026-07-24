@@ -12,6 +12,10 @@ export async function getServerBikes(params: URLSearchParams): Promise<Paginated
   return fetchServerJson<PaginatedResponse<Bike>>(`/api/inventory/bikes/?${params.toString()}`);
 }
 
+export async function getServerBikeMakes(params: URLSearchParams): Promise<string[]> {
+  return fetchServerJson<string[]>(`/api/inventory/bikes/makes/?${params.toString()}`);
+}
+
 export async function getServerBikeById(id: string): Promise<Bike> {
   return fetchServerJson<Bike>(`/api/inventory/bikes/${id}/`);
 }

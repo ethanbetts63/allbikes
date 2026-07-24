@@ -123,6 +123,7 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
         is_featured,
         is_hire,
         search,
+        make,
         status,
         ordering,
         min_price,
@@ -144,6 +145,7 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
     if (is_featured) params.append('is_featured', 'true');
     if (is_hire) params.append('is_hire', 'true');
     if (search) params.append('search', search);
+    if (make) params.append('make', make);
     if (ordering) params.append('ordering', ordering);
     if (min_price !== undefined) params.append('min_price', String(min_price));
     if (max_price !== undefined) params.append('max_price', String(max_price));
