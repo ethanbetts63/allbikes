@@ -38,6 +38,7 @@ class PartsOrder(models.Model):
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     terms_accepted = models.BooleanField(default=False)
+    admin_notes = models.TextField(blank=True, help_text="Internal notes (wholesaler chase-ups, etc.). Not shown to the customer.")
     dispatched_at = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -53,6 +54,22 @@ class PartsOrder(models.Model):
         if not self.order_reference:
             self.order_reference = _generate_reference()
         super().save(*args, **kwargs)
+
+    def recompute_rollup(self):
+        """Refresh has_backorder and the refund rollup from the line items.
+
+        Called after an admin changes a line's backorder/refund state. Does not
+        override terminal states (cancelled) or downgrade a manual status.
+        """
+        items = list(self.items.all())
+        self.has_backorder = any(i.backordered for i in items)
+        refunded = [i for i in items if i.status == 'refunded']
+        if self.status not in ('cancelled',):
+            if items and len(refunded) == len(items):
+                self.status = 'refunded'
+            elif refunded and self.status in ('paid', 'dispatched'):
+                self.status = 'partially_refunded'
+        self.save(update_fields=['has_backorder', 'status', 'updated_at'])
 
 
 def _generate_reference():

@@ -22,6 +22,13 @@ class PartsOrderItem(models.Model):
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Customer price incl. GST (marked up).")
     line_total = models.DecimalField(max_digits=10, decimal_places=2)
 
+    # `backordered` = on the 14-day hold; `status` = fulfilment outcome.
+    STATUS_CHOICES = [
+        ('ordered', 'Ordered'),
+        ('fulfilled', 'Fulfilled'),
+        ('refunded', 'Refunded'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ordered')
     backordered = models.BooleanField(default=False, help_text="Understocked at order time / placed on backorder by admin.")
     backorder_since = models.DateField(null=True, blank=True, help_text="Start of the 14-day hold clock.")
 

@@ -18,6 +18,7 @@ import {
   LogOut,
   Gauge,
   Key,
+  Wrench,
 } from 'lucide-react';
 import { adminGetNotifications } from '@/api';
 import type { AdminNotifications } from '@/types/AdminNotifications';
@@ -133,6 +134,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <Link href="/dashboard/products/new" className={subNavItemClass('/dashboard/products/new')}>
               <PlusCircle className="h-3.5 w-3.5 shrink-0" />
               Add Product
+            </Link>
+
+            <SectionLabel>SYM Parts</SectionLabel>
+            <Link href="/dashboard/parts-orders" className={navItemClass('/dashboard/parts-orders')}>
+              <Wrench className="h-4 w-4 shrink-0" />
+              Parts Orders
             </Link>
 
             <SectionLabel>Service</SectionLabel>

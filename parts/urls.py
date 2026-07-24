@@ -11,6 +11,11 @@ from parts.views.checkout_views import (
     CreatePartsPaymentIntentView,
     RetrievePartsOrderView,
 )
+from parts.views.admin_order_views import (
+    AdminPartsOrderDetailView,
+    AdminPartsOrderItemView,
+    AdminPartsOrderListView,
+)
 
 app_name = "parts"
 
@@ -20,6 +25,11 @@ urlpatterns = [
     path("sections/<int:pk>/", SectionDetailView.as_view(), name="section-detail"),
     path("search/", PartsSearchView.as_view(), name="search"),
     path("orders/", CreatePartsOrderView.as_view(), name="order-create"),
-    path("orders/<str:order_reference>/", RetrievePartsOrderView.as_view(), name="order-detail"),
     path("create-payment-intent/", CreatePartsPaymentIntentView.as_view(), name="create-payment-intent"),
+    # Admin (IsAdminUser)
+    path("admin/orders/", AdminPartsOrderListView.as_view(), name="admin-order-list"),
+    path("admin/orders/<int:pk>/", AdminPartsOrderDetailView.as_view(), name="admin-order-detail"),
+    path("admin/items/<int:pk>/", AdminPartsOrderItemView.as_view(), name="admin-order-item"),
+    # Public order retrieval by reference — keep last so it doesn't shadow admin/.
+    path("orders/<str:order_reference>/", RetrievePartsOrderView.as_view(), name="order-detail"),
 ]
