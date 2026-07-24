@@ -24,7 +24,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-[var(--bg-dark-primary)]">
-      <div className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
 
         {/* Contact */}
         <div>
@@ -56,13 +56,20 @@ const Footer = () => {
             {siteSettings.show_workshop_clearance && <li><Link href="/inventory/motorcycles/parts" className={LINK_CLASS}>Workshop Clearance</Link></li>}
             <li><Link href="/tyre-fitting" className={LINK_CLASS}>Tyre Fitting</Link></li>
             <li><Link href="/contact" className={LINK_CLASS}>Contact Us</Link></li>
+            <li><Link href="/login" className={LINK_CLASS}>Login</Link></li>
+          </ul>
+        </div>
+
+        {/* Terms & Conditions */}
+        <div>
+          <p className="text-[var(--highlight)] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">Terms &amp; Conditions</p>
+          <ul className="space-y-2">
             <li><Link href="/refunds" className={LINK_CLASS}>Returns &amp; Refunds</Link></li>
             <li><Link href="/terms?type=purchase" className={LINK_CLASS}>Sales &amp; Deposit Terms</Link></li>
             {siteSettings.show_hire && <li><Link href="/terms?type=hire" className={LINK_CLASS}>Hire Terms</Link></li>}
             <li><Link href="/terms?type=service" className={LINK_CLASS}>Service Terms</Link></li>
             <li><Link href="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>
             <li><Link href="/security" className={LINK_CLASS}>Security Policy</Link></li>
-            <li><Link href="/login" className={LINK_CLASS}>Login</Link></li>
           </ul>
         </div>
 
