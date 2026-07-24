@@ -23,7 +23,7 @@ class SectionPart(models.Model):
     description = models.CharField(max_length=255, blank=True, help_text="Description as printed in this book.")
     quantity = models.PositiveIntegerField(default=1)
     effective_date = models.DateField(null=True, blank=True, help_text="Running-change date, parsed from the book's Excel serial.")
-    superseded_flag = models.CharField(max_length=5, blank=True, help_text="The book's Y/N supersession flag.")
+    superseded_flag = models.CharField(max_length=50, blank=True, help_text="The book's supersession flag/note (usually Y/N).")
     sort_order = models.PositiveIntegerField(default=0)
 
     class Meta:

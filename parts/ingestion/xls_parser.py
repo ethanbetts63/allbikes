@@ -128,7 +128,7 @@ def parse_section_parts(sheet, datemode, colour_index):
                     effective_date = xlrd.xldate_as_datetime(date_cell, datemode).date()
                 except Exception:
                     effective_date = None
-        superseded_flag = _clean(sheet.cell_value(r, 7)) if sheet.ncols > 7 else ""
+        superseded_flag = (_clean(sheet.cell_value(r, 7)) if sheet.ncols > 7 else "")[:50]
         rows.append({
             "ref_number": ref,
             "part_number": part_number,
