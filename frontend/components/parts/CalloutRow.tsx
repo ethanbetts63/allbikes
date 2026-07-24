@@ -51,7 +51,7 @@ function ColourCallout({ callout, section }: Props) {
       </div>
       <div className="pl-8">
         <label className="mb-2 block text-xs text-gray-600">
-          Colour — pick the one matching your bike. Unsure of the code? We&apos;ll confirm before dispatch.
+          Colour — pick the one matching your bike.
         </label>
         <select
           value={index}

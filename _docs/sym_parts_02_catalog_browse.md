@@ -100,10 +100,10 @@ API-proxy convention (`/api/*` → backend).
   code), and price + stock update to the selected colour. Add-to-cart uses the
   chosen colour's specific part number. No global colour step — the choice lives on
   the callout where it matters (overview §5). Helper copy: *"Pick the colour
-  matching your bike. Unsure of the code? We'll confirm before dispatch."*
+  matching your bike."* (No pre-dispatch confirmation is offered to customers.)
 - **Date-variant badges:** when `variant_axis == "date"`, variants show a badge
   (e.g. "up to 2013") with: *"Running change — pick the variant matching your
-  bike's build date. Unsure? We'll confirm before dispatch."*
+  bike's build date."*
 - **Backorder note:** a variant with `backorder: true` shows a small "Backorder —
   ships when restocked" note but remains addable.
 

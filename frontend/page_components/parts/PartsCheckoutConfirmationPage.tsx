@@ -101,13 +101,12 @@ export default function PartsCheckoutConfirmationPage() {
             </div>
 
             <div className="mt-5 rounded-md border border-black bg-white p-4 text-sm text-black">
-              <p className="font-semibold">One quick step — confirm by email</p>
+              <p className="font-semibold">Please email us from your order email</p>
               <p className="mt-1 text-gray-700">
-                Please email{' '}
+                Email{' '}
                 <a href={`mailto:${ADMIN_EMAIL}`} className="underline">{ADMIN_EMAIL}</a>{' '}
                 from <strong>{order.customer_email}</strong> and quote{' '}
-                <span className="font-mono">{order.order_reference}</span> so we can verify your order and confirm
-                dispatch.
+                <span className="font-mono">{order.order_reference}</span> so we can link this order to your email.
               </p>
             </div>
 

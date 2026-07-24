@@ -38,8 +38,9 @@ rest).
 - Body (text + HTML template `notifications/emails/parts_customer_confirmation.html`):
   greeting, reference, **itemised line list** (part number, description, qty, unit
   price, line total), subtotal/shipping/total, ship-to address, and the
-  **"email us from your order email to confirm"** instruction (mirrors the success
-  page from ③ §4.4). Records a `Message` (sent/failed) via `_record`.
+  **"email us from your order email"** instruction (mirrors the success page from
+  ③ §4.4). Do **not** promise any pre-dispatch confirmation to the customer.
+  Records a `Message` (sent/failed) via `_record`.
 
 ### 3.2 `send_parts_admin_new_order(parts_order)`
 - To: `_admin_recipients()` (existing `ADMIN_EMAILS` handling).
@@ -93,8 +94,9 @@ weekly cron. Low priority — can defer to after ⑤.
 
 ## 8. Open decisions (for review)
 
-- **N1 — Customer copy:** exact wording of the "email us to confirm" instruction
-  and whether the customer email should also restate delivery expectations /
+- **N1 — Customer copy:** exact wording of the "email us from your order email"
+  instruction (must **not** promise pre-dispatch confirmation) and whether the
+  customer email should also restate delivery expectations /
   lead time (drop-ship from wholesaler may be slower than in-stock). Recommend a
   generic "typically ships within X business days" line — value TBD.
 - **N2 — Admin SMS threshold:** always SMS, or only above an order value? Default:

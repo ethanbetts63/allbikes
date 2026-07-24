@@ -63,7 +63,7 @@ Select Portal page
    ▼
 ③ CART + STRIPE CHECKOUT
    (PartsOrder + PartsOrderItem; reuse Stripe PaymentIntent + webhook pattern;
-    "email us to confirm" page; no user accounts)
+    "email us" page; no user accounts)
    │
    ▼
 ④ NOTIFICATIONS

@@ -10,7 +10,7 @@ multi-line **PartsOrder**. No user accounts. Reuses the existing Stripe
 PaymentIntent + webhook pattern from `payments`.
 
 **In scope:** cart (client-side), order + line-item models, the create-payment-
-intent endpoint for parts, webhook handling, the success + "email us to confirm"
+intent endpoint for parts, webhook handling, the success + "email us"
 page. **Out of scope:** the emails/SMS themselves (④) and wholesaler dispatch (⑤).
 
 ## 2. Cart (client-side, no accounts)
@@ -111,16 +111,17 @@ if `payment.parts_order_id` → mark `PartsOrder.status='paid'`,
 notification senders (④). No stock decrement (drop-ship; stock isn't ours).
 Keep idempotency (return if already `succeeded`).
 
-### 4.4 Success + "email us to confirm" page
+### 4.4 Success + "email us" page
 Route: `/parts/order/[order_reference]` (or a success page keyed by the ref).
 - Confirms payment received, shows the order summary + reference.
-- **The confirm step:** copy asks the customer to **email us from the same email
-  they ordered with** so we can verify and answer questions, e.g.:
+- **The email-us step:** copy asks the customer to **email us from the same email
+  they ordered with**, quoting their reference, so we can link the order to their
+  email, e.g.:
   > *"Your order **SP-1A2B3C4D** is paid. Please email **admin@scootershop.com.au**
-  > from **<their order email>** and quote your reference so we can confirm
-  > dispatch details."*
-- This replaces user accounts as the identity/verification mechanism (overview
-  §5). No login, no password.
+  > from **<their order email>** and quote your reference so we can link this order
+  > to your email."*
+- This replaces user accounts as the identity mechanism (overview §5). No login,
+  no password. **No pre-dispatch confirmation is promised to the customer.**
 
 ## 5. Abandoned orders
 
