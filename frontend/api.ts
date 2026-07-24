@@ -303,6 +303,7 @@ interface CreateOrderData {
     product?: number;
     motorcycle?: number;
     payment_type?: 'full' | 'deposit';
+    selected_colour?: string;
     customer_name: string;
     customer_email: string;
     customer_phone: string;

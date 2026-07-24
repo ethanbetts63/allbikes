@@ -61,7 +61,11 @@ class CreatePaymentIntentView(APIView):
             amount=amount_cents,
             currency='aud',
             automatic_payment_methods={'enabled': True},
-            metadata={'order_id': order.id, 'order_reference': order.order_reference},
+            metadata={
+                'order_id': order.id,
+                'order_reference': order.order_reference,
+                **({'selected_colour': order.selected_colour} if order.selected_colour else {}),
+            },
         )
 
         Payment.objects.create(

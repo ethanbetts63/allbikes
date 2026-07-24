@@ -28,6 +28,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'rego_exp',
             'stock_number',
             'warranty_months',
+            'available_colours',
             'transmission',
             'images',
             'date_posted',
@@ -35,3 +36,33 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'is_hire',
             'daily_rate',
         ]
+
+    def validate_available_colours(self, value):
+        if not isinstance(value, list):
+            raise serializers.ValidationError("Available colours must be a list.")
+
+        colours = []
+        seen = set()
+        for colour in value:
+            if not isinstance(colour, str):
+                raise serializers.ValidationError("Each colour must be a text name.")
+
+            colour = colour.strip()
+            if not colour:
+                continue
+            if len(colour) > 100:
+                raise serializers.ValidationError("Colour names cannot exceed 100 characters.")
+
+            key = colour.casefold()
+            if key not in seen:
+                seen.add(key)
+                colours.append(colour)
+
+        return colours
+
+    def validate(self, attrs):
+        condition = attrs.get('condition', getattr(self.instance, 'condition', None))
+        vehicle_type = attrs.get('vehicle_type', getattr(self.instance, 'vehicle_type', None))
+        if condition != 'new' or vehicle_type != 'scooter':
+            attrs['available_colours'] = []
+        return attrs

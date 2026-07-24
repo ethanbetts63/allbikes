@@ -95,11 +95,13 @@ def send_customer_confirmation(order):
     if order.payment_type == 'deposit':
         subject = f"Deposit confirmed — {order.order_reference}"
         motorcycle_name = str(order.motorcycle)
+        colour_line = f"Colour: {order.selected_colour}\n" if order.selected_colour else ""
         text_body = (
             f"Hi {order.customer_name},\n\n"
             f"Your deposit has been received and {motorcycle_name} is now reserved for you.\n\n"
             f"Deposit reference: {order.order_reference}\n"
             f"Motorcycle: {motorcycle_name}\n"
+            f"{colour_line}"
             f"Deposit paid: ${order.amount_paid}\n\n"
             f"Our team will be in touch as soon as possible to organise pickup.\n\n"
             f"Questions? Contact us at admin@scootershop.com.au"
@@ -331,10 +333,12 @@ def send_admin_new_order(order):
     if order.payment_type == 'deposit':
         subject = f"New deposit — {order.order_reference}"
         motorcycle_name = str(order.motorcycle)
+        colour_line = f"Colour: {order.selected_colour}\n" if order.selected_colour else ""
         text_body = (
             f"New deposit received: {order.order_reference}\n"
             f"Date: {timezone.localtime(order.created_at).strftime('%d %b %Y, %I:%M %p')} AWST\n\n"
             f"Motorcycle: {motorcycle_name}\n"
+            f"{colour_line}"
             f"Deposit: ${order.amount_paid}\n\n"
             f"Customer: {order.customer_name}\n"
             f"Phone: {order.customer_phone}\n"

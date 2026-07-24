@@ -24,6 +24,7 @@ export type Bike = {
   stock_number: string;
   vin?: string;
   warranty_months: number;
+  available_colours?: string[];
   transmission: string;
   images: BikeImage[];
   date_posted: string;

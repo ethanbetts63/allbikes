@@ -6,9 +6,12 @@ Each function returns a plain string for sending via Twilio.
 
 def admin_new_order(order):
     if order.payment_type == 'deposit':
+        motorcycle = str(order.motorcycle)
+        if order.selected_colour:
+            motorcycle += f" ({order.selected_colour})"
         return (
             f"New ScooterShop deposit: {order.order_reference} — "
-            f"{order.motorcycle} — ${order.amount_paid} deposit. "
+            f"{motorcycle} — ${order.amount_paid} deposit. "
             f"Customer: {order.customer_name} {order.customer_phone or ''}".strip()
         )
     return (

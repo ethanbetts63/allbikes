@@ -34,6 +34,7 @@
             {% if order.payment_type == 'deposit' %}
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Motorcycle</p>
             <p style="font-size: 15px; font-weight: bold; color: #1c1917; margin: 0 0 4px 0;">{{ order.motorcycle }}</p>
+            {% if order.selected_colour %}<p style="margin: 0;">Colour: {{ order.selected_colour }}</p>{% endif %}
             <p style="margin: 0;">Deposit: ${{ order.amount_paid }}</p>
             {% else %}
             <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Product</p>

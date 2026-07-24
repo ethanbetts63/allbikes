@@ -9,6 +9,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'product',
             'motorcycle',
             'payment_type',
+            'selected_colour',
             'customer_name',
             'customer_email',
             'customer_phone',
@@ -34,7 +35,27 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         if has_motorcycle:
             if not data.get('customer_phone'):
                 raise serializers.ValidationError({'customer_phone': 'Phone number is required for motorcycle reservations.'})
+
+            motorcycle = data['motorcycle']
+            available_colours = motorcycle.available_colours or []
+            selected_colour = (data.get('selected_colour') or '').strip()
+            if available_colours:
+                colour_map = {colour.casefold(): colour for colour in available_colours}
+                canonical_colour = colour_map.get(selected_colour.casefold())
+                if not canonical_colour:
+                    raise serializers.ValidationError({
+                        'selected_colour': 'Select one of the available motorcycle colours.'
+                    })
+                data['selected_colour'] = canonical_colour
+            elif selected_colour:
+                raise serializers.ValidationError({
+                    'selected_colour': 'This motorcycle does not have selectable colours.'
+                })
         else:
+            if data.get('selected_colour'):
+                raise serializers.ValidationError({
+                    'selected_colour': 'A colour can only be selected for a motorcycle reservation.'
+                })
             for field in ('address_line1', 'suburb', 'state', 'postcode'):
                 if not data.get(field):
                     raise serializers.ValidationError({field: 'This field is required.'})
@@ -56,6 +77,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'product_name',
             'motorcycle',
             'motorcycle_name',
+            'selected_colour',
             'amount_paid',
             'customer_name',
             'customer_email',

@@ -29,6 +29,7 @@ import PopularBadge from '@/components/PopularBadge';
 import { assetUrl } from '@/utils/assetUrl';
 import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/utils/vehicleImages';
 import { buildBreadcrumbSchema } from '@/lib/seo';
+import NewScooterColourPurchase from '@/components/NewScooterColourPurchase';
 
 interface BikeDetailPageProps {
     initialBike?: Bike | null;
@@ -91,6 +92,10 @@ const BikeDetailPage = ({
         bike.condition,
         bike.vehicle_type === 'scooter' ? 'scooter Perth' : 'motorcycle Perth',
     ].filter(Boolean).join(' ');
+    const isNewScooter = bike.condition === 'new' && bike.vehicle_type === 'scooter';
+    const canReserve = siteSettings.accept_online_payment
+        && bike.status === 'for_sale'
+        && Boolean(depositAmount);
 
     const bikeSubtitle = bike.condition === 'new'
         ? <p className="text-sm text-[var(--text-dark-secondary)]">
@@ -226,8 +231,17 @@ const BikeDetailPage = ({
                             </div>
                         )}
 
-                        {/* Reserve with Deposit */}
-                        {siteSettings.accept_online_payment && (bike.condition === 'new' || bike.condition === 'demo' || bike.condition === 'used') && bike.status === 'for_sale' && depositAmount && (
+                        {isNewScooter && (
+                            <NewScooterColourPurchase
+                                slug={bike.slug}
+                                availableColours={bike.available_colours ?? []}
+                                depositAmount={depositAmount}
+                                canPurchase={canReserve}
+                            />
+                        )}
+
+                        {/* Reserve non-new inventory with a deposit */}
+                        {!isNewScooter && siteSettings.accept_online_payment && (bike.condition === 'new' || bike.condition === 'demo' || bike.condition === 'used') && bike.status === 'for_sale' && depositAmount && (
                             <div className="mb-6">
                                 <Link
                                     href={`/checkout/${bike.slug}?type=deposit`}

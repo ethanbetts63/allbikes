@@ -191,7 +191,9 @@ function buildSummaryFromOrder(order: Order): CheckoutItemSummary {
       ? order.motorcycle_name ?? 'Motorcycle deposit'
       : order.product_name ?? 'E-scooter order',
     imageUrl: null,
-    priceLabel: isDeposit ? 'Deposit reservation' : 'Secure online payment',
+    priceLabel: isDeposit
+      ? `${order.selected_colour ? `Colour: ${order.selected_colour} · ` : ''}Deposit reservation`
+      : 'Secure online payment',
     isDeposit,
   };
 }

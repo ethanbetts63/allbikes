@@ -156,6 +156,12 @@ class Motorcycle(models.Model):
         help_text="Number of months the warranty is valid for",
     )
 
+    available_colours = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Colour names customers can choose for this motorcycle.",
+    )
+
     is_lams_approved = models.BooleanField(
         default=False,
         help_text="This motorcycle is LAMS (Learner Approved Motorcycle Scheme) approved.",

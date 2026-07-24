@@ -36,6 +36,11 @@ class Order(models.Model):
         choices=PAYMENT_TYPE_CHOICES,
         default='full',
     )
+    selected_colour = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="The motorcycle colour selected by the customer at order time.",
+    )
     order_reference = models.CharField(max_length=20, unique=True, blank=True)
     customer_name = models.CharField(max_length=200)
     customer_email = models.EmailField()

@@ -177,6 +177,7 @@ export function buildBikeSchema(bike: Bike): object {
     };
   }
   if (bike.vin) schema.vehicleIdentificationNumber = bike.vin;
+  if (bike.available_colours?.length) schema.color = bike.available_colours.join(', ');
   if (bike.transmission) schema.vehicleTransmission = bike.transmission;
   if (bike.engine_size) {
     schema.engineDisplacement = {

@@ -208,6 +208,21 @@ class TestDepositOrderCreateView:
         order = Order.objects.get(motorcycle=motorcycle)
         assert order.payment_type == 'deposit'
 
+    def test_deposit_order_saves_selected_colour(self, api_client):
+        motorcycle = MotorcycleFactory(
+            condition='new',
+            status='for_sale',
+            available_colours=['Matte Black', 'Pearl White'],
+        )
+        url = reverse('payments:order-create')
+        payload = _deposit_payload(motorcycle.id)
+        payload['selected_colour'] = 'Pearl White'
+
+        response = api_client.post(url, payload, format='json')
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert Order.objects.get(motorcycle=motorcycle).selected_colour == 'Pearl White'
+
     def test_returns_409_when_motorcycle_is_reserved(self, api_client):
         """
         GIVEN a motorcycle with status='reserved'

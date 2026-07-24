@@ -15,7 +15,8 @@ def test_motorcycle_serializer_contains_expected_fields():
                     'id', 'slug', 'make', 'model', 'year', 'price', 'condition', 'vehicle_type', 'status',
                     'is_featured', 'popular', 'odometer', 'engine_size', 'description', 'youtube_link',
                     'rego', 'rego_exp', 'stock_number', 'warranty_months', 'transmission', 'images',
-                    'discount_price', 'date_posted', 'is_lams_approved', 'is_hire', 'daily_rate']
+                    'discount_price', 'date_posted', 'is_lams_approved', 'is_hire', 'daily_rate',
+                    'available_colours']
     assert set(data.keys()) == set(expected_keys)
 
 @pytest.mark.django_db
@@ -49,3 +50,33 @@ def test_motorcycle_serializer_with_images():
     # Check a field from the nested serializer
     assert 'image' in data['images'][0]
     assert 'order' in data['images'][0]
+
+
+@pytest.mark.django_db
+def test_available_colours_are_trimmed_and_deduplicated():
+    motorcycle = MotorcycleFactory(condition='new', vehicle_type='scooter')
+    serializer = MotorcycleSerializer(
+        motorcycle,
+        data={'available_colours': [' Matte Black ', 'matte black', '', 'Pearl White']},
+        partial=True,
+    )
+
+    assert serializer.is_valid(), serializer.errors
+    assert serializer.validated_data['available_colours'] == ['Matte Black', 'Pearl White']
+
+
+@pytest.mark.django_db
+def test_available_colours_are_cleared_when_listing_is_not_a_new_scooter():
+    motorcycle = MotorcycleFactory(
+        condition='new',
+        vehicle_type='scooter',
+        available_colours=['Matte Black'],
+    )
+    serializer = MotorcycleSerializer(
+        motorcycle,
+        data={'condition': 'used'},
+        partial=True,
+    )
+
+    assert serializer.is_valid(), serializer.errors
+    assert serializer.validated_data['available_colours'] == []

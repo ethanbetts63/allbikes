@@ -93,7 +93,10 @@ const OrderTable = () => {
       accessorFn: (row) => row.product_name ?? row.motorcycle_name ?? '',
       cell: ({ row }) => (
         <div className="text-[var(--text-dark-primary)]">
-          {row.original.product_name ?? row.original.motorcycle_name ?? '—'}
+          <div>{row.original.product_name ?? row.original.motorcycle_name ?? '—'}</div>
+          {row.original.selected_colour && (
+            <div className="mt-0.5 text-xs text-[var(--text-dark-secondary)]">{row.original.selected_colour}</div>
+          )}
         </div>
       ),
     },

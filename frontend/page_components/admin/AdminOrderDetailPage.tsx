@@ -143,6 +143,7 @@ const AdminOrderDetailPage = () => {
           {isDeposit ? (
             <>
               <Row label="Motorcycle" value={order.motorcycle_name ?? '—'} />
+              {order.selected_colour && <Row label="Colour" value={order.selected_colour} />}
               <Row label="Deposit Paid" value={`$${parseFloat(displayPrice).toLocaleString()}`} />
             </>
           ) : (

@@ -6,6 +6,7 @@ export interface Order {
   product_name: string | null;
   motorcycle: number | null;
   motorcycle_name: string | null;
+  selected_colour: string;
   amount_paid: string | null;
   customer_name: string;
   customer_email: string;

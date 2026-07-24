@@ -1,5 +1,5 @@
 import { useEffect, type ChangeEvent } from 'react';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { useForm, Controller, useFieldArray, useWatch } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,9 +27,10 @@ import {
 
 const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProps) => {
     
-    const { register, handleSubmit, control, formState: { errors } } = useForm<MotorcycleFormData>({
+    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<MotorcycleFormData>({
         defaultValues: {
             vehicle_type: 'motorcycle',
+            available_colours: [],
             ...initialData,
             managedImages: initialData?.images
                 .sort((a, b) => a.order - b.order)
@@ -47,6 +48,28 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
         control,
         name: "managedImages"
     });
+
+    const condition = useWatch({ control, name: 'condition' });
+    const vehicleType = useWatch({ control, name: 'vehicle_type' });
+    const availableColours = useWatch({ control, name: 'available_colours' }) ?? [];
+
+    const addColour = () => {
+        setValue('available_colours', [...availableColours, ''], { shouldDirty: true });
+    };
+
+    const updateColour = (index: number, colour: string) => {
+        const nextColours = [...availableColours];
+        nextColours[index] = colour;
+        setValue('available_colours', nextColours, { shouldDirty: true });
+    };
+
+    const removeColour = (index: number) => {
+        setValue(
+            'available_colours',
+            availableColours.filter((_, colourIndex) => colourIndex !== index),
+            { shouldDirty: true }
+        );
+    };
 
     const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -100,6 +123,35 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                         <div className="space-y-2"><Label htmlFor="range">Range (km)</Label><Input id="range" type="number" {...register('range', { valueAsNumber: true })} /></div>
                         <div className="space-y-2"><Label htmlFor="seats">Seats</Label><Input id="seats" type="number" {...register('seats', { valueAsNumber: true })} /></div>
                     </div>
+
+                    {condition === 'new' && vehicleType === 'scooter' && (
+                        <div className="space-y-3 rounded-lg border border-border-light p-4">
+                            <div>
+                                <Label>Available Colours</Label>
+                                <p className="mt-1 text-xs text-[var(--text-dark-secondary)]">
+                                    Add the colour names customers can choose on this scooter&apos;s details page.
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                {availableColours.map((colour, index) => (
+                                    <div key={index} className="flex items-center gap-2">
+                                        <Input
+                                            value={colour}
+                                            onChange={(event) => updateColour(index, event.target.value)}
+                                            placeholder="e.g. Matte Black"
+                                            aria-label={`Colour ${index + 1}`}
+                                        />
+                                        <Button type="button" variant="outline" onClick={() => removeColour(index)}>
+                                            Remove
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                            <Button type="button" variant="outline" onClick={addColour}>
+                                Add Colour
+                            </Button>
+                        </div>
+                    )}
 
                     {/* Status, Condition, Vehicle Type, Transmission, and Boolean Switches */}
                     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">

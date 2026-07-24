@@ -144,6 +144,65 @@ class TestOrderCreateSerializer:
         serializer = OrderCreateSerializer(data=data)
         assert serializer.is_valid(), serializer.errors
 
+    def test_configured_motorcycle_requires_an_available_colour(self):
+        motorcycle = MotorcycleFactory(
+            condition='new',
+            status='for_sale',
+            available_colours=['Matte Black', 'Pearl White'],
+        )
+        data = {
+            'motorcycle': motorcycle.id,
+            'customer_name': 'Jane Smith',
+            'customer_email': 'jane@example.com',
+            'customer_phone': '0400000000',
+            'terms_accepted': True,
+        }
+
+        serializer = OrderCreateSerializer(data=data)
+
+        assert not serializer.is_valid()
+        assert 'selected_colour' in serializer.errors
+
+    def test_selected_colour_is_validated_and_canonicalised(self):
+        motorcycle = MotorcycleFactory(
+            condition='new',
+            status='for_sale',
+            available_colours=['Matte Black', 'Pearl White'],
+        )
+        data = {
+            'motorcycle': motorcycle.id,
+            'selected_colour': 'matte black',
+            'customer_name': 'Jane Smith',
+            'customer_email': 'jane@example.com',
+            'customer_phone': '0400000000',
+            'terms_accepted': True,
+        }
+
+        serializer = OrderCreateSerializer(data=data)
+
+        assert serializer.is_valid(), serializer.errors
+        assert serializer.validated_data['selected_colour'] == 'Matte Black'
+
+    def test_unavailable_colour_is_rejected(self):
+        motorcycle = MotorcycleFactory(
+            condition='new',
+            status='for_sale',
+            available_colours=['Matte Black'],
+        )
+        data = {
+            'motorcycle': motorcycle.id,
+            'selected_colour': 'Red',
+            'customer_name': 'Jane Smith',
+            'customer_email': 'jane@example.com',
+            'customer_phone': '0400000000',
+            'terms_accepted': True,
+        }
+
+        serializer = OrderCreateSerializer(data=data)
+
+        assert not serializer.is_valid()
+        assert 'selected_colour' in serializer.errors
+
 
 @pytest.mark.django_db
 class TestOrderSerializer:
@@ -178,6 +237,13 @@ class TestOrderSerializer:
         order = OrderFactory(amount_paid='1200.00')
         data = OrderSerializer(order).data
         assert float(data['amount_paid']) == 1200.00
+
+    def test_selected_colour_is_returned(self):
+        order = OrderFactory(selected_colour='Matte Black')
+
+        data = OrderSerializer(order).data
+
+        assert data['selected_colour'] == 'Matte Black'
 
 
 @pytest.mark.django_db

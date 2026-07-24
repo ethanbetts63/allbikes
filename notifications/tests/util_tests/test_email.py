@@ -9,7 +9,7 @@ from notifications.utils.email import (
     send_admin_new_order,
     send_service_booking_confirmation,
 )
-from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import MotorcycleOrderFactory, OrderFactory
 from service.tests.factories.booking_request_log_factory import BookingRequestLogFactory
 
 
@@ -55,6 +55,18 @@ class TestSendCustomerConfirmation:
         send_customer_confirmation(order)
         msg = _messages_for(order, message_type='customer_confirmation').get()
         assert order.order_reference in msg.body_html
+
+    def test_deposit_confirmation_includes_selected_colour(self, mock_post):
+        order = MotorcycleOrderFactory(
+            status='paid',
+            selected_colour='Matte Black',
+        )
+
+        send_customer_confirmation(order)
+
+        msg = _messages_for(order, message_type='customer_confirmation').get()
+        assert 'Matte Black' in msg.body_text
+        assert 'Matte Black' in msg.body_html
 
     def test_creates_failed_message_on_mailgun_error(self, mocker):
         mocker.patch('notifications.utils.email.requests.post', side_effect=Exception("network error"))

@@ -22,10 +22,12 @@ const CheckoutPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const checkoutType = (searchParams.get('type') ?? 'product') as 'product' | 'deposit';
+  const requestedColour = searchParams.get('colour');
 
   const [product, setProduct] = useState<Product | null>(null);
   const [bike, setBike] = useState<Bike | null>(null);
   const [depositAmount, setDepositAmount] = useState<string | null>(null);
+  const [selectedColour, setSelectedColour] = useState<string | null>(null);
   const [isLoadingItem, setIsLoadingItem] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -49,6 +51,20 @@ const CheckoutPage = () => {
             router.push(`/inventory/motorcycles/${slug}`);
             return;
           }
+          const availableColours = bikeData.available_colours ?? [];
+          if (availableColours.length > 0) {
+            const colour = availableColours.find(
+              (availableColour) => availableColour.toLocaleLowerCase() === requestedColour?.toLocaleLowerCase()
+            );
+            if (!colour) {
+              router.push(`/inventory/motorcycles/${slug}`);
+              return;
+            }
+            setSelectedColour(colour);
+          } else if (requestedColour) {
+            router.push(`/inventory/motorcycles/${slug}`);
+            return;
+          }
           setBike(bikeData);
           setDepositAmount(settings.deposit_amount);
         })
@@ -64,7 +80,7 @@ const CheckoutPage = () => {
         .catch(() => router.push('/escooters'))
         .finally(() => setIsLoadingItem(false));
     }
-  }, []);
+  }, [checkoutType, productId, requestedColour, router, slug]);
 
   const buildItemSummary = (): CheckoutItemSummary => {
     if (checkoutType === 'deposit' && bike && depositAmount) {
@@ -95,7 +111,7 @@ const CheckoutPage = () => {
     try {
       const orderPayload =
         checkoutType === 'deposit' && bike
-          ? { motorcycle: bike.id, payment_type: 'deposit' as const, ...formData, terms_accepted: true }
+          ? { motorcycle: bike.id, payment_type: 'deposit' as const, selected_colour: selectedColour ?? '', ...formData, terms_accepted: true }
           : { product: product!.id, ...formData, terms_accepted: true };
 
       const order = await createOrder(orderPayload);
@@ -147,6 +163,9 @@ const CheckoutPage = () => {
                 <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-0.5">{product.brand}</p>
               )}
               <p className="font-bold text-[var(--text-dark-primary)] truncate">{summary.name}</p>
+              {checkoutType === 'deposit' && selectedColour && (
+                <p className="text-sm font-medium text-[var(--text-dark-primary)]">Colour: {selectedColour}</p>
+              )}
               <p className="text-sm text-[var(--text-dark-secondary)]">{summary.priceLabel}</p>
             </div>
           </div>
