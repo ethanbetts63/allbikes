@@ -141,13 +141,23 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                                             placeholder="e.g. Matte Black"
                                             aria-label={`Colour ${index + 1}`}
                                         />
-                                        <Button type="button" variant="outline" onClick={() => removeColour(index)}>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => removeColour(index)}
+                                            className="border-red-300 bg-white text-red-700 hover:bg-red-50 hover:text-red-800"
+                                        >
                                             Remove
                                         </Button>
                                     </div>
                                 ))}
                             </div>
-                            <Button type="button" variant="outline" onClick={addColour}>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={addColour}
+                                className="border-border-light bg-white text-black hover:bg-gray-100 hover:text-black"
+                            >
                                 Add Colour
                             </Button>
                         </div>
