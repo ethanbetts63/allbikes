@@ -34,9 +34,12 @@ page. **Out of scope:** the emails/SMS themselves (④) and wholesaler dispatch 
 | `customer_email` | EmailField | the "order email" the confirm page references |
 | `customer_phone` | CharField, blank | |
 | `address_line1/2, suburb, state, postcode` | Char | ship-to (drop-ship destination) |
+| `country` | CharField | ISO/name; defaults `Australia`. Drives domestic vs international shipping |
+| `is_international` | BooleanField | derived from `country != AU` at order creation; snapshot |
 | `status` | CharField, choices | `pending_payment`, `paid`, `dispatched`, `cancelled`, `refunded` |
-| `subtotal` | Decimal | sum of line totals incl. GST, snapshot at order creation |
-| `shipping` | Decimal | see O1 |
+| `has_backorder` | BooleanField | true if any line was understocked at order time (advisory) |
+| `subtotal` | Decimal | sum of line totals incl. GST (marked-up), snapshot at order creation |
+| `shipping` | Decimal | flat fee from `PartsSettings` (domestic or international), snapshot |
 | `total` | Decimal | subtotal + shipping |
 | `amount_paid` | Decimal, null | set by webhook |
 | `terms_accepted` | Boolean | |
@@ -50,13 +53,15 @@ page. **Out of scope:** the emails/SMS themselves (④) and wholesaler dispatch 
 | Field | Type | Notes |
 |---|---|---|
 | `parts_order` | FK → PartsOrder, `related_name='items'`, CASCADE | |
-| `part_number` | CharField | **snapshot** (not FK) so catalog re-imports (①/D3) never mutate a placed order |
+| `part_number` | CharField | **snapshot** full number incl. colour suffix (not FK) so catalog re-imports (①/D3) never mutate a placed order |
 | `description` | CharField | snapshot |
+| `colour_name` | CharField, blank | snapshot, for customer/admin/wholesaler clarity |
 | `model_name` / `model_code` | CharField | snapshot, for the wholesaler + admin |
 | `section_code` / `ref_number` | CharField | snapshot, aids wholesaler lookup |
 | `quantity` | PositiveInteger | |
-| `unit_price` | Decimal | snapshot, incl. GST |
+| `unit_price` | Decimal | snapshot, customer price incl. GST (already marked-up) |
 | `line_total` | Decimal | `unit_price * quantity` |
+| `backordered` | BooleanField | snapshot: `available_qty < quantity` at order time |
 
 Rationale for snapshots: an order is an immutable record of what was bought at a
 price; ①'s delete-and-recreate re-import must never alter historical orders.
@@ -73,14 +78,17 @@ Mirrors the vehicle flow (`CreatePaymentIntentView` + webhook) but for many line
 ### 4.1 Create order + payment intent — `POST /api/parts/checkout/`
 1. Receive `{customer fields, address, terms_accepted, items:[{part_number, qty}]}`.
 2. **Server-side revalidation** of every line against the live `Part` table:
-   - part exists and `in_pa_feed` and `price != null` (orderable) — else 409 with
-     the offending part numbers so the UI can flag them;
-   - recompute `unit_price` from `Part.price_rrp_incl_gst` (ignore client price);
-   - `available_qty` is advisory — do **not** block on it for MVP (drop-ship;
-     wholesaler confirms), but include a soft warning flag in the response if
-     `qty > available_qty`.
-3. Create `PartsOrder` (`pending_payment`) + `PartsOrderItem`s with snapshots and
-   computed totals.
+   - part exists and `in_pa_feed` and `wholesale_price_incl_gst != null`
+     (orderable) — else 409 with the offending part numbers so the UI can flag them;
+   - recompute `unit_price` = `wholesale_price_incl_gst × (1 +
+     PartsSettings.markup_percentage/100)`, rounded 2dp (ignore client price);
+   - `available_qty` is advisory — **backorders allowed**: do **not** block when
+     `qty > available_qty`; set the line's `backordered` flag and the order's
+     `has_backorder`. Only absence from the PA feed blocks (409).
+3. Create `PartsOrder` (`pending_payment`) + `PartsOrderItem`s with snapshots
+   (incl. `colour_name`, `backordered`) and computed totals. Compute `shipping`
+   from `PartsSettings` by destination: `is_international ? international_shipping_fee
+   : domestic_shipping_fee`. `total = subtotal + shipping`.
 4. Create a Stripe PaymentIntent for `total` (AUD, `automatic_payment_methods`),
    `metadata = {parts_order_id, order_reference}`; create `Payment(status=pending,
    parts_order=…)`. Reuse the idempotency logic (reuse pending Payment if amount
@@ -120,6 +128,21 @@ Reuse the existing `cleanup_abandoned_orders` pattern: a management command (or
 extend the existing one) cancels `PartsOrder`s stuck in `pending_payment` beyond a
 TTL and cancels their Stripe intents. No stock to release.
 
+### 5.1 Backorder handling (MVP scope + deferred)
+
+**MVP:** stock is advisory. A part in the PA feed but understocked
+(`available_qty < qty`, incl. 0) is orderable; the line is flagged `backordered`
+and the order `has_backorder`. The customer sees a "backorder — ships when
+restocked" note at add-to-cart, checkout, and on the confirmation. The operator
+sees flagged lines on the admin order and resolves timing with the wholesaler by
+email (part of the ⑤ dispatch review). No automatic partial dispatch, no
+auto-refund, no stock reservation.
+
+**Deferred (post-MVP, own spec later):** structured backorder lifecycle —
+customer notifications on restock/ETA, partial dispatch + partial refund, and
+per-line backorder status. Flagged here so the data model already carries the
+`backordered` / `has_backorder` fields to build on.
+
 ## 6. Error handling
 
 - Line no longer orderable at checkout → 409 + list; UI removes/greys those lines
@@ -143,13 +166,14 @@ TTL and cancels their Stripe intents. No stock to release.
 
 ## 8. Open decisions (for review)
 
-- **O1 — Shipping cost:** MVP options: (a) flat AUD fee, (b) free (baked into
-  margin), (c) computed later. Spec leaves a `shipping` field; **default flat fee,
-  value TBD**. Needs your call — affects totals + wholesaler economics.
+- **O1 — Shipping cost:** decided — flat fee by destination
+  (`domestic_shipping_fee` / `international_shipping_fee`) from `PartsSettings`.
+  Actual fee **values** are operator-set in the dashboard (not hard-coded).
 - **O2 — Min order / handling:** any minimum order value for drop-ship? Default
   none.
-- **O3 — Availability blocking:** MVP does **not** block ordering parts with
-  `available_qty < qty` (drop-ship; wholesaler confirms), only soft-warns. Confirm.
+- **O3 — Availability blocking:** decided — understocked parts are **backorderable**
+  (order proceeds, `backordered`/`has_backorder` flagged). Only parts absent from
+  the PA feed are blocked. A fuller backorder workflow is deferred (§5.1).
 - **O4 — Reference prefix:** `SP-` for parts vs `SS-` for vehicle orders. Confirm.
 - **O5 — Shared vs. duplicated PaymentIntent helper:** prefer extracting a shared
   helper; confirm appetite for the small `payments` refactor.

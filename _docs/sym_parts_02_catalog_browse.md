@@ -26,24 +26,43 @@ All endpoints are public (`AllowAny`, no auth), read-only, GST-inclusive prices.
 | `GET /api/parts/search/?q=` | unified search across part number, description, and model name |
 
 ### 2.1 Section detail payload (the core screen)
-For each `SectionPart` row, serialize:
+Rows are grouped by `ref_number` (callout). A callout with one part renders as a
+simple row; a callout with several parts (year and/or colour variants) renders as
+a group the UI can present with a picker:
 ```jsonc
 {
   "ref_number": "6",
-  "part_number": "18241-F6S-000",
-  "description": "Exh. Pipe Protector",
-  "quantity": 1,
-  "effective_date": "2013-05-01",       // null if none
-  "variant_label": "from May 2013",     // derived; null if the ref has one variant
-  "price": "12.50",                     // Part.price_rrp_incl_gst, null if unknown
-  "available_qty": 2,                   // Part.available_qty, null if not in feed
-  "orderable": true                     // Part.in_pa_feed && price != null
+  "callout_label": "FR. Handle Cover",   // shared description for the group
+  "variant_axis": "colour",              // "colour" | "date" | "none"
+  "variants": [
+    {
+      "part_number": "53205-ALA-000-RD",
+      "description": "FR. Handle Cover (R-010CA)",
+      "colour_name": "Red",              // null for non-colour parts
+      "paint_code": "R-010CA",           // null if unknown
+      "effective_date": null,            // set for date-variant axes
+      "variant_label": "Red",            // colour name, or "up to/from <date>"
+      "quantity": 1,
+      "price": "171.60",                 // customer price = wholesale × (1+markup)
+      "available_qty": 0,                // advisory; 0 = backorderable
+      "backorder": true,                 // orderable but available_qty < needed
+      "orderable": true                  // in_pa_feed && wholesale price != null
+    }
+    // …one entry per colour / date variant
+  ]
 }
 ```
-- **Variant grouping:** rows sharing a `ref_number` are returned adjacently and
-  ordered by `effective_date`. `variant_label` is derived server-side: single
-  variant → null; multiple → `"up to <date>"` / `"from <date>"` labels so the UI
-  can badge them. This is how "year" is surfaced (see overview §2).
+- **`variant_axis`:** `colour` if the group's parts share a `base_part_number` and
+  differ by `colour_suffix`; `date` if they differ by `effective_date`; `none` for
+  a single part. Drives which picker the UI shows.
+- **Price** is the customer price: `wholesale_price_incl_gst × (1 +
+  PartsSettings.markup_percentage/100)`, rounded to 2dp, computed server-side.
+  Never expose the wholesale price.
+- **`variant_label`** is derived server-side: colour name for colour axes;
+  `"up to <date>"` / `"from <date>"` for date axes. This is how "year" and colour
+  are surfaced (overview §5).
+- **`backorder`** flags a part that is orderable but understocked (`available_qty`
+  < requested / 0) — the UI shows a "backorder" note but still allows adding.
 
 ### 2.2 Search
 - One box, `q`. Query strategy:
@@ -76,9 +95,17 @@ API-proxy convention (`/api/*` → backend).
 - **Add to cart:** clicking an orderable row opens a small popup (qty field
   default 1, price, "fits <model>", **Add to cart**) — same affordance as
   easyparts' part popup. Adds a line item to the cart (③).
-- **Variant badges:** rows with a `variant_label` show a small badge
-  (e.g. "up to 2013") and a short helper: *"Running change — pick the variant
-  matching your bike's build date. Unsure? We'll confirm before dispatch."*
+- **Colour picker (per-callout):** when `variant_axis == "colour"`, the callout
+  renders one row with a **colour dropdown** (human colour names + swatch/paint
+  code), and price + stock update to the selected colour. Add-to-cart uses the
+  chosen colour's specific part number. No global colour step — the choice lives on
+  the callout where it matters (overview §5). Helper copy: *"Pick the colour
+  matching your bike. Unsure of the code? We'll confirm before dispatch."*
+- **Date-variant badges:** when `variant_axis == "date"`, variants show a badge
+  (e.g. "up to 2013") with: *"Running change — pick the variant matching your
+  bike's build date. Unsure? We'll confirm before dispatch."*
+- **Backorder note:** a variant with `backorder: true` shows a small "Backorder —
+  ships when restocked" note but remains addable.
 
 ### 3.2 Search UX
 - Debounced query to `/api/parts/search`. Part results link straight to the
@@ -92,7 +119,7 @@ API-proxy convention (`/api/*` → backend).
   `resize_images` approach or Next/Image. Diagrams are ~500×400 line art; cheap.
 - **Caching:** catalog is static between ingests; section/model responses are
   safe to cache (HTTP cache headers / ISR). Pricing changes daily — acceptable
-  staleness ≤ 24h, or bust on `sync_parts_pricing` run.
+  staleness ≤ 24h, or bust on `import_parts_pricing` run.
 - **SEO:** model and section pages are good long-tail SEO targets (part numbers,
   model names). Server-render them; add basic metadata + sitemap entries.
 
@@ -106,12 +133,14 @@ API-proxy convention (`/api/*` → backend).
 
 ## 6. Testing
 
-- **API:** serializer tests for the section payload incl. variant grouping +
-  `orderable` logic; search ranking (part number exact beats description match);
-  greyed part excluded from orderable.
+- **API:** serializer tests for the section payload incl. callout grouping +
+  `variant_axis` detection (colour vs date vs none), markup applied to price,
+  wholesale price never exposed, `orderable`/`backorder` logic; search ranking
+  (part number exact beats description match); greyed part excluded from orderable.
 - **Frontend:** component tests for the core screen (renders diagram + list, popup
-  opens on orderable row only, variant badge shows). E2E happy path:
-  model → section → add to cart (cart assertions live in ③).
+  opens on orderable row only, **colour dropdown** appears for colour callouts and
+  swaps price/stock/part-number, date badge shows, backorder note shows). E2E happy
+  path: model → section → pick colour → add to cart (cart assertions live in ③).
 
 ## 7. Open decisions (for review)
 
@@ -126,6 +155,8 @@ API-proxy convention (`/api/*` → backend).
 
 ## 8. Definition of done
 
-A customer can browse from `/parts` to a section diagram, see prices + stock,
-search by part number/model, and add orderable parts to a cart. Unorderable parts
-are visibly greyed and non-interactive. Variant/year differences are badged inline.
+A customer can browse from `/parts` to a section diagram, see marked-up prices +
+stock, search by part number/model, pick a colour on painted callouts, and add
+orderable parts to a cart. Unorderable (not-in-feed) parts are visibly greyed;
+understocked parts are addable as backorders. Year and colour variants are
+surfaced inline per callout.

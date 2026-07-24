@@ -29,15 +29,33 @@ parts/
     part_section.py       # PartSection
     section_part.py       # SectionPart
     part.py               # Part
+    parts_settings.py     # PartsSettings (singleton: markup, shipping fees)
   ingestion/
     source_page.py        # scrape the Select Portal index page
-    xls_parser.py         # parse one .xls -> structured dict
+    xls_parser.py         # parse one .xls -> structured dict (incl. colour index)
     escher_images.py      # extract diagram images from .xls (spike code, hardened)
     pa_csv.py             # parse the Price & Availability CSV
+    colour.py             # paint-code -> colour-name mapping
     importer.py           # upsert structured data into the models
   management/commands/
-    sync_parts_books.py   # weekly: refresh model books
-    sync_parts_pricing.py # daily: refresh prices/availability
+    scrape_parts_pricing.py  # cron A: fetch changed/new PA file -> inbox/ + archive/
+    import_parts_pricing.py  # cron B: consume inbox/ -> DB
+    scrape_parts_books.py    # cron (weekly): fetch changed/new books -> inbox/ + archive/
+    import_parts_books.py    # cron: consume inbox/ -> DB
+```
+
+**Scrape/import separation (operator requirement).** Scraping (network, decides
+what changed) is decoupled from ingestion (parses + writes the DB). The scrape
+command drops changed/new source files into an **`inbox/`** directory and keeps a
+dated copy in **`archive/`**; the import command consumes `inbox/` and moves
+processed files out. Each is its own PythonAnywhere cron. Benefits: a parsing bug
+never loses source data (it's in `archive/`), imports are replayable from
+`archive/`, and the two concerns fail independently.
+
+Directory layout (under `data_management/data/sym_parts_files/`, git-ignored):
+```
+inbox/    pricing/   books/     # scraped, awaiting import
+archive/  pricing/   books/     # every version ever scraped, dated
 ```
 
 ## 3. Data model
@@ -85,17 +103,47 @@ is how "year" is surfaced inline (subsystem ②).
 ### 3.4 `Part` — one per unique part number (the pricing/stock join target)
 | Field | Type | Notes |
 |---|---|---|
-| `part_number` | CharField, unique | e.g. `93904-35380` — canonical key |
+| `part_number` | CharField, unique | full number incl. colour suffix, e.g. `53205-ALA-000-RD` — canonical key |
 | `description` | CharField | canonical description (from PA CSV if present, else book) |
-| `price_rrp_incl_gst` | Decimal, null | from PA `RRP+GST`; null = unknown |
+| `base_part_number` | CharField, indexed | number without colour suffix, e.g. `53205-ALA-000`; == `part_number` when not colour-keyed |
+| `colour_suffix` | CharField, blank | the suffix, e.g. `RD`; blank if not a colour variant |
+| `paint_code` | CharField, blank | parsed from description, e.g. `R-010CA` |
+| `colour_name` | CharField, blank | human name, e.g. `Red` (from paint code + colour index) |
+| `wholesale_price_incl_gst` | Decimal, null | from PA `RRP+GST`; null = unknown. Customer price = this × (1 + markup) at read time |
 | `available_qty` | Integer, null | from PA `AVAILABLE`; null = not in PA feed |
 | `in_pa_feed` | BooleanField | true if present in the latest PA CSV |
 | `price_updated_at` | DateTimeField, null | when pricing was last refreshed |
 
 **Orderability rule** (used by ② and ③): a part is orderable iff `in_pa_feed` is
-true, `price_rrp_incl_gst` is not null, and (for display) `available_qty` may be 0
-or positive. Parts not in the PA feed are shown greyed-out and cannot be added to
-cart — matching easyparts' greyed rows.
+true and `wholesale_price_incl_gst` is not null. `available_qty` does **not** gate
+orderability — a part with `available_qty` 0 or `< qty` is still orderable as a
+**backorder** (overview §5). Parts absent from the PA feed are greyed-out and
+cannot be added to cart, matching easyparts.
+
+**Colour variants** are simply multiple `Part` rows sharing a `base_part_number`,
+each with its own `colour_suffix` / `colour_name` / price / stock. A section
+callout (`SectionPart`) references one specific colour `Part`; the UI groups a
+callout's colour variants and shows a picker (subsystem ②). See §4.6.
+
+### 3.5 `PartsSettings` — operator settings singleton
+Singleton with a `.get()` classmethod, mirroring `payments.DepositSettings` and
+the Service/Hire settings pattern. Edited from the dashboard settings page.
+| Field | Type | Notes |
+|---|---|---|
+| `markup_percentage` | Decimal | applied to `wholesale_price_incl_gst` to get customer price. e.g. `20.00` = +20% |
+| `domestic_shipping_fee` | Decimal | flat AUD fee for AU destinations |
+| `international_shipping_fee` | Decimal | flat AUD fee for non-AU destinations |
+| `updated_at` | DateTimeField | |
+
+Customer price helper (used by ②/③):
+`round(wholesale_price_incl_gst * (1 + markup_percentage/100), 2)`. Computed at
+read/checkout time — never denormalised onto `Part` — so a markup change takes
+effect immediately without re-ingesting.
+
+**Dashboard settings page.** A `PartsSettings` admin get/update endpoint
+(`IsAdminUser`) + a frontend settings page under the existing dashboard, mirroring
+the Service/Hire/Deposit settings pattern (serializer + `admin`-guarded view +
+`/dashboard/...` page). This is the operator UI for markup + the two shipping fees.
 
 ## 4. Ingestion pipeline
 
@@ -122,8 +170,17 @@ Uses `xlrd` (cells) for the tables and `escher_images.py` for diagrams.
     `{ref_number, part_number, description, quantity, effective_date,
     superseded_flag, sort_order}`. Convert Excel serial dates via
     `xlrd.xldate_as_datetime`.
+  - **Colour parts:** painted callouts appear as several rows under one
+    `ref_number`, each a colour-suffixed part number (e.g. `53205-ALA-000-RD`).
+    These are captured as ordinary `SectionPart` rows pointing at distinct
+    (suffixed) parts — no special casing at parse time; colour attributes are
+    derived in `colour.py` (§4.6) at import.
+- **Colour index sheets** (`new color index`, `<year> new color index`): parse the
+  header block (`MODEL`, `COLOR`, `BASIC COLOR`, `CODE`) and the item rows to build
+  a paint-code → colour-name map for this book. Feeds `colour.py`.
 - Returns a structured dict:
-  `{model_code, model_name, sections: [{code, group, name, diagram, parts:[...]}]}`.
+  `{model_code, model_name, sections:[{code, group, name, diagram, parts:[...]}],
+    colour_index:[{paint_code, colour_name, ...}]}`.
 
 ### 4.3 `escher_images.py` — extract diagrams (spike-proven)
 Deterministic, pure Python. Algorithm (validated in the feasibility spike):
@@ -163,30 +220,54 @@ null image and logged (does not abort the book).
     `description` if the Part is new;
   - save diagram images.
 - **Pricing:** for each PA row, `update_or_create` the `Part` (by `part_number`),
-  setting `price_rrp_incl_gst`, `available_qty`, `in_pa_feed=True`,
-  `price_updated_at=now`. After the pass, set `in_pa_feed=False` on any Part not
-  seen in this file (marks discontinued parts unorderable).
+  setting `wholesale_price_incl_gst`, `available_qty`, `in_pa_feed=True`,
+  `price_updated_at=now`, and deriving `base_part_number` / `colour_suffix` /
+  `paint_code` / `colour_name` (§4.6). After the pass, set `in_pa_feed=False` on any
+  Part not seen in this file (marks discontinued parts unorderable).
 
-## 5. Scheduled commands
+### 4.6 `colour.py` — paint code → colour name
+- **Suffix:** the part of a `part_number` after the base (e.g. `-RD` → `RD`).
+- **Paint code:** parsed from the PA/book description via regex on the trailing
+  parenthesised token, e.g. `FR. HANDLE COVER(R-010CA)` → `R-010CA`.
+- **Colour name:** resolved from a lookup built from the book's `…color index`
+  sheets (which give `CODE`/`BASIC COLOR` + a colour word like `RED`, `BLUE`) plus
+  a small static fallback map keyed on the paint-code prefix (`R-`→Red, `BK-`→
+  Black, `BU-`→Blue, `GN-`→Green, `WH-`→White, `YL`→Yellow, `S-`/`GY`→Silver/Grey…).
+- Best-effort: if a colour name can't be resolved, fall back to showing the paint
+  code (or the raw suffix). Never blocks import.
 
-Follows the existing "management command on a cron" convention (as with
-`send_admin_reminders`).
+## 5. Scheduled commands (scrape ≠ import)
 
-- **`sync_parts_pricing`** — daily.
-  1. Scrape page → `pa_url`, `pa_date`.
-  2. If `pa_date` ≤ last successful import date, log "no change" and exit.
-  3. Else download + import PA CSV (§4.4/4.5). Record the import date + row count.
-  - Flags: `--force` (re-import regardless of date), `--url` (override source).
+Two-stage, per the operator requirement (§2). Each stage is a separate
+PythonAnywhere cron. Follows the existing "management command on a cron"
+convention (as with `send_admin_reminders`).
 
-- **`sync_parts_books`** — weekly (books "should never change", but we re-verify).
-  1. Scrape page → book list.
-  2. For each book, download; skip if hash unchanged; else parse + import.
-  3. Mark `is_active=False` on any `PartsModel` whose book vanished from the page.
-  - Flags: `--model-code`/`--slug` (one book), `--force`, `--file` (import a local
-    `.xls`, e.g. the sample already in `data_management/data/sym_parts_files/`).
+### 5.1 Pricing (daily)
+- **`scrape_parts_pricing`** — cron A.
+  1. Scrape the source page → `pa_url`, `pa_date`.
+  2. Download the PA file to a temp path; compute sha256.
+  3. If `pa_date` > last-seen date **and** hash differs from the newest archived
+     file → copy to `archive/pricing/PA-<date>.csv` and `inbox/pricing/`. Else log
+     "no change" and exit 0.
+  - Flags: `--force`, `--url` (override source).
+- **`import_parts_pricing`** — cron B.
+  1. For each file in `inbox/pricing/` (oldest first): import it (§4.4/4.5),
+     record the import date + row count, then move it out of `inbox/`.
+  2. No-op (exit 0) when the inbox is empty.
+  - Flags: `--file` (import a specific file directly, bypassing the inbox).
 
-Cron wiring uses the same mechanism the project already uses for scheduled
-commands (documented in the plan; see open decision D5).
+### 5.2 Books (weekly — books "should never change", but we re-verify)
+- **`scrape_parts_books`** — for each book link on the page: download, hash, and if
+  new/changed vs. the stored `book_hash`, copy to `archive/books/` + `inbox/books/`.
+- **`import_parts_books`** — consume `inbox/books/`: parse + import each (§4.1–4.5),
+  save diagrams, move processed files out. Mark `is_active=False` on any
+  `PartsModel` whose book vanished from the last scrape.
+  - Flags: `--file` (import a local `.xls`, e.g. the sample already in
+    `data_management/data/sym_parts_files/`), `--model-code`/`--slug`.
+
+Change-detection state (last PA date/hash, per-book hashes) lives in the DB (§6),
+so a scrape run is cheap and idempotent. Cron wiring uses PythonAnywhere's
+scheduled-tasks UI (operator-managed).
 
 ## 6. State & idempotency
 
@@ -215,18 +296,29 @@ commands (documented in the plan; see open decision D5).
   - `xls_parser`: correct section count, section names, and known part rows
     (assert the E01 "Shroud Assy" callouts incl. the dated `18241-*` variants).
   - `pa_csv`: parses prices/availability; handles `$`/whitespace.
-- **Integration:** `sync_parts_books --file <sample.xls>` populates PartsModel /
+- **Integration:** `import_parts_books --file <sample.xls>` populates PartsModel /
   PartSection / SectionPart / Part correctly; re-running is a no-op (hash match).
-- **Pricing:** `sync_parts_pricing --url <sample.csv>` sets prices + `in_pa_feed`;
-  a second file with a part removed flips that part's `in_pa_feed=False`.
-- **Change detection:** older `pa_date` → skipped; `--force` overrides.
+- **Colour:** the F05 handle-cover / F06 front-cover callouts yield multiple colour
+  `Part`s sharing a `base_part_number`; `colour_suffix`/`paint_code`/`colour_name`
+  are populated (assert e.g. `-RD` → paint `R-010CA` → "Red").
+- **Pricing:** `import_parts_pricing --file <sample.csv>` sets
+  `wholesale_price_incl_gst` + `in_pa_feed`; a second file with a part removed
+  flips that part's `in_pa_feed=False`. Customer-price helper applies markup.
+- **Scrape/import split:** `scrape_parts_pricing` writes to `archive/` + `inbox/`
+  only when the date/hash changed; `import_parts_pricing` consumes `inbox/` and
+  empties it; older `pa_date` → skipped; `--force` overrides.
+- **Settings:** `PartsSettings.get()` returns a singleton; markup + shipping
+  defaults sane.
 - Uses `pytest` + factories, matching the existing test structure.
 
 ## 9. Open decisions (for review)
 
-- **D1 — Pricing/markup:** MVP uses PA `RRP+GST` as the customer price with **no
-  markup**. Drop-ship margin model needs confirming before launch (flat %, per-cc,
-  or none). Isolated to `Part.price_rrp_incl_gst` consumption in ②/③.
+- **D1 — What is the PA price?** Pricing model is decided: customer price =
+  `wholesale_price_incl_gst × (1 + PartsSettings.markup_percentage/100)`. The one
+  open question is whether the PA `RRP+GST` column is **our dealer cost** or a
+  **suggested retail** — this determines what a sensible markup value is (and
+  whether a discount off RRP should apply instead). Confirm with the wholesaler;
+  does not block the model/pipeline.
 - **D2 — Section name source:** primary from section header cell, fallback to
   group-index sheets. If some books lack clean headers we may need the group-index
   as primary. Verify across several books during implementation.
@@ -237,12 +329,17 @@ commands (documented in the plan; see open decision D5).
 - **D4 — Model code extraction reliability:** verified on one book. Validate the
   header-cell + `No.index` cross-check across the full catalog; fall back to
   deriving the code from the source filename if a book's cells are inconsistent.
-- **D5 — Cron mechanism:** confirm how existing scheduled commands are triggered
-  (Windows Task Scheduler / server cron / hosting scheduler) and wire both
-  commands into it.
+- **D5 — Cron mechanism:** confirmed — PythonAnywhere scheduled tasks, operator-
+  managed. Four crons: `scrape_parts_pricing` + `import_parts_pricing` (daily),
+  `scrape_parts_books` + `import_parts_books` (weekly).
+- **D6 — Colour name coverage:** the paint-code→name map is best-effort (colour
+  index sheets + static prefix fallback). Validate coverage across the catalog;
+  unresolved codes fall back to showing the paint code. Acceptable for MVP.
 
 ## 10. Definition of done
 
-`sync_parts_books` + `sync_parts_pricing` populate the catalog from live Select
-Portal data; diagrams render; prices/availability attach by part number; re-runs
-are idempotent; change detection works; tests pass against the repo sample files.
+The scrape commands drop changed/new source files into `inbox/` + `archive/`; the
+import commands populate the catalog from them; diagrams render; prices/
+availability attach by part number; colour variants carry human colour names;
+`PartsSettings` drives the customer-price markup; re-runs are idempotent; change
+detection works; tests pass against the repo sample files.

@@ -16,7 +16,7 @@ The whole system must be **completely automated**: data ingestion, pricing
 updates, ordering, payment, and notifications all run without manual data entry.
 The only manual step is the operator reviewing each paid order before it is
 forwarded to the wholesaler (subsystem ⑤), which also serves as a human check
-against wrong-variant orders.
+against wrong-variant orders. But even this in the long term will be automated. 
 
 ## 2. Key domain facts (established during research)
 
@@ -51,11 +51,11 @@ against wrong-variant orders.
 
 ```
 Select Portal page
-   │  (scrape, daily/weekly cron)
-   ▼
-① DATA PIPELINE  ── parses .xls books + PA CSV ──►  Catalog DB
-   (new `parts` app: models, ingestion, cron)         (PartsModel, PartSection,
-   │                                                    SectionPart, Part, diagrams)
+   │  scrape cron  ──►  inbox/ + archive/   (changed/new files only)
+   ▼                        │  import cron
+① DATA PIPELINE  ── parse .xls books + PA CSV ──►  Catalog DB
+   (new `parts` app)     (scrape ≠ import, separated)  (PartsModel, PartSection,
+   │  + PartsSettings (markup, shipping fees)           SectionPart, Part, diagrams)
    ▼
 ② CATALOG API + BROWSE UI
    (DRF read endpoints + Next.js pages: model → section → diagram → add to cart)
@@ -95,16 +95,32 @@ above. ① is foundational and already de-risked by the extraction spike.
 
 ## 5. Cross-cutting decisions
 
-- **Currency / GST:** all prices are AUD incl. GST. The PA `RRP+GST` column is
-  the customer price for MVP (no markup applied — revisit before launch;
-  see subsystem ① open decisions).
+- **Pricing = wholesale × markup.** Prices are AUD incl. GST. The customer price
+  is the PA feed price × `(1 + markup%)`, where `markup%` is an operator-editable
+  setting (`PartsSettings`, subsystem ①). Computed at display/checkout time, never
+  stored on the catalog. (Open: whether the PA `RRP+GST` column is our cost or a
+  suggested retail — see ①-D1.)
+- **Operator settings (`PartsSettings`).** A dashboard settings page (mirroring
+  Service/Hire/Deposit settings) holds: `markup_percentage`,
+  `domestic_shipping_fee`, `international_shipping_fee`. A singleton with
+  `.get()`, like `DepositSettings`.
+- **Shipping = flat fee by destination.** Each order gets a flat shipping fee —
+  domestic (AU) or international — from `PartsSettings`. Set at checkout (③).
+- **Colour = part-number variants, per-callout picker.** Painted body parts are
+  colour-suffixed part numbers (e.g. `53205-ALA-000-RD`), each independently
+  priced/stocked in the PA feed. They ride the same `SectionPart→Part` variant
+  mechanism as year/effective-date variants — no new model. The UI shows a colour
+  picker on painted callouts, with human colour names parsed from the paint code
+  in the description and the book's `…color index` sheets. No global colour tier.
+- **Backorder (advisory stock).** The PA `AVAILABLE` count is a wholesaler
+  snapshot, not a live reservation. A part absent from the PA feed is unorderable
+  (greyed); a part present but with `AVAILABLE < qty` **can still be ordered** as a
+  backorder — real fulfilment is confirmed by the wholesaler (⑤). A fuller
+  backorder workflow (customer messaging, partial dispatch) is deferred (see ③).
 - **No user accounts.** Orders are identified by an `order_reference`; the
   customer is asked to email us from their ordering email for any follow-up.
-- **Stock is advisory.** The PA `AVAILABLE` count is a wholesaler snapshot, not a
-  live reservation. We display it and block ordering only for parts absent from
-  the PA feed. Real fulfilment is confirmed by the wholesaler (subsystem ⑤).
 - **Reuse over rebuild:** Stripe flow, `Payment`, `notifications` audit log, SMS,
-  and admin dashboard patterns are reused rather than re-implemented.
+  and admin dashboard/settings patterns are reused rather than re-implemented.
 
 ## 6. Non-goals (MVP)
 
