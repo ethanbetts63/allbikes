@@ -74,17 +74,15 @@ export default function PartsCartPage() {
         <span className="text-lg font-semibold text-black">
           Subtotal: ${subtotal.toFixed(2)} <span className="text-sm font-normal text-gray-600">incl. GST</span>
         </span>
-        <button
-          type="button"
-          disabled
-          title="Checkout is being finalised"
-          className="cursor-not-allowed rounded-md bg-gray-200 px-5 py-2.5 text-sm font-medium text-gray-500"
+        <Link
+          href="/parts/checkout"
+          className="rounded-md bg-black px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-800"
         >
-          Checkout (coming soon)
-        </button>
+          Checkout
+        </Link>
       </div>
       <p className="mt-2 text-right text-xs text-gray-500">
-        Shipping is calculated at checkout. Backordered items ship when restocked.
+        Shipping is calculated at checkout. Out-of-stock items can be ordered on backorder.
       </p>
     </div>
   );

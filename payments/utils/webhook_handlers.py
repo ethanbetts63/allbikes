@@ -20,7 +20,7 @@ def handle_payment_intent_succeeded(payment_intent):
     with transaction.atomic():
         try:
             payment = Payment.objects.select_related(
-                'order__product', 'order__motorcycle', 'hire_booking__motorcycle'
+                'order__product', 'order__motorcycle', 'hire_booking__motorcycle', 'parts_order'
             ).select_for_update().get(stripe_payment_intent_id=intent_id)
         except Payment.DoesNotExist:
             logger.error("Webhook: Payment not found for intent %s", intent_id)
@@ -37,6 +37,16 @@ def handle_payment_intent_succeeded(payment_intent):
             booking = payment.hire_booking
             booking.status = 'confirmed'
             booking.save(update_fields=['status', 'updated_at'])
+        elif payment.parts_order_id:
+            parts_order = payment.parts_order
+            parts_order.status = 'paid'
+            parts_order.amount_paid = payment.amount
+            parts_order.save(update_fields=['status', 'amount_paid', 'updated_at'])
+            # Start the 14-day backorder hold clock for understocked lines.
+            from django.utils import timezone
+            parts_order.items.filter(
+                backordered=True, backorder_since__isnull=True
+            ).update(backorder_since=timezone.now().date())
         else:
             order = payment.order
             order.status = 'paid'
@@ -60,6 +70,10 @@ def handle_payment_intent_succeeded(payment_intent):
     if payment.hire_booking_id:
         send_hire_confirmation(payment.hire_booking)
         send_admin_new_hire(payment.hire_booking)
+    elif payment.parts_order_id:
+        # Parts notifications (customer confirmation, admin email + SMS) are wired
+        # in phase 4. The order is already marked paid above.
+        pass
     else:
         send_customer_confirmation(payment.order)
         send_admin_new_order(payment.order)
