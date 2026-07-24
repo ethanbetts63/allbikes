@@ -27,7 +27,7 @@ class Command(BaseCommand):
         if not pa_url:
             raise SystemExit("Could not find the Price & Availability link on the page.")
 
-        resp = requests.get(pa_url, timeout=60)
+        resp = requests.get(pa_url, headers=source_page.REQUEST_HEADERS, timeout=60)
         resp.raise_for_status()
         data = resp.content
         digest = storage.sha256_bytes(data)

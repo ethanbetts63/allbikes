@@ -34,7 +34,7 @@ class Command(BaseCommand):
         queued = 0
         for book in books:
             try:
-                resp = requests.get(book["url"], timeout=120)
+                resp = requests.get(book["url"], headers=source_page.REQUEST_HEADERS, timeout=120)
                 resp.raise_for_status()
             except requests.RequestException as exc:
                 logger.error("Failed to download %s: %s", book["url"], exc)

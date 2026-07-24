@@ -15,6 +15,17 @@ logger = logging.getLogger(__name__)
 
 SOURCE_URL = "https://www.selectportal.com.au/sym-spare-parts-books/"
 
+# Select Portal returns 406 to the default requests User-Agent, so present a
+# browser-like set of headers for the page fetch and file downloads.
+REQUEST_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-AU,en;q=0.9",
+}
+
 # Heading text on the page -> our cc_class code.
 _CC_CLASS_HEADINGS = [
     (re.compile(r"200.*400", re.I), "200_400"),
@@ -28,7 +39,7 @@ _PA_DATE_RE = re.compile(r"PA-(\d{1,2}-[A-Za-z]{3}-\d{2})")
 
 
 def fetch_page(url=SOURCE_URL, timeout=30):
-    resp = requests.get(url, timeout=timeout)
+    resp = requests.get(url, headers=REQUEST_HEADERS, timeout=timeout)
     resp.raise_for_status()
     return resp.text
 
