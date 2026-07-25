@@ -175,3 +175,54 @@ class TestWebhookPartsBranch:
         handle_payment_intent_succeeded({'id': 'pi_y'})  # replay
         order.refresh_from_db()
         assert order.status == 'paid'
+
+
+class TestConfirmOrder:
+    def _pending_order(self, available=5):
+        p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'),
+                        available_qty=available, in_pa_feed=True)
+        SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
+        return create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+
+    def test_already_paid_returns_paid_without_stripe(self, client, settings_fixture):
+        order = self._pending_order()
+        order.status = 'paid'
+        order.save()
+        resp = client.post(f'/api/parts/orders/{order.order_reference}/confirm/')
+        assert resp.status_code == 200
+        assert resp.json()['state'] == 'paid'
+
+    @patch('parts.views.checkout_views.stripe')
+    def test_reconciles_when_intent_succeeded(self, mock_stripe, client, settings_fixture):
+        # Webhook never ran (order pending), but Stripe says the intent succeeded.
+        mock_stripe.PaymentIntent.retrieve.return_value = MagicMock(status='succeeded')
+        order = self._pending_order()
+        Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_ok', amount=order.total, status='pending')
+        resp = client.post(f'/api/parts/orders/{order.order_reference}/confirm/')
+        assert resp.status_code == 200
+        assert resp.json()['state'] == 'paid'
+        order.refresh_from_db()
+        assert order.status == 'paid'  # self-healed
+
+    @patch('parts.views.checkout_views.stripe')
+    def test_processing_returns_pending(self, mock_stripe, client, settings_fixture):
+        mock_stripe.PaymentIntent.retrieve.return_value = MagicMock(status='processing')
+        order = self._pending_order()
+        Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_p', amount=order.total, status='pending')
+        resp = client.post(f'/api/parts/orders/{order.order_reference}/confirm/')
+        assert resp.json()['state'] == 'pending'
+        order.refresh_from_db()
+        assert order.status == 'pending_payment'
+
+    @patch('parts.views.checkout_views.stripe')
+    def test_failed_intent_returns_failed(self, mock_stripe, client, settings_fixture):
+        mock_stripe.PaymentIntent.retrieve.return_value = MagicMock(status='requires_payment_method')
+        order = self._pending_order()
+        Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_f', amount=order.total, status='pending')
+        resp = client.post(f'/api/parts/orders/{order.order_reference}/confirm/')
+        assert resp.json()['state'] == 'failed'
+
+    def test_no_payment_returns_pending(self, client, settings_fixture):
+        order = self._pending_order()
+        resp = client.post(f'/api/parts/orders/{order.order_reference}/confirm/')
+        assert resp.json()['state'] == 'pending'

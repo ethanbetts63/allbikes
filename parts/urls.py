@@ -7,6 +7,7 @@ from parts.views.catalog_views import (
     SectionDetailView,
 )
 from parts.views.checkout_views import (
+    ConfirmPartsOrderView,
     CreatePartsOrderView,
     CreatePartsPaymentIntentView,
     RetrievePartsOrderView,
@@ -31,5 +32,6 @@ urlpatterns = [
     path("admin/orders/<int:pk>/", AdminPartsOrderDetailView.as_view(), name="admin-order-detail"),
     path("admin/items/<int:pk>/", AdminPartsOrderItemView.as_view(), name="admin-order-item"),
     # Public order retrieval by reference — keep last so it doesn't shadow admin/.
+    path("orders/<str:order_reference>/confirm/", ConfirmPartsOrderView.as_view(), name="order-confirm"),
     path("orders/<str:order_reference>/", RetrievePartsOrderView.as_view(), name="order-detail"),
 ]

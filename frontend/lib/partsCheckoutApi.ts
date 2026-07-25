@@ -76,6 +76,16 @@ export async function getPartsOrder(reference: string): Promise<PartsOrderDetail
   return res.json();
 }
 
+export type ConfirmState = 'paid' | 'pending' | 'failed';
+
+export async function confirmPartsOrder(
+  reference: string,
+): Promise<{ state: ConfirmState; order: PartsOrderDetail }> {
+  const res = await fetch(`/api/parts/orders/${reference}/confirm/`, { method: 'POST' });
+  if (!res.ok) throw new Error('Could not confirm order.');
+  return res.json();
+}
+
 export async function createPartsPaymentIntent(reference: string): Promise<{ clientSecret: string }> {
   const res = await fetch('/api/parts/create-payment-intent/', {
     method: 'POST',
