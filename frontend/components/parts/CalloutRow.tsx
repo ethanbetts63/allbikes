@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { usePartsCart } from '@/context/PartsCartContext';
+import { stockState } from '@/lib/partsStock';
 import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
 
 interface Props {
@@ -84,6 +85,8 @@ function VariantLine({
 }) {
   const { items, addItem, updateQuantity } = usePartsCart();
   const cartQuantity = items.find((item) => item.part_number === variant.part_number)?.quantity ?? 0;
+  // Badge reflects the quantity that would be in the cart (at least 1).
+  const stock = stockState(variant.available_qty, cartQuantity || 1);
 
   const add = () => {
     if (!variant.price) return;
@@ -97,7 +100,7 @@ function VariantLine({
       ref_number: callout.ref_number,
       unit_price: variant.price,
       quantity: 1,
-      backorder: variant.backorder,
+      available_qty: variant.available_qty,
     });
   };
 
@@ -113,14 +116,14 @@ function VariantLine({
           )}
         </div>
         <div className="text-xs">
-          {variant.orderable ? (
-            variant.backorder ? (
-              <span className="font-medium text-black">Backorder — ships when restocked</span>
-            ) : (
-              <span className="text-gray-600">In stock</span>
-            )
-          ) : (
+          {!variant.orderable ? (
             <span className="text-gray-400">Not available</span>
+          ) : stock.kind === 'backorder' ? (
+            <span className="font-medium text-amber-700">{stock.note}</span>
+          ) : stock.kind === 'low' ? (
+            <span className="font-medium text-amber-700">{stock.badge}</span>
+          ) : (
+            <span className="text-gray-600">{stock.badge}</span>
           )}
         </div>
       </div>

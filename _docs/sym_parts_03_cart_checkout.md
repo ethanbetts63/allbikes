@@ -131,13 +131,34 @@ TTL and cancels their Stripe intents. No stock to release.
 
 ### 5.1 Backorder handling (MVP scope + deferred)
 
+**Fulfilment policy: ship-complete.** The order is held and shipped as one parcel
+once every line is secured (single flat shipping fee, drop-shipped from the
+wholesaler). If a backordered part can't be secured within the 14-day hold, the
+rest ships and that line is refunded. Because nothing ships until the whole order
+is secured, backorder is a **whole-line boolean** — we never fulfil a partial
+quantity mid-flight, so no in-stock/backorder split on `PartsOrderItem` is needed.
+
 **MVP:** stock is advisory. A part in the PA feed but understocked
 (`available_qty < qty`, incl. 0) is orderable; the line is flagged `backordered`
-and the order `has_backorder`. The customer sees a "backorder — ships when
-restocked" note at add-to-cart, checkout, and on the confirmation. The operator
-sees flagged lines on the admin order and resolves timing with the wholesaler by
-email (part of the ⑤ dispatch review). No automatic partial dispatch, no
-auto-refund, no stock reservation.
+and the order `has_backorder`. No automatic partial dispatch, no auto-refund, no
+stock reservation.
+
+**Live pre-payment visibility.** The catalog payload already ships `available_qty`
+per variant, so backorder is derived **client-side and live** — the customer sees
+it before paying, not only post-payment. A shared helper (`frontend/lib/partsStock.ts`,
+`stockState(available, quantity)`) drives a tiered badge everywhere the quantity
+can change (diagram callout row + cart line), so the two surfaces never drift:
+- `available ≥ 5` → **"In stock"**
+- `1–4` → **"Only ~N left"** (approximate; stock is a ~daily snapshot, never promised)
+- `0` / unknown → **"Backorder"**
+- `quantity > available` → line flips to **Backorder** with a "ships complete once
+  we restock" note (fixes the case where adding 1 is in stock but incrementing to 2
+  should backorder). The `< 5` low threshold is purely cosmetic; the server's
+  authoritative `backordered = available_qty < qty` in `create_parts_order` is
+  unchanged and agrees with the displayed state.
+
+The operator sees flagged lines on the admin order and resolves timing with the
+wholesaler by email (part of the ⑤ dispatch review).
 
 **Deferred (post-MVP, own spec later):** structured backorder lifecycle —
 customer notifications on restock/ETA, partial dispatch + partial refund, and

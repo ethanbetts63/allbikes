@@ -7,6 +7,7 @@ import { usePartsCart } from '@/context/PartsCartContext';
 import CheckoutSteps from '@/components/parts/CheckoutSteps';
 import OrderSummary from '@/components/parts/OrderSummary';
 import { createPartsOrder, type CustomerDetails } from '@/lib/partsCheckoutApi';
+import { stockState } from '@/lib/partsStock';
 
 const STORAGE_KEY = 'parts_checkout_details_v1';
 
@@ -134,7 +135,7 @@ export default function PartsCheckoutDetailsPage() {
               colour_name: i.colour_name,
               quantity: i.quantity,
               unit_price: i.unit_price,
-              backordered: i.backorder,
+              backordered: stockState(i.available_qty, i.quantity).kind === 'backorder',
             }))}
             subtotal={subtotal}
             shipping={null}

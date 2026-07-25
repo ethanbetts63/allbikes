@@ -88,5 +88,6 @@ export interface PartsCartItem {
   ref_number: string;
   unit_price: string;
   quantity: number;
-  backorder: boolean;
+  /** Approximate wholesaler stock at add-time; backorder is derived live from this. */
+  available_qty: number | null;
 }

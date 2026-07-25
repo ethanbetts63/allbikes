@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePartsCart } from '@/context/PartsCartContext';
+import { stockState } from '@/lib/partsStock';
 
 export default function PartsCartPage() {
   const { items, subtotal, updateQuantity, removeItem } = usePartsCart();
@@ -25,7 +26,9 @@ export default function PartsCartPage() {
       <h1 className="mb-6 text-2xl font-bold text-black">Your parts cart</h1>
 
       <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
-        {items.map((item) => (
+        {items.map((item) => {
+          const stock = stockState(item.available_qty, item.quantity);
+          return (
           <li key={item.part_number} className="flex flex-wrap items-center gap-3 p-4">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
@@ -35,9 +38,17 @@ export default function PartsCartPage() {
                     {item.colour_name}
                   </span>
                 )}
-                {item.backorder && (
-                  <span className="rounded border border-black px-1.5 py-0.5 text-xs font-medium text-black">
+                {stock.kind === 'backorder' ? (
+                  <span className="rounded border border-amber-400 bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-800">
                     Backorder
+                  </span>
+                ) : stock.kind === 'low' ? (
+                  <span className="rounded border border-amber-300 px-1.5 py-0.5 text-xs font-medium text-amber-700">
+                    {stock.badge}
+                  </span>
+                ) : (
+                  <span className="rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-600">
+                    {stock.badge}
                   </span>
                 )}
               </div>
@@ -45,6 +56,9 @@ export default function PartsCartPage() {
               <div className="text-xs text-gray-500">
                 {item.model_name} · {item.section_code} · #{item.ref_number}
               </div>
+              {stock.kind === 'backorder' && stock.note && (
+                <div className="mt-1 text-xs font-medium text-amber-700">{stock.note}</div>
+              )}
             </div>
 
             <div className="flex h-8 items-center overflow-hidden rounded-md border border-black bg-white">
@@ -80,7 +94,8 @@ export default function PartsCartPage() {
               Remove
             </button>
           </li>
-        ))}
+          );
+        })}
       </ul>
 
       <div className="mt-6 flex items-center justify-between">
