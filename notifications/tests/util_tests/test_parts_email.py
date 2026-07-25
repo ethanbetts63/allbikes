@@ -45,7 +45,7 @@ class TestCustomerConfirmation:
         assert 'A-1' in msg.body_text and 'Red' in msg.body_text
         assert '120.00' in msg.body_text  # 100 * 1.20
         assert 'Dianella' in msg.body_text
-        assert 'link this order to your email' in msg.body_text
+        assert '/refunds' in msg.body_text
         assert 'A-1' in msg.body_html
 
     def test_backorder_note_when_understocked(self):

@@ -366,8 +366,7 @@ def send_parts_customer_confirmation(parts_order):
         f"YOUR DETAILS\n{parts_order.customer_email}"
         + (f"\n{parts_order.customer_phone}" if parts_order.customer_phone else "")
         + "\n\n"
-        f"Please email admin@scootershop.com.au from {parts_order.customer_email} and quote "
-        f"{parts_order.order_reference} so we can link this order to your email.\n"
+        f"Returns & refunds: https://www.scootershop.com.au/refunds\n"
     )
     html_body = render_to_string('notifications/emails/parts_customer_confirmation.html', {'order': parts_order})
 

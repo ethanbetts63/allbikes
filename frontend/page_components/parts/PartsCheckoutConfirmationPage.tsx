@@ -9,7 +9,6 @@ import CheckoutSteps from '@/components/parts/CheckoutSteps';
 import OrderSummary from '@/components/parts/OrderSummary';
 import { getPartsOrder, type PartsOrderDetail } from '@/lib/partsCheckoutApi';
 
-const ADMIN_EMAIL = 'admin@scootershop.com.au';
 const PAID_STATES = ['paid', 'dispatched', 'partially_refunded', 'refunded'];
 
 export default function PartsCheckoutConfirmationPage() {
@@ -75,8 +74,8 @@ export default function PartsCheckoutConfirmationPage() {
 
       {notFound && (
         <div className="rounded-md border border-gray-300 bg-gray-50 p-4 text-sm text-black">
-          We couldn&apos;t load this order. If you completed payment, email us at{' '}
-          <a href={`mailto:${ADMIN_EMAIL}`} className="underline">{ADMIN_EMAIL}</a> quoting reference{' '}
+          We couldn&apos;t load this order. If you completed payment, please{' '}
+          <Link href="/contact" className="underline">get in touch</Link> quoting reference{' '}
           <span className="font-mono">{reference}</span>.
         </div>
       )}
@@ -100,16 +99,6 @@ export default function PartsCheckoutConfirmationPage() {
               </div>
             </div>
 
-            <div className="mt-5 rounded-md border border-black bg-white p-4 text-sm text-black">
-              <p className="font-semibold">Please email us from your order email</p>
-              <p className="mt-1 text-gray-700">
-                Email{' '}
-                <a href={`mailto:${ADMIN_EMAIL}`} className="underline">{ADMIN_EMAIL}</a>{' '}
-                from <strong>{order.customer_email}</strong> and quote{' '}
-                <span className="font-mono">{order.order_reference}</span> so we can link this order to your email.
-              </p>
-            </div>
-
             {order.has_backorder && (
               <div className="mt-3 rounded-md border border-gray-300 bg-gray-50 p-4 text-sm text-black">
                 <p className="font-semibold">Some items are on backorder</p>
@@ -128,12 +117,17 @@ export default function PartsCheckoutConfirmationPage() {
             total={Number(order.total)}
           />
 
-          <Link
-            href="/parts"
-            className="inline-block rounded-md border border-gray-300 px-5 py-2.5 text-sm font-medium text-black hover:border-black"
-          >
-            Back to parts
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/parts"
+              className="inline-block rounded-md border border-gray-300 px-5 py-2.5 text-sm font-medium text-black hover:border-black"
+            >
+              Back to parts
+            </Link>
+            <Link href="/refunds" className="text-sm text-gray-600 underline underline-offset-2 hover:text-black">
+              Returns &amp; refunds policy
+            </Link>
+          </div>
         </div>
       )}
     </div>
