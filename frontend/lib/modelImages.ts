@@ -21,7 +21,7 @@ import hd300 from '@/assets/models/hd300.jpg';
 import jetsportx from '@/assets/models/jetsportx-50.jpg';
 import jolie from '@/assets/models/jolie.jpg';
 import legrande125 from '@/assets/models/legrande-125.webp';
-import legrande200 from '@/assets/models/legrande-200.jpg';
+import legrande200 from '@/assets/models/legrande-200.png';
 import quadlander300 from '@/assets/models/quadlander-300.jpg';
 import quadlander600 from '@/assets/models/quadlander-600.png';
 import redDevil from '@/assets/models/red-devil.webp';

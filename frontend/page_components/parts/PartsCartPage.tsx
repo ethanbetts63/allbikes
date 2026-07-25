@@ -47,14 +47,27 @@ export default function PartsCartPage() {
               </div>
             </div>
 
-            <input
-              type="number"
-              min={1}
-              value={item.quantity}
-              onChange={(e) => updateQuantity(item.part_number, Math.max(1, Number(e.target.value)))}
-              className="w-16 rounded-md border border-gray-300 px-2 py-1 text-sm text-black"
-              aria-label={`Quantity for ${item.part_number}`}
-            />
+            <div className="flex h-8 items-center overflow-hidden rounded-md border border-black bg-white">
+              <button
+                type="button"
+                onClick={() => updateQuantity(item.part_number, item.quantity - 1)}
+                aria-label={`Remove one ${item.part_number} from cart`}
+                className="flex h-full w-8 items-center justify-center text-lg font-medium text-black hover:bg-gray-100"
+              >
+                −
+              </button>
+              <span className="min-w-8 border-x border-black px-2 text-center text-sm font-semibold text-black">
+                {item.quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() => updateQuantity(item.part_number, item.quantity + 1)}
+                aria-label={`Add one more ${item.part_number} to cart`}
+                className="flex h-full w-8 items-center justify-center text-lg font-medium text-black hover:bg-gray-100"
+              >
+                +
+              </button>
+            </div>
             <div className="w-20 text-right text-sm font-semibold text-black">
               ${(Number(item.unit_price) * item.quantity).toFixed(2)}
             </div>

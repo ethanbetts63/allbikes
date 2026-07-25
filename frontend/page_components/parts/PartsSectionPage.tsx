@@ -6,6 +6,10 @@ import CalloutRow from '@/components/parts/CalloutRow';
 import type { SectionDetail } from '@/types/parts';
 
 export default function PartsSectionPage({ section }: { section: SectionDetail }) {
+  const sectionLabel = section.name.toUpperCase().startsWith(section.code.toUpperCase())
+    ? section.name
+    : `${section.code} ${section.name}`;
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <nav className="mb-4 text-sm text-gray-600">
@@ -20,30 +24,32 @@ export default function PartsSectionPage({ section }: { section: SectionDetail }
         <span className="text-black">{section.name}</span>
       </nav>
 
-      <h1 className="mb-6 text-xl font-bold text-black">
-        <span className="font-mono text-gray-500">{section.code}</span> {section.name}
-        <span className="ml-2 text-sm font-normal text-gray-500">{section.model.name}</span>
-      </h1>
-
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="lg:sticky lg:top-4 lg:self-start">
-          {section.diagram_image ? (
-            <div className="overflow-auto rounded-lg border border-gray-200 bg-white p-2">
-              <Image
-                src={section.diagram_image}
-                alt={`${section.name} exploded diagram`}
-                width={800}
-                height={600}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                unoptimized
-                className="mx-auto h-auto w-full"
-              />
+        <div className="lg:sticky lg:top-[8.25rem] lg:self-start">
+          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+            <div className="border-b border-gray-200 px-4 py-3">
+              <h1 className="text-xl font-bold text-black">{sectionLabel}</h1>
+              <p className="text-sm text-gray-500">{section.model.name}</p>
             </div>
-          ) : (
-            <div className="flex h-64 items-center justify-center rounded-lg border border-dashed border-gray-300 text-gray-500">
-              Diagram not available — use the parts list.
-            </div>
-          )}
+
+            {section.diagram_image ? (
+              <div className="overflow-auto p-2">
+                <Image
+                  src={section.diagram_image}
+                  alt={`${section.name} exploded diagram`}
+                  width={800}
+                  height={600}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  unoptimized
+                  className="mx-auto h-auto w-full"
+                />
+              </div>
+            ) : (
+              <div className="flex h-64 items-center justify-center text-gray-500">
+                Diagram not available — use the parts list.
+              </div>
+            )}
+          </div>
         </div>
 
         <div>

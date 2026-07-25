@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { usePartsCart } from '@/context/PartsCartContext';
 import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
 
@@ -83,7 +82,8 @@ function VariantLine({
   callout: Callout;
   showLabel: boolean;
 }) {
-  const { addItem } = usePartsCart();
+  const { items, addItem, updateQuantity } = usePartsCart();
+  const cartQuantity = items.find((item) => item.part_number === variant.part_number)?.quantity ?? 0;
 
   const add = () => {
     if (!variant.price) return;
@@ -99,7 +99,6 @@ function VariantLine({
       quantity: 1,
       backorder: variant.backorder,
     });
-    toast.success(`Added ${variant.part_number} to cart`);
   };
 
   return (
@@ -129,14 +128,38 @@ function VariantLine({
         <span className="text-sm font-semibold text-black">
           {variant.price ? `$${variant.price}` : '—'}
         </span>
-        <button
-          type="button"
-          onClick={add}
-          disabled={!variant.orderable}
-          className="rounded-md bg-black px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
-        >
-          Add
-        </button>
+        {cartQuantity > 0 ? (
+          <div className="flex h-8 items-center overflow-hidden rounded-md border border-black bg-white">
+            <button
+              type="button"
+              onClick={() => updateQuantity(variant.part_number, cartQuantity - 1)}
+              aria-label={`Remove one ${variant.part_number} from cart`}
+              className="flex h-full w-8 items-center justify-center text-lg font-medium text-black hover:bg-gray-100"
+            >
+              −
+            </button>
+            <span className="min-w-8 border-x border-black px-2 text-center text-sm font-semibold text-black">
+              {cartQuantity}
+            </span>
+            <button
+              type="button"
+              onClick={() => updateQuantity(variant.part_number, cartQuantity + 1)}
+              aria-label={`Add one more ${variant.part_number} to cart`}
+              className="flex h-full w-8 items-center justify-center text-lg font-medium text-black hover:bg-gray-100"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={add}
+            disabled={!variant.orderable}
+            className="rounded-md bg-black px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+          >
+            Add
+          </button>
+        )}
       </div>
     </div>
   );
