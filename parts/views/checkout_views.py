@@ -14,14 +14,9 @@ from parts.models import PartsOrder
 from parts.serializers.order_serializers import PartsCheckoutSerializer, PartsOrderSerializer
 
 from payments.models import Payment
-from payments.utils.webhook_handlers import handle_payment_intent_succeeded
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
 STRIPE_MINIMUM = Decimal('0.50')
-
-PAID_STATES = {'paid', 'dispatched', 'partially_refunded', 'refunded'}
-# Intent statuses that mean the payment will not complete without a new attempt.
-FAILED_INTENT_STATES = {'requires_payment_method', 'canceled'}
 
 
 class PublicAPIView(APIView):
@@ -52,49 +47,6 @@ class RetrievePartsOrderView(PublicAPIView):
             PartsOrder.objects.prefetch_related('items'), order_reference=order_reference
         )
         return Response(PartsOrderSerializer(order).data)
-
-
-class ConfirmPartsOrderView(PublicAPIView):
-    """Independent confirmation path for the success page.
-
-    The webhook is the primary way an order is marked paid, but it can fail
-    (misconfigured secret, downtime). This endpoint asks Stripe directly: if the
-    PaymentIntent has succeeded but our order is still pending, it reconciles via
-    the same handler the webhook uses (idempotent), so the order self-heals. The
-    frontend polls it and shows: paid (done), pending (keep waiting), or failed.
-    """
-
-    def post(self, request, order_reference):
-        try:
-            order = PartsOrder.objects.get(order_reference=order_reference)
-        except PartsOrder.DoesNotExist:
-            return Response({'detail': 'Order not found.'}, status=404)
-
-        state = self._resolve_state(order)
-        order = PartsOrder.objects.prefetch_related('items').get(pk=order.pk)
-        return Response({'state': state, 'order': PartsOrderSerializer(order).data})
-
-    def _resolve_state(self, order):
-        if order.status in PAID_STATES:
-            return 'paid'
-
-        payment = Payment.objects.filter(parts_order=order).first()
-        if not payment:
-            return 'pending'  # no payment attempt recorded yet
-
-        try:
-            intent = stripe.PaymentIntent.retrieve(payment.stripe_payment_intent_id)
-        except Exception:
-            return 'pending'  # transient Stripe error — let the client keep polling
-
-        if intent.status == 'succeeded':
-            # Reconcile through the same code path as the webhook (idempotent —
-            # a no-op if the webhook already handled it).
-            handle_payment_intent_succeeded({'id': payment.stripe_payment_intent_id})
-            return 'paid'
-        if intent.status in FAILED_INTENT_STATES:
-            return 'failed'
-        return 'pending'  # processing / requires_action
 
 
 class CreatePartsPaymentIntentView(PublicAPIView):
