@@ -49,3 +49,7 @@ data_management/data/sym_parts_files/archive/
 
 # Local SEO analysis cache
 .seo-cache/
+
+# Scraped/working bike imagery (large binaries, not source-controlled)
+frontend/assets/new_sym_bikes/
+frontend/assets/motorcycle_images/

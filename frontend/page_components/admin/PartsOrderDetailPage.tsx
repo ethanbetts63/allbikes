@@ -15,7 +15,7 @@ import {
   adminGetPartsOrder, adminUpdatePartsOrder, adminUpdatePartsOrderItem,
 } from '@/services/partsAdminService';
 import type { AdminPartsOrder, AdminPartsOrderItem, ItemAction } from '@/types/partsAdmin';
-import { PARTS_STATUS_BADGE } from './PartsOrdersListPage';
+import { PARTS_STATUS_BADGE, BTN_INACTIVE } from './PartsOrdersListPage';
 
 const ORDER_STATUSES = ['pending_payment', 'paid', 'dispatched', 'completed', 'cancelled', 'refunded', 'partially_refunded'];
 
@@ -162,7 +162,7 @@ export default function PartsOrderDetailPage() {
             placeholder="Wholesaler chase-ups, backorder ETAs…"
             className="w-full rounded-md border border-input bg-transparent p-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           />
-          <Button onClick={saveOrder} disabled={busy} variant="outline" className="mt-2 border-black">Save notes</Button>
+          <Button onClick={saveOrder} disabled={busy} variant="outline" className={`mt-2 ${BTN_INACTIVE}`}>Save notes</Button>
         </div>
 
         <p className="mb-4 text-xs text-[var(--text-dark-secondary)]">

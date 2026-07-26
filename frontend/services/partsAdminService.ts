@@ -11,6 +11,7 @@ interface ListParams {
   has_backorder?: boolean;
   q?: string;
   page?: number;
+  ordering?: string;
 }
 
 export async function adminGetPartsOrders(params: ListParams = {}): Promise<Paginated<AdminPartsOrderListItem>> {
@@ -19,6 +20,7 @@ export async function adminGetPartsOrders(params: ListParams = {}): Promise<Pagi
   if (params.has_backorder) qs.set('has_backorder', 'true');
   if (params.q) qs.set('q', params.q);
   if (params.page) qs.set('page', String(params.page));
+  if (params.ordering) qs.set('ordering', params.ordering);
   const res = await authedFetch(`/api/parts/admin/orders/?${qs.toString()}`);
   if (!res.ok) throw new Error('Failed to load orders.');
   return res.json();

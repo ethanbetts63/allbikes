@@ -1,7 +1,7 @@
 """Admin parts-order management (IsAdminUser)."""
 from datetime import date
 
-from django.db.models import Q
+from django.db.models import Case, IntegerField, Q, Value, When
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -15,6 +15,19 @@ from parts.serializers.admin_order_serializers import (
 )
 
 ITEM_ACTIONS = {'place_backorder', 'remove_backorder', 'mark_fulfilled', 'mark_refunded', 'mark_ordered'}
+
+# Default "to-do first" ordering: actionable statuses float to the top.
+STATUS_PRIORITY = {
+    'paid': 0,             # needs dispatch
+    'dispatched': 1,       # in transit
+    'partially_refunded': 2,
+    'pending_payment': 3,
+    'completed': 4,
+    'refunded': 5,
+    'cancelled': 6,
+}
+# Fields the list may be explicitly ordered by (via ?ordering=, optional '-').
+ORDERABLE_FIELDS = {'created_at', 'total', 'customer_name', 'status'}
 
 
 class AdminPartsOrderPagination(PageNumberPagination):
@@ -45,10 +58,39 @@ class AdminPartsOrderListView(APIView):
                 | Q(customer_name__icontains=q)
             )
 
-        orders = orders.order_by('-created_at')
+        orders = self._apply_ordering(orders, request.query_params.get('ordering'))
         paginator = AdminPartsOrderPagination()
         page = paginator.paginate_queryset(orders, request)
         return paginator.get_paginated_response(AdminPartsOrderListSerializer(page, many=True).data)
+
+    @staticmethod
+    def _status_priority_annotation():
+        return Case(
+            *[When(status=s, then=Value(p)) for s, p in STATUS_PRIORITY.items()],
+            default=Value(99),
+            output_field=IntegerField(),
+        )
+
+    def _apply_ordering(self, orders, ordering):
+        """Order by ?ordering= (an ORDERABLE_FIELDS name, optionally '-'-prefixed).
+
+        Falls back to the "to-do first" default. `status` sorts by the actionable
+        priority above rather than alphabetically.
+        """
+        ordering = (ordering or '').strip()
+        desc = ordering.startswith('-')
+        field = ordering.lstrip('-')
+
+        if field == 'status':
+            orders = orders.annotate(_priority=self._status_priority_annotation())
+            return orders.order_by('-_priority' if desc else '_priority', '-created_at')
+        if field in ORDERABLE_FIELDS:
+            secondary = () if field == 'created_at' else ('-created_at',)
+            return orders.order_by(ordering, *secondary)
+
+        # Default: actionable statuses first, newest within each group.
+        orders = orders.annotate(_priority=self._status_priority_annotation())
+        return orders.order_by('_priority', '-created_at')
 
 
 class AdminPartsOrderDetailView(APIView):

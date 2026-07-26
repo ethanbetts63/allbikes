@@ -11,7 +11,9 @@ export default function PartsSearchBar() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = value.trim();
-    if (q.length >= 2) {
+    // Navigate on any input so Enter always lands on the results page; the page
+    // itself prompts for more characters when the query is too short (< 2).
+    if (q) {
       router.push(`/parts/search?q=${encodeURIComponent(q)}`);
     }
   };

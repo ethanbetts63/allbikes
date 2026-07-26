@@ -10,7 +10,7 @@ export default function PartsShell({ children }: { children: React.ReactNode }) 
   return (
     <PartsCartProvider>
       <div className="min-h-screen bg-white text-black">
-        <div className="border-b border-gray-200 bg-white">
+        <div className="border-b border-gray-200 bg-white sm:sticky sm:top-0 sm:z-40">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center">
             <Link href="/parts" className="whitespace-nowrap text-lg font-bold text-black">
               SYM Parts
