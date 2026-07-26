@@ -1,4 +1,4 @@
-import BikeListPage from '@/page_components/BikeListPage';
+import BikeListPage from '@/components/BikeListPage';
 import { buildMetadata, buildBikeListSchema } from '@/lib/seo';
 import { getInitialBikeList } from '@/lib/inventoryList';
 import type { ListSearchParams } from '@/lib/listQuery';

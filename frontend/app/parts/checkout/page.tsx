@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import PartsCheckoutDetailsPage from '@/page_components/parts/PartsCheckoutDetailsPage';
+import PartsCheckoutDetailsPage from './PartsCheckoutDetailsPage';
 
 export const metadata: Metadata = {
   title: 'Checkout | SYM Spare Parts',

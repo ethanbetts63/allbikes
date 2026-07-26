@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import PartsCheckoutConfirmationPage from '@/page_components/parts/PartsCheckoutConfirmationPage';
+import PartsCheckoutConfirmationPage from './PartsCheckoutConfirmationPage';
 
 export const metadata: Metadata = {
   title: 'Order Confirmation | SYM Spare Parts',

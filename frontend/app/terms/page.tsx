@@ -1,7 +1,6 @@
+import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import { buildMetadata } from '@/lib/seo';
 import { getServerLatestTermsAndConditions } from '@/lib/serverApi';
-import type { TermsAndConditions } from '@/types/TermsAndConditions';
-import TermsAndConditionsPage from '@/page_components/TermsAndConditionsPage';
 
 export const dynamic = 'force-dynamic';
 export const metadata = buildMetadata({
@@ -39,3 +38,24 @@ async function fetchLatestTerms(type?: 'hire' | 'service' | 'purchase'): Promise
     return null;
   }
 }
+
+interface TermsAndConditionsPageProps {
+    initialTerms: TermsAndConditions | null;
+}
+
+const TermsAndConditionsPage = ({ initialTerms }: TermsAndConditionsPageProps) => {
+    return (
+        <>
+            <div className="container mx-auto px-4 py-8 max-w-4xl prose dark:prose-invert text-[var(--text-light-primary)]">
+                {initialTerms ? (
+                    <div dangerouslySetInnerHTML={{ __html: initialTerms.content }} />
+                ) : (
+                    <div>
+                        <h2>Error</h2>
+                        <p>Failed to load terms and conditions.</p>
+                    </div>
+                )}
+            </div>
+        </>
+    );
+};

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import PartsSearchPage from '@/page_components/parts/PartsSearchPage';
+import PartsSearchPage from './PartsSearchPage';
 
 export const metadata: Metadata = {
   title: 'Search SYM Parts',

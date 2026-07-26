@@ -1,1 +1,1 @@
-export { default } from '@/page_components/admin/AddMotorcyclePage';
+export { default } from '@/components/admin/AddMotorcyclePage';

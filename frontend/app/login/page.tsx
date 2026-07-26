@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   noindex: true,
 });
 
-export { default } from '@/page_components/LoginPage';
+export { default } from './LoginPage';

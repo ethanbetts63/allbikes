@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import AdminServiceDiaryPage from '@/page_components/admin/AdminServiceDiaryPage';
+import AdminServiceDiaryPage from './AdminServiceDiaryPage';
 
 // The diary reads its week from ?week=, so useSearchParams needs a Suspense
 // boundary above it or the production build fails.

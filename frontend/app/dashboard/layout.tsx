@@ -1,4 +1,4 @@
-import AdminLayout from '@/page_components/admin/AdminLayout';
+import AdminLayout from './AdminLayout';
 import { AuthProvider } from '@/context/AuthContext';
 import { buildMetadata } from '@/lib/seo';
 

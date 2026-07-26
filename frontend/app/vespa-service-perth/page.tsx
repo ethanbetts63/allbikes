@@ -1,5 +1,5 @@
 import { buildMetadata } from '@/lib/seo';
-import VespaServicePage from '@/page_components/VespaServicePage';
+import VespaServicePage from '@/components/VespaServicePage';
 
 export const metadata = buildMetadata({
   title: 'Vespa Service & Repairs Perth | ScooterShop Dianella',

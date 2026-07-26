@@ -1,1 +1,1 @@
-export { default } from '@/page_components/admin/AdminHireBlockedDatesPage';
+export { default } from './AdminHireBlockedDatesPage';

@@ -15,7 +15,7 @@ import {
   adminGetPartsOrder, adminUpdatePartsOrder, adminUpdatePartsOrderItem,
 } from '@/services/partsAdminService';
 import type { AdminPartsOrder, AdminPartsOrderItem, ItemAction } from '@/types/partsAdmin';
-import { PARTS_STATUS_BADGE, BTN_INACTIVE } from './PartsOrdersListPage';
+import { PARTS_STATUS_BADGE, BTN_INACTIVE } from '../PartsOrdersListPage';
 
 const ORDER_STATUSES = ['pending_payment', 'paid', 'dispatched', 'completed', 'cancelled', 'refunded', 'partially_refunded'];
 

@@ -1,1 +1,1 @@
-export { default } from '@/page_components/admin/AdminSentMessageDetailPage';
+export { default } from './AdminSentMessageDetailPage';

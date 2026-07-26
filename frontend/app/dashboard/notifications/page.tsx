@@ -1,1 +1,1 @@
-export { default } from '@/page_components/admin/AdminNotificationsPage';
+export { default } from './AdminNotificationsPage';

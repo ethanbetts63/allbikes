@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   noindex: true,
 });
 
-export { default } from '@/page_components/CheckoutProcessingPage';
+export { default } from './CheckoutProcessingPage';

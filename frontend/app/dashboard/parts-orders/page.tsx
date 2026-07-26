@@ -1,1 +1,1 @@
-export { default } from '@/page_components/admin/PartsOrdersListPage';
+export { default } from './PartsOrdersListPage';

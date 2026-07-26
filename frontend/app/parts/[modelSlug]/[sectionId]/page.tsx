@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPartsSection } from '@/lib/partsApi';
-import PartsSectionPage from '@/page_components/parts/PartsSectionPage';
+import PartsSectionPage from './PartsSectionPage';
 
 interface PageProps {
   params: Promise<{ modelSlug: string; sectionId: string }>;

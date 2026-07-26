@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import PartsCartPage from '@/page_components/parts/PartsCartPage';
+import PartsCartPage from './PartsCartPage';
 
 export const metadata: Metadata = {
   title: 'Parts Cart | SYM Spare Parts',

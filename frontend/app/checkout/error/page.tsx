@@ -6,4 +6,4 @@ export const metadata = buildMetadata({
   noindex: true,
 });
 
-export { default } from '@/page_components/CheckoutErrorPage';
+export { default } from './CheckoutErrorPage';
