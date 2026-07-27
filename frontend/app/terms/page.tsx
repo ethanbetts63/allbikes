@@ -23,14 +23,14 @@ export default async function Page({ searchParams }: TermsPageProps) {
 }
 
 function normalizeTermsType(type?: string) {
-  if (type === 'hire' || type === 'service' || type === 'purchase') {
+  if (type === 'hire' || type === 'service' || type === 'purchase' || type === 'parts') {
     return type;
   }
 
   return undefined;
 }
 
-async function fetchLatestTerms(type?: 'hire' | 'service' | 'purchase'): Promise<TermsAndConditions | null> {
+async function fetchLatestTerms(type?: 'hire' | 'service' | 'purchase' | 'parts'): Promise<TermsAndConditions | null> {
   try {
     return await getServerLatestTermsAndConditions(type);
   } catch (error) {

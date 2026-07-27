@@ -68,6 +68,7 @@ const Footer = () => {
           <ul className="space-y-2">
             <li><Link href="/refunds" className={LINK_CLASS}>Returns &amp; Refunds</Link></li>
             <li><Link href="/terms?type=purchase" className={LINK_CLASS}>Sales &amp; Deposit Terms</Link></li>
+            <li><Link href="/terms?type=parts" className={LINK_CLASS}>New SYM Parts Terms</Link></li>
             {siteSettings.show_hire && <li><Link href="/terms?type=hire" className={LINK_CLASS}>Hire Terms</Link></li>}
             <li><Link href="/terms?type=service" className={LINK_CLASS}>Service Terms</Link></li>
             <li><Link href="/privacy" className={LINK_CLASS}>Privacy Policy</Link></li>

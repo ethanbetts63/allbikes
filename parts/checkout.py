@@ -10,18 +10,11 @@ from django.db import transaction
 
 from parts.models import Part, PartsOrder, PartsOrderItem, PartsSettings, SectionPart
 
-_AU_NAMES = {'australia', 'au', 'aus'}
-
-
 class CheckoutError(Exception):
     def __init__(self, message, unavailable=None):
         super().__init__(message)
         self.message = message
         self.unavailable = unavailable or []
-
-
-def is_international(country):
-    return (country or 'Australia').strip().lower() not in _AU_NAMES
 
 
 @transaction.atomic
@@ -90,8 +83,7 @@ def create_parts_order(*, customer, items):
     if unavailable:
         raise CheckoutError("Some items are no longer available.", unavailable)
 
-    intl = is_international(customer.get('country'))
-    shipping = settings.shipping_fee(intl)
+    shipping = settings.current_shipping_fee()
     total = subtotal + shipping
 
     order = PartsOrder.objects.create(
@@ -103,8 +95,8 @@ def create_parts_order(*, customer, items):
         suburb=customer['suburb'],
         state=customer.get('state', ''),
         postcode=customer['postcode'],
-        country=customer.get('country') or 'Australia',
-        is_international=intl,
+        country='Australia',
+        is_international=False,
         terms_accepted=bool(customer.get('terms_accepted')),
         has_backorder=has_backorder,
         subtotal=subtotal,

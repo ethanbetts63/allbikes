@@ -288,7 +288,7 @@ export default function PartsOrdersListPage() {
         <ol className="mt-3 list-decimal space-y-3 pl-5 text-sm text-slate-600">
           <li>Each day, the system imports the latest SYM price and availability data from Select Portal.</li>
           <li>Customers choose their model, section and exploded diagram, then add the required parts to their cart.</li>
-          <li>At checkout, the customer price is Select Portal&apos;s base price plus our markup and domestic or international shipping.</li>
+          <li>At checkout, the customer price is Select Portal&apos;s base price plus our markup and the Australian shipping fee.</li>
           <li>Admin receives an email and SMS for each paid order. Open it here, review it, choose <strong>Email supplier</strong>, check the draft and send it to Select Scooters.</li>
           <li>Select Scooters should fulfil only complete orders. If anything is unavailable, they should email us with the missing parts and expected restock date.</li>
           <li>If one or more items go on backorder, mark those items and use <strong>Email backorder update</strong> to send the customer a full line-by-line update.</li>

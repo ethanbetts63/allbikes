@@ -75,6 +75,18 @@ class TestTermsUpdateOrchestrator:
         assert terms.term_type == 'hire'
         assert terms.content == "<h1>Hire Terms Content</h1>"
 
+    def test_process_file_creates_parts_terms(self, orchestrator):
+        """New SYM parts terms are recognised and published as their own type."""
+        file_name = 'terms_parts.html'
+        file_path = os.path.join(orchestrator.data_dir, file_name)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write("<h1>New SYM Parts Terms</h1>")
+
+        orchestrator.process_file(file_name)
+
+        terms = TermsAndConditions.objects.get(term_type='parts')
+        assert terms.content == "<h1>New SYM Parts Terms</h1>"
+
     def test_process_file_updates_existing_terms(self, orchestrator):
         """
         GIVEN an existing hire TermsAndConditions record

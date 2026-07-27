@@ -97,8 +97,7 @@ The full order endpoint is staff-only. It is not exposed just by knowing an
 ```
 /dashboard/parts-settings
   ├─ Markup percentage
-  ├─ Domestic shipping fee
-  ├─ International shipping fee
+  ├─ Australian shipping fee
   └─ Enable new parts sales
 
 /dashboard/parts-orders

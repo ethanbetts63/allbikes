@@ -20,7 +20,6 @@ const EMPTY: CustomerDetails = {
   suburb: '',
   state: '',
   postcode: '',
-  country: 'Australia',
   terms_accepted: false,
 };
 
@@ -90,10 +89,8 @@ export default function PartsCheckoutDetailsPage() {
             <Field label="Suburb" value={form.suburb} onChange={set('suburb')} required />
             <Field label="State" value={form.state} onChange={set('state')} />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Postcode" value={form.postcode} onChange={set('postcode')} required />
-            <Field label="Country" value={form.country} onChange={set('country')} required />
-          </div>
+          <Field label="Postcode" value={form.postcode} onChange={set('postcode')} required />
+          <p className="text-sm text-gray-600">Delivery is currently available within Australia only.</p>
 
           <label className="flex gap-2 text-sm text-gray-700">
             <input
@@ -105,8 +102,8 @@ export default function PartsCheckoutDetailsPage() {
             />
             <span>
               I have read and accept the{' '}
-              <Link href="/terms?type=purchase" target="_blank" className="underline">
-                terms &amp; conditions
+              <Link href="/terms?type=parts" target="_blank" className="underline">
+                New SYM Parts Terms &amp; Conditions
               </Link>{' '}
               .
             </span>

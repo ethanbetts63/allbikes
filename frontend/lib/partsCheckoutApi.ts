@@ -27,7 +27,6 @@ export interface PartsOrderDetail {
   suburb: string;
   state: string;
   postcode: string;
-  country: string;
   has_backorder: boolean;
   subtotal: string;
   shipping: string;

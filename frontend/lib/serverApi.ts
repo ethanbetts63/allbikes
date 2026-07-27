@@ -49,7 +49,7 @@ export async function getServerDepositSettings(): Promise<{ deposit_amount: stri
   return fetchServerJson<{ deposit_amount: string }>('/api/payments/deposit-settings/');
 }
 
-export async function getServerLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase'): Promise<TermsAndConditions> {
+export async function getServerLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase' | 'parts'): Promise<TermsAndConditions> {
   const path = type ? `/api/data/terms/latest/?type=${type}` : '/api/data/terms/latest/';
   return fetchServerJson<TermsAndConditions>(path);
 }

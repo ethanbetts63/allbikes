@@ -4,7 +4,8 @@ from django.conf import settings
 from data_management.models import TermsAndConditions
 from django.utils.timezone import now
 
-VALID_TYPES = {'hire', 'service', 'purchase'}
+VALID_TYPES = {'hire', 'service', 'purchase', 'parts'}
+TERMS_FILE_PATTERN = r'^terms_(hire|service|purchase|parts)\.html$'
 
 
 class TermsUpdateOrchestrator:
@@ -18,7 +19,7 @@ class TermsUpdateOrchestrator:
         # Find all terms_{type}.html files
         html_files = [
             f for f in os.listdir(self.data_dir)
-            if re.match(r'^terms_(hire|service|purchase)\.html$', f)
+            if re.match(TERMS_FILE_PATTERN, f)
         ]
 
         if not html_files:
@@ -31,7 +32,7 @@ class TermsUpdateOrchestrator:
         self.command.stdout.write(self.command.style.SUCCESS("Successfully updated Terms and Conditions."))
 
     def process_file(self, file_name):
-        match = re.match(r'^terms_(hire|service|purchase)\.html$', file_name)
+        match = re.match(TERMS_FILE_PATTERN, file_name)
         if not match:
             return
 

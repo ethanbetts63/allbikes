@@ -34,8 +34,7 @@ numbered sections, and clear contact details for FEPS (WA) PTY LTD.
 
 - All displayed customer prices are in Australian dollars and include GST unless
   clearly stated otherwise.
-- The checkout total includes the parts price plus the applicable domestic or
-  international shipping charge.
+- The checkout total includes the parts price plus the Australian shipping charge.
 - Prices and availability are rechecked at checkout; if a part is no longer
   available or its price has changed, the customer must be told before payment
   can proceed.
@@ -46,21 +45,13 @@ numbered sections, and clear contact details for FEPS (WA) PTY LTD.
 
 ### 4. Availability and backorders
 
-- Supplier availability is an advisory snapshot and is not a live reservation.
-- A part may appear available when ordered but later be unavailable when the
-  supplier reviews the order.
-- If any item is unavailable, we will ask the supplier not to part-ship the
-  order without first resolving the unavailable item(s).
-- We will email the customer a line-by-line update if one or more items enter
-  backorder.
-- State the customer-facing backorder period explicitly: **up to 7 days**.
-  This must be the same period shown at checkout and in customer emails. If the
-  internal setting remains configurable, changing it should not retroactively
-  change the promise made to existing orders.
-- If an unavailable part cannot be obtained in that period, we may cancel and
-  refund that line, then arrange shipment of the remaining available parts.
-- State that delivery dates and supplier ETAs are estimates, not guarantees,
-  except where consumer law requires otherwise.
+- If one or more parts are unavailable, we will email a line-by-line update.
+- We will hold the order for up to **7 days** while the unavailable part is
+  expected to return to stock.
+- If a part cannot be obtained in that period, we may refund that line and
+  arrange shipment of the remaining available parts.
+- Delivery dates and supplier ETAs are estimates, not guarantees, except where
+  consumer law requires otherwise.
 
 ### 5. Supplier fulfilment and delivery
 
@@ -69,13 +60,11 @@ numbered sections, and clear contact details for FEPS (WA) PTY LTD.
 - The customer must provide a complete and accurate delivery address, contact
   details and any required delivery instructions.
 - Set out whether authority-to-leave, redelivery fees, address changes after
-  dispatch, PO boxes and international delivery are supported. These are still
-  business decisions to make.
+  dispatch and PO boxes are supported. These are still business decisions to make.
 - Clearly disclose that delivery timing can depend on supplier processing and
   the carrier. Avoid promising a dispatch or delivery timeframe until one is
   genuinely supportable.
-- For international orders, decide and state whether the customer is responsible
-  for destination-country duties, taxes, customs fees and import restrictions.
+- Delivery is currently available to Australian addresses only.
 
 ### 6. Order-arranged communications
 
@@ -154,13 +143,11 @@ numbered sections, and clear contact details for FEPS (WA) PTY LTD.
 2. What is the precise change-of-mind return policy and who bears return postage?
 3. Will the supplier accept returns for fitted, opened, electrical or special
    order parts, and is there a restocking fee?
-4. Does ScooterShop offer international delivery now? If yes, who pays customs
-   duties and destination taxes?
-5. What happens to the shipping charge on a full cancellation, partial refund
+4. What happens to the shipping charge on a full cancellation, partial refund
    and supplier-caused delivery failure?
-6. Will a dispatch/tracking notice be available later, or is “order arranged”
+5. Will a dispatch/tracking notice be available later, or is “order arranged”
    the final automated delivery communication for MVP?
-7. Should an order become binding on payment, supplier acceptance, or another
+6. Should an order become binding on payment, supplier acceptance, or another
    clearly stated point? Obtain legal advice before using an “acceptance” clause.
 
 ## Reference material

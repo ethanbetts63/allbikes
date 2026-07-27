@@ -9,19 +9,17 @@ import { authedFetch } from '@/apiClient';
 
 interface PartsSettings {
   markup_percentage: string;
-  domestic_shipping_fee: string;
-  international_shipping_fee: string;
+  shipping_fee: string;
   enable_new_part_sales: boolean;
   backorder_hold_days: number;
   updated_at: string;
 }
 
-type EditableField = 'markup_percentage' | 'domestic_shipping_fee' | 'international_shipping_fee';
+type EditableField = 'markup_percentage' | 'shipping_fee';
 
 const fields: Array<{ key: EditableField; title: string; detail: string; prefix?: string; suffix?: string }> = [
   { key: 'markup_percentage', title: 'Markup percentage', detail: 'Added to the supplier price to calculate the customer part price.', suffix: '%' },
-  { key: 'domestic_shipping_fee', title: 'Domestic shipping', detail: 'Flat shipping fee for Australian delivery addresses.', prefix: '$' },
-  { key: 'international_shipping_fee', title: 'International shipping', detail: 'Flat shipping fee for delivery addresses outside Australia.', prefix: '$' },
+  { key: 'shipping_fee', title: 'Shipping fee', detail: 'Flat shipping fee for Australian delivery addresses.', prefix: '$' },
 ];
 
 export default function PartsSettingsPage() {
@@ -60,8 +58,7 @@ export default function PartsSettingsPage() {
         method: 'PATCH',
         body: JSON.stringify({
           markup_percentage: Number(settings.markup_percentage).toFixed(2),
-          domestic_shipping_fee: Number(settings.domestic_shipping_fee).toFixed(2),
-          international_shipping_fee: Number(settings.international_shipping_fee).toFixed(2),
+          shipping_fee: Number(settings.shipping_fee).toFixed(2),
           enable_new_part_sales: settings.enable_new_part_sales,
           backorder_hold_days: settings.backorder_hold_days,
         }),
@@ -109,20 +106,6 @@ export default function PartsSettingsPage() {
             </label>
           ))}
         </div>
-        <section className="mt-8 border-t border-border-light pt-6">
-          <h2 className="text-lg font-bold">How it works</h2>
-          <ol className="mt-3 list-decimal space-y-3 pl-5 text-sm text-[var(--text-dark-secondary)]">
-            <li>Each day, the system imports the latest SYM price and availability data from Select Portal.</li>
-            <li>Customers choose their model, section and exploded diagram, then add the required parts to their cart.</li>
-            <li>At checkout, the customer price is Select Portal&apos;s base price plus our markup and domestic or international shipping.</li>
-            <li>Admin receives an email and SMS for each paid order. Find it in Parts Orders, review it, choose <strong>Email supplier</strong>, check the draft and send it to Select Scooters.</li>
-            <li>Select Scooters should fulfil only complete orders. If anything is unavailable, they should email us with the missing parts and expected restock date.</li>
-            <li>If one or more items go on backorder, mark those items and use <strong>Email backorder update</strong> to send the customer a full line-by-line update.</li>
-            <li>Admin then marks affected items as backordered or refunded, depending on whether the order can be fulfilled within the {settings.backorder_hold_days}-day backorder window. Only use <strong>Email refund update</strong> after the relevant Stripe refund has been processed.</li>
-            <li>When the order has been arranged with the supplier, use <strong>Email order arranged</strong> to tell the customer their complete order has been arranged for shipment.</li>
-            <li><strong>Planned next:</strong> admin will receive email and SMS reminders when an order exceeds that backorder window. Admin must then remove unavailable items and process the appropriate partial or full Stripe refund.</li>
-          </ol>
-        </section>
         <div className="mt-5 flex items-center justify-between gap-3"><p className="text-xs text-[var(--text-dark-secondary)]">Changes apply to new checkouts immediately.</p><Button onClick={save} disabled={!isDirty || saving}>{saving ? 'Saving…' : 'Save settings'}</Button></div>
       </div>
     </div>

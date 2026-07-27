@@ -20,7 +20,6 @@ class PartsCheckoutSerializer(serializers.Serializer):
     suburb = serializers.CharField(max_length=100)
     state = serializers.CharField(max_length=50, required=False, allow_blank=True)
     postcode = serializers.CharField(max_length=20)
-    country = serializers.CharField(max_length=100, required=False, allow_blank=True)
     terms_accepted = serializers.BooleanField()
     items = PartsCheckoutItemSerializer(many=True)
 

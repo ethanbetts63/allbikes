@@ -219,7 +219,7 @@ export async function manageMotorcycleImages(motorcycleId: number, images: Pick<
 
 // --- Legal Endpoints ---
 
-export async function getLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase'): Promise<TermsAndConditions> {
+export async function getLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase' | 'parts'): Promise<TermsAndConditions> {
     const url = type ? `${API_BASE_URL}/terms/latest/?type=${type}` : `${API_BASE_URL}/terms/latest/`;
     const response = await fetch(url);
     return handleResponse(response);

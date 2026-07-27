@@ -6,12 +6,13 @@ TERM_TYPE_CHOICES = [
     ('hire', 'Hire'),
     ('service', 'Service'),
     ('purchase', 'Purchase'),
+    ('parts', 'New SYM Parts'),
 ]
 
 
 class TermsAndConditions(models.Model):
     """
-    Represents the current Terms and Conditions for a given context (hire, service, purchase).
+    Represents the current Terms and Conditions for a given context.
     One record per term_type — updated in place when terms change.
     """
     term_type = models.CharField(
@@ -19,7 +20,7 @@ class TermsAndConditions(models.Model):
         choices=TERM_TYPE_CHOICES,
         unique=True,
         default='purchase',
-        help_text="The type of terms (hire, service, purchase).",
+        help_text="The type of terms (hire, service, purchase, parts).",
     )
     content = models.TextField(help_text="The full HTML content of the terms and conditions.")
     published_at = models.DateTimeField(default=timezone.now, help_text="The date and time these terms were last published.")

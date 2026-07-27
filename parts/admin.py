@@ -43,4 +43,4 @@ class PartAdmin(admin.ModelAdmin):
 
 @admin.register(PartsSettings)
 class PartsSettingsAdmin(admin.ModelAdmin):
-    list_display = ('markup_percentage', 'domestic_shipping_fee', 'international_shipping_fee', 'updated_at')
+    list_display = ('markup_percentage', 'shipping_fee', 'backorder_hold_days', 'enable_new_part_sales', 'updated_at')

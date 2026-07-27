@@ -10,13 +10,9 @@ class PartsSettings(models.Model):
         max_digits=6, decimal_places=2, default=Decimal('20.00'),
         help_text="Percent added to the wholesale price to get the customer price, e.g. 20.00 = +20%.",
     )
-    domestic_shipping_fee = models.DecimalField(
+    shipping_fee = models.DecimalField(
         max_digits=10, decimal_places=2, default=Decimal('15.00'),
-        help_text="Flat shipping fee (AUD) for Australian destinations.",
-    )
-    international_shipping_fee = models.DecimalField(
-        max_digits=10, decimal_places=2, default=Decimal('50.00'),
-        help_text="Flat shipping fee (AUD) for non-Australian destinations.",
+        help_text="Flat shipping fee (AUD) for Australian delivery addresses.",
     )
     enable_new_part_sales = models.BooleanField(
         default=True,
@@ -51,5 +47,5 @@ class PartsSettings(models.Model):
         factor = Decimal(1) + (self.markup_percentage / Decimal(100))
         return (wholesale_price * factor).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
-    def shipping_fee(self, is_international):
-        return self.international_shipping_fee if is_international else self.domestic_shipping_fee
+    def current_shipping_fee(self):
+        return self.shipping_fee

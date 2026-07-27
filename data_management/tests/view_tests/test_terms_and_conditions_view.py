@@ -32,6 +32,14 @@ class LatestTermsAndConditionsViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['content'], "Hire terms.")
 
+    def test_returns_parts_terms_filtered_by_type(self):
+        """The dedicated New SYM Parts terms can be retrieved publicly."""
+        TermsAndConditions.objects.create(term_type='parts', content="Parts terms.")
+
+        response = self.client.get(self.url, {'type': 'parts'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['content'], "Parts terms.")
+
     def test_returns_404_for_unknown_type(self):
         """
         GIVEN only hire terms exist
