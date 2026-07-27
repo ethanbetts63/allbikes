@@ -1,4 +1,5 @@
 from decimal import Decimal
+from unittest.mock import MagicMock
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -84,6 +85,43 @@ class TestAdminDetailAndUpdate:
         assert resp.status_code == 200
         assert resp.json()['status'] == 'dispatched'
         assert resp.json()['admin_notes'] == 'called SP'
+
+
+class TestSupplierEmail:
+    def test_draft_uses_supplier_prices_and_keeps_recipient_blank(self, admin_client):
+        order = _order()
+        response = admin_client.get(f'/api/parts/admin/orders/{order.id}/supplier-email/')
+        assert response.status_code == 200
+        data = response.json()
+        assert data['to'] == ''
+        assert data['items'][0]['unit_price'] == 100.0
+        assert data['supplier_parts_total'] == 100.0
+        assert '1. A-1' in data['body']
+        item = order.items.first()
+        assert f'Model: {item.model_name} ({item.model_code})' in data['body']
+        assert f'Section: {item.section_code} · Ref {item.ref_number}' in data['body']
+        assert 'Quantity: 1 × $100.00 = $100.00' in data['body']
+        assert 'do not ship any part of the order' in data['body']
+        assert order.customer_name in data['body']
+
+    def test_send_requires_recipient_and_does_not_change_order_status(self, admin_client, monkeypatch):
+        order = _order()
+        order.status = 'paid'
+        order.save()
+        send = MagicMock(return_value=True)
+        monkeypatch.setattr('parts.views.admin_order_views.send_parts_supplier_dispatch', send)
+
+        missing = admin_client.post(f'/api/parts/admin/orders/{order.id}/supplier-email/', {}, format='json')
+        assert missing.status_code == 400
+
+        response = admin_client.post(
+            f'/api/parts/admin/orders/{order.id}/supplier-email/',
+            {'to': 'parts@supplier.test', 'subject': 'Order', 'body': 'Hello'}, format='json',
+        )
+        assert response.status_code == 200
+        send.assert_called_once_with(order, to='parts@supplier.test', subject='Order', text_body='Hello')
+        order.refresh_from_db()
+        assert order.status == 'paid'
 
 
 class TestAdminItemActions:

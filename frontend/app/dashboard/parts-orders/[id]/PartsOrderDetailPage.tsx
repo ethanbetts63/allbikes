@@ -83,6 +83,9 @@ export default function PartsOrderDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button asChild className="border-sky-700 bg-sky-600 text-white hover:bg-sky-700 hover:text-white">
+              <Link href={`/dashboard/parts-orders/${order.id}/supplier-email`}>Email supplier</Link>
+            </Button>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}

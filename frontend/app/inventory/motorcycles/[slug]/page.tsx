@@ -270,7 +270,7 @@ const BikeDetailPage = ({
                         )}
                         {bike.status === 'available_soon' && (
                             <span className="bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                                In Preparation
+                                {bike.condition === 'new' ? 'Coming Soon' : 'In Preparation'}
                             </span>
                         )}
                         {bike.is_lams_approved && (
@@ -327,7 +327,7 @@ const BikeDetailPage = ({
                         )}
 
                         {/* SYM trade-in offer */}
-                        {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && (
+                        {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && bike.status !== 'available_soon' && (
                             <div className="mb-6 border border-[var(--highlight)] rounded-lg p-4">
                                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--highlight)] mb-1">SYM Trade-In Offer</p>
                                 <p className="text-sm font-bold text-[var(--text-dark-primary)] mb-1">

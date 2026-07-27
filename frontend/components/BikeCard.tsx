@@ -63,7 +63,7 @@ const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boole
           )}
           {bike.status === 'available_soon' && (
             <span className="absolute top-3 left-3 bg-[var(--bg-dark-primary)]/80 text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm">
-              In Preparation
+              {bike.condition === 'new' ? 'Coming Soon' : 'In Preparation'}
             </span>
           )}
         </div>
@@ -110,7 +110,7 @@ const BikeCard = ({ bike, priority = false }: BikeCardProps & { priority?: boole
           )}
 
           {/* Trade-in offer */}
-          {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && (
+          {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && bike.status !== 'available_soon' && (
             <p className="text-xs font-semibold text-[var(--highlight)]">
               Trade-in offer: minimum $500 off — any make or model if licensed and running.
             </p>

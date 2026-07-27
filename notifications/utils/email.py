@@ -417,6 +417,27 @@ def send_parts_admin_new_order(parts_order):
     _send_admin_sms(sms_messages.admin_new_parts_order(parts_order))
 
 
+def send_parts_supplier_dispatch(parts_order, *, to, subject, text_body):
+    """Send the staff-reviewed supplier email and audit the exact sent copy.
+
+    This deliberately accepts the operator-entered recipient and body: the
+    compose page is the safety gate, and no supplier address is configured or
+    prefilled by the application.
+    """
+    html_body = render_to_string(
+        'notifications/emails/parts_supplier_dispatch.html',
+        {'subject': subject, 'body': text_body},
+    )
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(parts_order, 'parts_wholesaler_dispatch', to, subject, text_body, html_body, 'sent')
+        return True
+    except Exception as e:
+        logger.error("Failed to send supplier dispatch for %s to %s: %s", parts_order.order_reference, to, e)
+        _record(parts_order, 'parts_wholesaler_dispatch', to, subject, text_body, html_body, 'failed', str(e))
+        return False
+
+
 def send_admin_new_order(order):
     recipients = _admin_recipients()
     if not recipients:

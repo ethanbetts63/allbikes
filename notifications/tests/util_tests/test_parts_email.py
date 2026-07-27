@@ -96,6 +96,19 @@ class TestSmsCopy:
         assert 'Jane Smith' in text
 
 
+class TestSupplierDispatch:
+    def test_sends_operator_reviewed_copy_and_records_it(self):
+        order = _order()
+        assert email_utils.send_parts_supplier_dispatch(
+            order, to='supplier@test.com', subject='Order', text_body='Hello supplier',
+        ) is True
+        msg = Message.objects.get(message_type='parts_wholesaler_dispatch')
+        assert msg.to == 'supplier@test.com'
+        assert msg.subject == 'Order'
+        assert msg.body_text == 'Hello supplier'
+        assert msg.status == 'sent'
+
+
 class TestWebhookIntegration:
     def test_paid_sends_both_emails(self, settings, monkeypatch):
         settings.ADMIN_EMAILS = ['ops@test.com']

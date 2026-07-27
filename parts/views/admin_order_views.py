@@ -1,13 +1,17 @@
 """Admin parts-order management (IsAdminUser)."""
 from datetime import date
 
+from decimal import Decimal
+
 from django.db.models import Case, IntegerField, Q, Value, When
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+from rest_framework.serializers import EmailField, ValidationError
 from rest_framework.views import APIView
 
-from parts.models import PartsOrder, PartsOrderItem
+from notifications.utils.email import send_parts_supplier_dispatch
+from parts.models import Part, PartsOrder, PartsOrderItem
 from parts.serializers.admin_order_serializers import (
     AdminPartsOrderDetailSerializer,
     AdminPartsOrderListSerializer,
@@ -28,6 +32,92 @@ STATUS_PRIORITY = {
 }
 # Fields the list may be explicitly ordered by (via ?ordering=, optional '-').
 ORDERABLE_FIELDS = {'created_at', 'total', 'customer_name', 'status'}
+
+
+def _get_order_or_404(pk):
+    try:
+        return PartsOrder.objects.prefetch_related('items').get(pk=pk)
+    except PartsOrder.DoesNotExist:
+        return None
+
+
+def _supplier_email_draft(order):
+    """Build the operator-editable supplier email from current PA feed prices."""
+    prices = Part.objects.in_bulk(
+        [item.part_number for item in order.items.all()], field_name='part_number'
+    )
+    rows = []
+    total = Decimal('0.00')
+    for item in order.items.all():
+        part = prices.get(item.part_number)
+        unit_price = part.wholesale_price_incl_gst if part else None
+        line_total = unit_price * item.quantity if unit_price is not None else None
+        if line_total is not None:
+            total += line_total
+        rows.append({
+            'part_number': item.part_number,
+            'description': item.description,
+            'model_name': item.model_name,
+            'model_code': item.model_code,
+            'section_code': item.section_code,
+            'ref_number': item.ref_number,
+            'quantity': item.quantity,
+            'unit_price': unit_price,
+            'line_total': line_total,
+        })
+
+    part_count = sum(row['quantity'] for row in rows)
+
+    address_lines = [order.customer_name, order.address_line1]
+    if order.address_line2:
+        address_lines.append(order.address_line2)
+    address_lines += [f'{order.suburb} {order.state} {order.postcode}', order.country]
+    if order.customer_phone:
+        address_lines.append(f'Phone: {order.customer_phone}')
+
+    item_lines = []
+    for position, row in enumerate(rows, start=1):
+        unit = f"${row['unit_price']:.2f}" if row['unit_price'] is not None else 'Price unavailable'
+        line = f"${row['line_total']:.2f}" if row['line_total'] is not None else 'Price unavailable'
+        context = []
+        if row['model_name']:
+            model = row['model_name']
+            if row['model_code']:
+                model += f" ({row['model_code']})"
+            context.append(f"Model: {model}")
+        if row['section_code']:
+            section = f"Section: {row['section_code']}"
+            if row['ref_number']:
+                section += f" · Ref {row['ref_number']}"
+            context.append(section)
+        context_line = f"\n   {' · '.join(context)}" if context else ''
+        item_lines.append(
+            f"{position}. {row['part_number']} — {row['description']}\n"
+            f"{context_line}\n"
+            f"   Quantity: {row['quantity']} × {unit} = {line}"
+        )
+
+    location = ' '.join(part for part in [order.suburb, order.state] if part)
+    subject = f'Drop-ship SYM parts order {order.order_reference}' + (f' — {location}' if location else '')
+    body = (
+        'Hello,\n\n'
+        f'Please arrange the following {part_count} SYM parts to be shipped directly to:\n\n'
+        + '\n'.join(address_lines)
+        + '\n\nPARTS REQUIRED\n'
+        + '\n\n'.join(item_lines)
+        + f'\n\nSupplier parts total (incl. GST): ${total:.2f}\n\n'
+        'If you cannot fulfil the order in full with current stock, please do not ship any part of the order. '
+        'Please let us know which parts are missing and an ETA for when they are expected back in stock.\n\n'
+        'Regards,\nScooterShop\nadmin@scootershop.com.au'
+    )
+    return {
+        'to': '',  # Never prefill a third-party recipient.
+        'subject': subject,
+        'body': body,
+        'items': rows,
+        'supplier_parts_total': total,
+        'has_unpriced_items': any(row['unit_price'] is None for row in rows),
+    }
 
 
 class AdminPartsOrderPagination(PageNumberPagination):
@@ -152,3 +242,38 @@ class AdminPartsOrderItemView(APIView):
 
         order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=order.pk)
         return Response(AdminPartsOrderDetailSerializer(order).data)
+
+
+class AdminPartsSupplierEmailView(APIView):
+    """Preview and send an operator-reviewed supplier dispatch email.
+
+    The recipient is intentionally never supplied by the server.  A staff member
+    must enter it on the compose screen before a third-party email can be sent.
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, pk):
+        order = _get_order_or_404(pk)
+        if not order:
+            return Response({'detail': 'Order not found.'}, status=404)
+        return Response(_supplier_email_draft(order))
+
+    def post(self, request, pk):
+        order = _get_order_or_404(pk)
+        if not order:
+            return Response({'detail': 'Order not found.'}, status=404)
+
+        try:
+            to = EmailField().run_validation((request.data.get('to') or '').strip())
+        except ValidationError:
+            return Response({'to': ['Enter a valid supplier email address.']}, status=400)
+
+        subject = (request.data.get('subject') or '').strip()
+        body = (request.data.get('body') or '').strip()
+        if not subject or not body:
+            return Response({'detail': 'Subject and email body are required.'}, status=400)
+
+        sent = send_parts_supplier_dispatch(order, to=to, subject=subject, text_body=body)
+        if not sent:
+            return Response({'detail': 'Email could not be sent. The failed attempt was recorded.'}, status=502)
+        return Response({'detail': 'Supplier email sent.'})
