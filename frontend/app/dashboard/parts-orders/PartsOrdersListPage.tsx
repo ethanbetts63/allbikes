@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table';
 import { adminGetPartsOrders } from '@/services/partsAdminService';
 import type { AdminPartsOrderListItem } from '@/types/partsAdmin';
+import { authedFetch } from '@/apiClient';
 
 // Badge classes reused by the order detail page's header status chip.
 export const PARTS_STATUS_BADGE: Record<string, string> = {
@@ -104,6 +105,16 @@ export default function PartsOrdersListPage() {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<Sort | null>(null); // null → backend "to-do first" default
   const [loading, setLoading] = useState(true);
+  const [backorderDays, setBackorderDays] = useState(7);
+
+  useEffect(() => {
+    authedFetch('/api/parts/admin/settings/')
+      .then((response) => response.ok ? response.json() : null)
+      .then((settings) => {
+        if (typeof settings?.backorder_hold_days === 'number') setBackorderDays(settings.backorder_hold_days);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -270,6 +281,21 @@ export default function PartsOrdersListPage() {
             </Button>
           </div>
         </footer>
+      </section>
+
+      <section className="mt-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <h2 className="text-lg font-bold text-slate-950">How it works</h2>
+        <ol className="mt-3 list-decimal space-y-3 pl-5 text-sm text-slate-600">
+          <li>Each day, the system imports the latest SYM price and availability data from Select Portal.</li>
+          <li>Customers choose their model, section and exploded diagram, then add the required parts to their cart.</li>
+          <li>At checkout, the customer price is Select Portal&apos;s base price plus our markup and domestic or international shipping.</li>
+          <li>Admin receives an email and SMS for each paid order. Open it here, review it, choose <strong>Email supplier</strong>, check the draft and send it to Select Scooters.</li>
+          <li>Select Scooters should fulfil only complete orders. If anything is unavailable, they should email us with the missing parts and expected restock date.</li>
+          <li>If one or more items go on backorder, mark those items and use <strong>Email backorder update</strong> to send the customer a full line-by-line update.</li>
+          <li>Mark affected items as backordered or refunded, depending on whether the order can be fulfilled within the {backorderDays}-day backorder window. Only use <strong>Email refund update</strong> after the relevant Stripe refund has been processed.</li>
+          <li>When you have arranged the order with the supplier, use <strong>Email order arranged</strong> to tell the customer their complete order has been arranged for shipment.</li>
+          <li><strong>Planned next:</strong> admin will receive email and SMS reminders when an order exceeds that window. Then remove unavailable items and process the appropriate partial or full Stripe refund.</li>
+        </ol>
       </section>
     </div>
   );

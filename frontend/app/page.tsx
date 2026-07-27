@@ -26,8 +26,8 @@ export const revalidate = 300;
 
 export default async function Page() {
   const [newBikes, usedBikes, products] = await Promise.all([
-    fetchFeaturedBikes('new', 'scooter'),
-    fetchFeaturedBikes('used', 'motorcycle'),
+    fetchCarouselBikes('new', 'scooter'),
+    fetchCarouselBikes('used', 'motorcycle'),
     fetchFeaturedProducts(),
   ]);
 
@@ -40,11 +40,11 @@ export default async function Page() {
   );
 }
 
-async function fetchFeaturedBikes(condition: string, vehicleType?: Bike['vehicle_type']): Promise<Bike[]> {
+async function fetchCarouselBikes(condition: string, vehicleType?: Bike['vehicle_type']): Promise<Bike[]> {
   const params = new URLSearchParams({
     page: '1',
+    page_size: '8',
     condition,
-    is_featured: 'true',
   });
   if (vehicleType) {
     params.set('vehicle_type', vehicleType);
@@ -54,7 +54,7 @@ async function fetchFeaturedBikes(condition: string, vehicleType?: Bike['vehicle
     const response = await getServerBikes(params);
     return response.results.filter((bike) => bike.status !== 'unavailable');
   } catch (error) {
-    console.error(`Failed to server-render featured ${condition} bikes:`, error);
+    console.error(`Failed to server-render ${condition} bikes:`, error);
     return [];
   }
 }

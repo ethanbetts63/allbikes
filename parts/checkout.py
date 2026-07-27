@@ -24,22 +24,6 @@ def is_international(country):
     return (country or 'Australia').strip().lower() not in _AU_NAMES
 
 
-def _section_context(part):
-    sp = (
-        SectionPart.objects.filter(part=part)
-        .select_related('section', 'section__parts_model')
-        .first()
-    )
-    if not sp:
-        return {}
-    return {
-        'model_name': sp.section.parts_model.name,
-        'model_code': sp.section.parts_model.model_code,
-        'section_code': sp.section.code,
-        'ref_number': sp.ref_number,
-    }
-
-
 @transaction.atomic
 def create_parts_order(*, customer, items):
     """Create a pending PartsOrder from validated customer data + cart items.
@@ -52,6 +36,8 @@ def create_parts_order(*, customer, items):
         raise CheckoutError("Your cart is empty.")
 
     settings = PartsSettings.get()
+    if not settings.enable_new_part_sales:
+        raise CheckoutError("New SYM parts sales are temporarily unavailable.")
     order_items = []
     subtotal = Decimal('0')
     has_backorder = False
@@ -64,9 +50,20 @@ def create_parts_order(*, customer, items):
         except (TypeError, ValueError):
             qty = 1
         qty = max(qty, 1)
+        if qty > 100:
+            raise CheckoutError("A maximum of 100 of any one part can be ordered at once.")
 
         part = Part.objects.filter(part_number=part_number).first()
-        if not part or not part.is_orderable:
+        section_part_id = line.get('section_part_id')
+        section_part = (
+            SectionPart.objects.select_related('section', 'section__parts_model')
+            .filter(pk=section_part_id, part=part).first()
+            if part and section_part_id else (
+                SectionPart.objects.select_related('section', 'section__parts_model')
+                .filter(part=part).first() if part else None
+            )
+        )
+        if not part or not part.is_orderable or not section_part:
             unavailable.append(part_number)
             continue
 
@@ -84,7 +81,10 @@ def create_parts_order(*, customer, items):
             unit_price=unit_price,
             line_total=line_total,
             backordered=backordered,
-            **_section_context(part),
+            model_name=section_part.section.parts_model.name,
+            model_code=section_part.section.parts_model.model_code,
+            section_code=section_part.section.code,
+            ref_number=section_part.ref_number,
         ))
 
     if unavailable:

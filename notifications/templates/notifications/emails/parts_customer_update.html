@@ -1,0 +1,8 @@
+<html><body style="font-family:Arial,sans-serif;color:#1f2937;line-height:1.5">
+<h2>SYM parts order update</h2><p>Hi {{ order.customer_name }},</p>
+{% if update_type == 'backorder' %}<p>One or more items in your order are now on backorder. We will hold the order for up to <strong>{{ backorder_days }} days</strong>. If an item cannot be obtained, we will refund that item and arrange shipment of the remaining available parts.</p>
+{% elif update_type == 'refund' %}<p>Some parts could not be obtained within the {{ backorder_days }}-day backorder window. We have processed a refund of <strong>${{ refunded_total }}</strong> for the cancelled lines. Refunds can take up to 14 days to appear, depending on your bank.</p>
+{% else %}<p>Good news — all parts in your order are available and we have arranged shipment to your delivery address.</p>{% endif %}
+<p><strong>Order reference:</strong> {{ order.order_reference }}</p>
+<table style="border-collapse:collapse;width:100%"><thead><tr><th align="left">Part</th><th align="left">Qty</th><th align="left">Status</th></tr></thead><tbody>{% for item in order.items.all %}<tr><td style="border-top:1px solid #ddd;padding:8px 0">{{ item.part_number }}<br><small>{{ item.description }}</small></td><td style="border-top:1px solid #ddd">{{ item.quantity }}</td><td style="border-top:1px solid #ddd">{% if item.status == 'refunded' %}Refunded{% elif item.backordered %}On backorder{% else %}In progress{% endif %}</td></tr>{% endfor %}</tbody></table>
+<p>Questions? admin@scootershop.com.au</p></body></html>

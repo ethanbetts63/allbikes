@@ -31,7 +31,7 @@ export function stockState(
 
   // Unknown or zero stock → backorder regardless of quantity.
   if (available == null || available <= 0) {
-    return { kind: 'backorder', badge: 'Backorder', note: 'Backorder — ships when restocked' };
+    return { kind: 'backorder', badge: 'Backorder', note: 'Backorder — ships complete within 14 days or partial shipment and refund if no stock.' };
   }
 
   // Ordering more than we hold → whole line backordered (ship-complete policy).

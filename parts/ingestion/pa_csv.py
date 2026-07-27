@@ -8,6 +8,8 @@ from decimal import Decimal, InvalidOperation
 
 logger = logging.getLogger(__name__)
 
+REQUIRED_COLUMNS = ('PART NUMBER', 'DESCRIPTION', 'AVAILABLE', 'RRP+GST')
+
 
 def _parse_price(raw):
     if raw is None:
@@ -41,6 +43,9 @@ def iter_pa_rows(path):
     with open(path, newline="", encoding="utf-8-sig", errors="replace") as fh:
         reader = csv.reader(fh)
         header = next(reader, None)  # PART NUMBER, DESCRIPTION, AVAILABLE, RRP+GST, ...
+        normalised_header = tuple((value or '').strip().upper() for value in (header or []))
+        if normalised_header[:len(REQUIRED_COLUMNS)] != REQUIRED_COLUMNS:
+            raise ValueError('PA CSV has an unexpected header; refusing to import it.')
         for row in reader:
             if not row:
                 continue

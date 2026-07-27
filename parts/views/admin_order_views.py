@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework.serializers import EmailField, ValidationError
 from rest_framework.views import APIView
 
-from notifications.utils.email import send_parts_supplier_dispatch
-from parts.models import Part, PartsOrder, PartsOrderItem
+from notifications.utils.email import send_parts_customer_update, send_parts_supplier_dispatch
+from parts.models import Part, PartsOrder, PartsOrderItem, PartsSettings
 from parts.serializers.admin_order_serializers import (
     AdminPartsOrderDetailSerializer,
     AdminPartsOrderListSerializer,
@@ -197,7 +197,7 @@ class AdminPartsOrderDetailView(APIView):
             order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=pk)
         except PartsOrder.DoesNotExist:
             return Response({'detail': 'Order not found.'}, status=404)
-        return Response(AdminPartsOrderDetailSerializer(order).data)
+        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context()).data)
 
     def patch(self, request, pk):
         try:
@@ -209,7 +209,7 @@ class AdminPartsOrderDetailView(APIView):
             return Response(serializer.errors, status=400)
         serializer.save()
         order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=pk)
-        return Response(AdminPartsOrderDetailSerializer(order).data)
+        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context()).data)
 
 
 class AdminPartsOrderItemView(APIView):
@@ -247,7 +247,11 @@ class AdminPartsOrderItemView(APIView):
         order.recompute_rollup()
 
         order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=order.pk)
-        return Response(AdminPartsOrderDetailSerializer(order).data)
+        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context()).data)
+
+
+def _admin_order_context():
+    return {'backorder_hold_days': PartsSettings.get().backorder_hold_days}
 
 
 class AdminPartsSupplierEmailView(APIView):
@@ -262,12 +266,16 @@ class AdminPartsSupplierEmailView(APIView):
         order = _get_order_or_404(pk)
         if not order:
             return Response({'detail': 'Order not found.'}, status=404)
+        if order.status != 'paid':
+            return Response({'detail': 'Supplier emails are only available for paid orders.'}, status=400)
         return Response(_supplier_email_draft(order))
 
     def post(self, request, pk):
         order = _get_order_or_404(pk)
         if not order:
             return Response({'detail': 'Order not found.'}, status=404)
+        if order.status != 'paid':
+            return Response({'detail': 'Supplier emails are only available for paid orders.'}, status=400)
 
         try:
             to = EmailField().run_validation((request.data.get('to') or '').strip())
@@ -283,3 +291,23 @@ class AdminPartsSupplierEmailView(APIView):
         if not sent:
             return Response({'detail': 'Email could not be sent. The failed attempt was recorded.'}, status=502)
         return Response({'detail': 'Supplier email sent.'})
+
+
+class AdminPartsCustomerUpdateView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, pk):
+        order = _get_order_or_404(pk)
+        if not order:
+            return Response({'detail': 'Order not found.'}, status=404)
+        update_type = request.data.get('type')
+        if update_type not in {'backorder', 'refund', 'arranged'}:
+            return Response({'detail': 'Invalid customer update type.'}, status=400)
+        if update_type == 'backorder' and not order.items.filter(backordered=True).exists():
+            return Response({'detail': 'No order items are currently on backorder.'}, status=400)
+        if update_type == 'refund' and not order.items.filter(status='refunded').exists():
+            return Response({'detail': 'No order items are marked refunded.'}, status=400)
+        sent = send_parts_customer_update(order, update_type, backorder_days=PartsSettings.get().backorder_hold_days)
+        if not sent:
+            return Response({'detail': 'Customer update could not be sent. The failed attempt was recorded.'}, status=502)
+        return Response({'detail': 'Customer update sent.'})

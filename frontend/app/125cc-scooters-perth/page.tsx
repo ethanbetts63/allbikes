@@ -3,6 +3,7 @@ import symImage from '@/assets/sym_22.webp';
 import { siteSettings } from '@/config/siteSettings';
 import {
   activeLandingBikes,
+  carouselBikes,
   fetchLandingBikes,
   prioritizeLandingBikes,
 } from '@/lib/landingInventory';
@@ -38,7 +39,7 @@ const faqData = [
   },
   {
     question: 'Do you sell both new and used 125cc scooters?',
-    answer: 'Yes, we do. Our current new and used 125cc stock is shown first on this page, with other featured scooters appearing further down if stock is limited so you still have something to compare against.',
+    answer: 'Yes, we do. Our current new and used 125cc stock is shown on this page.',
   },
   {
     question: 'Is a 125cc scooter a good option for getting around Perth?',
@@ -51,16 +52,14 @@ const faqData = [
 ];
 
 export default async function OneTwentyFiveCcScootersPage() {
-  const [targetNew, targetUsed, featuredNew, featuredUsed] = await Promise.all([
+  const [targetNew, targetUsed] = await Promise.all([
     fetchLandingBikes({ condition: 'new,demo', vehicle_type: 'scooter', max_engine_size: 125 }),
     fetchLandingBikes({ condition: 'used', vehicle_type: 'scooter', max_engine_size: 125 }),
-    fetchLandingBikes({ condition: 'new,demo', vehicle_type: 'scooter', is_featured: true }),
-    fetchLandingBikes({ condition: 'used', vehicle_type: 'scooter', is_featured: true }),
   ]);
 
-  const targetBikes = prioritizeLandingBikes([...targetNew, ...targetUsed], []);
-  const newBikes = prioritizeLandingBikes(targetNew, featuredNew);
-  const usedBikes = prioritizeLandingBikes(targetUsed, featuredUsed);
+  const targetBikes = prioritizeLandingBikes([...targetNew, ...targetUsed]);
+  const newBikes = carouselBikes(targetNew);
+  const usedBikes = carouselBikes(targetUsed);
 
   const structuredData = [
     buildLocalBusinessSchema(siteSettings),
@@ -113,14 +112,14 @@ export default async function OneTwentyFiveCcScootersPage() {
       newCarousel={{
         title: 'New 125cc Stock',
         bikes: newBikes,
-        description: 'Our current new 125cc scooters come up first here, with other featured new scooters filling in the rest of the carousel.',
+        description: 'Our current new 125cc scooters.',
         linkTo: newInventoryPath,
         linkText: 'All New 125cc Scooters',
       }}
       usedCarousel={{
         title: 'Used 125cc Stock',
         bikes: usedBikes,
-        description: 'Second-hand 125cc scooters we have available (or have recently sold) show up first, followed by other featured used scooters.',
+        description: 'Second-hand 125cc scooters we have available or have recently sold.',
         linkTo: usedInventoryPath,
         linkText: 'All Used 125cc Scooters',
       }}

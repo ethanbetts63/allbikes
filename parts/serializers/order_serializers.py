@@ -5,6 +5,7 @@ from parts.models import PartsOrder, PartsOrderItem
 
 class PartsCheckoutItemSerializer(serializers.Serializer):
     part_number = serializers.CharField(max_length=60)
+    section_part_id = serializers.IntegerField(min_value=1)
     quantity = serializers.IntegerField(min_value=1, default=1)
 
 
@@ -31,6 +32,11 @@ class PartsCheckoutSerializer(serializers.Serializer):
     def validate_items(self, value):
         if not value:
             raise serializers.ValidationError("Your cart is empty.")
+        if len(value) > 50:
+            raise serializers.ValidationError("Your cart can contain at most 50 different parts.")
+        part_numbers = [item['part_number'].strip() for item in value]
+        if len(part_numbers) != len(set(part_numbers)):
+            raise serializers.ValidationError("Each part can only appear once in your cart.")
         return value
 
 
@@ -53,4 +59,22 @@ class PartsOrderSerializer(serializers.ModelSerializer):
             'address_line1', 'address_line2', 'suburb', 'state', 'postcode', 'country',
             'has_backorder', 'subtotal', 'shipping', 'total', 'amount_paid', 'items',
         ]
+        read_only_fields = fields
+
+
+class PartsOrderCreatedSerializer(serializers.ModelSerializer):
+    """Returned only to the browser that has just created the order."""
+
+    class Meta:
+        model = PartsOrder
+        fields = ['order_reference', 'access_token']
+
+
+class PartsOrderConfirmationSerializer(serializers.ModelSerializer):
+    """Customer confirmation data. Deliberately excludes all personal details."""
+    items = PartsOrderItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = PartsOrder
+        fields = ['order_reference', 'status', 'has_backorder', 'subtotal', 'shipping', 'total', 'amount_paid', 'items']
         read_only_fields = fields

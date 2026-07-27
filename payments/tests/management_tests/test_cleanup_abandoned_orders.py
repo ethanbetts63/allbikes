@@ -7,10 +7,30 @@ from hire.models import HireBooking
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
 from payments.models import Order
 from payments.tests.factories.order_factory import OrderFactory
+from parts.checkout import create_parts_order
+from parts.models import Part, PartsSettings
+from parts.tests.factories import PartSectionFactory, SectionPartFactory
 
 
 @pytest.mark.django_db
 class TestCleanupAbandonedOrdersCommand:
+
+    def test_cancels_pending_parts_orders_older_than_7_days(self):
+        settings = PartsSettings.get()
+        part = Part.objects.create(part_number='CLEANUP-PART', wholesale_price_incl_gst=10, in_pa_feed=True)
+        section_part = SectionPartFactory(section=PartSectionFactory(), part=part)
+        order = create_parts_order(customer={
+            'customer_name': 'Cleanup Test', 'customer_email': 'cleanup@example.com',
+            'address_line1': '1 Test St', 'suburb': 'Perth', 'postcode': '6000',
+            'terms_accepted': True,
+        }, items=[{'part_number': part.part_number, 'section_part_id': section_part.id, 'quantity': 1}])
+        from parts.models import PartsOrder
+        PartsOrder.objects.filter(pk=order.pk).update(created_at=timezone.now() - timedelta(days=8))
+
+        call_command('cleanup_abandoned_orders')
+
+        order.refresh_from_db()
+        assert order.status == 'cancelled'
 
     def test_cancels_pending_payment_orders_older_than_7_days(self):
         """

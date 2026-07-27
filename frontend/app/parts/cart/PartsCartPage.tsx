@@ -12,7 +12,7 @@ export default function PartsCartPage() {
       <div className="mx-auto max-w-3xl px-4 py-12 text-center">
         <h1 className="text-2xl font-bold text-black">Your parts cart is empty</h1>
         <Link
-          href="/parts"
+          href="/parts/new/sym"
           className="mt-4 inline-block rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
         >
           Browse parts

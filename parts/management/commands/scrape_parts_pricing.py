@@ -37,7 +37,9 @@ class Command(BaseCommand):
             return
 
         stamp = pa_date.isoformat() if pa_date else "undated"
-        filename = f"PA-{stamp}.csv"
+        # A source URL may be replaced more than once on the same date. Include
+        # its hash so archive/ remains an append-only audit trail.
+        filename = f"PA-{stamp}-{digest[:12]}.csv"
         (storage.archive_dir("pricing") / filename).write_bytes(data)
         (storage.inbox_dir("pricing") / filename).write_bytes(data)
         self.stdout.write(self.style.SUCCESS(f"Scraped new PA file {filename} ({len(data)} bytes) -> inbox."))

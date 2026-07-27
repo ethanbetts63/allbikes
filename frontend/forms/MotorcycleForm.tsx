@@ -219,12 +219,6 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                             )} />
                         </div>
                         <div className="flex items-center space-x-2 pt-6">
-                             <Controller name="is_featured" control={control} render={({ field }) => (
-                                <Switch id="is_featured" checked={field.value} onCheckedChange={field.onChange} />
-                             )} />
-                            <Label htmlFor="is_featured">Featured?</Label>
-                        </div>
-                        <div className="flex items-center space-x-2 pt-6">
                             <Controller name="popular" control={control} render={({ field }) => (
                                 <Switch id="popular" checked={!!field.value} onCheckedChange={field.onChange} />
                             )} />

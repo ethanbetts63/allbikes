@@ -141,6 +141,10 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               <Wrench className="h-4 w-4 shrink-0" />
               Parts Orders
             </Link>
+            <Link href="/dashboard/parts-settings" className={navItemClass('/dashboard/parts-settings')}>
+              <Settings className="h-4 w-4 shrink-0" />
+              Parts Settings
+            </Link>
 
             <SectionLabel>Service</SectionLabel>
             <Link href="/dashboard/service-diary" className={navItemClass('/dashboard/service-diary')}>

@@ -43,7 +43,9 @@ class Command(BaseCommand):
             data = resp.content
             if not options["force"] and storage.sha256_bytes(data) in archived:
                 continue
-            filename = urlparse(book["url"]).path.rsplit("/", 1)[-1] or f"{book['name']}.xls"
+            source_filename = urlparse(book["url"]).path.rsplit("/", 1)[-1] or f"{book['name']}.xls"
+            stem, dot, suffix = source_filename.rpartition('.')
+            filename = f"{stem or source_filename}-{storage.sha256_bytes(data)[:12]}.{suffix or 'xls'}"
             (storage.archive_dir("books") / filename).write_bytes(data)
             (storage.inbox_dir("books") / filename).write_bytes(data)
             sidecar = {"name": book["name"], "cc_class": book["cc_class"], "url": book["url"]}

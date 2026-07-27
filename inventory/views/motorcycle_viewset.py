@@ -25,7 +25,7 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Optionally restricts the returned motorcycles by condition, featured status,
+        Optionally restricts the returned motorcycles by condition,
         and applies ordering and filtering, by using query parameters in the URL.
         """
         queryset = Motorcycle.objects.prefetch_related('images')
@@ -66,11 +66,6 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
         if make:
             queryset = queryset.filter(make__iexact=make)
             
-        # Filtering by featured status
-        is_featured = self.request.query_params.get('is_featured')
-        if is_featured and is_featured.lower() == 'true':
-            queryset = queryset.filter(is_featured=True)
-
         # Filtering by hire availability
         is_hire = self.request.query_params.get('is_hire')
         if is_hire and is_hire.lower() == 'true':

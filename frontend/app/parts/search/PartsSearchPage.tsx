@@ -122,7 +122,7 @@ function PartResultRow({ part }: { part: SearchPartResult }) {
   if (target) {
     return (
       <li>
-        <Link href={`/parts/${target.model_slug}/${target.section_id}`} className="block hover:bg-gray-50">
+        <Link href={`/parts/new/sym/${target.model_slug}/${target.section_id}`} className="block hover:bg-gray-50">
           {inner}
         </Link>
       </li>

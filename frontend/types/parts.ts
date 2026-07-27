@@ -5,6 +5,7 @@ export interface PartsModelListItem {
   model_code: string;
   cc_class: CcClass;
   slug: string;
+  last_ingested_at: string | null;
 }
 
 export interface PartSectionSummary {
@@ -23,6 +24,7 @@ export interface PartsModelDetail extends PartsModelListItem {
 export type VariantAxis = 'colour' | 'date' | 'none';
 
 export interface PartVariant {
+  section_part_id: number;
   part_number: string;
   description: string;
   colour_name: string | null;
@@ -50,6 +52,7 @@ export interface SectionDetail {
   name: string;
   model: { name: string; model_code: string; slug: string };
   diagram_image: string | null;
+  enable_new_part_sales: boolean;
   callouts: Callout[];
 }
 
@@ -79,6 +82,7 @@ export interface PartsSearchResults {
 
 /** A line item in the parts cart (persisted in localStorage). */
 export interface PartsCartItem {
+  section_part_id: number;
   part_number: string;
   description: string;
   colour_name: string | null;

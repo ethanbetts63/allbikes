@@ -9,6 +9,7 @@ from parts.views.catalog_views import (
 from parts.views.checkout_views import (
     CreatePartsOrderView,
     CreatePartsPaymentIntentView,
+    RetrievePartsOrderConfirmationView,
     RetrievePartsOrderView,
 )
 from parts.views.admin_order_views import (
@@ -16,7 +17,9 @@ from parts.views.admin_order_views import (
     AdminPartsOrderItemView,
     AdminPartsOrderListView,
     AdminPartsSupplierEmailView,
+    AdminPartsCustomerUpdateView,
 )
+from parts.views.settings_views import AdminPartsSettingsView
 
 app_name = "parts"
 
@@ -26,11 +29,14 @@ urlpatterns = [
     path("sections/<int:pk>/", SectionDetailView.as_view(), name="section-detail"),
     path("search/", PartsSearchView.as_view(), name="search"),
     path("orders/", CreatePartsOrderView.as_view(), name="order-create"),
+    path("orders/<str:order_reference>/confirmation/", RetrievePartsOrderConfirmationView.as_view(), name="order-confirmation"),
     path("create-payment-intent/", CreatePartsPaymentIntentView.as_view(), name="create-payment-intent"),
     # Admin (IsAdminUser)
     path("admin/orders/", AdminPartsOrderListView.as_view(), name="admin-order-list"),
+    path("admin/settings/", AdminPartsSettingsView.as_view(), name="admin-settings"),
     path("admin/orders/<int:pk>/", AdminPartsOrderDetailView.as_view(), name="admin-order-detail"),
     path("admin/orders/<int:pk>/supplier-email/", AdminPartsSupplierEmailView.as_view(), name="admin-order-supplier-email"),
+    path("admin/orders/<int:pk>/customer-update/", AdminPartsCustomerUpdateView.as_view(), name="admin-order-customer-update"),
     path("admin/items/<int:pk>/", AdminPartsOrderItemView.as_view(), name="admin-order-item"),
     # Public order retrieval by reference — keep last so it doesn't shadow admin/.
     path("orders/<str:order_reference>/", RetrievePartsOrderView.as_view(), name="order-detail"),

@@ -58,7 +58,7 @@ export default function PartsCheckoutDetailsPage() {
       const { terms_accepted, ...persistable } = form;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(persistable));
       const order = await createPartsOrder(form, items);
-      router.push(`/parts/checkout/payment?ref=${order.order_reference}`);
+      router.push(`/parts/checkout/payment?ref=${order.order_reference}&token=${encodeURIComponent(order.access_token)}`);
     } catch (err) {
       const e2 = err as Error & { unavailable?: string[] };
       setError(
@@ -104,13 +104,11 @@ export default function PartsCheckoutDetailsPage() {
               className="mt-0.5"
             />
             <span>
-              I accept the{' '}
+              I have read and accept the{' '}
               <Link href="/terms?type=purchase" target="_blank" className="underline">
                 terms &amp; conditions
               </Link>{' '}
-              and understand that some items may be placed on <strong>backorder after payment</strong>. Backordered parts
-              are held for up to <strong>14 days</strong>; if we can&apos;t secure shipment within 14 days, that part is
-              refunded.
+              .
             </span>
           </label>
 

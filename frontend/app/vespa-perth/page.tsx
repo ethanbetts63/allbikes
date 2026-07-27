@@ -5,9 +5,9 @@ import symImage from '@/assets/sym_22.webp';
 import { siteSettings } from '@/config/siteSettings';
 import {
   activeLandingBikes,
+  carouselBikes,
   exactMake,
   fetchLandingBikes,
-  prioritizeLandingBikes,
 } from '@/lib/landingInventory';
 import {
   buildBikeListSchema,
@@ -50,14 +50,14 @@ const faqData = [
 ];
 
 export default async function VespaPerthPage() {
-  const [vespaSearchResults, featuredNew, featuredUsed] = await Promise.all([
+  const [vespaSearchResults, otherNewScooters] = await Promise.all([
     fetchLandingBikes({ condition: 'used', vehicle_type: 'scooter', search: 'vespa' }),
-    fetchLandingBikes({ condition: 'new,demo', vehicle_type: 'scooter', is_featured: true }),
-    fetchLandingBikes({ condition: 'used', vehicle_type: 'scooter', is_featured: true }),
+    fetchLandingBikes({ condition: 'new,demo', vehicle_type: 'scooter' }),
   ]);
 
   const vespas = exactMake(vespaSearchResults, 'Vespa');
-  const usedBikes = prioritizeLandingBikes(vespas, featuredUsed);
+  const newBikes = carouselBikes(otherNewScooters);
+  const usedBikes = carouselBikes(vespas);
   const structuredData = [
     buildLocalBusinessSchema(siteSettings),
     buildBreadcrumbSchema([
@@ -73,7 +73,7 @@ export default async function VespaPerthPage() {
       reviews={vespaReviews}
       hero={{
         layout: 'single',
-        newBikes: activeLandingBikes(featuredNew),
+        newBikes: activeLandingBikes(otherNewScooters),
         usedBikes: activeLandingBikes(vespas),
         error: null,
         phoneNumber: siteSettings.phone_number,
@@ -108,16 +108,16 @@ export default async function VespaPerthPage() {
         },
       }}
       newCarousel={{
-        title: 'Featured New Scooters',
-        bikes: featuredNew,
+        title: 'New Scooters',
+        bikes: newBikes,
         description: 'We do not sell new Vespas, but these are some of the new scooters currently available from brands we support.',
         linkTo: '/inventory/scooters/new',
         linkText: 'All New Scooters',
       }}
       usedCarousel={{
-        title: 'Used Vespas First',
+        title: 'Used Vespas',
         bikes: usedBikes,
-        description: 'Current and recently sold Vespas appear first, followed by other featured used scooters.',
+        description: 'Current and recently sold Vespas.',
         linkTo: usedInventoryPath,
         linkText: 'Browse Used Scooters',
       }}

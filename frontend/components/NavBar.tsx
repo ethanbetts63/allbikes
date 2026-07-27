@@ -39,7 +39,7 @@ const NavBar = () => {
           {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}
           <DesktopScootersMenu />
           <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Motorcycles</Link>
-          <Link href="/parts" className={NAV_LINK}>SYM Parts</Link>
+          <Link href="/parts/new/sym" className={NAV_LINK}>SYM Parts</Link>
           {siteSettings.show_workshop_clearance && <Link href="/inventory/motorcycles/parts" className={NAV_LINK}>Workshop Clearance</Link>}
           <Link href="/contact" className={cn(NAV_LINK, "border border-white/30 px-4 py-2 hover:border-amber-400")}>
             Contact

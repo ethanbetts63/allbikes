@@ -1,0 +1,14 @@
+Hi {{ order.customer_name }},
+
+{% if update_type == 'backorder' %}One or more items in your SYM parts order are now on backorder. We will hold the order for up to {{ backorder_days }} days. If an item cannot be obtained in that time, we will refund that item and arrange shipment of the remaining available parts.
+{% elif update_type == 'refund' %}Some parts in your SYM order could not be obtained within the {{ backorder_days }}-day backorder window. We have processed a refund of ${{ refunded_total }} for the cancelled lines. Refunds can take up to 14 days to appear, depending on your bank.
+{% else %}Good news — all parts in your order are available and we have arranged shipment to your delivery address. The supplier will send the order directly to you.
+{% endif %}
+
+Order reference: {{ order.order_reference }}
+
+ORDER STATUS
+{% for item in order.items.all %}{{ item.part_number }} — {{ item.description }} · Qty {{ item.quantity }} · {% if item.status == 'refunded' %}Refunded{% elif item.backordered %}On backorder{% else %}In progress{% endif %}
+{% endfor %}
+
+Questions? admin@scootershop.com.au

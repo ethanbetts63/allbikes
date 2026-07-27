@@ -13,6 +13,16 @@ from parts.ingestion.importer import import_pricing
 from parts.ingestion.pa_csv import iter_pa_rows
 
 logger = logging.getLogger(__name__)
+MIN_PRICING_ROWS = 100
+
+
+def _validated_rows(path):
+    rows = list(iter_pa_rows(str(path)))
+    if len(rows) < MIN_PRICING_ROWS:
+        raise ValueError(
+            f"Pricing file {path} has only {len(rows)} rows; refusing to replace live availability."
+        )
+    return rows
 
 
 class Command(BaseCommand):
@@ -23,7 +33,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options.get("file"):
-            applied = import_pricing(iter_pa_rows(options["file"]))
+            applied = import_pricing(_validated_rows(options["file"]))
             self.stdout.write(self.style.SUCCESS(f"Imported {applied} rows from {options['file']}."))
             return
 
@@ -33,6 +43,6 @@ class Command(BaseCommand):
             return
 
         for path in files:
-            applied = import_pricing(iter_pa_rows(str(path)))
+            applied = import_pricing(_validated_rows(path))
             path.unlink()
             self.stdout.write(self.style.SUCCESS(f"Imported {applied} rows from {path.name}; removed from inbox."))

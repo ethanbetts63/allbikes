@@ -13,11 +13,15 @@ export default function PartsSectionPage({ section }: { section: SectionDetail }
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <nav className="mb-4 text-sm text-gray-600">
-        <Link href="/parts" className="hover:underline">
-          SYM Parts
+        <Link href="/" className="hover:underline">
+          Home
         </Link>
         <span className="mx-2">/</span>
-        <Link href={`/parts/${section.model.slug}`} className="hover:underline">
+        <Link href="/parts/new/sym" className="hover:underline">
+          New SYM Parts
+        </Link>
+        <span className="mx-2">/</span>
+        <Link href={`/parts/new/sym/${section.model.slug}`} className="hover:underline">
           {section.model.name}
         </Link>
         <span className="mx-2">/</span>

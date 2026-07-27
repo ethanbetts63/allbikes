@@ -87,9 +87,38 @@ class TestAdminDetailAndUpdate:
         assert resp.json()['admin_notes'] == 'called SP'
 
 
+class TestAdminPartsSettings:
+    def test_requires_admin(self):
+        assert APIClient().get('/api/parts/admin/settings/').status_code in (401, 403)
+
+    def test_reads_and_updates_settings(self, admin_client):
+        response = admin_client.get('/api/parts/admin/settings/')
+        assert response.status_code == 200
+        assert response.json()['markup_percentage'] == '20.00'
+
+        response = admin_client.patch(
+            '/api/parts/admin/settings/',
+            {
+                'markup_percentage': '25.00', 'domestic_shipping_fee': '19.50',
+                'international_shipping_fee': '65.00', 'enable_new_part_sales': False,
+            },
+            format='json',
+        )
+        assert response.status_code == 200
+        assert response.json()['markup_percentage'] == '25.00'
+        assert response.json()['domestic_shipping_fee'] == '19.50'
+        assert response.json()['enable_new_part_sales'] is False
+
+    def test_rejects_negative_amounts(self, admin_client):
+        response = admin_client.patch('/api/parts/admin/settings/', {'domestic_shipping_fee': '-1.00'}, format='json')
+        assert response.status_code == 400
+
+
 class TestSupplierEmail:
     def test_draft_uses_supplier_prices_and_keeps_recipient_blank(self, admin_client):
         order = _order()
+        order.status = 'paid'
+        order.save()
         response = admin_client.get(f'/api/parts/admin/orders/{order.id}/supplier-email/')
         assert response.status_code == 200
         data = response.json()

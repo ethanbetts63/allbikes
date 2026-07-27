@@ -29,9 +29,9 @@ export default async function Page() {
 async function fetchFeaturedUsedMotorcycles(): Promise<Bike[]> {
   const params = new URLSearchParams({
     page: '1',
+    page_size: '8',
     condition: 'used',
     vehicle_type: 'motorcycle',
-    is_featured: 'true',
   });
   try {
     const response = await getServerBikes(params);

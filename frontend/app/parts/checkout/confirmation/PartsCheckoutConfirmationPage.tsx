@@ -20,6 +20,7 @@ export default function PartsCheckoutConfirmationPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reference = searchParams.get('ref');
+  const accessToken = searchParams.get('token');
   const { clear } = usePartsCart();
 
   const [mode, setMode] = useState<Mode>('waiting');
@@ -27,8 +28,12 @@ export default function PartsCheckoutConfirmationPage() {
   const clearedRef = useRef(false);
 
   useEffect(() => {
-    if (!reference) {
-      router.replace('/parts');
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (!reference || !accessToken) {
+      router.replace('/parts/new/sym');
       return;
     }
     if (!clearedRef.current) {
@@ -42,7 +47,7 @@ export default function PartsCheckoutConfirmationPage() {
     const poll = async () => {
       attempts += 1;
       try {
-        const ord = await getPartsOrder(reference);
+        const ord = await getPartsOrder(reference, accessToken);
         if (cancelled) return;
         setOrder(ord);
         if (PAID_STATES.includes(ord.status)) {
@@ -63,7 +68,7 @@ export default function PartsCheckoutConfirmationPage() {
     return () => {
       cancelled = true;
     };
-  }, [reference, router, clear]);
+  }, [reference, accessToken, router, clear]);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -139,7 +144,7 @@ export default function PartsCheckoutConfirmationPage() {
 
           <div className="flex items-center gap-4">
             <Link
-              href="/parts"
+              href="/parts/new/sym"
               className="inline-block rounded-md border border-gray-300 px-5 py-2.5 text-sm font-medium text-black hover:border-black"
             >
               Back to parts

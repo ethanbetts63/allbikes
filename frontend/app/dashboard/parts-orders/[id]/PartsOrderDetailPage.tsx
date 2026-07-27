@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table';
 import {
   adminGetPartsOrder, adminUpdatePartsOrder, adminUpdatePartsOrderItem,
+  adminSendPartsCustomerUpdate,
 } from '@/services/partsAdminService';
 import type { AdminPartsOrder, AdminPartsOrderItem, ItemAction } from '@/types/partsAdmin';
 import { PARTS_STATUS_BADGE, BTN_INACTIVE } from '../PartsOrdersListPage';
@@ -54,6 +55,18 @@ export default function PartsOrderDetailPage() {
     catch { setMsg({ text: 'Action failed.', error: true }); }
     finally { setBusy(false); }
   };
+  const customerUpdate = async (type: 'backorder' | 'refund' | 'arranged') => {
+    const confirmationCopy = {
+      backorder: 'This will send an email to the customer. This type should only be sent if one or more items in the order are on backorder.',
+      refund: 'This will send an email to the customer. This type should only be sent after the relevant Stripe refund has been processed.',
+      arranged: 'This will send an email to the customer. This type should only be sent once you have arranged the order with the supplier.',
+    };
+    if (!order || !confirm(confirmationCopy[type])) return;
+    setBusy(true); setMsg(null);
+    try { await adminSendPartsCustomerUpdate(order.id, type); refresh(await adminGetPartsOrder(order.id)); setMsg({ text: 'Customer update sent.' }); }
+    catch (error) { setMsg({ text: error instanceof Error ? error.message : 'Customer update failed.', error: true }); }
+    finally { setBusy(false); }
+  };
 
   if (loading) return <div className="flex h-64 items-center justify-center"><Spinner className="h-12 w-12" /></div>;
   if (!order) return <p className="p-6 text-destructive">Order not found.</p>;
@@ -83,9 +96,11 @@ export default function PartsOrderDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button asChild className="border-sky-700 bg-sky-600 text-white hover:bg-sky-700 hover:text-white">
-              <Link href={`/dashboard/parts-orders/${order.id}/supplier-email`}>Email supplier</Link>
-            </Button>
+            {order.status === 'paid' && (
+              <Button asChild className="border-sky-700 bg-sky-600 text-white hover:bg-sky-700 hover:text-white">
+                <Link href={`/dashboard/parts-orders/${order.id}/supplier-email`}>Email supplier</Link>
+              </Button>
+            )}
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -153,6 +168,27 @@ export default function PartsOrderDetailPage() {
             <h2 className="mb-2 font-bold">Ship to</h2>
             <p className="text-sm text-[var(--text-dark-secondary)]">{address}</p>
           </div>
+        </div>
+
+        <div className="mb-6">
+          <h2 className="mb-2 font-bold">Customer updates</h2>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" className={BTN_INACTIVE} disabled={busy || !order.items.some((item) => item.backordered)} onClick={() => customerUpdate('backorder')}>Email backorder update</Button>
+            <Button variant="outline" className={BTN_INACTIVE} disabled={busy || !order.items.some((item) => item.status === 'refunded')} onClick={() => customerUpdate('refund')}>Email refund update</Button>
+            <Button variant="outline" className={BTN_INACTIVE} disabled={busy} onClick={() => customerUpdate('arranged')}>Email order arranged</Button>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <h2 className="mb-2 font-bold">Communications</h2>
+          {order.messages.length === 0 ? <p className="text-sm text-[var(--text-dark-secondary)]">No emails recorded for this order yet.</p> : (
+            <div className="overflow-hidden rounded-md border border-border-light">
+              {order.messages.map((message) => <Link key={message.id} href={`/dashboard/messages/${message.id}`} className="block border-b border-border-light p-3 text-sm last:border-0 hover:bg-gray-50">
+                <div className="flex flex-wrap justify-between gap-2"><strong>{message.subject || message.message_type.replace(/^parts_/, '').replace(/_/g, ' ')}</strong><span className={message.status === 'sent' ? 'text-green-700' : 'text-red-600'}>{message.status}</span></div>
+                <div className="mt-1 text-xs text-[var(--text-dark-secondary)]">To: {message.to} · {formatDate(message.sent_at ?? message.created_at)}</div>
+              </Link>)}
+            </div>
+          )}
         </div>
 
         {/* Internal notes */}

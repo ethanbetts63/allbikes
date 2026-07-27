@@ -90,3 +90,13 @@ export async function adminSendPartsSupplierEmail(id: number, data: { to: string
     throw new Error(payload.detail || payload.to?.[0] || 'Supplier email could not be sent.');
   }
 }
+
+export async function adminSendPartsCustomerUpdate(id: number, type: 'backorder' | 'refund' | 'arranged'): Promise<void> {
+  const res = await authedFetch(`/api/parts/admin/orders/${id}/customer-update/`, {
+    method: 'POST', body: JSON.stringify({ type }),
+  });
+  if (!res.ok) {
+    const payload = await res.json().catch(() => ({}));
+    throw new Error(payload.detail || 'Customer update could not be sent.');
+  }
+}

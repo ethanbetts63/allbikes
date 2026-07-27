@@ -89,8 +89,9 @@ function VariantLine({
   const stock = stockState(variant.available_qty, cartQuantity || 1);
 
   const add = () => {
-    if (!variant.price) return;
+    if (!variant.price || !section.enable_new_part_sales) return;
     addItem({
+      section_part_id: variant.section_part_id,
       part_number: variant.part_number,
       description: variant.description,
       colour_name: variant.colour_name,
@@ -116,7 +117,9 @@ function VariantLine({
           )}
         </div>
         <div className="text-xs">
-          {!variant.orderable ? (
+          {!section.enable_new_part_sales ? (
+            <span className="text-gray-400">Sales temporarily unavailable</span>
+          ) : !variant.orderable ? (
             <span className="text-gray-400">Not available</span>
           ) : stock.kind === 'backorder' ? (
             <span className="font-medium text-amber-700">{stock.note}</span>
@@ -157,7 +160,7 @@ function VariantLine({
           <button
             type="button"
             onClick={add}
-            disabled={!variant.orderable}
+            disabled={!variant.orderable || !section.enable_new_part_sales}
             className="rounded-md bg-black px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
           >
             Add

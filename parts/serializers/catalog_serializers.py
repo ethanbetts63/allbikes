@@ -22,7 +22,7 @@ def _image_url(image, request):
 class PartsModelListSerializer(serializers.ModelSerializer):
     class Meta:
         model = PartsModel
-        fields = ["name", "model_code", "cc_class", "slug"]
+        fields = ["name", "model_code", "cc_class", "slug", "last_ingested_at"]
 
 
 class PartSectionSummarySerializer(serializers.ModelSerializer):
@@ -41,7 +41,7 @@ class PartsModelDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PartsModel
-        fields = ["name", "model_code", "cc_class", "slug", "sections"]
+        fields = ["name", "model_code", "cc_class", "slug", "last_ingested_at", "sections"]
 
     def get_sections(self, obj):
         sections = obj.sections.all()
@@ -77,6 +77,7 @@ def _build_variant(section_part, axis, settings):
     orderable = part.is_orderable
     backorder = orderable and (part.available_qty is None or part.available_qty < section_part.quantity)
     return {
+        "section_part_id": section_part.id,
         "part_number": part.part_number,
         "description": section_part.description or part.description,
         "colour_name": part.colour_name or None,
@@ -126,5 +127,6 @@ def build_section_payload(section, settings, request=None):
             "slug": section.parts_model.slug,
         },
         "diagram_image": _image_url(section.diagram_image, request),
+        "enable_new_part_sales": settings.enable_new_part_sales,
         "callouts": callouts,
     }

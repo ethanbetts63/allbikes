@@ -77,10 +77,6 @@ class Motorcycle(models.Model):
         default="for_sale",
         help_text="The sales status of the motorcycle.",
     )
-    is_featured = models.BooleanField(
-        default=True,
-        help_text="Featured bikes are shown on the homepage.",
-    )
     popular = models.BooleanField(
         default=False,
         help_text="Popular bikes are highlighted in the listing page.",

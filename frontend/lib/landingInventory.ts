@@ -26,19 +26,14 @@ export function activeLandingBikes(bikes: Bike[]): Bike[] {
   return bikes.filter((bike) => ACTIVE_STATUSES.has(bike.status));
 }
 
-export function prioritizeLandingBikes(targetBikes: Bike[], fallbackBikes: Bike[]): Bike[] {
-  const targetActive = targetBikes.filter(
-    (bike) => bike.status !== 'unavailable' && ACTIVE_STATUSES.has(bike.status),
-  );
-  const targetSold = targetBikes.filter((bike) => bike.status === 'sold');
-  const fallback = fallbackBikes.filter((bike) => bike.status !== 'unavailable');
-  const seen = new Set<number>();
+export function prioritizeLandingBikes(bikes: Bike[]): Bike[] {
+  const active = bikes.filter((bike) => bike.status !== 'unavailable' && ACTIVE_STATUSES.has(bike.status));
+  const sold = bikes.filter((bike) => bike.status === 'sold');
+  return [...active, ...sold];
+}
 
-  return [...targetActive, ...targetSold, ...fallback].filter((bike) => {
-    if (seen.has(bike.id)) return false;
-    seen.add(bike.id);
-    return true;
-  });
+export function carouselBikes(bikes: Bike[], limit = 8): Bike[] {
+  return prioritizeLandingBikes(bikes).slice(0, limit);
 }
 
 export function exactMake(bikes: Bike[], make: string): Bike[] {

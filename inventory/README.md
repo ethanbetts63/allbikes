@@ -6,7 +6,7 @@ The `inventory` application is responsible for managing motorcycle and scooter i
 
 ### `Motorcycle`
 Represents a motorcycle or scooter in the inventory.
--   **Fields**: `make`, `model`, `year`, `price`, `condition` (New, Used, Demo), `status` (For Sale, Sold, Reserved, Unavailable), `is_featured`, `odometer`, `engine_size`, `range`, `seats`, `transmission`, `description`, `youtube_link`, `date_posted`, `rego`, `rego_exp`, `stock_number`, `warranty_months`.
+-   **Fields**: `make`, `model`, `year`, `price`, `condition` (New, Used, Demo), `status` (For Sale, Sold, Reserved, Unavailable), `odometer`, `engine_size`, `range`, `seats`, `transmission`, `description`, `youtube_link`, `date_posted`, `rego`, `rego_exp`, `stock_number`, `warranty_months`.
 -   **Choices**: Defined for `status`, `condition`, and `transmission`.
 -   **String Representation**: Returns `{year} {make} {model}`.
 
@@ -43,7 +43,7 @@ Serializes the `MotorcycleImage` model.
 A `ModelViewSet` providing full CRUD operations for `Motorcycle` instances.
 -   **Permissions**: Public read-only access (`list`, `retrieve`), and admin-only access for write operations (create, update, delete).
 -   **Pagination**: Uses `StandardResultsSetPagination` (12 items per page by default).
--   **Filtering**: Supports filtering by `condition`, `is_featured`, `min_price`, `max_price`, `min_year`, `max_year`, `min_engine_size`, `max_engine_size`.
+-   **Filtering**: Supports filtering by `condition`, `min_price`, `max_price`, `min_year`, `max_year`, `min_engine_size`, `max_engine_size`.
 -   **Ordering**: Supports ordering by `price`, `year`, and `engine_size` (ascending or descending), defaulting to `-date_posted`.
 -   **Custom Action (`manage_images`)**: An admin-only action (`POST` request to `/bikes/<pk>/manage_images/`) to update the order of existing images and delete images not included in the request payload. It ensures data integrity using atomic transactions.
 
@@ -91,7 +91,6 @@ The detail page for a single bike uses a "slug" for better readability and searc
 ### Filtering Examples
 
 -   **New bikes**: `/api/inventory/bikes/?condition=new`
--   **Featured bikes**: `/api/inventory/bikes/?is_featured=true`
 -   **Bikes between $5000 and $10000**: `/api/inventory/bikes/?min_price=5000&max_price=10000`
 -   **Order by price ascending**: `/api/inventory/bikes/?ordering=price_asc`
 -   **Combined filters**: `/api/inventory/bikes/?condition=used&min_year=2020&ordering=year_desc`

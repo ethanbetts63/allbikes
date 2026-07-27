@@ -4,9 +4,9 @@ import symWorkshopImage from '@/assets/close_up.jpg';
 import { siteSettings } from '@/config/siteSettings';
 import {
   activeLandingBikes,
+  carouselBikes,
   exactMake,
   fetchLandingBikes,
-  prioritizeLandingBikes,
 } from '@/lib/landingInventory';
 import {
   buildBikeListSchema,
@@ -40,7 +40,7 @@ const faqData = [
   },
   {
     question: 'Do you also sell used SYM scooters?',
-    answer: 'Yes. When trade-ins and used SYM scooters come through our workshop, they are inspected and listed here first, ahead of other featured used stock.',
+    answer: 'Yes. When trade-ins and used SYM scooters come through our workshop, they are inspected and listed here.',
   },
   {
     question: 'Can I trade in my old bike on a new SYM?',
@@ -53,17 +53,15 @@ const faqData = [
 ];
 
 export default async function SymPage() {
-  const [newSearchResults, usedSearchResults, featuredNew, featuredUsed] = await Promise.all([
+  const [newSearchResults, usedSearchResults] = await Promise.all([
     fetchLandingBikes({ condition: 'new,demo', vehicle_type: 'scooter', search: 'sym' }),
     fetchLandingBikes({ condition: 'used', vehicle_type: 'scooter', search: 'sym' }),
-    fetchLandingBikes({ condition: 'new,demo', vehicle_type: 'scooter', is_featured: true }),
-    fetchLandingBikes({ condition: 'used', vehicle_type: 'scooter', is_featured: true }),
   ]);
 
   const newSyms = exactMake(newSearchResults, 'SYM');
   const usedSyms = exactMake(usedSearchResults, 'SYM');
-  const newBikes = prioritizeLandingBikes(newSyms, featuredNew);
-  const usedBikes = prioritizeLandingBikes(usedSyms, featuredUsed);
+  const newBikes = carouselBikes(newSyms);
+  const usedBikes = carouselBikes(usedSyms);
 
   const structuredData = [
     buildLocalBusinessSchema(siteSettings),
@@ -114,16 +112,16 @@ export default async function SymPage() {
         },
       }}
       newCarousel={{
-        title: 'New SYM Scooters First',
+        title: 'New SYM Scooters',
         bikes: newBikes,
-        description: 'As a SYM dealership, our new SYM stock appears first here, followed by other featured new scooters when available.',
+        description: 'As a SYM dealership, here is our current new SYM stock.',
         linkTo: newInventoryPath,
         linkText: 'All New SYM Scooters',
       }}
       usedCarousel={{
-        title: 'Used SYM Scooters First',
+        title: 'Used SYM Scooters',
         bikes: usedBikes,
-        description: 'Current and recently sold used SYMs appear first, followed by other featured used scooters.',
+        description: 'Our current and recently sold used SYM scooters.',
         linkTo: usedInventoryPath,
         linkText: 'All Used SYM Scooters',
       }}

@@ -44,6 +44,17 @@ def _customer(**over):
 
 
 class TestCreatePartsOrderService:
+    def test_sales_disabled_blocks_checkout(self, settings_fixture):
+        p = PartFactory(part_number='DISABLED-1', wholesale_price_incl_gst=Decimal('10'), in_pa_feed=True)
+        section_part = SectionPartFactory(section=PartSectionFactory(), part=p)
+        settings = PartsSettings.get()
+        settings.enable_new_part_sales = False
+        settings.save()
+
+        with pytest.raises(CheckoutError, match='temporarily unavailable'):
+            create_parts_order(customer=_customer(), items=[{
+                'part_number': p.part_number, 'section_part_id': section_part.id, 'quantity': 1,
+            }])
     def test_totals_with_markup_and_shipping(self, settings_fixture):
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('100'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
@@ -85,20 +96,22 @@ class TestCreatePartsOrderService:
 class TestCheckoutViews:
     def test_create_order_endpoint(self, client, settings_fixture):
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('100'), available_qty=5, in_pa_feed=True)
-        SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
+        section_part = SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
         resp = client.post('/api/parts/orders/', {
-            **_customer(), 'items': [{'part_number': 'A-1', 'quantity': 1}],
+            **_customer(), 'items': [{'part_number': 'A-1', 'section_part_id': section_part.id, 'quantity': 1}],
         }, format='json')
         assert resp.status_code == 201
-        assert resp.json()['total'] == '135.00'  # 120 + 15
+        assert resp.json()['order_reference'].startswith('SP-')
+        assert len(resp.json()['access_token']) >= 40
 
     def test_terms_required(self, client, settings_fixture):
         resp = client.post('/api/parts/orders/', {**_customer(terms_accepted=False), 'items': [{'part_number': 'X'}]}, format='json')
         assert resp.status_code == 400
 
     def test_unavailable_returns_409(self, client, settings_fixture):
-        PartFactory(part_number='A-1', in_pa_feed=False, wholesale_price_incl_gst=None)
-        resp = client.post('/api/parts/orders/', {**_customer(), 'items': [{'part_number': 'A-1', 'quantity': 1}]}, format='json')
+        part = PartFactory(part_number='A-1', in_pa_feed=False, wholesale_price_incl_gst=None)
+        section_part = SectionPartFactory(section=PartSectionFactory(), part=part)
+        resp = client.post('/api/parts/orders/', {**_customer(), 'items': [{'part_number': 'A-1', 'section_part_id': section_part.id, 'quantity': 1}]}, format='json')
         assert resp.status_code == 409
         assert 'A-1' in resp.json()['unavailable']
 
@@ -107,8 +120,11 @@ class TestCheckoutViews:
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
         order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
         resp = client.get(f'/api/parts/orders/{order.order_reference}/')
+        assert resp.status_code in (401, 403)
+        resp = client.get(f'/api/parts/orders/{order.order_reference}/confirmation/?token={order.access_token}')
         assert resp.status_code == 200
         assert resp.json()['order_reference'] == order.order_reference
+        assert 'customer_email' not in resp.json()
 
     @patch('parts.views.checkout_views.stripe')
     def test_create_payment_intent(self, mock_stripe, client, settings_fixture):
@@ -116,7 +132,7 @@ class TestCheckoutViews:
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
         order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
-        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference}, format='json')
+        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference, 'access_token': order.access_token}, format='json')
         assert resp.status_code == 200
         assert resp.json()['clientSecret'] == 'cs_test'
         assert Payment.objects.filter(parts_order=order, status='pending').count() == 1
@@ -128,7 +144,7 @@ class TestCheckoutViews:
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
         order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
         Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_x', amount=order.total, status='pending')
-        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference}, format='json')
+        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference, 'access_token': order.access_token}, format='json')
         assert resp.status_code == 200
         assert resp.json()['clientSecret'] == 'cs_existing'
         mock_stripe.PaymentIntent.create.assert_not_called()
@@ -142,7 +158,7 @@ class TestCheckoutViews:
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
         order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
         Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_old', amount=order.total, status='failed')
-        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference}, format='json')
+        resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference, 'access_token': order.access_token}, format='json')
         assert resp.status_code == 200
         assert resp.json()['clientSecret'] == 'cs_new'
         assert Payment.objects.filter(parts_order=order).count() == 1  # replaced, not duplicated

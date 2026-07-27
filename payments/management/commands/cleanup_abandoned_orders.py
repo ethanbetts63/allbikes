@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from hire.models import HireBooking
 from payments.models import Order
+from parts.models import PartsOrder
 
 
 class Command(BaseCommand):
@@ -23,7 +24,13 @@ class Command(BaseCommand):
             created_at__lt=cutoff,
         ).update(status='cancelled')
 
+        cancelled_parts_orders = PartsOrder.objects.filter(
+            status='pending_payment',
+            created_at__lt=cutoff,
+        ).update(status='cancelled')
+
         self.stdout.write(
             f"Done. Cancelled {cancelled_orders} abandoned order(s) and "
-            f"{cancelled_bookings} abandoned hire booking(s)."
+            f"{cancelled_bookings} abandoned hire booking(s), and "
+            f"{cancelled_parts_orders} abandoned parts order(s)."
         )

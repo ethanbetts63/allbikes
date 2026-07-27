@@ -18,7 +18,6 @@ class MotorcycleFactory(DjangoModelFactory):
     condition = factory.Iterator([choice[0] for choice in Motorcycle.CONDITION_CHOICES])
     vehicle_type = factory.Iterator([choice[0] for choice in Motorcycle.VEHICLE_TYPE_CHOICES])
     status = factory.Iterator([choice[0] for choice in Motorcycle.STATUS_CHOICES])
-    is_featured = factory.LazyFunction(fake.pybool)
     odometer = factory.LazyFunction(lambda: fake.pyint(min_value=0, max_value=100000))
     engine_size = factory.LazyFunction(lambda: fake.pyint(min_value=50, max_value=2000))
     range = factory.LazyFunction(lambda: fake.pyint(min_value=100, max_value=500))

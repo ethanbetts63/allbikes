@@ -54,6 +54,7 @@ export interface AdminPartsOrder {
   items: AdminPartsOrderItem[];
   stripe_payment_intent_id: string | null;
   payment_status: string | null;
+  messages: Array<{ id: number; message_type: string; to: string; subject: string; status: string; sent_at: string | null; created_at: string }>;
 }
 
 export interface Paginated<T> {

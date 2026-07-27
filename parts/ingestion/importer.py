@@ -57,7 +57,13 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
     model.is_active = True
     model.save()
 
-    # Replace sections + section parts for this model.
+    # Replace sections + section parts for this model. ImageField files do not
+    # automatically disappear when their rows are deleted, so remove the old
+    # diagrams after a successful transaction as well.
+    old_diagram_names = [
+        section.diagram_image.name for section in model.sections.exclude(diagram_image='')
+        if section.diagram_image
+    ]
     model.sections.all().delete()
 
     for sec in parsed["sections"]:
@@ -88,6 +94,12 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
                 sort_order=row["sort_order"],
             )
 
+    def delete_old_diagrams():
+        storage = PartSection._meta.get_field('diagram_image').storage
+        for image_name in old_diagram_names:
+            storage.delete(image_name)
+
+    transaction.on_commit(delete_old_diagrams)
     logger.info("Imported book %s (%s): %d sections", display_name, model_code, len(parsed["sections"]))
     return model
 

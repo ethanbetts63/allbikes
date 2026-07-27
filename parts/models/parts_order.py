@@ -3,6 +3,18 @@ import secrets
 from django.db import models
 
 
+def _generate_access_token():
+    """Opaque customer-only token for the short-lived checkout/confirmation flow."""
+    return secrets.token_urlsafe(32)
+
+
+def _generate_reference():
+    while True:
+        ref = f'SP-{secrets.token_hex(4).upper()}'
+        if not PartsOrder.objects.filter(order_reference=ref).exists():
+            return ref
+
+
 class PartsOrder(models.Model):
     """A multi-line parts order. No user accounts — identified by order_reference."""
 
@@ -16,6 +28,7 @@ class PartsOrder(models.Model):
     ]
 
     order_reference = models.CharField(max_length=20, unique=True, blank=True)
+    access_token = models.CharField(max_length=64, unique=True, default=_generate_access_token, editable=False)
 
     customer_name = models.CharField(max_length=200)
     customer_email = models.EmailField()
@@ -70,10 +83,3 @@ class PartsOrder(models.Model):
             elif refunded and self.status in ('paid', 'dispatched'):
                 self.status = 'partially_refunded'
         self.save(update_fields=['has_backorder', 'status', 'updated_at'])
-
-
-def _generate_reference():
-    while True:
-        ref = f'SP-{secrets.token_hex(4).upper()}'
-        if not PartsOrder.objects.filter(order_reference=ref).exists():
-            return ref

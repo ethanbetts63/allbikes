@@ -60,6 +60,17 @@ class TestModelDetail:
 
 
 class TestSectionDetail:
+    def test_sales_setting_is_included_in_section_payload(self, client, settings_20pct):
+        section = PartSectionFactory()
+        PartsSettings.get().save()
+        response = client.get(f"/api/parts/sections/{section.id}/")
+        assert response.json()['enable_new_part_sales'] is True
+
+        settings = PartsSettings.get()
+        settings.enable_new_part_sales = False
+        settings.save()
+        response = client.get(f"/api/parts/sections/{section.id}/")
+        assert response.json()['enable_new_part_sales'] is False
     def test_colour_axis_and_markup(self, client, settings_20pct):
         section = PartSectionFactory()
         base = "53205-ALA-000"

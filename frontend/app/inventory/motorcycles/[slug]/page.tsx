@@ -112,8 +112,8 @@ function getPrimaryBikeImage(bike: Bike): string | null {
 async function fetchFeaturedBikes(condition: string, vehicleType?: Bike['vehicle_type']) {
   const params = new URLSearchParams({
     page: '1',
+    page_size: '8',
     condition,
-    is_featured: 'true',
   });
   if (vehicleType) {
     params.set('vehicle_type', vehicleType);

@@ -5,6 +5,7 @@ import { getAllArticleMeta } from '@/lib/articles';
 import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
+import { getPartsModel, getPartsModels } from '@/lib/partsApi';
 
 const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/`, lastModified: '2026-05-22' },
@@ -20,6 +21,7 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/125cc-scooters-perth`, lastModified: '2026-07-27' },
   { url: `${SITE_URL}/vespa-perth`, lastModified: '2026-07-23' },
   { url: `${SITE_URL}/sym`, lastModified: '2026-07-27' },
+  { url: `${SITE_URL}/parts/new/sym` },
   { url: `${SITE_URL}/scooter-service`, lastModified: '2026-07-13' },
   { url: `${SITE_URL}/motorcycle-service`, lastModified: '2026-07-13' },
   { url: `${SITE_URL}/tyre-fitting`, lastModified: '2026-07-13' },
@@ -27,9 +29,10 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [bikes, products] = await Promise.all([
+  const [bikes, products, partsModels] = await Promise.all([
     fetchAllPages<Bike>(getServerBikes),
     fetchAllPages<Product>(getServerProducts),
+    getPartsModels(),
   ]);
 
   const bikeRoutes = bikes
@@ -54,7 +57,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: '2026-05-23',
   };
 
-  return [...STATIC_ROUTES, blogIndex, ...articleRoutes, ...bikeRoutes, ...productRoutes];
+  const partsRoutes = await getPartsSitemapRoutes(partsModels);
+
+  return [...STATIC_ROUTES, blogIndex, ...articleRoutes, ...bikeRoutes, ...productRoutes, ...partsRoutes];
+}
+
+async function getPartsSitemapRoutes(models: Awaited<ReturnType<typeof getPartsModels>>): Promise<MetadataRoute.Sitemap> {
+  const modelDetails = await Promise.all(
+    models.map(async (model) => {
+      try {
+        return await getPartsModel(model.slug);
+      } catch {
+        // A model can disappear between the list and detail reads; omit it rather
+        // than publishing a non-200 sitemap URL.
+        return null;
+      }
+    })
+  );
+
+  return modelDetails.flatMap((model) => {
+    if (!model) return [];
+    const lastModified = model.last_ingested_at || undefined;
+    const base = `${SITE_URL}/parts/new/sym/${model.slug}`;
+    return [
+      { url: base, lastModified },
+      ...model.sections.map((section) => ({
+        url: `${base}/${section.id}`,
+        lastModified,
+      })),
+    ];
+  });
 }
 
 async function fetchAllPages<T>(

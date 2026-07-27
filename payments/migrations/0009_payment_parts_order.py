@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("parts", "0003_partsorder_partsorderitem"),
+        ("parts", "0003_partsorder_partssettings_backorder_hold_days_and_more"),
         ("payments", "0008_order_selected_colour"),
     ]
 

@@ -83,21 +83,6 @@ class TestMotorcycleViewSetList:
         assert response.status_code == status.HTTP_200_OK
         assert response.data == ['Honda', 'Vespa']
 
-    def test_filter_by_featured(self, api_client):
-        """
-        GIVEN a featured and a non-featured motorcycle
-        WHEN filtering by is_featured='true'
-        THEN only the featured motorcycle should be returned.
-        """
-        MotorcycleFactory(is_featured=True)
-        MotorcycleFactory(is_featured=False)
-        url = reverse("inventory:motorcycle-list")
-        response = api_client.get(url, {'is_featured': 'true'})
-
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data['count'] == 1
-        assert response.data['results'][0]['is_featured'] is True
-        
     def test_filter_by_price_range(self, api_client):
         """
         GIVEN motorcycles with different prices

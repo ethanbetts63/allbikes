@@ -5,13 +5,16 @@ import stripe
 from django.conf import settings as django_settings
 from django.db import IntegrityError, transaction
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from parts.checkout import CheckoutError, create_parts_order
 from parts.models import PartsOrder
-from parts.serializers.order_serializers import PartsCheckoutSerializer, PartsOrderSerializer
+from parts.serializers.order_serializers import (
+    PartsCheckoutSerializer, PartsOrderConfirmationSerializer, PartsOrderCreatedSerializer,
+    PartsOrderSerializer,
+)
 
 from payments.models import Payment
 
@@ -38,10 +41,13 @@ class CreatePartsOrderView(PublicAPIView):
                 {'detail': exc.message, 'unavailable': exc.unavailable},
                 status=409 if exc.unavailable else 400,
             )
-        return Response(PartsOrderSerializer(order).data, status=201)
+        return Response(PartsOrderCreatedSerializer(order).data, status=201)
 
 
-class RetrievePartsOrderView(PublicAPIView):
+class RetrievePartsOrderView(APIView):
+    """Full order data is an internal/admin-only resource."""
+    permission_classes = [IsAdminUser]
+
     def get(self, request, order_reference):
         order = get_object_or_404(
             PartsOrder.objects.prefetch_related('items'), order_reference=order_reference
@@ -49,11 +55,29 @@ class RetrievePartsOrderView(PublicAPIView):
         return Response(PartsOrderSerializer(order).data)
 
 
+class RetrievePartsOrderConfirmationView(PublicAPIView):
+    """Token-protected, PII-free data required by the checkout confirmation UI."""
+
+    def get(self, request, order_reference):
+        token = (request.query_params.get('token') or '').strip()
+        if not token:
+            return Response({'detail': 'Order access token is required.'}, status=403)
+        order = get_object_or_404(
+            PartsOrder.objects.prefetch_related('items'),
+            order_reference=order_reference,
+            access_token=token,
+        )
+        return Response(PartsOrderConfirmationSerializer(order).data)
+
+
 class CreatePartsPaymentIntentView(PublicAPIView):
     def post(self, request):
         order_reference = request.data.get('order_reference')
+        access_token = (request.data.get('access_token') or '').strip()
         if not order_reference:
             return Response({'detail': 'order_reference is required.'}, status=400)
+        if not access_token:
+            return Response({'detail': 'access_token is required.'}, status=403)
 
         try:
             # Lock the order row so two near-simultaneous requests (e.g. a
@@ -61,7 +85,9 @@ class CreatePartsPaymentIntentView(PublicAPIView):
             # create a Payment and colliding on the OneToOne unique constraint.
             with transaction.atomic():
                 try:
-                    order = PartsOrder.objects.select_for_update().get(order_reference=order_reference)
+                    order = PartsOrder.objects.select_for_update().get(
+                        order_reference=order_reference, access_token=access_token
+                    )
                 except PartsOrder.DoesNotExist:
                     return Response({'detail': 'Order not found.'}, status=404)
 

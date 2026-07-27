@@ -15,7 +15,7 @@ import {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-function PaymentForm({ reference }: { reference: string }) {
+function PaymentForm({ reference, accessToken }: { reference: string; accessToken: string }) {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -44,7 +44,7 @@ function PaymentForm({ reference }: { reference: string }) {
     }
     if (paymentIntent?.status === 'succeeded') {
       clear();
-      router.push(`/parts/checkout/confirmation?ref=${reference}`);
+      router.push(`/parts/checkout/confirmation?ref=${reference}&token=${encodeURIComponent(accessToken)}`);
       return;
     }
     setError('Payment could not be completed. Please try again.');
@@ -72,6 +72,7 @@ export default function PartsCheckoutPaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reference = searchParams.get('ref');
+  const accessToken = searchParams.get('token');
 
   const [order, setOrder] = useState<PartsOrderDetail | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -80,18 +81,18 @@ export default function PartsCheckoutPaymentPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!reference) {
+    if (!reference || !accessToken) {
       router.replace('/parts/cart');
       return;
     }
     (async () => {
       try {
-        const ord = await getPartsOrder(reference);
+        const ord = await getPartsOrder(reference, accessToken);
         if (ord.status !== 'pending_payment') {
-          router.replace(`/parts/checkout/confirmation?ref=${reference}`);
+          router.replace(`/parts/checkout/confirmation?ref=${reference}&token=${encodeURIComponent(accessToken)}`);
           return;
         }
-        const intent = await createPartsPaymentIntent(reference);
+        const intent = await createPartsPaymentIntent(reference, accessToken);
         setOrder(ord);
         setClientSecret(intent.clientSecret);
       } catch {
@@ -100,7 +101,7 @@ export default function PartsCheckoutPaymentPage() {
         setLoading(false);
       }
     })();
-  }, [reference, router]);
+  }, [reference, accessToken, router]);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -120,7 +121,7 @@ export default function PartsCheckoutPaymentPage() {
               Order reference: <span className="font-mono font-semibold text-black">{order.order_reference}</span>
             </p>
             <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
-              <PaymentForm reference={order.order_reference} />
+              <PaymentForm reference={order.order_reference} accessToken={accessToken!} />
             </Elements>
           </div>
           <OrderSummary

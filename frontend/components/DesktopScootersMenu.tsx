@@ -47,7 +47,7 @@ export default function DesktopScootersMenu() {
         <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div role="menu" className="absolute left-0 top-[calc(100%+6px)] z-50 min-w-52 overflow-hidden border border-white/15 bg-[var(--bg-dark-primary)] py-1 shadow-xl">
+        <div role="menu" className="absolute left-0 top-full z-50 min-w-52 overflow-hidden border border-white/15 bg-[var(--bg-dark-primary)] py-1 shadow-xl">
           <Link role="menuitem" href="/inventory/scooters/new" className={MENU_LINK} onClick={() => setOpen(false)}>New Scooters</Link>
           <Link role="menuitem" href="/inventory/scooters/used" className={MENU_LINK} onClick={() => setOpen(false)}>Used Scooters</Link>
           {!siteSettings.hide_escooters && <Link role="menuitem" href="/escooters" className={MENU_LINK} onClick={() => setOpen(false)}>E-Scooters</Link>}

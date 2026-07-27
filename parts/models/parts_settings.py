@@ -18,6 +18,14 @@ class PartsSettings(models.Model):
         max_digits=10, decimal_places=2, default=Decimal('50.00'),
         help_text="Flat shipping fee (AUD) for non-Australian destinations.",
     )
+    enable_new_part_sales = models.BooleanField(
+        default=True,
+        help_text="Allow customers to add genuine new SYM parts to their cart and checkout.",
+    )
+    backorder_hold_days = models.PositiveIntegerField(
+        default=7,
+        help_text="Days an order can wait for a backordered part before the operator refunds it.",
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

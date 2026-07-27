@@ -48,7 +48,7 @@ const MobileNavMenu = () => {
           <nav className="flex flex-col px-6 py-4 gap-5">
             <Link href="/service" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Servicing</Link>
             {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Hire</Link>}
-            <Link href="/parts" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>SYM Parts</Link>
+            <Link href="/parts/new/sym" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>SYM Parts</Link>
             <Link href="/inventory/scooters/new" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>New Scooters</Link>
             <Link href="/inventory/scooters/used" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Used Scooters</Link>
             <Link href="/inventory/motorcycles/used" className={NAV_LINK} onClick={() => setIsMenuOpen(false)}>Used Motorcycles</Link>

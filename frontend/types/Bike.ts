@@ -11,7 +11,6 @@ export type Bike = {
   condition: 'new' | 'used' | 'demo' | 'parts';
   vehicle_type: 'motorcycle' | 'scooter';
   status: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'unavailable';
-  is_featured?: boolean;
   popular?: boolean;
   odometer: number;
   engine_size: number;

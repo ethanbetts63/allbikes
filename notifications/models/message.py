@@ -27,6 +27,9 @@ class Message(models.Model):
         ('parts_customer_confirmation', 'Parts Customer Confirmation'),
         ('parts_admin_new_order', 'Parts Admin New Order'),
         ('parts_wholesaler_dispatch', 'Parts Wholesaler Dispatch'),
+        ('parts_customer_backorder_update', 'Parts Customer Backorder Update'),
+        ('parts_customer_refund_update', 'Parts Customer Refund Update'),
+        ('parts_customer_order_arranged', 'Parts Customer Order Arranged'),
     ]
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -38,7 +41,7 @@ class Message(models.Model):
     body_text = models.TextField(blank=True)
     body_html = models.TextField(blank=True)
 
-    message_type = models.CharField(max_length=30, choices=MESSAGE_TYPE_CHOICES)
+    message_type = models.CharField(max_length=40, choices=MESSAGE_TYPE_CHOICES)
     channel = models.CharField(max_length=10, choices=CHANNEL_CHOICES, default='email')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='sent')
     error_message = models.TextField(blank=True)

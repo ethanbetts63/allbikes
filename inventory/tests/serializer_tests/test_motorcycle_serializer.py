@@ -13,7 +13,7 @@ def test_motorcycle_serializer_contains_expected_fields():
     data = serializer.data
     expected_keys = [
                     'id', 'slug', 'make', 'model', 'year', 'price', 'condition', 'vehicle_type', 'status',
-                    'is_featured', 'popular', 'odometer', 'engine_size', 'description', 'youtube_link',
+                    'popular', 'odometer', 'engine_size', 'description', 'youtube_link',
                     'rego', 'rego_exp', 'stock_number', 'warranty_months', 'transmission', 'images',
                     'discount_price', 'date_posted', 'is_lams_approved', 'is_hire', 'daily_rate',
                     'available_colours']

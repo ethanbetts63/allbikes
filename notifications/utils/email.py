@@ -213,7 +213,7 @@ def send_service_booking_confirmation(booking_data, booking_log=None):
         f"Rego: {booking_data.get('registration_number', '')}\n"
         f"Services: {', '.join(booking_data.get('job_type_names', []))}\n"
         f"Requested drop-off: {booking_data.get('drop_off_time', '')}\n\n"
-        f"Cancellation policy: Cancellations with less than 5 days notice may incur acancellation fee.\n\n"
+        f"Cancellation policy: Cancellations with less than 5 days notice may incur a cancellation fee.\n\n"
         f"Unit 5 / 6 Cleveland Street, Dianella WA 6059\n"
         f"admin@scootershop.com.au | 08 9433 4613"
     )
@@ -435,6 +435,31 @@ def send_parts_supplier_dispatch(parts_order, *, to, subject, text_body):
     except Exception as e:
         logger.error("Failed to send supplier dispatch for %s to %s: %s", parts_order.order_reference, to, e)
         _record(parts_order, 'parts_wholesaler_dispatch', to, subject, text_body, html_body, 'failed', str(e))
+        return False
+
+
+def send_parts_customer_update(parts_order, update_type, *, backorder_days):
+    """Send one of the fixed, audited customer parts-order status updates."""
+    labels = {
+        'backorder': ('parts_customer_backorder_update', f'Update on your SYM parts order — {parts_order.order_reference}'),
+        'refund': ('parts_customer_refund_update', f'Refund update for your SYM parts order — {parts_order.order_reference}'),
+        'arranged': ('parts_customer_order_arranged', f'Your SYM parts order has been arranged — {parts_order.order_reference}'),
+    }
+    message_type, subject = labels[update_type]
+    refunded_total = sum((item.line_total for item in parts_order.items.filter(status='refunded')), start=0)
+    context = {
+        'order': parts_order, 'update_type': update_type,
+        'backorder_days': backorder_days, 'refunded_total': refunded_total,
+    }
+    text_body = render_to_string('notifications/emails/parts_customer_update.txt', context)
+    html_body = render_to_string('notifications/emails/parts_customer_update.html', context)
+    try:
+        _send_mailgun(parts_order.customer_email, subject, html_body, text_body)
+        _record(parts_order, message_type, parts_order.customer_email, subject, text_body, html_body, 'sent')
+        return True
+    except Exception as e:
+        logger.error('Failed to send %s for %s: %s', update_type, parts_order.order_reference, e)
+        _record(parts_order, message_type, parts_order.customer_email, subject, text_body, html_body, 'failed', str(e))
         return False
 
 
