@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: `Genuine SYM ${model.name} spare parts. Browse the exploded-diagram sections and order the exact part with live availability.`,
     };
   } catch {
-    return { title: 'SYM Spare Parts' };
+    return { title: 'SYM Parts' };
   }
 }
 

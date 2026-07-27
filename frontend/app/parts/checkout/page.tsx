@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import PartsCheckoutDetailsPage from './PartsCheckoutDetailsPage';
 
 export const metadata: Metadata = {
-  title: 'Checkout | SYM Spare Parts',
+  title: 'Checkout | SYM Parts',
   robots: { index: false },
 };
 

@@ -96,6 +96,9 @@ class TestSupplierEmail:
         assert data['to'] == ''
         assert data['items'][0]['unit_price'] == 100.0
         assert data['supplier_parts_total'] == 100.0
+        assert data['items'][0]['customer_unit_price'] == 120.0
+        assert data['items'][0]['gross_profit'] == 20.0
+        assert data['gross_profit_total'] == 20.0
         assert '1. A-1' in data['body']
         item = order.items.first()
         assert f'Model: {item.model_name} ({item.model_code})' in data['body']

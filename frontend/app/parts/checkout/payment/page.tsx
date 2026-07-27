@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import PartsCheckoutPaymentPage from './PartsCheckoutPaymentPage';
 
 export const metadata: Metadata = {
-  title: 'Payment | SYM Spare Parts',
+  title: 'Payment | SYM Parts',
   robots: { index: false },
 };
 

@@ -52,6 +52,7 @@ def _supplier_email_draft(order):
         part = prices.get(item.part_number)
         unit_price = part.wholesale_price_incl_gst if part else None
         line_total = unit_price * item.quantity if unit_price is not None else None
+        gross_profit = item.line_total - line_total if line_total is not None else None
         if line_total is not None:
             total += line_total
         rows.append({
@@ -64,6 +65,9 @@ def _supplier_email_draft(order):
             'quantity': item.quantity,
             'unit_price': unit_price,
             'line_total': line_total,
+            'customer_unit_price': item.unit_price,
+            'customer_line_total': item.line_total,
+            'gross_profit': gross_profit,
         })
 
     part_count = sum(row['quantity'] for row in rows)
@@ -90,10 +94,10 @@ def _supplier_email_draft(order):
             if row['ref_number']:
                 section += f" · Ref {row['ref_number']}"
             context.append(section)
-        context_line = f"\n   {' · '.join(context)}" if context else ''
+        context_line = f"   {' · '.join(context)}\n" if context else ''
         item_lines.append(
             f"{position}. {row['part_number']} — {row['description']}\n"
-            f"{context_line}\n"
+            f"{context_line}"
             f"   Quantity: {row['quantity']} × {unit} = {line}"
         )
 
@@ -116,6 +120,8 @@ def _supplier_email_draft(order):
         'body': body,
         'items': rows,
         'supplier_parts_total': total,
+        'customer_parts_total': sum(row['customer_line_total'] for row in rows),
+        'gross_profit_total': sum((row['gross_profit'] or Decimal('0.00')) for row in rows),
         'has_unpriced_items': any(row['unit_price'] is None for row in rows),
     }
 

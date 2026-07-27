@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { siteSettings } from "@/config/siteSettings";
 import { MapPin, Phone, Mail } from "lucide-react";
 import MobileNavMenu from "@/components/MobileNavMenu";
+import DesktopScootersMenu from "@/components/DesktopScootersMenu";
 
 const NAV_LINK = "text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest hover:text-[var(--highlight)] transition-colors duration-200";
 
@@ -36,10 +37,9 @@ const NavBar = () => {
         <nav className="hidden min-[968px]:flex items-center gap-10 self-center ml-auto xl:flex-1 xl:ml-0 xl:pl-10 xl:justify-between xl:gap-0">
           <Link href="/service" className={NAV_LINK}>Servicing</Link>
           {siteSettings.show_hire && <Link href="/hire" className={NAV_LINK}>Hire</Link>}
-          <Link href="/inventory/scooters/new" className={NAV_LINK}>New Scooters</Link>
-          <Link href="/inventory/scooters/used" className={NAV_LINK}>Used Scooters</Link>
-          <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Used Motorcycles</Link>
-          {!siteSettings.hide_escooters && <Link href="/escooters" className={NAV_LINK}>E-Scooters</Link>}
+          <DesktopScootersMenu />
+          <Link href="/inventory/motorcycles/used" className={NAV_LINK}>Motorcycles</Link>
+          <Link href="/parts" className={NAV_LINK}>SYM Parts</Link>
           {siteSettings.show_workshop_clearance && <Link href="/inventory/motorcycles/parts" className={NAV_LINK}>Workshop Clearance</Link>}
           <Link href="/contact" className={cn(NAV_LINK, "border border-white/30 px-4 py-2 hover:border-amber-400")}>
             Contact

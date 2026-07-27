@@ -6,7 +6,7 @@
 
 ## 1. Purpose
 
-Sell genuine SYM spare parts on scootershop.com.au via a **drop-ship** model: the
+Sell genuine SYM parts on scootershop.com.au via a **drop-ship** model: the
 customer orders and pays us; our wholesaler (Select Portal) ships the parts
 directly to the customer. The customer experience mirrors the *flow* (not the
 look) of easyparts.com; the wholesale data comes from Select Portal's public

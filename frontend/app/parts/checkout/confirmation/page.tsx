@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import PartsCheckoutConfirmationPage from './PartsCheckoutConfirmationPage';
 
 export const metadata: Metadata = {
-  title: 'Order Confirmation | SYM Spare Parts',
+  title: 'Order Confirmation | SYM Parts',
   robots: { index: false },
 };
 

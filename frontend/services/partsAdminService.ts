@@ -59,6 +59,9 @@ export interface SupplierEmailDraftItem {
   quantity: number;
   unit_price: number | null;
   line_total: number | null;
+  customer_unit_price: number;
+  customer_line_total: number;
+  gross_profit: number | null;
 }
 
 export interface SupplierEmailDraft {
@@ -67,6 +70,8 @@ export interface SupplierEmailDraft {
   body: string;
   items: SupplierEmailDraftItem[];
   supplier_parts_total: number;
+  customer_parts_total: number;
+  gross_profit_total: number;
   has_unpriced_items: boolean;
 }
 

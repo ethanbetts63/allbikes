@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: `Order ${section.name} parts for the SYM ${section.model.name} from the exploded diagram, with live availability.`,
     };
   } catch {
-    return { title: 'SYM Spare Parts' };
+    return { title: 'SYM Parts' };
   }
 }
 

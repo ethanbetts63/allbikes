@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import { getPartsModels } from '@/lib/partsApi';
 
 export const metadata: Metadata = {
-  title: 'SYM Spare Parts | Genuine Parts Online',
+  title: 'SYM Parts | Genuine Parts Online',
   description:
     'Order genuine SYM scooter and motorcycle spare parts online. Browse by model and section, find the exact part from the exploded diagrams, and check live availability.',
 };
@@ -26,7 +26,7 @@ function PartsLandingPage({ models }: { models: PartsModelListItem[] }) {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-black">SYM Spare Parts</h1>
+      <h1 className="text-2xl font-bold text-black">SYM Parts</h1>
       <p className="mt-2 max-w-2xl text-gray-600">
         Choose your model, open the relevant section, and add the parts you need straight from the
         exploded diagram. Availability and pricing are shown per part.

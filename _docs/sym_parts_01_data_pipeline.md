@@ -152,7 +152,7 @@ the Service/Hire/Deposit settings pattern (serializer + `admin`-guarded view +
 - Parse with BeautifulSoup:
   - **Book links:** every `<a href="*.xls">` under the model listing, capturing
     link text (display name), href, and the surrounding cc-class heading.
-  - **PA CSV link:** the nav link labelled "SYM Spare Parts Price & Availability"
+  - **PA CSV link:** the nav link labelled "SYM Parts Price & Availability"
     → `href` (e.g. `.../uploads/2026/07/PA-16-Jul-26.csv`).
 - Returns `{books: [{name, cc_class, url}], pa_url, pa_date}` where `pa_date` is
   parsed from the PA filename (`PA-16-Jul-26` → `2026-07-16`).

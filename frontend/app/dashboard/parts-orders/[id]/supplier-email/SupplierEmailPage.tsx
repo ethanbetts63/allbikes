@@ -76,16 +76,20 @@ export default function SupplierEmailPage() {
           </div>
 
           <aside className="h-fit rounded-md border border-border-light p-4">
-            <h2 className="mb-1 font-bold">Supplier pricing</h2>
+            <h2 className="mb-1 font-bold">Internal pricing</h2>
             <p className="mb-4 text-xs text-[var(--text-dark-secondary)]">Current base prices from the supplier feed, before our markup.</p>
             <div className="space-y-3 text-sm">
               {draft.items.map((item) => <div key={item.part_number} className="border-b border-border-light pb-3 last:border-0">
                 <p className="font-mono text-xs font-bold">{item.part_number}</p>
                 <p className="text-xs text-[var(--text-dark-secondary)]">{item.description}</p>
-                <div className="mt-1 flex justify-between"><span>Qty {item.quantity} × {money(item.unit_price)}</span><strong>{money(item.line_total)}</strong></div>
+                <div className="mt-1 flex justify-between"><span>Supplier cost</span><strong>{money(item.line_total)}</strong></div>
+                <div className="mt-1 flex justify-between text-[var(--text-dark-secondary)]"><span>Sold for</span><span>${item.customer_line_total.toFixed(2)}</span></div>
+                <div className="mt-1 flex justify-between font-medium text-emerald-700"><span>Gross profit</span><span>{money(item.gross_profit)}</span></div>
               </div>)}
             </div>
             <div className="mt-4 flex justify-between border-t border-border-light pt-3 text-sm font-bold"><span>Parts total incl. GST</span><span>${draft.supplier_parts_total.toFixed(2)}</span></div>
+            <div className="mt-1 flex justify-between text-sm text-[var(--text-dark-secondary)]"><span>Customer parts total</span><span>${draft.customer_parts_total.toFixed(2)}</span></div>
+            <div className="mt-1 flex justify-between text-sm font-bold text-emerald-700"><span>Gross profit</span><span>${draft.gross_profit_total.toFixed(2)}</span></div>
           </aside>
         </div>
       </div>
