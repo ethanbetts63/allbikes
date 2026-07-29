@@ -24,15 +24,18 @@ export const PARTS_STATUS_BADGE: Record<string, string> = {
   pending_payment: 'border-amber-500 text-[var(--highlight)]',
   paid: 'border-green-600 text-green-700',
   dispatched: 'border-blue-500 text-blue-700',
+  completed: 'border-emerald-600 text-emerald-700',
   cancelled: 'border-red-500 text-destructive',
   refunded: 'border-orange-500 text-orange-600',
   partially_refunded: 'border-orange-400 text-orange-500',
 };
 
 // Outline buttons on the light order-detail surface need explicit colours
-// (the dark-dashboard variant leaves them unreadable).
+// (the dark-dashboard variant leaves them unreadable). Filled slate rather than
+// white-on-white so they stay visible against the light card background;
+// the base button's disabled:opacity-50 still reads as disabled.
 export const BTN_INACTIVE =
-  'bg-white text-[var(--text-dark-primary)] border-black hover:bg-gray-100 hover:text-[var(--text-dark-primary)]';
+  'bg-slate-600 text-white border-slate-700 hover:bg-slate-700 hover:text-white';
 
 const PAGE_SIZE = 50;
 
@@ -240,7 +243,7 @@ export default function PartsOrdersListPage() {
                     <TableRow
                       key={o.id}
                       className={`cursor-pointer border-slate-100 ${st.row}`}
-                      onClick={() => router.push(`/dashboard/parts-orders/${o.id}`)}
+                      onClick={() => router.push(`/dashboard/parts-orders/${o.order_reference}`)}
                     >
                       <TableCell>
                         <div className="font-mono font-semibold text-slate-950">{o.order_reference}</div>
@@ -288,11 +291,11 @@ export default function PartsOrdersListPage() {
         <ol className="mt-3 list-decimal space-y-3 pl-5 text-sm text-slate-600">
           <li>Each day, the system imports the latest SYM price and availability data from Select Portal.</li>
           <li>Customers choose their model, section and exploded diagram, then add the required parts to their cart.</li>
-          <li>At checkout, the customer price is Select Portal&apos;s base price plus our markup and the Australian shipping fee.</li>
+          <li>At checkout, the customer price is Select Portal&apos;s base price plus our markup and the shipping fee.</li>
           <li>Admin receives an email and SMS for each paid order. Open it here, review it, choose <strong>Email supplier</strong>, check the draft and send it to Select Scooters.</li>
           <li>Select Scooters should fulfil only complete orders. If anything is unavailable, they should email us with the missing parts and expected restock date.</li>
           <li>If one or more items go on backorder, mark those items and use <strong>Email backorder update</strong> to send the customer a full line-by-line update.</li>
-          <li>Mark affected items as backordered or refunded, depending on whether the order can be fulfilled within the {backorderDays}-day backorder window. Only use <strong>Email refund update</strong> after the relevant Stripe refund has been processed.</li>
+          <li>Mark affected items as backordered or refunded. The {backorderDays}-day backorder window runs from the <strong>order date</strong>, not from when you flag the line — once it has passed you can no longer place a line on backorder and should refund it instead. Only use <strong>Email refund update</strong> after the relevant Stripe refund has been processed.</li>
           <li>When you have arranged the order with the supplier, use <strong>Email order arranged</strong> to tell the customer their complete order has been arranged for shipment.</li>
           <li><strong>Planned next:</strong> admin will receive email and SMS reminders when an order exceeds that window. Then remove unavailable items and process the appropriate partial or full Stripe refund.</li>
         </ol>

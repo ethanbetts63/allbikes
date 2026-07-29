@@ -20,8 +20,28 @@ import { PARTS_STATUS_BADGE, BTN_INACTIVE } from '../PartsOrdersListPage';
 
 const ORDER_STATUSES = ['pending_payment', 'paid', 'dispatched', 'completed', 'cancelled', 'refunded', 'partially_refunded'];
 
+const ITEM_STATUS_BADGE: Record<string, string> = {
+  to_order: 'border-gray-400 text-[var(--text-dark-primary)]',
+  completed: 'border-green-600 text-green-700',
+  refunded: 'border-orange-500 text-orange-600',
+};
+
+/** A single outbound email the operator can trigger for this order. */
+type EmailAction = {
+  key: string;
+  label: string;
+  description: string;
+  cta: string;
+  disabled: boolean;
+  /** Shown under the description so the operator knows why the button is greyed out. */
+  disabledReason?: string;
+  /** Set for emails that open a compose screen instead of sending immediately. */
+  href?: string;
+  onClick?: () => void;
+};
+
 export default function PartsOrderDetailPage() {
-  const { id } = useParams<{ id: string }>();
+  const { reference } = useParams<{ reference: string }>();
   const [order, setOrder] = useState<AdminPartsOrder | null>(null);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('');
@@ -30,12 +50,12 @@ export default function PartsOrderDetailPage() {
   const [msg, setMsg] = useState<{ text: string; error?: boolean } | null>(null);
 
   useEffect(() => {
-    if (!id) return;
-    adminGetPartsOrder(Number(id))
+    if (!reference) return;
+    adminGetPartsOrder(reference)
       .then((o) => { setOrder(o); setStatus(o.status); setNotes(o.admin_notes); })
       .catch(() => setMsg({ text: 'Failed to load order.', error: true }))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [reference]);
 
   const refresh = (o: AdminPartsOrder) => { setOrder(o); setStatus(o.status); };
 
@@ -43,7 +63,7 @@ export default function PartsOrderDetailPage() {
     if (!order) return;
     setBusy(true); setMsg(null);
     try {
-      refresh(await adminUpdatePartsOrder(order.id, { status, admin_notes: notes }));
+      refresh(await adminUpdatePartsOrder(order.order_reference, { status, admin_notes: notes }));
       setMsg({ text: 'Saved.' });
     } catch { setMsg({ text: 'Save failed.', error: true }); }
     finally { setBusy(false); }
@@ -63,7 +83,7 @@ export default function PartsOrderDetailPage() {
     };
     if (!order || !confirm(confirmationCopy[type])) return;
     setBusy(true); setMsg(null);
-    try { await adminSendPartsCustomerUpdate(order.id, type); refresh(await adminGetPartsOrder(order.id)); setMsg({ text: 'Customer update sent.' }); }
+    try { await adminSendPartsCustomerUpdate(order.order_reference, type); refresh(await adminGetPartsOrder(order.order_reference)); setMsg({ text: 'Customer update sent.' }); }
     catch (error) { setMsg({ text: error instanceof Error ? error.message : 'Customer update failed.', error: true }); }
     finally { setBusy(false); }
   };
@@ -74,6 +94,46 @@ export default function PartsOrderDetailPage() {
   const refundedItems = order.items.filter((i) => i.status === 'refunded');
   const address = [order.address_line1, order.address_line2, `${order.suburb} ${order.state} ${order.postcode}`, order.country]
     .filter(Boolean).join(', ');
+
+  // Ordered by the workflow an operator actually follows: order from the
+  // supplier, confirm to the customer, then chase backorders/refunds.
+  const emailActions: EmailAction[] = [
+    {
+      key: 'supplier',
+      label: 'Supplier order',
+      description: 'Sends the parts list to the wholesaler to fulfil. Opens a compose screen so you can set the recipient and review the body first.',
+      cta: 'Compose',
+      disabled: order.status !== 'paid',
+      disabledReason: 'Only available once the order is paid.',
+      href: `/dashboard/parts-orders/${order.order_reference}/supplier-email`,
+    },
+    {
+      key: 'arranged',
+      label: 'Order arranged',
+      description: 'Tells the customer every part is available and shipment has been arranged with the supplier.',
+      cta: 'Email',
+      disabled: false,
+      onClick: () => customerUpdate('arranged'),
+    },
+    {
+      key: 'backorder',
+      label: 'Backorder update',
+      description: 'Tells the customer one or more parts are on backorder and the order is being held.',
+      cta: 'Email',
+      disabled: !order.items.some((item) => item.backordered),
+      disabledReason: 'No items are currently on backorder.',
+      onClick: () => customerUpdate('backorder'),
+    },
+    {
+      key: 'refund',
+      label: 'Refund update',
+      description: 'Tells the customer the refund for cancelled lines has been processed. Send only after refunding in Stripe.',
+      cta: 'Email',
+      disabled: refundedItems.length === 0,
+      disabledReason: 'No items are marked refunded.',
+      onClick: () => customerUpdate('refund'),
+    },
+  ];
 
   return (
     <div className="p-4 md:p-6">
@@ -96,11 +156,6 @@ export default function PartsOrderDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {order.status === 'paid' && (
-              <Button asChild className="border-sky-700 bg-sky-600 text-white hover:bg-sky-700 hover:text-white">
-                <Link href={`/dashboard/parts-orders/${order.id}/supplier-email`}>Email supplier</Link>
-              </Button>
-            )}
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -128,34 +183,6 @@ export default function PartsOrderDetailPage() {
           </div>
         )}
 
-        {/* Line items */}
-        <h2 className="mb-2 font-bold">Items</h2>
-        <div className="mb-6 overflow-x-auto rounded-md border border-border-light">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-border-light">
-                <TableHead className="text-[var(--text-dark-primary)]">Part</TableHead>
-                <TableHead className="text-[var(--text-dark-primary)]">Qty</TableHead>
-                <TableHead className="text-[var(--text-dark-primary)]">Total</TableHead>
-                <TableHead className="text-[var(--text-dark-primary)]">Status</TableHead>
-                <TableHead className="text-[var(--text-dark-primary)]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {order.items.map((item) => (
-                <ItemRow key={item.id} item={item} busy={busy} onAction={itemAction} />
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Totals */}
-        <div className="mb-6 max-w-xs space-y-1 text-sm">
-          <div className="flex justify-between"><span className="text-[var(--text-dark-secondary)]">Subtotal</span><span>${order.subtotal}</span></div>
-          <div className="flex justify-between"><span className="text-[var(--text-dark-secondary)]">Shipping</span><span>${order.shipping}</span></div>
-          <div className="flex justify-between font-bold"><span>Total paid</span><span>${order.amount_paid ?? order.total}</span></div>
-        </div>
-
         {/* Customer + address */}
         <div className="mb-6 grid gap-6 sm:grid-cols-2">
           <div>
@@ -170,17 +197,109 @@ export default function PartsOrderDetailPage() {
           </div>
         </div>
 
-        <div className="mb-6">
-          <h2 className="mb-2 font-bold">Customer updates</h2>
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" className={BTN_INACTIVE} disabled={busy || !order.items.some((item) => item.backordered)} onClick={() => customerUpdate('backorder')}>Email backorder update</Button>
-            <Button variant="outline" className={BTN_INACTIVE} disabled={busy || !order.items.some((item) => item.status === 'refunded')} onClick={() => customerUpdate('refund')}>Email refund update</Button>
-            <Button variant="outline" className={BTN_INACTIVE} disabled={busy} onClick={() => customerUpdate('arranged')}>Email order arranged</Button>
+        {/* Line items */}
+        <h2 className="mb-2 font-bold">Items</h2>
+        <div className="mb-6 overflow-x-auto rounded-md border border-border-light">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-border-light">
+                <TableHead className="text-[var(--text-dark-primary)]">Part</TableHead>
+                <TableHead className="text-[var(--text-dark-primary)]">Qty</TableHead>
+                <TableHead className="text-[var(--text-dark-primary)]">Sold</TableHead>
+                <TableHead className="text-[var(--text-dark-primary)]">Cost</TableHead>
+                <TableHead className="text-[var(--text-dark-primary)]">Profit</TableHead>
+                <TableHead className="text-[var(--text-dark-primary)]">Status</TableHead>
+                <TableHead className="text-[var(--text-dark-primary)]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {order.items.map((item) => (
+                <ItemRow
+                  key={item.id}
+                  item={item}
+                  busy={busy}
+                  daysRemaining={order.backorder_days_remaining}
+                  windowExpired={order.backorder_window_expired}
+                  holdDays={order.backorder_hold_days}
+                  onAction={itemAction}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Totals + internal margin */}
+        <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:max-w-2xl">
+          <div className="space-y-1 text-sm">
+            <div className="flex justify-between"><span className="text-[var(--text-dark-secondary)]">Subtotal</span><span>${order.subtotal}</span></div>
+            <div className="flex justify-between"><span className="text-[var(--text-dark-secondary)]">Shipping</span><span>${order.shipping}</span></div>
+            <div className="flex justify-between font-bold"><span>Total </span><span>${order.amount_paid ?? order.total}</span></div>
+          </div>
+
+          <div className="rounded-md border border-border-light p-3 text-sm">
+            <h3 className="mb-1 font-bold">Internal margin</h3>
+            <p className="mb-2 text-xs text-[var(--text-dark-secondary)]">
+              Current supplier feed prices, before markup. Parts only — shipping excluded.
+            </p>
+            <div className="flex justify-between"><span className="text-[var(--text-dark-secondary)]">Customer parts total</span><span>${order.margin.customer_parts_total.toFixed(2)}</span></div>
+            <div className="flex justify-between"><span className="text-[var(--text-dark-secondary)]">Supplier cost</span><span>${order.margin.supplier_parts_total.toFixed(2)}</span></div>
+            <div className="mt-1 flex justify-between border-t border-border-light pt-1 font-bold text-emerald-700">
+              <span>Gross profit</span><span>${order.margin.gross_profit_total.toFixed(2)}</span>
+            </div>
+            {order.margin.has_unpriced_items && (
+              <p className="mt-2 text-xs text-orange-700">
+                Some parts have no current supplier price — the cost and profit figures above exclude them.
+              </p>
+            )}
           </div>
         </div>
 
         <div className="mb-6">
-          <h2 className="mb-2 font-bold">Communications</h2>
+          <h2 className="mb-2 font-bold">Send email</h2>
+          <div className="overflow-x-auto rounded-md border border-border-light">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border-light">
+                  <TableHead className="text-[var(--text-dark-primary)]">Type</TableHead>
+                  <TableHead className="text-[var(--text-dark-primary)]">What it does</TableHead>
+                  <TableHead className="text-right text-[var(--text-dark-primary)]">Send</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {emailActions.map((action) => (
+                  <TableRow key={action.key} className="border-border-light">
+                    <TableCell className="whitespace-nowrap align-top font-medium">{action.label}</TableCell>
+                    <TableCell className="align-top text-sm text-[var(--text-dark-secondary)]">
+                      {action.description}
+                      {action.disabled && action.disabledReason && (
+                        <span className="mt-1 block text-xs italic">{action.disabledReason}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="align-top text-right">
+                      {action.href && !action.disabled ? (
+                        <Button asChild className="border-sky-700 bg-sky-600 text-white hover:bg-sky-700 hover:text-white">
+                          <Link href={action.href}>{action.cta}</Link>
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          className={BTN_INACTIVE}
+                          disabled={busy || action.disabled}
+                          onClick={action.onClick}
+                        >
+                          {action.cta}
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <h2 className="mb-2 font-bold">Communication History</h2>
           {order.messages.length === 0 ? <p className="text-sm text-[var(--text-dark-secondary)]">No emails recorded for this order yet.</p> : (
             <div className="overflow-hidden rounded-md border border-border-light">
               {order.messages.map((message) => <Link key={message.id} href={`/dashboard/messages/${message.id}`} className="block border-b border-border-light p-3 text-sm last:border-0 hover:bg-gray-50">
@@ -216,12 +335,18 @@ export default function PartsOrderDetailPage() {
   );
 }
 
-function ItemRow({ item, busy, onAction }: {
+function ItemRow({ item, busy, daysRemaining, windowExpired, holdDays, onAction }: {
   item: AdminPartsOrderItem;
   busy: boolean;
+  /** Days left in the hold for the whole order; zero or negative means closed. */
+  daysRemaining: number;
+  windowExpired: boolean;
+  holdDays: number;
   onAction: (itemId: number, action: ItemAction) => void;
 }) {
   const btn = 'rounded border border-gray-300 px-2 py-1 text-xs hover:border-black disabled:opacity-40';
+  const settled = item.status === 'refunded' || item.status === 'completed';
+  const daysOld = holdDays - daysRemaining;
   return (
     <TableRow className="border-border-light align-top">
       <TableCell>
@@ -232,42 +357,52 @@ function ItemRow({ item, busy, onAction }: {
         <div className="text-xs text-[var(--text-dark-secondary)]">{item.model_name} · {item.section_code} #{item.ref_number}</div>
       </TableCell>
       <TableCell className="text-sm">{item.quantity}</TableCell>
-      <TableCell className="text-sm">${item.line_total}</TableCell>
+      <TableCell className="text-sm whitespace-nowrap">${item.line_total}</TableCell>
+      <TableCell className="text-sm whitespace-nowrap text-[var(--text-dark-secondary)]">
+        {item.supplier_line_total == null ? '—' : `$${item.supplier_line_total.toFixed(2)}`}
+      </TableCell>
+      <TableCell className="text-sm whitespace-nowrap font-medium text-emerald-700">
+        {item.gross_profit == null ? '—' : `$${item.gross_profit.toFixed(2)}`}
+      </TableCell>
       <TableCell>
         <div className="flex flex-col gap-1">
-          <Badge variant="outline" className={
-            item.status === 'refunded' ? 'border-orange-500 text-orange-600'
-              : item.status === 'fulfilled' ? 'border-green-600 text-green-700'
-                : 'border-gray-400 text-[var(--text-dark-primary)]'
-          }>
-            {item.status}
+          <Badge variant="outline" className={ITEM_STATUS_BADGE[item.status] ?? 'border-gray-400'}>
+            {item.status.replace(/_/g, ' ')}
           </Badge>
           {item.backordered && (
-            <span className={`text-xs font-medium ${item.backorder_overdue ? 'text-red-600' : 'text-orange-600'}`}>
-              Backorder · {item.backorder_days_remaining != null
-                ? (item.backorder_overdue ? `${-item.backorder_days_remaining}d overdue` : `${item.backorder_days_remaining}d left`)
-                : ''}
+            <span className={`text-xs font-medium ${daysRemaining < 0 ? 'text-red-600' : 'text-orange-600'}`}>
+              Backorder · {daysRemaining < 0 ? `${-daysRemaining}d overdue` : `${daysRemaining}d left`}
             </span>
           )}
         </div>
       </TableCell>
       <TableCell>
         <div className="flex flex-wrap gap-1">
-          {item.status !== 'refunded' && item.status !== 'fulfilled' && (
+          {!settled && (
             <>
               {item.backordered ? (
                 <button className={btn} disabled={busy} onClick={() => onAction(item.id, 'remove_backorder')}>Remove backorder</button>
               ) : (
-                <button className={btn} disabled={busy} onClick={() => onAction(item.id, 'place_backorder')}>Place on backorder</button>
+                <button
+                  className={btn}
+                  disabled={busy || windowExpired}
+                  onClick={() => onAction(item.id, 'place_backorder')}
+                >
+                  Place on backorder
+                </button>
               )}
-              <button className={btn} disabled={busy} onClick={() => onAction(item.id, 'mark_fulfilled')}>Fulfilled</button>
               <button className={btn} disabled={busy} onClick={() => onAction(item.id, 'mark_refunded')}>Refund</button>
             </>
           )}
-          {(item.status === 'refunded' || item.status === 'fulfilled') && (
-            <button className={btn} disabled={busy} onClick={() => onAction(item.id, 'mark_ordered')}>Undo</button>
+          {item.status === 'refunded' && (
+            <button className={btn} disabled={busy} onClick={() => onAction(item.id, 'mark_to_order')}>Undo</button>
           )}
         </div>
+        {!settled && !item.backordered && windowExpired && (
+          <p className="mt-1 max-w-[14rem] text-xs italic text-[var(--text-dark-secondary)]">
+            Order is {daysOld}d old; exceeds the {holdDays}-day backorder window. Refund instead.
+          </p>
+        )}
       </TableCell>
     </TableRow>
   );

@@ -22,11 +22,18 @@ export interface AdminPartsOrderItem {
   quantity: number;
   unit_price: string;
   line_total: string;
-  status: 'ordered' | 'fulfilled' | 'refunded';
+  status: 'to_order' | 'completed' | 'refunded';
   backordered: boolean;
-  backorder_since: string | null;
-  backorder_days_remaining: number | null;
-  backorder_overdue: boolean;
+  /** Current supplier cost for this line; null when the part has no live feed price. */
+  supplier_line_total: number | null;
+  gross_profit: number | null;
+}
+
+export interface AdminPartsOrderMargin {
+  supplier_parts_total: number;
+  customer_parts_total: number;
+  gross_profit_total: number;
+  has_unpriced_items: boolean;
 }
 
 export interface AdminPartsOrder {
@@ -34,6 +41,10 @@ export interface AdminPartsOrder {
   order_reference: string;
   status: string;
   has_backorder: boolean;
+  /** Days left in the hold, counted from the order date. Zero or negative means closed. */
+  backorder_days_remaining: number;
+  backorder_window_expired: boolean;
+  backorder_hold_days: number;
   customer_name: string;
   customer_email: string;
   customer_phone: string;
@@ -52,6 +63,7 @@ export interface AdminPartsOrder {
   created_at: string;
   updated_at: string;
   items: AdminPartsOrderItem[];
+  margin: AdminPartsOrderMargin;
   stripe_payment_intent_id: string | null;
   payment_status: string | null;
   messages: Array<{ id: number; message_type: string; to: string; subject: string; status: string; sent_at: string | null; created_at: string }>;
@@ -67,6 +79,5 @@ export interface Paginated<T> {
 export type ItemAction =
   | 'place_backorder'
   | 'remove_backorder'
-  | 'mark_fulfilled'
   | 'mark_refunded'
-  | 'mark_ordered';
+  | 'mark_to_order';
