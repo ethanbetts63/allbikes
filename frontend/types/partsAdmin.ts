@@ -75,6 +75,9 @@ export interface Paginated<T> {
   previous: string | null;
 }
 
+/** The three fixed customer emails an operator can trigger for an order. */
+export type CustomerUpdateType = 'backorder' | 'refund' | 'arranged';
+
 export type ItemAction =
   | 'place_backorder'
   | 'remove_backorder'

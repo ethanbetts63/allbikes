@@ -2,6 +2,7 @@ import { authedFetch } from '../apiClient';
 import type {
   AdminPartsOrder,
   AdminPartsOrderListItem,
+  CustomerUpdateType,
   ItemAction,
   Paginated,
 } from '@/types/partsAdmin';
@@ -91,7 +92,7 @@ export async function adminSendPartsSupplierEmail(reference: string, data: { to:
   }
 }
 
-export async function adminSendPartsCustomerUpdate(reference: string, type: 'backorder' | 'refund' | 'arranged'): Promise<void> {
+export async function adminSendPartsCustomerUpdate(reference: string, type: CustomerUpdateType): Promise<void> {
   const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/customer-update/`, {
     method: 'POST', body: JSON.stringify({ type }),
   });

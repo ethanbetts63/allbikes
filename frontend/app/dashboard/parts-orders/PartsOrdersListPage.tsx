@@ -19,24 +19,6 @@ import { adminGetPartsOrders } from '@/services/partsAdminService';
 import type { AdminPartsOrderListItem } from '@/types/partsAdmin';
 import { authedFetch } from '@/apiClient';
 
-// Badge classes reused by the order detail page's header status chip.
-export const PARTS_STATUS_BADGE: Record<string, string> = {
-  pending_payment: 'border-amber-500 text-[var(--highlight)]',
-  paid: 'border-green-600 text-green-700',
-  dispatched: 'border-blue-500 text-blue-700',
-  completed: 'border-emerald-600 text-emerald-700',
-  cancelled: 'border-red-500 text-destructive',
-  refunded: 'border-orange-500 text-orange-600',
-  partially_refunded: 'border-orange-400 text-orange-500',
-};
-
-// Outline buttons on the light order-detail surface need explicit colours
-// (the dark-dashboard variant leaves them unreadable). Filled slate rather than
-// white-on-white so they stay visible against the light card background;
-// the base button's disabled:opacity-50 still reads as disabled.
-export const BTN_INACTIVE =
-  'bg-slate-600 text-white border-slate-700 hover:bg-slate-700 hover:text-white';
-
 const PAGE_SIZE = 50;
 
 // Whole-row tint + legend swatch per status (light so text stays readable).

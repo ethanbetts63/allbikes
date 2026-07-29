@@ -9,7 +9,7 @@ import type { AdminNotifications } from '@/types/AdminNotifications';
 import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { PARTS_STATUS_BADGE } from '../parts-orders/PartsOrdersListPage';
+import { PARTS_STATUS_BADGE } from '../parts-orders/_lib/partsOrderStyles';
 
 const HIRE_STATUS_BADGE: Record<string, string> = {
   confirmed: 'border-green-600 text-green-700',

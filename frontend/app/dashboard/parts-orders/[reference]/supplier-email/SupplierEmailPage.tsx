@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -20,25 +21,25 @@ export default function SupplierEmailPage() {
   const [body, setBody] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [message, setMessage] = useState<{ text: string; error?: boolean } | null>(null);
 
   useEffect(() => {
     if (!reference) return;
     adminGetPartsSupplierEmailDraft(reference)
       .then((data) => { setDraft(data); setSubject(data.subject); setBody(data.body); })
-      .catch(() => setMessage({ text: 'Failed to load the supplier email draft.', error: true }))
+      .catch(() => toast.error('Failed to load the supplier email draft.'))
       .finally(() => setLoading(false));
   }, [reference]);
 
   const send = async () => {
-    if (!to.trim()) { setMessage({ text: 'Enter the supplier email address before sending.', error: true }); return; }
+    if (!to.trim()) { toast.error('Enter the supplier email address before sending.'); return; }
     if (!confirm(`Send this supplier order email to ${to.trim()}?`)) return;
-    setSending(true); setMessage(null);
+    setSending(true);
     try {
       await adminSendPartsSupplierEmail(reference, { to, subject, body });
+      toast.success('Supplier email sent.');
       router.push(`/dashboard/parts-orders/${reference}`);
     } catch (error) {
-      setMessage({ text: error instanceof Error ? error.message : 'Supplier email could not be sent.', error: true });
+      toast.error(error instanceof Error ? error.message : 'Supplier email could not be sent.');
     } finally { setSending(false); }
   };
 
@@ -56,8 +57,7 @@ export default function SupplierEmailPage() {
           <Link className="text-sm underline underline-offset-2" href={`/dashboard/parts-orders/${reference}`}>← Back to order</Link>
         </div>
 
-        {message && <Alert variant={message.error ? 'destructive' : 'default'} className="mb-4"><AlertDescription>{message.text}</AlertDescription></Alert>}
-        {draft.has_unpriced_items && <Alert variant="destructive" className="mb-4"><AlertDescription>One or more current supplier prices are unavailable. Check the email carefully before sending.</AlertDescription></Alert>}
+        {draft.has_unpriced_items &&<Alert variant="destructive" className="mb-4"><AlertDescription>One or more current supplier prices are unavailable. Check the email carefully before sending.</AlertDescription></Alert>}
 
         <div className="space-y-4">
           <label className="block text-sm font-medium">To
