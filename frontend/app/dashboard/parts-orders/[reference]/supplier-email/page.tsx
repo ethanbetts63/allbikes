@@ -74,7 +74,7 @@ export default function SupplierEmailPage() {
         {draft.has_unpriced_items && (
           <Alert variant="destructive" className="mb-4">
             <AlertDescription>
-              One or more current supplier prices are unavailable. Check the email carefully before sending.
+              One or more older order lines have no pricing snapshot. Check the email carefully before sending.
             </AlertDescription>
           </Alert>
         )}

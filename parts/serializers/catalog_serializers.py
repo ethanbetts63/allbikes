@@ -2,8 +2,8 @@
 
 The section payload is the interesting part: callout rows are grouped by
 ``ref_number`` into pickers, the variant axis (colour / date / none) is detected,
-and the customer price (wholesale x markup) is computed server-side. The wholesale
-price is never exposed.
+and the customer price (RRP+GST plus markup) is computed server-side. The source
+RRP is never exposed.
 """
 from collections import OrderedDict
 

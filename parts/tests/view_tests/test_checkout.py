@@ -119,6 +119,26 @@ class TestCreatePartsOrderService:
         assert order.total == Decimal('255.00')
         assert order.items.count() == 1
         assert order.order_reference.startswith('SP-')
+        item = order.items.get()
+        assert item.rrp_unit_price_incl_gst == Decimal('100.00')
+        assert item.supplier_discount_percentage == Decimal('30.00')
+        assert item.supplier_unit_cost_incl_gst == Decimal('70.00')
+        assert item.markup_percentage == Decimal('20.00')
+        assert item.unit_price == Decimal('120.00')
+
+    def test_supplier_discount_comes_from_config(self, settings_fixture, settings):
+        settings.PARTS_SUPPLIER_DISCOUNT_PERCENTAGE = '25.00'
+        part = PartFactory(
+            part_number='A-1', wholesale_price_incl_gst=Decimal('100'),
+            available_qty=5, in_pa_feed=True,
+        )
+        SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=part)
+
+        order = create_parts_order(customer=_customer(), items=[_item('A-1')])
+
+        item = order.items.get()
+        assert item.supplier_discount_percentage == Decimal('25.00')
+        assert item.supplier_unit_cost_incl_gst == Decimal('75.00')
 
     def test_checkout_is_australia_only(self, settings_fixture):
         """A non-Australian country is ignored — we only ship domestically."""

@@ -20,19 +20,25 @@ export interface AdminPartsOrderItem {
   section_code: string;
   ref_number: string;
   quantity: number;
+  rrp_unit_price_incl_gst: string | null;
+  rrp_line_total_incl_gst: string | null;
+  supplier_discount_percentage: string | null;
+  supplier_unit_cost_incl_gst: string | null;
+  supplier_line_total_incl_gst: string | null;
+  markup_percentage: string | null;
   unit_price: string;
   line_total: string;
   status: 'to_order' | 'completed' | 'refunded';
   backordered: boolean;
-  /** Current supplier cost for this line; null when the part has no live feed price. */
-  supplier_line_total: number | null;
-  gross_profit: number | null;
+  gross_profit_ex_gst: string | null;
+  profit_margin_percentage: string | null;
 }
 
 export interface AdminPartsOrderMargin {
-  supplier_parts_total: number;
-  customer_parts_total: number;
-  gross_profit_total: number;
+  supplier_parts_total_incl_gst: number;
+  customer_parts_total_incl_gst: number;
+  gross_profit_ex_gst_total: number;
+  profit_margin_percentage: number;
   has_unpriced_items: boolean;
 }
 

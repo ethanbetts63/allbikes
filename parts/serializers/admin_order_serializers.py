@@ -87,8 +87,8 @@ class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
     def get_margin(self, obj):
         """Order-level supplier cost vs. what the customer paid for the parts.
 
-        Shipping is excluded — it isn't a supplier cost. Lines whose part has no
-        live feed price are skipped from the cost total and flagged instead.
+        Shipping is excluded — it isn't a supplier parts cost. Legacy lines with
+        no checkout pricing snapshot are skipped and flagged.
         """
         return order_margin(obj)
 

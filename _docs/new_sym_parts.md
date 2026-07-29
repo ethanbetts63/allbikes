@@ -157,8 +157,12 @@ Catalog database
   overwrite a prior archive copy.
 - The pricing importer validates the expected CSV header and minimum row count
   before it can change catalog availability.
-- Customer price is `supplier base price × (1 + markup percentage)`, rounded to
-  cents. Prices displayed to customers include GST.
+- The Price & Availability `RRP+GST` value is the pricing base. Customer price is
+  `RRP+GST × (1 + Parts Settings markup percentage)`. Our actual supplier cost is
+  `RRP+GST × (1 - PARTS_SUPPLIER_DISCOUNT_PERCENTAGE)`, currently 30% by default.
+  All inputs and results are snapshotted on the order line. Admin gross profit is
+  shown ex GST as `(customer price - actual supplier cost) ÷ 1.10`; shipping is
+  excluded from parts profit and margin.
 - Models use their SYM model code as a stable key; sections use model + section
   code; fitments use model + section + callout + part number + effective date.
 - Re-importing a book updates those stable records in place, removes source rows

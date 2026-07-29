@@ -59,7 +59,8 @@ export interface SupplierEmailDraftItem {
   line_total: number | null;
   customer_unit_price: number;
   customer_line_total: number;
-  gross_profit: number | null;
+  gross_profit_ex_gst: number | null;
+  profit_margin_percentage: number | null;
 }
 
 export interface SupplierEmailDraft {
@@ -67,9 +68,10 @@ export interface SupplierEmailDraft {
   subject: string;
   body: string;
   items: SupplierEmailDraftItem[];
-  supplier_parts_total: number;
-  customer_parts_total: number;
-  gross_profit_total: number;
+  supplier_parts_total_incl_gst: number;
+  customer_parts_total_incl_gst: number;
+  gross_profit_ex_gst_total: number;
+  profit_margin_percentage: number;
   has_unpriced_items: boolean;
 }
 

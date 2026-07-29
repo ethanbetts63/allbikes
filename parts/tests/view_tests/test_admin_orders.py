@@ -95,6 +95,30 @@ class TestAdminDetailAndUpdate:
         assert len(data['items']) == 1
         assert data['stripe_payment_intent_id'] == 'pi_abc'
 
+    def test_detail_uses_snapshotted_cost_and_shows_profit_ex_gst(self, admin_client):
+        order = _order()
+        item = order.items.get()
+        # Later feed/settings changes must not rewrite this order's economics.
+        from parts.models import Part
+        Part.objects.filter(part_number=item.part_number).update(
+            wholesale_price_incl_gst=Decimal('999.00')
+        )
+        settings = PartsSettings.get()
+        settings.markup_percentage = Decimal('50.00')
+        settings.save()
+
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
+        line = data['items'][0]
+        assert line['rrp_unit_price_incl_gst'] == '100.00'
+        assert line['supplier_discount_percentage'] == '30.00'
+        assert line['supplier_unit_cost_incl_gst'] == '70.00'
+        assert line['markup_percentage'] == '20.00'
+        assert line['unit_price'] == '120.00'
+        assert line['gross_profit_ex_gst'] == '45.45'
+        assert line['profit_margin_percentage'] == '41.67'
+        assert data['margin']['gross_profit_ex_gst_total'] == 45.45
+        assert data['margin']['profit_margin_percentage'] == 41.67
+
     def test_detail_exposes_order_level_backorder_window(self, admin_client):
         order = _order()
         data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
@@ -326,16 +350,17 @@ class TestSupplierEmail:
         assert response.status_code == 200
         data = response.json()
         assert data['to'] == ''
-        assert data['items'][0]['unit_price'] == 100.0
-        assert data['supplier_parts_total'] == 100.0
+        assert data['items'][0]['unit_price'] == 70.0
+        assert data['supplier_parts_total_incl_gst'] == 70.0
         assert data['items'][0]['customer_unit_price'] == 120.0
-        assert data['items'][0]['gross_profit'] == 20.0
-        assert data['gross_profit_total'] == 20.0
+        assert data['items'][0]['gross_profit_ex_gst'] == 45.45
+        assert data['gross_profit_ex_gst_total'] == 45.45
+        assert data['profit_margin_percentage'] == 41.67
         assert '1. A-1' in data['body']
         item = order.items.first()
         assert f'Model: {item.model_name} ({item.model_code})' in data['body']
         assert f'Section: {item.section_code} · Ref {item.ref_number}' in data['body']
-        assert 'Quantity: 1 × $100.00 = $100.00' in data['body']
+        assert 'Quantity: 1 × $70.00 = $70.00' in data['body']
         assert 'do not ship any part of the order' in data['body']
         assert order.customer_name in data['body']
 
