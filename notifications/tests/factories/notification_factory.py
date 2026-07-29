@@ -4,7 +4,7 @@ from django.utils import timezone
 from factory.django import DjangoModelFactory
 
 from notifications.models import Message
-from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import ProductOrderFactory
 
 
 class MessageFactory(DjangoModelFactory):
@@ -12,7 +12,7 @@ class MessageFactory(DjangoModelFactory):
         model = Message
         exclude = ['related_object']
 
-    related_object = factory.SubFactory(OrderFactory)
+    related_object = factory.SubFactory(ProductOrderFactory)
     content_type = factory.LazyAttribute(lambda o: ContentType.objects.get_for_model(o.related_object))
     object_id = factory.LazyAttribute(lambda o: o.related_object.pk)
 

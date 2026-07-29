@@ -208,12 +208,13 @@ class TestHireBookingCreateView:
         """
         GIVEN a valid hire bike and payload
         WHEN POST /api/hire/bookings/
-        THEN 201 is returned with booking_reference and booking_id.
+        THEN 201 is returned with a reference and private access token.
         """
         response = api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
         assert response.status_code == status.HTTP_201_CREATED
         assert 'booking_reference' in response.data
-        assert 'booking_id' in response.data
+        assert 'access_token' in response.data
+        assert 'booking_id' not in response.data
 
     def test_booking_is_saved_as_pending_payment(self, api_client, hire_bike):
         """
@@ -377,16 +378,16 @@ class TestHireBookingCreateView:
         booking = HireBooking.objects.first()
         assert float(booking.bond_amount) == 500.00
 
-    def test_response_includes_booking_id_for_payment_intent_creation(self, api_client, hire_bike):
+    def test_response_token_matches_created_booking(self, api_client, hire_bike):
         """
         GIVEN a valid booking payload
         WHEN the booking is created
-        THEN booking_id is included in the response so the client can create a payment intent.
+        THEN the token required by the payment flow is returned once.
         """
         response = api_client.post(self.URL, _booking_payload(hire_bike.id), format='json')
         assert response.status_code == status.HTTP_201_CREATED
         booking = HireBooking.objects.first()
-        assert response.data['booking_id'] == booking.id
+        assert response.data['access_token'] == booking.access_token
 
     def test_returns_400_when_terms_not_accepted(self, api_client, hire_bike):
         """

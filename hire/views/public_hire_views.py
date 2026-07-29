@@ -1,6 +1,7 @@
 import math
 import stripe
 from datetime import date, datetime, timedelta
+from decimal import Decimal
 
 from django.conf import settings as django_settings
 from django.db import transaction
@@ -173,8 +174,8 @@ class HireBookingCreateView(APIView):
 
         return Response(
             {
-                'booking_id': booking.id,
                 'booking_reference': booking.booking_reference,
+                'access_token': booking.access_token,
                 'motorcycle_name': str(motorcycle),
                 'hire_start': str(hire_start),
                 'hire_end': str(hire_end),
@@ -193,14 +194,17 @@ class HireCreatePaymentIntentView(APIView):
     authentication_classes = []
     permission_classes = [AllowAny]
 
-    def post(self, request):
-        booking_id = request.data.get('booking_id')
-        if not booking_id:
-            return Response({'detail': 'booking_id is required.'}, status=400)
+    def post(self, request, booking_reference):
+        access_token = (request.data.get('access_token') or '').strip()
+        if not access_token:
+            return Response({'detail': 'Booking access token is required.'}, status=403)
 
         with transaction.atomic():
             try:
-                booking = HireBooking.objects.select_for_update().get(pk=booking_id)
+                booking = HireBooking.objects.select_for_update().get(
+                    booking_reference=booking_reference,
+                    access_token=access_token,
+                )
             except HireBooking.DoesNotExist:
                 return Response({'detail': 'Booking not found.'}, status=404)
 
@@ -228,10 +232,13 @@ class HireBookingRetrieveView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, booking_reference):
+        access_token = (request.headers.get('X-Booking-Token') or '').strip()
+        if not access_token:
+            return Response({'detail': 'Booking access token is required.'}, status=403)
         try:
             booking = HireBooking.objects.select_related('motorcycle').prefetch_related(
                 'extras__extra'
-            ).get(booking_reference=booking_reference)
+            ).get(booking_reference=booking_reference, access_token=access_token)
         except HireBooking.DoesNotExist:
             return Response({'detail': 'Booking not found.'}, status=404)
 

@@ -10,6 +10,7 @@ import { getHireBookingByReference } from '@/lib/api';
 import type { HireBooking } from '@/types/HireBooking';
 import ConfirmedBookingDetails from './ConfirmedBookingDetails';
 import PickupInstructions from './PickupInstructions';
+import { getHireBookingToken } from '@/app/hire/book/_lib/hireBookingAccess';
 
 export default function HireConfirmationScreen() {
   const params = useParams<{ bookingReference: string }>();
@@ -24,9 +25,17 @@ export default function HireConfirmationScreen() {
     window.scrollTo(0, 0);
     if (!bookingReference) return;
     let cancelled = false;
-    getHireBookingByReference(bookingReference)
+    const token = getHireBookingToken(bookingReference);
+    const request = token
+      ? getHireBookingByReference(bookingReference, token)
+      : Promise.reject(new Error('The secure booking session has expired.'));
+    request
       .then((data) => { if (!cancelled) setBooking(data); })
-      .catch(() => { if (!cancelled) setError('Booking not found.'); })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'Booking not found.');
+        }
+      })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
   }, [bookingReference]);

@@ -70,7 +70,7 @@ class TestHandlePaymentIntentSucceededHire:
         """
         GIVEN a Payment linked to a HireBooking
         WHEN the succeeded handler is called
-        THEN send_customer_confirmation and send_admin_new_order are NOT called.
+        THEN product-order notification functions are NOT called.
         """
         mock_order_confirm = mocker.patch('payments.utils.webhook_handlers.send_product_customer_confirmation')
         mock_order_admin = mocker.patch('payments.utils.webhook_handlers.send_product_admin_new_order')

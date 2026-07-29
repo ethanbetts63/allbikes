@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from notifications.models import Message
 from notifications.tests.factories.notification_factory import MessageFactory
-from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import ProductOrderFactory
 
 
 def _messages_for(obj, **kwargs):
@@ -21,7 +21,7 @@ class TestMessageModel:
         assert 'sent' in result
 
     def test_content_object_round_trips(self):
-        order = OrderFactory()
+        order = ProductOrderFactory()
         msg = MessageFactory(related_object=order)
         msg.refresh_from_db()
         assert msg.content_object == order
@@ -50,7 +50,7 @@ class TestMessageModel:
         WHEN the Order is deleted
         THEN the Message persists and content_object resolves to None.
         """
-        order = OrderFactory()
+        order = ProductOrderFactory()
         msg = MessageFactory(related_object=order)
         msg_pk = msg.pk
 

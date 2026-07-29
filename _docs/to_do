@@ -1,0 +1,62 @@
+ 12. Customer access tokens are placed in URLs
+
+  Tokens in query strings can appear in:
+
+  - Browser history.
+  - Access logs.
+  - Analytics.
+  - Error reporting.
+  - Same-origin referrer headers.
+
+  The current referrer policy limits cross-origin leakage, but logs and analytics remain relevant. Store the token in sessionStorage during checkout and send it in a
+  request header/body instead.
+
+  13. JWT refresh security could be tightened
+
+  Current refresh tokens last 30 days, rotate, but old rotated tokens are not blacklisted. A stolen refresh token can remain usable.
+
+  Recommended:
+
+  - Enable refresh-token blacklisting.
+  - Consider a shorter refresh lifetime for an admin-only system.
+  - Scope the refresh cookie to /api/token/.
+  - Use SameSite=Lax if all browser calls continue through the same-origin Next.js proxy.
+  - CSRF/origin-protect refresh and logout endpoints.
+
+
+ 11. Notifications are not transactionally reliable
+
+  Order changes commit first, then email/SMS runs synchronously. If the process stops after the commit but before notifications finish, Stripe retries the webhook.
+  However, the webhook sees an already-succeeded payment and exits, so the missed notification may never be retried.
+
+  An outbox approach would be safer:
+
+  Webhook transaction
+    ├── mark payment/order paid
+    └── create NotificationJob
+
+  Worker/command
+    └── send and retry NotificationJob
+
+  This also makes Stripe webhooks respond faster.
+
+
+ 2. Stop putting order bearer tokens in URLs.
+
+  Customer access tokens currently travel through query strings in all checkout systems, for example:
+
+  - frontend/app/checkout/[slug]/_components/CheckoutScreen.tsx:100
+  - frontend/app/parts/checkout/_components/PartsCheckoutDetailsScreen.tsx:53
+  - frontend/lib/api.ts:339
+
+  These tokens can enter browser history, server/proxy logs, referrers, analytics, screenshots, and support messages.
+
+  The strongest solution is to exchange the token once for a short-lived, scoped HttpOnly order cookie. A simpler improvement is sending it in an
+  authorization header or POST body and keeping checkout state in sessionStorage, never the URL.
+
+  3. Sanitize rendered HTML and safely serialize JSON-LD.
+
+  Two meaningful XSS surfaces exist:
+
+  - Backend-provided terms HTML is inserted directly in frontend/app/terms/page.tsx:51.
+  - Markdown is converted by marked and rendered directly in frontend/app/blog/[slug]/page.tsx:120.

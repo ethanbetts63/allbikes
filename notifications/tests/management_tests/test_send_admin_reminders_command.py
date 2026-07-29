@@ -3,7 +3,7 @@ import datetime
 from unittest.mock import patch
 from django.core.management import call_command
 from django.utils import timezone
-from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import ProductOrderFactory
 from notifications.models import Message
 
 @pytest.mark.django_db
@@ -36,7 +36,7 @@ class TestSendAdminRemindersCommand:
         tuesday = datetime.datetime(2023, 1, 3, tzinfo=datetime.timezone.utc)
         
         # Create an order so there is something to send
-        OrderFactory(status='paid')
+        ProductOrderFactory(status='paid')
 
         with patch('django.utils.timezone.now', return_value=tuesday):
             # Also mock render_to_string to avoid template errors if template missing
@@ -71,8 +71,8 @@ class TestSendAdminRemindersCommand:
     def test_sends_email_with_orders(self, capsys, mock_send_mailgun, mock_admin_recipients):
         monday = datetime.datetime(2023, 1, 2, tzinfo=datetime.timezone.utc)
         
-        order1 = OrderFactory(status='paid', order_reference='REF1')
-        order2 = OrderFactory(status='paid', order_reference='REF2')
+        order1 = ProductOrderFactory(status='paid', order_reference='REF1')
+        order2 = ProductOrderFactory(status='paid', order_reference='REF2')
 
         with patch('django.utils.timezone.now', return_value=monday):
             with patch('notifications.management.commands.send_admin_reminders.render_to_string', return_value="<html>Orders</html>"):
@@ -93,7 +93,7 @@ class TestSendAdminRemindersCommand:
 
     def test_sends_email_to_all_admin_recipients(self, capsys, mock_send_mailgun):
         monday = datetime.datetime(2023, 1, 2, tzinfo=datetime.timezone.utc)
-        OrderFactory(status='paid', order_reference='REF1')
+        ProductOrderFactory(status='paid', order_reference='REF1')
 
         with patch('notifications.management.commands.send_admin_reminders._admin_recipients', return_value=['admin1@example.com', 'admin2@example.com']):
             with patch('django.utils.timezone.now', return_value=monday):
@@ -106,7 +106,7 @@ class TestSendAdminRemindersCommand:
 
     def test_handles_send_error(self, capsys, mock_send_mailgun, mock_admin_recipients):
         monday = datetime.datetime(2023, 1, 2, tzinfo=datetime.timezone.utc)
-        OrderFactory(status='paid')
+        ProductOrderFactory(status='paid')
         
         mock_send_mailgun.side_effect = Exception("Mailgun error")
         

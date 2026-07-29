@@ -11,6 +11,7 @@ import StripePaymentForm from '@/components/payments/StripePaymentForm';
 import { stripePromise } from '@/lib/stripe';
 import HirePaymentSummary from './HirePaymentSummary';
 import { buildSummaryFromBooking } from '../_lib/hirePayment';
+import { getHireBookingToken } from '@/app/hire/book/_lib/hireBookingAccess';
 
 export default function HirePaymentScreen() {
   const router = useRouter();
@@ -31,8 +32,10 @@ export default function HirePaymentScreen() {
     let cancelled = false;
     const loadPayment = async () => {
       try {
-        const booking = await getHireBookingByReference(bookingReference);
-        const paymentIntent = await createHirePaymentIntent(booking.id);
+        const token = getHireBookingToken(bookingReference);
+        if (!token) throw new Error('The secure booking session has expired.');
+        const booking = await getHireBookingByReference(bookingReference, token);
+        const paymentIntent = await createHirePaymentIntent(bookingReference, token);
         if (cancelled) return;
         setClientSecret(paymentIntent.clientSecret);
         setSummary(buildSummaryFromBooking(booking));

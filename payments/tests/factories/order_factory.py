@@ -42,8 +42,3 @@ class BikeOrderFactory(DjangoModelFactory):
     deposit_amount = '500.00'
     status = 'pending_payment'
     terms_accepted = True
-
-
-# Transitional test aliases for notification tests; runtime code has no mixed Order type.
-OrderFactory = ProductOrderFactory
-MotorcycleOrderFactory = BikeOrderFactory

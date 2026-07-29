@@ -3,6 +3,10 @@ from decimal import Decimal
 from django.db import models
 
 
+def _generate_access_token():
+    return secrets.token_urlsafe(32)
+
+
 class HireBooking(models.Model):
     STATUS_CHOICES = [
         ('pending_payment', 'Pending Payment'),
@@ -18,6 +22,12 @@ class HireBooking(models.Model):
         related_name='hire_bookings',
     )
     booking_reference = models.CharField(max_length=20, unique=True, blank=True)
+    access_token = models.CharField(
+        max_length=64,
+        unique=True,
+        default=_generate_access_token,
+        editable=False,
+    )
     hire_start = models.DateField()
     hire_end = models.DateField()
     effective_daily_rate = models.DecimalField(

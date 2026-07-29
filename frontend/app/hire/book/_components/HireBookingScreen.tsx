@@ -12,6 +12,7 @@ import BookingSummaryCard from './BookingSummaryCard';
 import ExtrasPicker from './ExtrasPicker';
 import HireCustomerForm from './HireCustomerForm';
 import { type HireDiscounts, effectiveDailyRate, hireDayCount } from '../_lib/hireBooking';
+import { storeHireBookingToken } from '../_lib/hireBookingAccess';
 
 export default function HireBookingScreen() {
   const router = useRouter();
@@ -86,6 +87,7 @@ export default function HireBookingScreen() {
           .filter(e => selectedExtras[e.id])
           .map(e => ({ extra_id: e.id, quantity: 1 })),
       });
+      storeHireBookingToken(booking.booking_reference, booking.access_token);
       router.push(`/hire/book/${booking.booking_reference}/payment`);
     } catch (err: unknown) {
       setSubmitError(err instanceof Error ? err.message : 'Failed to create booking. Please try again.');

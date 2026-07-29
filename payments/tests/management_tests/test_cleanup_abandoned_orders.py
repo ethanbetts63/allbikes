@@ -6,7 +6,7 @@ from django.utils import timezone
 from hire.models import HireBooking
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
 from product.models import ProductOrder
-from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import ProductOrderFactory
 from parts.checkout import create_parts_order
 from parts.models import Part, PartsSettings
 from parts.tests.factories import PartSectionFactory, SectionPartFactory
@@ -38,7 +38,7 @@ class TestCleanupAbandonedOrdersCommand:
         WHEN cleanup_abandoned_orders is run
         THEN the order status becomes cancelled.
         """
-        order = OrderFactory(status='pending_payment')
+        order = ProductOrderFactory(status='pending_payment')
         ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=8)
         )
@@ -54,7 +54,7 @@ class TestCleanupAbandonedOrdersCommand:
         WHEN cleanup_abandoned_orders is run
         THEN the order status remains pending_payment.
         """
-        order = OrderFactory(status='pending_payment')
+        order = ProductOrderFactory(status='pending_payment')
         ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=6)
         )
@@ -70,7 +70,7 @@ class TestCleanupAbandonedOrdersCommand:
         WHEN cleanup_abandoned_orders is run
         THEN the order status is not changed.
         """
-        order = OrderFactory(status='paid')
+        order = ProductOrderFactory(status='paid')
         ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=14)
         )
@@ -87,7 +87,7 @@ class TestCleanupAbandonedOrdersCommand:
         THEN stdout reports the number cancelled.
         """
         for _ in range(2):
-            order = OrderFactory(status='pending_payment')
+            order = ProductOrderFactory(status='pending_payment')
             ProductOrder.objects.filter(pk=order.pk).update(
                 created_at=timezone.now() - timedelta(days=8)
             )
@@ -103,7 +103,7 @@ class TestCleanupAbandonedOrdersCommand:
         WHEN cleanup_abandoned_orders is run
         THEN the order is cancelled (strictly older than 7 days is caught).
         """
-        order = OrderFactory(status='pending_payment')
+        order = ProductOrderFactory(status='pending_payment')
         ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=7, seconds=1)
         )

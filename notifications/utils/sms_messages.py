@@ -21,23 +21,6 @@ def admin_new_bike_order(order):
     ).strip()
 
 
-def admin_new_order(order):
-    if order.payment_type == 'deposit':
-        motorcycle = str(order.motorcycle)
-        if order.selected_colour:
-            motorcycle += f" ({order.selected_colour})"
-        return (
-            f"New ScooterShop deposit: {order.order_reference} — "
-            f"{motorcycle} — ${order.amount_paid} deposit. "
-            f"Customer: {order.customer_name} {order.customer_phone or ''}".strip()
-        )
-    return (
-        f"New ScooterShop order: {order.order_reference} — "
-        f"{order.product.name} — ${order.amount_paid}. "
-        f"Customer: {order.customer_name} {order.customer_phone or ''}".strip()
-    )
-
-
 def admin_new_hire(booking):
     return (
         f"New hire booking: {booking.booking_reference} — "

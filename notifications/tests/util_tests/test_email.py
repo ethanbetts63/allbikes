@@ -10,19 +10,8 @@ from notifications.utils.email import (
     send_product_admin_new_order,
     send_service_booking_confirmation,
 )
-from inventory.models import BikeOrder
-from payments.tests.factories.order_factory import MotorcycleOrderFactory, OrderFactory
+from payments.tests.factories.order_factory import BikeOrderFactory, ProductOrderFactory
 from service.tests.factories.booking_request_log_factory import BookingRequestLogFactory
-
-
-def send_customer_confirmation(order):
-    if isinstance(order, BikeOrder):
-        return send_bike_customer_confirmation(order)
-    return send_product_customer_confirmation(order)
-
-
-send_admin_new_order = send_product_admin_new_order
-
 
 def _messages_for(obj, **kwargs):
     ct = ContentType.objects.get_for_model(obj)
@@ -37,21 +26,21 @@ def mock_post(mocker):
 
 
 @pytest.mark.django_db
-class TestSendCustomerConfirmation:
+class TestSendProductCustomerConfirmation:
 
     def test_sends_to_customer_email(self, mock_post):
-        order = OrderFactory(status='paid')
-        send_customer_confirmation(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_customer_confirmation(order)
         assert order.customer_email in mock_post.call_args[1]['data']['to']
 
     def test_subject_contains_order_reference(self, mock_post):
-        order = OrderFactory(status='paid')
-        send_customer_confirmation(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_customer_confirmation(order)
         assert order.order_reference in mock_post.call_args[1]['data']['subject']
 
     def test_creates_sent_message_on_success(self, mock_post):
-        order = OrderFactory(status='paid')
-        send_customer_confirmation(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_customer_confirmation(order)
         msg = _messages_for(order, message_type='customer_confirmation').get()
         assert msg.status == 'sent'
         assert msg.to == order.customer_email
@@ -62,18 +51,18 @@ class TestSendCustomerConfirmation:
         assert msg.channel == 'email'
 
     def test_stores_html_body(self, mock_post):
-        order = OrderFactory(status='paid')
-        send_customer_confirmation(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_customer_confirmation(order)
         msg = _messages_for(order, message_type='customer_confirmation').get()
         assert order.order_reference in msg.body_html
 
     def test_deposit_confirmation_includes_selected_colour(self, mock_post):
-        order = MotorcycleOrderFactory(
+        order = BikeOrderFactory(
             status='paid',
             selected_colour='Matte Black',
         )
 
-        send_customer_confirmation(order)
+        send_bike_customer_confirmation(order)
 
         msg = _messages_for(order, message_type='customer_confirmation').get()
         assert 'Matte Black' in msg.body_text
@@ -81,32 +70,32 @@ class TestSendCustomerConfirmation:
 
     def test_creates_failed_message_on_mailgun_error(self, mocker):
         mocker.patch('notifications.utils.email.requests.post', side_effect=Exception("network error"))
-        order = OrderFactory(status='paid')
-        send_customer_confirmation(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_customer_confirmation(order)
         msg = _messages_for(order, message_type='customer_confirmation').get()
         assert msg.status == 'failed'
         assert 'network error' in msg.error_message
 
     def test_does_not_raise_on_mailgun_error(self, mocker):
         mocker.patch('notifications.utils.email.requests.post', side_effect=Exception("network error"))
-        order = OrderFactory(status='paid')
-        send_customer_confirmation(order)  # must not raise
+        order = ProductOrderFactory(status='paid')
+        send_product_customer_confirmation(order)  # must not raise
 
 
 @pytest.mark.django_db
-class TestSendAdminNewOrder:
+class TestSendProductAdminNewOrder:
 
     def test_sends_to_admin_email(self, mock_post, settings):
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
         settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
-        order = OrderFactory(status='paid')
-        send_admin_new_order(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_admin_new_order(order)
         assert 'admin@scootershop.com.au' in mock_post.call_args[1]['data']['to']
 
     def test_sends_to_all_admin_emails(self, mock_post, settings):
         settings.ADMIN_EMAILS = ['admin1@example.com', 'admin2@example.com']
-        order = OrderFactory(status='paid')
-        send_admin_new_order(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_admin_new_order(order)
         recipients = [call.kwargs['data']['to'][0] for call in mock_post.call_args_list]
         assert recipients == ['admin1@example.com', 'admin2@example.com']
         assert _messages_for(order, message_type='admin_new_order').count() == 2
@@ -114,15 +103,15 @@ class TestSendAdminNewOrder:
     def test_subject_contains_order_reference(self, mock_post, settings):
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
         settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
-        order = OrderFactory(status='paid')
-        send_admin_new_order(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_admin_new_order(order)
         assert order.order_reference in mock_post.call_args[1]['data']['subject']
 
     def test_creates_sent_message_on_success(self, mock_post, settings):
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
         settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
-        order = OrderFactory(status='paid')
-        send_admin_new_order(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_admin_new_order(order)
         msg = _messages_for(order, message_type='admin_new_order').get()
         assert msg.status == 'sent'
         assert msg.to == 'admin@scootershop.com.au'
@@ -131,16 +120,16 @@ class TestSendAdminNewOrder:
     def test_skips_if_no_admin_email(self, mock_post, settings):
         settings.ADMIN_EMAIL = None
         settings.ADMIN_EMAILS = []
-        order = OrderFactory(status='paid')
-        send_admin_new_order(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_admin_new_order(order)
         mock_post.assert_not_called()
 
     def test_creates_failed_message_on_mailgun_error(self, mocker, settings):
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
         settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
         mocker.patch('notifications.utils.email.requests.post', side_effect=Exception("timeout"))
-        order = OrderFactory(status='paid')
-        send_admin_new_order(order)
+        order = ProductOrderFactory(status='paid')
+        send_product_admin_new_order(order)
         msg = _messages_for(order, message_type='admin_new_order').get()
         assert msg.status == 'failed'
         assert 'timeout' in msg.error_message

@@ -69,27 +69,27 @@ class TestSendTestEmailCommand:
         call_command('send_test_email')
         assert Message.objects.filter(message_type='test_email', status='sent').exists()
 
-    def test_customer_confirmation_template_creates_record(self, mock_mailgun, settings):
+    def test_product_confirmation_template_creates_record(self, mock_mailgun, settings):
         """
-        GIVEN --template=customer_confirmation
+        GIVEN --template=product_order_confirmation
         WHEN send_test_email is called
-        THEN a Message record with type 'customer_confirmation' is created.
+        THEN a test Message record is created.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
         settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
-        call_command('send_test_email', template='customer_confirmation')
-        assert Message.objects.filter(message_type='customer_confirmation', status='sent').exists()
+        call_command('send_test_email', template='product_order_confirmation')
+        assert Message.objects.filter(message_type='test_email', status='sent').exists()
 
-    def test_admin_new_order_template_creates_record(self, mock_mailgun, settings):
+    def test_bike_admin_template_creates_record(self, mock_mailgun, settings):
         """
-        GIVEN --template=admin_new_order
+        GIVEN --template=bike_admin_new_order
         WHEN send_test_email is called
-        THEN a Message record with type 'admin_new_order' is created.
+        THEN a test Message record is created.
         """
         settings.ADMIN_EMAIL = 'admin@scootershop.com.au'
         settings.ADMIN_EMAILS = ['admin@scootershop.com.au']
-        call_command('send_test_email', template='admin_new_order')
-        assert Message.objects.filter(message_type='admin_new_order', status='sent').exists()
+        call_command('send_test_email', template='bike_admin_new_order')
+        assert Message.objects.filter(message_type='test_email', status='sent').exists()
 
     def test_mailgun_failure_writes_to_stderr(self, mocker, settings, capsys):
         """

@@ -582,8 +582,8 @@ export async function createHireBooking(data: {
     is_of_age: boolean;
     extras: { extra_id: number; quantity: number }[];
 }): Promise<{
-    booking_id: number;
     booking_reference: string;
+    access_token: string;
     motorcycle_name: string;
     hire_start: string;
     hire_end: string;
@@ -602,17 +602,19 @@ export async function createHireBooking(data: {
     return handleResponse(response);
 }
 
-export async function createHirePaymentIntent(bookingId: number): Promise<{ clientSecret: string }> {
-    const response = await fetch('/api/hire/create-payment-intent/', {
+export async function createHirePaymentIntent(reference: string, token: string): Promise<{ clientSecret: string }> {
+    const response = await fetch(`/api/hire/bookings/${reference}/payment-intent/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ booking_id: bookingId }),
+        body: JSON.stringify({ access_token: token }),
     });
     return handleResponse(response);
 }
 
-export async function getHireBookingByReference(reference: string): Promise<HireBooking> {
-    const response = await fetch(`/api/hire/bookings/${reference}/`);
+export async function getHireBookingByReference(reference: string, token: string): Promise<HireBooking> {
+    const response = await fetch(`/api/hire/bookings/${reference}/`, {
+        headers: { 'X-Booking-Token': token },
+    });
     return handleResponse(response);
 }
 
