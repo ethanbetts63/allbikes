@@ -1,0 +1,8 @@
+{% extends "notifications/emails/base.html" %}
+{% block title %}New product order — {{ order.order_reference }}{% endblock %}
+{% block content %}
+<h1>New product order</h1><p><strong>{{ order.order_reference }}</strong></p>
+<p>{{ order.product.name }} — ${{ order.amount_paid }}</p>
+<p>{{ order.customer_name }}<br>{{ order.customer_email }}<br>{{ order.customer_phone }}</p>
+<p>{{ order.address_line1 }}{% if order.address_line2 %}<br>{{ order.address_line2 }}{% endif %}<br>{{ order.suburb }} {{ order.state }} {{ order.postcode }}</p>
+{% endblock %}

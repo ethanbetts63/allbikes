@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { Bike } from '@/types/Bike';
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 import { bikeLabel } from '../_lib/blockedDates';
 
 export type NewBlockedDate = {

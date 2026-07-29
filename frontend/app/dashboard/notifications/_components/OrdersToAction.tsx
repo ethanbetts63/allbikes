@@ -19,12 +19,12 @@ export default function OrdersToAction({ orders }: { orders: NotificationOrder[]
           </thead>
           <tbody className="divide-y divide-stone-100">
             {orders.map(order => (
-              <tr key={order.id} onClick={() => router.push(`/dashboard/orders/${order.id}`)} className={ROW}>
+              <tr key={`${order.order_kind}-${order.id}`} onClick={() => router.push(`/dashboard/orders/${order.id}?kind=${order.order_kind}`)} className={ROW}>
                 <td className="px-4 py-3">
                   <span className="font-mono font-semibold text-[var(--text-dark-primary)]">
                     {order.order_reference}
                   </span>
-                  {order.payment_type === 'deposit' && (
+                  {order.order_kind === 'bike' && (
                     <span className="ml-2 text-xs bg-stone-200 text-[var(--text-dark-secondary)] px-1.5 py-0.5 rounded font-medium">
                       Deposit
                     </span>

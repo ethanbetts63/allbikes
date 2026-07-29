@@ -1,4 +1,4 @@
-import type { AdminPartsOrderItem } from '@/types/partsAdmin';
+import type { AdminPartsOrderItem } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 
 /**
  * Stripe refunds are processed by hand, so a line marked refunded here is a

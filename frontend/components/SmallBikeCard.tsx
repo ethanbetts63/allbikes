@@ -1,8 +1,13 @@
 import Link from 'next/link';
 import NextImage from 'next/image';
 import { Wrench, Cog, Flame } from "lucide-react";
-import type { SmallBikeCardProps } from "@/types/SmallBikeCardProps";
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
+
+import type { Bike } from '@/types/Bike';
+
+export interface SmallBikeCardProps {
+  bike: Bike;
+}
 
 const SmallBikeCard: React.FC<SmallBikeCardProps> = ({ bike }) => {
   const thumbnailUrl = getPrimaryVehicleImage(bike.images, 'thumbnail');

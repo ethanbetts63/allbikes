@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { PlusCircle, X } from 'lucide-react';
 
-import { getJobTypesAdmin, createJobType, updateJobType, deleteJobType } from '@/services/jobTypeService';
-import type { JobType } from '@/types/JobType';
+import { getJobTypesAdmin, createJobType, updateJobType, deleteJobType } from '@/app/dashboard/job-types/_lib/jobTypeService';
+import type { JobType } from '@/app/dashboard/job-types/_lib/JobType';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';

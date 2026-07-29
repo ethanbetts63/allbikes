@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import type { AdminPartsOrder, CustomerUpdateType } from '@/types/partsAdmin';
+import type { AdminPartsOrder, CustomerUpdateType } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 import { BTN_INACTIVE } from '../_lib/partsOrderStyles';
 
 /** A single outbound email the operator can trigger for this order. */

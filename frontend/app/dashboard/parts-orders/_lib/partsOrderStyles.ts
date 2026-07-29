@@ -1,4 +1,4 @@
-import type { AdminPartsOrderItem } from '@/types/partsAdmin';
+import type { AdminPartsOrderItem } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 
 /** Statuses an operator can move an order to, in workflow order. */
 export const ORDER_STATUSES = [

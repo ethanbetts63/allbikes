@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import type { AdminPartsOrder } from '@/types/partsAdmin';
+import type { AdminPartsOrder } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 import { BTN_INACTIVE, ORDER_STATUSES, ORDER_STATUS_BANNER } from '../_lib/partsOrderStyles';
 
 /**

@@ -1,4 +1,12 @@
-import type { BikeImage } from './BikeImage';
+
+
+export type BikeImage = {
+  id: number;
+  image: string;
+  thumbnail: string | null;
+  medium: string;
+  order: number;
+};
 
 export type Bike = {
   id: number;

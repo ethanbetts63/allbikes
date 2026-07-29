@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import type { Bike } from '@/types/Bike';
-import type { Specification } from '@/types/Specification';
+import type { Specification } from '@/app/inventory/motorcycles/[slug]/_lib/Specification';
 import StructuredDataScript from '@/components/StructuredDataScript';
-import DesktopOnly from '@/components/DesktopOnly';
+import DesktopOnly from '@/app/inventory/motorcycles/[slug]/_components/DesktopOnly';
 import FeaturedBikes from '@/components/FeaturedBikes';
 import {
     Hash,
@@ -19,17 +19,17 @@ import {
     Globe,
 } from 'lucide-react';
 import clickIcon from '@/assets/click.svg';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import PayLaterSection from '@/components/PayLaterSection';
 import MediaGallery from '@/components/MediaGallery';
 import PriceDisplay from '@/components/PriceDisplay';
 import { ErrorScreen } from '@/components/DetailPageStates';
-import { getYouTubeVideoId } from '@/utils/youtube';
+import { getYouTubeVideoId } from '@/lib/youtube';
 import PopularBadge from '@/components/PopularBadge';
-import { assetUrl } from '@/utils/assetUrl';
-import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/utils/vehicleImages';
+import { assetUrl } from '@/lib/assetUrl';
+import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/lib/vehicleImages';
 import { buildBreadcrumbSchema } from '@/lib/seo';
-import NewScooterColourPurchase from '@/components/NewScooterColourPurchase';
+import NewScooterColourPurchase from '@/app/inventory/motorcycles/[slug]/_components/NewScooterColourPurchase';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { preload } from 'react-dom';
@@ -156,13 +156,13 @@ const BikeDetailPage = ({
 
     const specifications: Specification[] = bike ? [
         { label: "Stock Number", value: bike.stock_number, icon: Hash },
-        { label: "Odometer", value: bike.odometer, icon: Gauge, formatter: (val: number) => `${val.toLocaleString()} km` },
-        { label: "Engine Size", value: bike.engine_size, icon: Cog, formatter: (val: number) => `${val}cc` },
+        { label: "Odometer", value: bike.odometer, icon: Gauge, formatter: (val: unknown) => `${Number(val).toLocaleString()} km` },
+        { label: "Engine Size", value: bike.engine_size, icon: Cog, formatter: (val: unknown) => `${Number(val)}cc` },
         { label: "Year", value: bike.year, icon: Calendar },
         { label: "Transmission", value: bike.transmission, icon: GitCommit },
         { label: "Registration", value: bike.rego, icon: FileText },
         { label: "Rego Expiry", value: bike.rego_exp, icon: CalendarClock },
-        { label: "Warranty", value: bike.warranty_months, icon: ShieldCheck, formatter: (val: number) => `${val} months` },
+        { label: "Warranty", value: bike.warranty_months, icon: ShieldCheck, formatter: (val: unknown) => `${Number(val)} months` },
     ] : [];
 
     const vehicleLabel = bike?.vehicle_type === 'scooter' ? 'scooter' : 'motorcycle';

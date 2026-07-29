@@ -1,6 +1,6 @@
 'use client';
 
-import InventoryTable from '@/components/InventoryTable';
+import InventoryTable from '@/app/dashboard/inventory/_components/InventoryTable';
 import { Button } from '@/components/ui/button';
 import DepositSettingsPanel from './_components/DepositSettingsPanel';
 

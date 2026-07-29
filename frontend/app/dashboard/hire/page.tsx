@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-import { adminGetHireBookings, adminDeleteHireBooking } from '@/api';
+import { adminGetHireBookings, adminDeleteHireBooking } from '@/lib/api';
 import type { HireBooking } from '@/types/HireBooking';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 import { Spinner } from '@/components/ui/spinner';

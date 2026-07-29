@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { formatDate } from '@/utils/formatting';
+import { formatDate } from '@/lib/formatting';
 import { Spinner } from '@/components/ui/spinner';
 import {
   adminGetPartsOrder, adminUpdatePartsOrder, adminUpdatePartsOrderItem,
   adminSendPartsCustomerUpdate,
-} from '@/services/partsAdminService';
-import type { AdminPartsOrder, CustomerUpdateType, ItemAction } from '@/types/partsAdmin';
+} from '@/app/dashboard/parts-orders/_lib/partsAdminService';
+import type { AdminPartsOrder, CustomerUpdateType, ItemAction } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 import CommunicationHistory from '../_components/CommunicationHistory';
 import CustomerSummary from '../_components/CustomerSummary';
 import InternalNotes from '../_components/InternalNotes';

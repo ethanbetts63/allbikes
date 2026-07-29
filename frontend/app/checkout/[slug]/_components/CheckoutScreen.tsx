@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 import { Spinner } from '@/components/ui/spinner';
-import { getProductById, getBikeById, getDepositSettings, createOrder } from '@/api';
+import { createBikeOrder, createProductOrder, getProductById, getBikeById, getDepositSettings } from '@/lib/api';
 import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
-import type { CheckoutFormData } from '@/types/CheckoutFormData';
+import type { CheckoutFormData } from '@/app/checkout/[slug]/_lib/CheckoutFormData';
 import CheckoutForm from './CheckoutForm';
 import CheckoutItemCard from './CheckoutItemCard';
 import { type CheckoutType, buildItemSummary } from '../_lib/checkout';
@@ -82,19 +82,23 @@ export default function CheckoutScreen() {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const orderPayload =
-        checkoutType === 'deposit' && bike
-          ? {
+      const order = checkoutType === 'deposit' && bike
+        ? await createBikeOrder({
             motorcycle: bike.id,
-            payment_type: 'deposit' as const,
             selected_colour: selectedColour ?? '',
-            ...formData,
+            customer_name: formData.customer_name,
+            customer_email: formData.customer_email,
+            customer_phone: formData.customer_phone,
             terms_accepted: true,
-          }
-          : { product: product!.id, ...formData, terms_accepted: true };
+          })
+        : await createProductOrder({ product: product!.id, ...formData, terms_accepted: true });
 
-      const order = await createOrder(orderPayload);
-      router.push(`/checkout/${slug}/payment?ref=${order.order_reference}`);
+      const query = new URLSearchParams({
+        ref: order.order_reference,
+        token: order.access_token,
+        kind: order.order_kind,
+      });
+      router.push(`/checkout/${slug}/payment?${query.toString()}`);
     } catch (err: unknown) {
       const status = err instanceof Error ? (err as Error & { status?: number }).status : undefined;
       if (status === 409) {

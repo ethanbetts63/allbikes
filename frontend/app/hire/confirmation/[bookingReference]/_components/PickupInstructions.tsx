@@ -1,4 +1,4 @@
-import { formatDate } from '@/lib/hire';
+import { formatDate } from '@/app/hire/_lib/hire';
 import type { HireBooking } from '@/types/HireBooking';
 
 /** What the customer has to do and bring, plus the shop's hours. */

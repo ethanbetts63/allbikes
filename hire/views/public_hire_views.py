@@ -1,7 +1,6 @@
 import math
 import stripe
 from datetime import date, datetime, timedelta
-from decimal import Decimal
 
 from django.conf import settings as django_settings
 from django.db import transaction
@@ -10,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from inventory.models import Motorcycle
-from payments.models import Payment
+from payments.payment_intents import create_or_reuse_payment_intent
 from ..models import HireBooking, HireBookingExtra, HireExtra, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
 from ..serializers.hire_booking_serializer import HireBookingCreateSerializer
@@ -18,9 +17,6 @@ from ..serializers.hire_extra_serializer import HireExtraSerializer
 from ..utils.availability import is_motorcycle_available, is_globally_blocked
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
-
-STRIPE_MINIMUM = Decimal('0.50')
-
 
 class PublicHireSettingsView(APIView):
     authentication_classes = []
@@ -202,47 +198,29 @@ class HireCreatePaymentIntentView(APIView):
         if not booking_id:
             return Response({'detail': 'booking_id is required.'}, status=400)
 
-        try:
-            booking = HireBooking.objects.get(pk=booking_id)
-        except HireBooking.DoesNotExist:
-            return Response({'detail': 'Booking not found.'}, status=404)
+        with transaction.atomic():
+            try:
+                booking = HireBooking.objects.select_for_update().get(pk=booking_id)
+            except HireBooking.DoesNotExist:
+                return Response({'detail': 'Booking not found.'}, status=404)
 
-        if booking.status != 'pending_payment':
-            return Response({'detail': 'Booking is not awaiting payment.'}, status=400)
+            if booking.status != 'pending_payment':
+                return Response({'detail': 'Booking is not awaiting payment.'}, status=400)
 
-        amount = max(booking.total_charged, STRIPE_MINIMUM)
-        amount_cents = int(amount * 100)
+            secret = create_or_reuse_payment_intent(
+                target_field='hire_booking',
+                target=booking,
+                amount=booking.total_charged,
+                metadata={
+                    'target_type': 'hire_booking',
+                    'hire_booking_id': booking.id,
+                    'hire_booking_reference': booking.booking_reference,
+                    'customer_name': booking.customer_name,
+                    'customer_email': booking.customer_email,
+                },
+            )
 
-        # Idempotency: reuse existing pending Payment if amount matches
-        existing = Payment.objects.filter(hire_booking=booking, status='pending').first()
-        if existing:
-            if existing.amount == amount:
-                intent = stripe.PaymentIntent.retrieve(existing.stripe_payment_intent_id)
-                return Response({'clientSecret': intent.client_secret})
-            else:
-                stripe.PaymentIntent.cancel(existing.stripe_payment_intent_id)
-                existing.delete()
-
-        intent = stripe.PaymentIntent.create(
-            amount=amount_cents,
-            currency='aud',
-            automatic_payment_methods={'enabled': True},
-            metadata={
-                'hire_booking_id': booking.id,
-                'hire_booking_reference': booking.booking_reference,
-                'customer_name': booking.customer_name,
-                'customer_email': booking.customer_email,
-            },
-        )
-
-        Payment.objects.create(
-            hire_booking=booking,
-            stripe_payment_intent_id=intent.id,
-            amount=amount,
-            status='pending',
-        )
-
-        return Response({'clientSecret': intent.client_secret})
+        return Response({'clientSecret': secret})
 
 
 class HireBookingRetrieveView(APIView):

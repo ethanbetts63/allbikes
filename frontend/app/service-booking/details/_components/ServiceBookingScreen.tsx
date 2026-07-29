@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { createBooking } from '@/services/bookingService';
+import { createBooking } from '@/lib/bookingService';
 import { australianAddressError } from '@/lib/australianAddresses';
-import BikeDetailsForm from '@/forms/ServiceBikeDetailsForm';
-import PersonalDetailsForm from '@/forms/ServicePersonalDetailsForm';
+import BikeDetailsForm from '@/app/service-booking/details/_components/ServiceBikeDetailsForm';
+import PersonalDetailsForm from '@/app/service-booking/details/_components/ServicePersonalDetailsForm';
 import {
   BOOKING_PROGRESS_STORAGE_KEY,
   hasStep1Data,

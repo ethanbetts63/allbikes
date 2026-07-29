@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import PaymentProcessing from '@/components/payments/PaymentProcessing';
-import { getHireBookingByReference } from '@/api';
+import { getHireBookingByReference } from '@/lib/api';
 
 export default function HireProcessingScreen() {
   const router = useRouter();

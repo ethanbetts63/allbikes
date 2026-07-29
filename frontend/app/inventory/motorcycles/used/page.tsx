@@ -1,6 +1,6 @@
-import BikeListPage from '@/components/BikeListPage';
+import BikeListPage from '@/app/inventory/_components/BikeListPage';
 import { buildMetadata, buildBikeListSchema } from '@/lib/seo';
-import { getInitialBikeList } from '@/lib/inventoryList';
+import { getInitialBikeList } from '@/app/inventory/_lib/inventoryList';
 import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({

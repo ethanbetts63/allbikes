@@ -2,7 +2,7 @@ import { Trash2 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { formatDateTime } from '@/utils/formatting';
+import { formatDateTime } from '@/lib/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import StatusBadge from '@/components/ui/status-badge';
 import { STATUS_BADGE } from '../_lib/bookingLogStatus';

@@ -23,7 +23,7 @@ export default function OrderHeader({ order, selectedStatus, isSaving, onStatusC
           {badge && (
             <Badge variant="outline" className={`text-sm px-3 py-1 ${badge.className}`}>{badge.label}</Badge>
           )}
-          {order.payment_type === 'deposit' && (
+          {order.order_kind === 'bike' && (
             <Badge variant="outline" className="text-sm px-3 py-1 border-[var(--highlight)] text-[var(--highlight)]">
               Deposit
             </Badge>

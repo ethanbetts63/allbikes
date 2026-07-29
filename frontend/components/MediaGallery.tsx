@@ -3,8 +3,24 @@
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ChevronLeft, ChevronRight, PlayCircle } from 'lucide-react';
-import type { MediaGalleryProps } from '@/types/MediaGalleryProps';
-import { getVehicleImageUrl } from '@/utils/vehicleImages';
+import { getVehicleImageUrl } from '@/lib/vehicleImages';
+
+
+export interface GalleryImage {
+    id: number;
+    image: string;
+    thumbnail?: string | null;
+    medium?: string;
+    order: number;
+}
+
+export interface MediaGalleryProps {
+    videoId: string | null;
+    images: GalleryImage[];
+    initialSelectedMedia: string;
+    altText: string;
+    overlay?: React.ReactNode;
+}
 
 const YouTube = dynamic(() => import('react-youtube'), {
     ssr: false,

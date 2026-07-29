@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 
 import { Spinner } from '@/components/ui/spinner';
-import { getHireBookingByReference } from '@/api';
+import { getHireBookingByReference } from '@/lib/api';
 import type { HireBooking } from '@/types/HireBooking';
 import ConfirmedBookingDetails from './ConfirmedBookingDetails';
 import PickupInstructions from './PickupInstructions';

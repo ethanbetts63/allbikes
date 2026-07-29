@@ -1,1 +1,1 @@
-export { default } from '@/components/admin/AddMotorcyclePage';
+export { default } from '@/app/dashboard/_components/AddMotorcyclePage';

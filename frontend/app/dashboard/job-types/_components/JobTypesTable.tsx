@@ -2,7 +2,7 @@ import { Edit, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { JobType } from '@/types/JobType';
+import type { JobType } from '@/app/dashboard/job-types/_lib/JobType';
 
 /** The job types offered on the public booking form. */
 export default function JobTypesTable({ jobTypes, onEdit, onDelete }: {

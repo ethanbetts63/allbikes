@@ -2,9 +2,14 @@ import Link from 'next/link';
 import NextImage from 'next/image';
 import { Zap, Truck, ArrowRight, ShieldCheck, Flame } from 'lucide-react';
 import stripeLogo from '@/assets/stripe-ar21.svg';
-import type { FeaturedEScootersProps } from '@/types/FeaturedEScootersProps';
-import { assetUrl } from '@/utils/assetUrl';
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { assetUrl } from '@/lib/assetUrl';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
+
+import type { Product } from '@/types/Product';
+
+export interface FeaturedEScootersProps {
+    products: Product[];
+}
 
 const FeaturedEScooters = ({ products }: FeaturedEScootersProps) => {
   if (products.length === 0) return null;

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 
-import { formatDateTime } from '@/utils/formatting';
+import { formatDateTime } from '@/lib/formatting';
 import type { SentMessage } from '@/types/SentMessage';
 import { Badge } from '@/components/ui/badge';
 import {

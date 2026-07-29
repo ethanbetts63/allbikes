@@ -2,9 +2,9 @@
 
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 
-import { authedFetch } from '@/apiClient';
+import { authedFetch } from '@/lib/apiClient';
 import type { ServiceSettings } from '@/types/ServiceSettings';
-import ServiceSettingsForm from '@/forms/ServiceSettingsForm';
+import ServiceSettingsForm from '@/app/dashboard/service-settings/_components/ServiceSettingsForm';
 
 export default function ServiceSettingsPage() {
   const [settings, setSettings] = useState<ServiceSettings | null>(null);

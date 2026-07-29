@@ -1,4 +1,4 @@
-import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
+import type { CheckoutItemSummary } from '@/app/checkout/[slug]/_lib/CheckoutItemSummary';
 import type { Order } from '@/types/Order';
 
 /**
@@ -8,11 +8,11 @@ import type { Order } from '@/types/Order';
  * placeholder would just be noise this late in the flow.
  */
 export function buildSummaryFromOrder(order: Order): CheckoutItemSummary {
-  const isDeposit = order.payment_type === 'deposit';
+  const isDeposit = order.order_kind === 'bike';
   return {
     name: isDeposit
-      ? order.motorcycle_name ?? 'Motorcycle deposit'
-      : order.product_name ?? 'E-scooter order',
+      ? order.motorcycle_name
+      : order.product_name,
     imageUrl: null,
     priceLabel: isDeposit
       ? `${order.selected_colour ? `Colour: ${order.selected_colour} · ` : ''}Deposit reservation`

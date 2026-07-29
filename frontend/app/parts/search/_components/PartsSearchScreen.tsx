@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
-import ModelCard from '@/components/parts/ModelCard';
+import ModelCard from '@/app/parts/_components/ModelCard';
 import type { PartsSearchResults } from '@/types/parts';
 import PartResultRow from './PartResultRow';
 

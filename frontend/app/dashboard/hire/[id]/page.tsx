@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import {
   adminGetHireBooking, adminUpdateHireBookingStatus, adminDeleteHireBooking, adminDownloadHireContract,
-} from '@/api';
+} from '@/lib/api';
 import type { HireBooking } from '@/types/HireBooking';
 import { toast } from 'sonner';
 

@@ -15,8 +15,10 @@ def _intent(intent_id):
 def mock_emails(mocker):
     mocker.patch('payments.utils.webhook_handlers.send_hire_confirmation')
     mocker.patch('payments.utils.webhook_handlers.send_admin_new_hire')
-    mocker.patch('payments.utils.webhook_handlers.send_customer_confirmation')
-    mocker.patch('payments.utils.webhook_handlers.send_admin_new_order')
+    mocker.patch('payments.utils.webhook_handlers.send_product_customer_confirmation')
+    mocker.patch('payments.utils.webhook_handlers.send_product_admin_new_order')
+    mocker.patch('payments.utils.webhook_handlers.send_bike_customer_confirmation')
+    mocker.patch('payments.utils.webhook_handlers.send_bike_admin_new_order')
 
 
 @pytest.mark.django_db
@@ -70,8 +72,8 @@ class TestHandlePaymentIntentSucceededHire:
         WHEN the succeeded handler is called
         THEN send_customer_confirmation and send_admin_new_order are NOT called.
         """
-        mock_order_confirm = mocker.patch('payments.utils.webhook_handlers.send_customer_confirmation')
-        mock_order_admin = mocker.patch('payments.utils.webhook_handlers.send_admin_new_order')
+        mock_order_confirm = mocker.patch('payments.utils.webhook_handlers.send_product_customer_confirmation')
+        mock_order_admin = mocker.patch('payments.utils.webhook_handlers.send_product_admin_new_order')
 
         booking = HireBookingFactory(status='pending_payment')
         HirePaymentFactory(

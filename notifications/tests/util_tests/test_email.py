@@ -5,12 +5,23 @@ from django.contrib.contenttypes.models import ContentType
 from notifications.models import Message
 from notifications.utils.email import (
     send_admin_service_booking,
-    send_customer_confirmation,
-    send_admin_new_order,
+    send_bike_customer_confirmation,
+    send_product_customer_confirmation,
+    send_product_admin_new_order,
     send_service_booking_confirmation,
 )
+from inventory.models import BikeOrder
 from payments.tests.factories.order_factory import MotorcycleOrderFactory, OrderFactory
 from service.tests.factories.booking_request_log_factory import BookingRequestLogFactory
+
+
+def send_customer_confirmation(order):
+    if isinstance(order, BikeOrder):
+        return send_bike_customer_confirmation(order)
+    return send_product_customer_confirmation(order)
+
+
+send_admin_new_order = send_product_admin_new_order
 
 
 def _messages_for(obj, **kwargs):

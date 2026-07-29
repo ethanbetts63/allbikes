@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { usePartsCart } from '@/context/PartsCartContext';
-import CheckoutSteps from '@/components/parts/CheckoutSteps';
-import OrderSummary from '@/components/parts/OrderSummary';
-import { createPartsOrder, type CustomerDetails } from '@/lib/partsCheckoutApi';
+import { usePartsCart } from '@/app/parts/_components/PartsCartContext';
+import CheckoutSteps from '@/app/parts/checkout/_components/CheckoutSteps';
+import OrderSummary from '@/app/parts/checkout/_components/OrderSummary';
+import { createPartsOrder, type CustomerDetails } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 import { australianAddressError } from '@/lib/australianAddresses';
-import { stockState } from '@/lib/partsStock';
+import { stockState } from '@/app/parts/_lib/partsStock';
 import PartsCustomerForm from './PartsCustomerForm';
 import {
   EMPTY_DETAILS, STORAGE_KEY, persistableDetails, readStoredDetails,

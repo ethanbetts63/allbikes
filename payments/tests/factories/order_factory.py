@@ -2,46 +2,48 @@ import factory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from payments.models import Order
-from product.tests.factories.product_factory import ProductFactory
+from inventory.models import BikeOrder
 from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
+from product.models import ProductOrder
+from product.tests.factories.product_factory import ProductFactory
 
 fake = Faker('en_AU')
-
 AU_STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA']
 
 
-class OrderFactory(DjangoModelFactory):
+class ProductOrderFactory(DjangoModelFactory):
     class Meta:
-        model = Order
+        model = ProductOrder
 
     product = factory.SubFactory(ProductFactory)
-    customer_name = factory.Sequence(lambda n: f"Test Customer {n}")
+    customer_name = factory.Sequence(lambda n: f'Test Customer {n}')
     customer_email = factory.LazyFunction(fake.email)
-    customer_phone = factory.LazyFunction(lambda: fake.phone_number()[:20])
+    customer_phone = '0400000000'
     address_line1 = factory.LazyFunction(fake.street_address)
     address_line2 = ''
-    suburb = factory.LazyFunction(fake.city)
-    state = factory.Iterator(AU_STATES)
-    postcode = factory.LazyFunction(lambda: fake.postcode()[:4])
+    suburb = 'Perth'
+    state = 'WA'
+    postcode = '6000'
+    unit_price_incl_gst = factory.LazyAttribute(lambda obj: obj.product.price)
+    total = factory.LazyAttribute(lambda obj: obj.unit_price_incl_gst)
     status = 'pending_payment'
+    terms_accepted = True
 
 
-class MotorcycleOrderFactory(DjangoModelFactory):
-    """Factory for deposit orders linked to a motorcycle."""
-
+class BikeOrderFactory(DjangoModelFactory):
     class Meta:
-        model = Order
+        model = BikeOrder
 
-    product = None
     motorcycle = factory.SubFactory(MotorcycleFactory, condition='new', status='for_sale')
-    payment_type = 'deposit'
-    customer_name = factory.Sequence(lambda n: f"Test Customer {n}")
+    selected_colour = ''
+    customer_name = factory.Sequence(lambda n: f'Test Customer {n}')
     customer_email = factory.LazyFunction(fake.email)
-    customer_phone = factory.LazyFunction(lambda: fake.phone_number()[:20])
-    address_line1 = ''
-    address_line2 = ''
-    suburb = ''
-    state = ''
-    postcode = ''
+    customer_phone = '0400000000'
+    deposit_amount = '500.00'
     status = 'pending_payment'
+    terms_accepted = True
+
+
+# Transitional test aliases for notification tests; runtime code has no mixed Order type.
+OrderFactory = ProductOrderFactory
+MotorcycleOrderFactory = BikeOrderFactory

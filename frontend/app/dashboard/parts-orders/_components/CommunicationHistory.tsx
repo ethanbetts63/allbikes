@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { formatDate } from '@/utils/formatting';
-import type { AdminPartsOrder } from '@/types/partsAdmin';
+import { formatDate } from '@/lib/formatting';
+import type { AdminPartsOrder } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 
 /** Every email recorded against this order, sent or failed. */
 export default function CommunicationHistory({ messages }: {

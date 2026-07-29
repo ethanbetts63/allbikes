@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-import { adminGetBookingLogs, adminDeleteBookingLog } from '@/api';
+import { adminGetBookingLogs, adminDeleteBookingLog } from '@/lib/api';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import BookingLogFilters from './_components/BookingLogFilters';

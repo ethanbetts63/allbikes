@@ -3,7 +3,7 @@ from django.db import IntegrityError
 
 from payments.models import Payment
 from payments.tests.factories.payment_factory import PaymentFactory, HirePaymentFactory
-from payments.tests.factories.order_factory import OrderFactory
+from payments.tests.factories.order_factory import ProductOrderFactory
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
 
 
@@ -20,14 +20,14 @@ class TestPaymentModel:
         payment = PaymentFactory()
         assert payment.status == 'pending'
 
-    def test_one_to_one_relationship_with_order(self):
+    def test_one_to_one_relationship_with_product_order(self):
         """
         GIVEN an Order with a Payment
         WHEN accessed via order.payment
         THEN the correct Payment is returned.
         """
         payment = PaymentFactory()
-        assert payment.order.payment == payment
+        assert payment.product_order.payment == payment
 
     def test_str_contains_intent_id_and_status(self):
         """
@@ -46,11 +46,11 @@ class TestPaymentModel:
         WHEN a second Payment is created with the same ID
         THEN a database error is raised.
         """
-        order_a = OrderFactory()
-        order_b = OrderFactory()
-        PaymentFactory(order=order_a, stripe_payment_intent_id='pi_duplicate')
+        order_a = ProductOrderFactory()
+        order_b = ProductOrderFactory()
+        PaymentFactory(product_order=order_a, stripe_payment_intent_id='pi_duplicate')
         with pytest.raises(IntegrityError):
-            PaymentFactory(order=order_b, stripe_payment_intent_id='pi_duplicate')
+            PaymentFactory(product_order=order_b, stripe_payment_intent_id='pi_duplicate')
 
     def test_one_to_one_relationship_with_hire_booking(self):
         """
@@ -61,14 +61,14 @@ class TestPaymentModel:
         payment = HirePaymentFactory()
         assert payment.hire_booking.payment == payment
 
-    def test_hire_payment_has_null_order(self):
+    def test_hire_payment_has_null_product_order(self):
         """
         GIVEN a Payment linked to a HireBooking
         WHEN order is accessed
         THEN it is None.
         """
         payment = HirePaymentFactory()
-        assert payment.order is None
+        assert payment.product_order is None
 
     def test_order_payment_has_null_hire_booking(self):
         """

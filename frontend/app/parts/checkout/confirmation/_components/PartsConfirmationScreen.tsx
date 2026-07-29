@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { usePartsCart } from '@/context/PartsCartContext';
-import CheckoutSteps from '@/components/parts/CheckoutSteps';
-import { getPartsOrder, type PartsOrderDetail } from '@/lib/partsCheckoutApi';
+import { usePartsCart } from '@/app/parts/_components/PartsCartContext';
+import CheckoutSteps from '@/app/parts/checkout/_components/CheckoutSteps';
+import { getPartsOrder, type PartsOrderDetail } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 import {
   ConfirmationFailed, ConfirmationSuccess, ConfirmationTimeout, ConfirmationWaiting,
 } from './ConfirmationStates';

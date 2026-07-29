@@ -3,7 +3,7 @@ import type { Bike } from '@/types/Bike';
 import type { FaqItem } from '@/types/FaqItem';
 import type { Product } from '@/types/Product';
 import type { SiteSettings } from '@/types/SiteSettings';
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 
 export const SITE_URL = 'https://www.scootershop.com.au';
 export const SITE_NAME = 'ScooterShop';

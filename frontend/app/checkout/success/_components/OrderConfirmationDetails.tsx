@@ -2,7 +2,7 @@ import type { Order } from '@/types/Order';
 
 /** What was bought, where it ships, and how to reach the customer. */
 export default function OrderConfirmationDetails({ order }: { order: Order }) {
-  const isDeposit = order.payment_type === 'deposit';
+  const isDeposit = order.order_kind === 'bike';
   const amountPaid = parseFloat(order.amount_paid ?? '0').toLocaleString();
 
   return (
@@ -12,7 +12,7 @@ export default function OrderConfirmationDetails({ order }: { order: Order }) {
           <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-2">
             Motorcycle Reserved
           </p>
-          <p className="font-bold text-[var(--text-dark-primary)]">{order.motorcycle_name}</p>
+          <p className="font-bold text-[var(--text-dark-primary)]">{order.order_kind === 'bike' ? order.motorcycle_name : ''}</p>
           {order.selected_colour && (
             <p className="text-[var(--text-dark-secondary)] text-sm">Colour: {order.selected_colour}</p>
           )}
@@ -25,7 +25,7 @@ export default function OrderConfirmationDetails({ order }: { order: Order }) {
           <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-2">
             Product
           </p>
-          <p className="font-bold text-[var(--text-dark-primary)]">{order.product_name}</p>
+          <p className="font-bold text-[var(--text-dark-primary)]">{order.order_kind === 'product' ? order.product_name : ''}</p>
           <p className="text-[var(--text-dark-secondary)] text-sm">
             ${amountPaid} incl. GST &middot; Free delivery Australia-wide
           </p>

@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Spinner } from '@/components/ui/spinner';
-import { getBikeById, createHireBooking, getPublicHireSettings, getHireExtras } from '@/api';
+import { getBikeById, createHireBooking, getPublicHireSettings, getHireExtras } from '@/lib/api';
 import type { HireExtra } from '@/types/HireBooking';
-import type { HireBookingFormData } from '@/types/HireBookingFormData';
+import type { HireBookingFormData } from '@/app/hire/book/_lib/HireBookingFormData';
 import type { Bike } from '@/types/Bike';
 import BookingSummaryCard from './BookingSummaryCard';
 import ExtrasPicker from './ExtrasPicker';

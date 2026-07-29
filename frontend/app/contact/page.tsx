@@ -1,12 +1,12 @@
 import Hero from '@/components/Hero';
-import ContactDetails from '@/components/ContactDetails';
+import ContactDetails from '@/app/contact/_components/ContactDetails';
 import SymImage from '@/assets/sym_22.webp';
-import { siteSettings } from '@/config/siteSettings';
-import ContactButtons from '@/components/ContactButtons';
+import { siteSettings } from '@/lib/siteSettings';
+import ContactButtons from '@/app/contact/_components/ContactButtons';
 import splitcartLogo from "@/assets/splitcart_logo.png";
 import futureFlowerLogo from "@/assets/futureflower_logo.png";
-import DeferredContactSections from '@/components/DeferredContactSections';
-import { contactFaqData } from '@/data/contactFaqs';
+import DeferredContactSections from '@/app/contact/_components/DeferredContactSections';
+import { contactFaqData } from '@/app/contact/_lib/contactFaqs';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import { buildFaqSchema, buildLocalBusinessSchema, buildContactPageSchema, buildMetadata } from '@/lib/seo';
 

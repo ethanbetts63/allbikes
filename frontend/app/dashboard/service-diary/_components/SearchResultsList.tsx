@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 
 import type { Booking } from '@/types/Booking';
-import { STATUS_STYLES } from '@/lib/bookingStatus';
+import { STATUS_STYLES } from '@/app/dashboard/service-diary/_lib/bookingStatus';
 import { formatTime, vehicleLabel } from '../_lib/diary';
 
 /** Flat results list shown instead of the week grid while a search is active. */

@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 
-import OrderSummary from '@/components/parts/OrderSummary';
-import type { PartsOrderDetail } from '@/lib/partsCheckoutApi';
+import OrderSummary from '@/app/parts/checkout/_components/OrderSummary';
+import type { PartsOrderDetail } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 
 /** Still polling for the webhook. */
 export function ConfirmationWaiting() {

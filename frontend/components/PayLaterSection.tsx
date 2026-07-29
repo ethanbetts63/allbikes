@@ -1,8 +1,8 @@
 import afterpayLogo from '@/assets/afterpay_logo.svg';
 import klarnaLogo from '@/assets/klarna_logo.svg';
 import zipLogo from '@/assets/zip_logo.svg';
-import { siteSettings } from '@/config/siteSettings';
-import { assetUrl } from '@/utils/assetUrl';
+import { siteSettings } from '@/lib/siteSettings';
+import { assetUrl } from '@/lib/assetUrl';
 
 const providers = [
   {
@@ -45,7 +45,7 @@ const PayLaterSection = ({ className = 'bg-foreground' }: { className?: string }
               Shop Now.<br />Pay Later.
             </h2>
             <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed max-w-sm">
-              We partner with Australia's leading buy now, pay later providers so you can ride away today and spread the cost over time.
+              We partner with Australia&apos;s leading buy now, pay later providers so you can ride away today and spread the cost over time.
             </p>
           </div>
 

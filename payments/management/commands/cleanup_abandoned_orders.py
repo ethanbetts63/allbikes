@@ -4,33 +4,23 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from hire.models import HireBooking
-from payments.models import Order
+from inventory.models import BikeOrder
 from parts.models import PartsOrder
+from product.models import ProductOrder
 
 
 class Command(BaseCommand):
-    help = 'Cancels orders and hire bookings that have been in pending_payment status for more than 7 days.'
+    help = 'Cancels orders and hire bookings pending payment for more than 7 days.'
 
     def handle(self, *args, **options):
         cutoff = timezone.now() - timedelta(days=7)
-
-        cancelled_orders = Order.objects.filter(
-            status='pending_payment',
-            created_at__lt=cutoff,
-        ).update(status='cancelled')
-
-        cancelled_bookings = HireBooking.objects.filter(
-            status='pending_payment',
-            created_at__lt=cutoff,
-        ).update(status='cancelled')
-
-        cancelled_parts_orders = PartsOrder.objects.filter(
-            status='pending_payment',
-            created_at__lt=cutoff,
-        ).update(status='cancelled')
-
+        targets = (ProductOrder, BikeOrder, HireBooking, PartsOrder)
+        counts = [
+            model.objects.filter(status='pending_payment', created_at__lt=cutoff).update(status='cancelled')
+            for model in targets
+        ]
         self.stdout.write(
-            f"Done. Cancelled {cancelled_orders} abandoned order(s) and "
-            f"{cancelled_bookings} abandoned hire booking(s), and "
-            f"{cancelled_parts_orders} abandoned parts order(s)."
+            'Done. Cancelled '
+            f'{counts[0]} product order(s), {counts[1]} bike order(s), '
+            f'{counts[2]} hire booking(s), and {counts[3]} parts order(s).'
         )

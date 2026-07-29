@@ -1,5 +1,5 @@
 import type { HireBooking } from '@/types/HireBooking';
-import type { HireBookingSummary } from '@/types/HireBookingSummary';
+import type { HireBookingSummary } from '@/app/hire/book/[bookingReference]/payment/_lib/HireBookingSummary';
 
 /** Flattens a booking into the figures shown above the payment form. */
 export function buildSummaryFromBooking(booking: HireBooking): HireBookingSummary {

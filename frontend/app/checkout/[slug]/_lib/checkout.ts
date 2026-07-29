@@ -1,7 +1,7 @@
 import type { Bike } from '@/types/Bike';
-import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
+import type { CheckoutItemSummary } from '@/app/checkout/[slug]/_lib/CheckoutItemSummary';
 import type { Product } from '@/types/Product';
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 
 export type CheckoutType = 'product' | 'deposit';
 

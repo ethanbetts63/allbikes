@@ -2,10 +2,15 @@
 
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-import { adminGetOrder, adminUpdateOrderStatus } from '@/api';
+import {
+  adminGetBikeOrder,
+  adminGetProductOrder,
+  adminUpdateBikeOrderStatus,
+  adminUpdateProductOrderStatus,
+} from '@/lib/api';
 import type { Order } from '@/types/Order';
 import { Spinner } from '@/components/ui/spinner';
 import OrderCustomer from '../_components/OrderCustomer';
@@ -15,6 +20,7 @@ import OrderHeader from '../_components/OrderHeader';
 
 export default function AdminOrderDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const kind = useSearchParams().get('kind');
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -23,7 +29,8 @@ export default function AdminOrderDetailPage() {
   useEffect(() => {
     if (!id) return;
     let cancelled = false;
-    adminGetOrder(Number(id))
+    const request = kind === 'bike' ? adminGetBikeOrder(Number(id)) : adminGetProductOrder(Number(id));
+    request
       .then((data) => {
         if (cancelled) return;
         setOrder(data);
@@ -34,14 +41,16 @@ export default function AdminOrderDetailPage() {
       })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
-  }, [id]);
+  }, [id, kind]);
 
   const handleStatusUpdate = async () => {
     if (!order || selectedStatus === order.status) return;
     setIsSaving(true);
     try {
-      await adminUpdateOrderStatus(order.id, selectedStatus);
-      setOrder({ ...order, status: selectedStatus });
+      const updated = order.order_kind === 'bike'
+        ? await adminUpdateBikeOrderStatus(order.id, selectedStatus)
+        : await adminUpdateProductOrderStatus(order.id, selectedStatus);
+      setOrder(updated);
       toast.success('Status updated.');
     } catch {
       toast.error('Failed to update status.');
@@ -78,7 +87,7 @@ export default function AdminOrderDetailPage() {
         <OrderDeliveryAddress order={order} />
 
         <Link
-          href="/dashboard/orders"
+          href={order.order_kind === 'bike' ? '/dashboard/bike-orders' : '/dashboard/product-orders'}
           className="text-sm text-[var(--text-dark-secondary)] hover:text-[var(--text-dark-primary)] underline underline-offset-2"
         >
           ← Back to Orders

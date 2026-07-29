@@ -2,7 +2,7 @@ import vespaHero from '@/assets/IMG_20250730_102056.webp';
 import vespaHistoryImage from '@/assets/nhan-nguyen-Gaxd2A8EsHw-unsplash.jpg';
 import vespaSupportImage from '@/assets/tao-xanh-kim-5oRaXQqV6CM-unsplash.jpg';
 import symImage from '@/assets/sym_22.webp';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import {
   activeLandingBikes,
   carouselBikes,

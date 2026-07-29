@@ -1,4 +1,4 @@
-import type { AdminPartsOrder } from '@/types/partsAdmin';
+import type { AdminPartsOrder } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 
 /** What the customer paid, beside the margin figures only staff see. */
 export default function OrderTotals({ order }: { order: AdminPartsOrder }) {

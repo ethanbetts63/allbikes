@@ -1,5 +1,5 @@
 import type { Booking } from '@/types/Booking';
-import { STATUS_STYLES } from '@/lib/bookingStatus';
+import { STATUS_STYLES } from '@/app/dashboard/service-diary/_lib/bookingStatus';
 import { formatTime, vehicleLabel } from '../_lib/diary';
 
 /** One job in a day column. Clicking it opens the action menu. */

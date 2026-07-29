@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { adminCreateBooking } from '@/api';
+import { adminCreateBooking } from '@/lib/api';
 import type { BookingInput } from '@/types/Booking';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';

@@ -1,6 +1,3 @@
-"""Public parts checkout endpoints (no auth): create order, retrieve, pay."""
-from decimal import Decimal
-
 import stripe
 from django.conf import settings as django_settings
 from django.db import IntegrityError, transaction
@@ -12,15 +9,16 @@ from rest_framework.views import APIView
 from parts.checkout import CheckoutError, create_parts_order
 from parts.models import PartsOrder
 from parts.serializers.order_serializers import (
-    PartsCheckoutSerializer, PartsOrderConfirmationSerializer, PartsOrderCreatedSerializer,
+    PartsCheckoutSerializer,
+    PartsOrderConfirmationSerializer,
+    PartsOrderCreatedSerializer,
     PartsOrderSerializer,
 )
-
-from payments.models import Payment
 from parts.views.base import PublicAPIView
+from payments.models import Payment
+from payments.payment_intents import create_or_reuse_payment_intent
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
-STRIPE_MINIMUM = Decimal('0.50')
 
 
 class CreatePartsOrderView(PublicAPIView):
@@ -41,7 +39,6 @@ class CreatePartsOrderView(PublicAPIView):
 
 
 class RetrievePartsOrderView(APIView):
-    """Full order data is an internal/admin-only resource."""
     permission_classes = [IsAdminUser]
 
     def get(self, request, order_reference):
@@ -76,9 +73,6 @@ class CreatePartsPaymentIntentView(PublicAPIView):
             return Response({'detail': 'access_token is required.'}, status=403)
 
         try:
-            # Lock the order row so two near-simultaneous requests (e.g. a
-            # double-fired effect or a retry) serialise instead of both trying to
-            # create a Payment and colliding on the OneToOne unique constraint.
             with transaction.atomic():
                 try:
                     order = PartsOrder.objects.select_for_update().get(
@@ -90,44 +84,21 @@ class CreatePartsPaymentIntentView(PublicAPIView):
                 if order.status != 'pending_payment':
                     return Response({'detail': 'Order is not awaiting payment.'}, status=400)
 
-                amount = max(order.total, STRIPE_MINIMUM)
-                amount_cents = int(amount * 100)
-
-                # There is at most one Payment per order (OneToOne). Reuse it for
-                # any status — a reusable pending one is returned as-is; anything
-                # else (failed retry, stale amount) is cancelled + replaced.
-                existing = Payment.objects.filter(parts_order=order).first()
-                if existing:
-                    if existing.status == 'pending' and existing.amount == amount:
-                        intent = stripe.PaymentIntent.retrieve(existing.stripe_payment_intent_id)
-                        return Response({'clientSecret': intent.client_secret})
-                    if existing.status == 'pending':
-                        try:
-                            stripe.PaymentIntent.cancel(existing.stripe_payment_intent_id)
-                        except Exception:
-                            pass
-                    existing.delete()
-
-                intent = stripe.PaymentIntent.create(
-                    amount=amount_cents,
-                    currency='aud',
-                    automatic_payment_methods={'enabled': True},
+                secret = create_or_reuse_payment_intent(
+                    target_field='parts_order',
+                    target=order,
+                    amount=order.total,
                     metadata={
+                        'target_type': 'parts_order',
                         'parts_order_id': order.id,
                         'order_reference': order.order_reference,
                     },
                 )
-                Payment.objects.create(
-                    parts_order=order,
-                    stripe_payment_intent_id=intent.id,
-                    amount=amount,
-                    status='pending',
-                )
-                return Response({'clientSecret': intent.client_secret})
+                return Response({'clientSecret': secret})
         except IntegrityError:
-            # Safety net: a concurrent request created the Payment first. Return
-            # its client secret rather than a 500.
-            existing = Payment.objects.filter(parts_order__order_reference=order_reference).first()
+            existing = Payment.objects.filter(
+                parts_order__order_reference=order_reference
+            ).first()
             if existing:
                 intent = stripe.PaymentIntent.retrieve(existing.stripe_payment_intent_id)
                 return Response({'clientSecret': intent.client_secret})

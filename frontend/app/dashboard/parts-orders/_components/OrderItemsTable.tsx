@@ -1,7 +1,7 @@
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import type { AdminPartsOrder, AdminPartsOrderItem, ItemAction } from '@/types/partsAdmin';
+import type { AdminPartsOrder, AdminPartsOrderItem, ItemAction } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 import { ITEM_LEGEND_ORDER, ITEM_STATE_STYLE, itemState } from '../_lib/partsOrderStyles';
 
 /**

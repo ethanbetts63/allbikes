@@ -6,28 +6,36 @@ import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 
 import { Spinner } from '@/components/ui/spinner';
-import { getOrderByReference } from '@/api';
+import { getBikeOrder, getProductOrder } from '@/lib/api';
 import type { Order } from '@/types/Order';
 import OrderConfirmationDetails from './OrderConfirmationDetails';
 
 export default function CheckoutSuccessScreen() {
   const searchParams = useSearchParams();
   const ref = searchParams.get('ref');
+  const token = searchParams.get('token');
+  const kind = searchParams.get('kind');
+  const hasSecureOrderLink = Boolean(ref && token && (kind === 'product' || kind === 'bike'));
   const [order, setOrder] = useState<Order | null>(null);
-  const [isLoading, setIsLoading] = useState(!!ref);
-  const [error, setError] = useState<string | null>(ref ? null : 'No order reference found.');
+  const [isLoading, setIsLoading] = useState(hasSecureOrderLink);
+  const [error, setError] = useState<string | null>(
+    hasSecureOrderLink ? null : 'The secure order link is incomplete.',
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!ref) return;
+    if (!ref || !token || (kind !== 'product' && kind !== 'bike')) {
+      return;
+    }
 
     let cancelled = false;
-    getOrderByReference(ref)
+    const request = kind === 'bike' ? getBikeOrder(ref, token) : getProductOrder(ref, token);
+    request
       .then((data) => { if (!cancelled) setOrder(data); })
       .catch(() => { if (!cancelled) setError('Order not found.'); })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
-  }, [ref]);
+  }, [kind, ref, token]);
 
   if (isLoading) {
     return (
@@ -41,7 +49,7 @@ export default function CheckoutSuccessScreen() {
     return <p className="text-destructive text-center mt-8">{error || 'Order not found.'}</p>;
   }
 
-  const isDeposit = order.payment_type === 'deposit';
+  const isDeposit = order.order_kind === 'bike';
 
   return (
     <div className="bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] min-h-screen">

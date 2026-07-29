@@ -1,4 +1,4 @@
-import { BOOKING_STATUSES } from '@/lib/bookingStatus';
+import { BOOKING_STATUSES } from '@/app/dashboard/service-diary/_lib/bookingStatus';
 
 /** What each tile colour and the grey day shading mean. */
 export default function DiaryLegend() {

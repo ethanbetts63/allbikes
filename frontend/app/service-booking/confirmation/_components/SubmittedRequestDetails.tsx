@@ -1,4 +1,4 @@
-import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConfirmationState';
+import type { ServiceBookingConfirmationState } from '@/app/service-booking/confirmation/_lib/ServiceBookingConfirmationState';
 
 /**
  * Echoes back what was submitted.

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import useHireDateConstraints from '@/hooks/useHireDateConstraints';
+import useHireDateConstraints from '@/lib/useHireDateConstraints';
 
 const HireCTASection = () => {
   const router = useRouter();

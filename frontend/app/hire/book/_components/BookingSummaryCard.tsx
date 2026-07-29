@@ -1,8 +1,8 @@
 import { CalendarDays } from 'lucide-react';
 
 import type { Bike } from '@/types/Bike';
-import { formatDate } from '@/lib/hire';
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { formatDate } from '@/app/hire/_lib/hire';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 import { bikeLabel } from '../_lib/hireBooking';
 
 /** What is being hired, for how long, and what it costs. */

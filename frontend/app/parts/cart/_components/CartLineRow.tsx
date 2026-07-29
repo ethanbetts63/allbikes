@@ -1,4 +1,4 @@
-import type { StockState } from '@/lib/partsStock';
+import type { StockState } from '@/app/parts/_lib/partsStock';
 import type { PartsCartItem } from '@/types/parts';
 
 /**

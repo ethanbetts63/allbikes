@@ -1,12 +1,12 @@
-import HireAvailabilitySection from '@/components/HireAvailabilitySection';
-import HireConfidenceSection from '@/components/HireConfidenceSection';
+import HireAvailabilitySection from '@/app/hire/_components/HireAvailabilitySection';
+import HireConfidenceSection from '@/app/hire/_components/HireConfidenceSection';
 import FeaturedBikes from '@/components/FeaturedBikes';
 import type { Bike } from '@/types/Bike';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { PublicHireSettings } from '@/types/PublicHireSettings';
 import { buildFaqSchema, buildBreadcrumbSchema, buildServiceSchema, buildMetadata } from '@/lib/seo';
 import { getServerBikes, getServerHireBikes, getServerHireBlockedDates, getServerPublicHireSettings } from '@/lib/serverApi';
-import DeferredHireSections from '@/components/DeferredHireSections';
+import DeferredHireSections from '@/app/hire/_components/DeferredHireSections';
 
 const hireFaqData = [
   {

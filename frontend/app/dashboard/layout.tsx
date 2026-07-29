@@ -1,5 +1,5 @@
-import AdminLayout from './AdminLayout';
-import { AuthProvider } from '@/context/AuthContext';
+import AdminLayout from './_components/AdminLayout';
+import { AuthProvider } from '@/app/dashboard/_components/AuthContext';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata = buildMetadata({

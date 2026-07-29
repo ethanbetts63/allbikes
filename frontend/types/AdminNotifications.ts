@@ -1,8 +1,25 @@
 export interface NotificationOrder {
   id: number;
   order_reference: string;
-  payment_type: 'full' | 'deposit';
+  order_kind: 'product' | 'bike';
   customer_name: string;
+  item_name: string;
+  created_at: string;
+}
+
+export interface NotificationProductOrder {
+  id: number;
+  order_reference: string;
+  customer_name: string;
+  product_name: string;
+  created_at: string;
+}
+
+export interface NotificationBikeOrder {
+  id: number;
+  order_reference: string;
+  customer_name: string;
+  motorcycle_name: string;
   created_at: string;
 }
 
@@ -44,7 +61,8 @@ export interface NotificationPartsOrder {
 }
 
 export interface AdminNotifications {
-  paid_orders: NotificationOrder[];
+  product_orders_to_action: NotificationProductOrder[];
+  bike_orders_to_action: NotificationBikeOrder[];
   reserved_bikes: NotificationBike[];
   attention_products: NotificationProduct[];
   active_hire_bookings: NotificationHireBooking[];

@@ -1,7 +1,7 @@
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-import { formatDate } from '@/utils/formatting';
+import { formatDate } from '@/lib/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

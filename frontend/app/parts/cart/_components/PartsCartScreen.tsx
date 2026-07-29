@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 
-import { partsCartItemKey, usePartsCart } from '@/context/PartsCartContext';
-import { stockState } from '@/lib/partsStock';
-import QuantityControl from '@/components/parts/QuantityControl';
+import { partsCartItemKey, usePartsCart } from '@/app/parts/_components/PartsCartContext';
+import { stockState } from '@/app/parts/_lib/partsStock';
+import QuantityControl from '@/app/parts/_components/QuantityControl';
 import CartLineRow from './CartLineRow';
 
 export default function PartsCartScreen() {

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import type { CustomerDetails } from '@/lib/partsCheckoutApi';
+import type { CustomerDetails } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 import { AUSTRALIAN_STATES } from '@/lib/australianAddresses';
 import CheckoutField from './CheckoutField';
 

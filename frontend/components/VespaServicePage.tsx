@@ -135,13 +135,13 @@ const VespaServicePage = () => {
                 <div className="container mx-auto max-w-3xl text-center">
                     <div className="flex items-center justify-center gap-2 mb-4">
                         <Award className="h-5 w-5 text-[var(--highlight)]" />
-                        <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em]">Perth's Vespa Specialists</p>
+                        <p className="text-[var(--highlight)] text-xs font-bold uppercase tracking-[0.2em]">Perth&apos;s Vespa Specialists</p>
                     </div>
                     <h2 className="text-3xl sm:text-4xl font-black uppercase italic text-[var(--text-light-primary)] leading-none mb-6">
                         30+ Years of Vespa Experience
                     </h2>
                     <p className="text-[var(--text-light-secondary)] text-lg leading-relaxed">
-                        We were once Perth's only Vespa dealership, and that history runs deep. Decades of working exclusively on Vespas means we know every model inside out — from the older two-strokes through to the modern GTS and Primavera range. Vespas are genuinely some of our favourite bikes to work on. The build quality, the engineering heritage, and the way they ride makes them a pleasure to service and get right.
+                        We were once Perth&apos;s only Vespa dealership, and that history runs deep. Decades of working exclusively on Vespas means we know every model inside out — from the older two-strokes through to the modern GTS and Primavera range. Vespas are genuinely some of our favourite bikes to work on. The build quality, the engineering heritage, and the way they ride makes them a pleasure to service and get right.
                     </p>
                 </div>
             </div>

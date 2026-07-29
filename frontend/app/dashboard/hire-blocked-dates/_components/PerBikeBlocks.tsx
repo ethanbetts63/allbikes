@@ -3,7 +3,7 @@ import { Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Bike } from '@/types/Bike';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 import { formatDateRange } from '../_lib/blockedDates';
 
 /** Closures scoped to a single bike; the rest of the fleet stays bookable. */

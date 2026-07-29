@@ -1,13 +1,13 @@
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-import { formatDate } from '@/utils/formatting';
+import { formatDate } from '@/lib/formatting';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import type { AdminPartsOrderListItem } from '@/types/partsAdmin';
+import type { AdminPartsOrderListItem } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 import {
   ORDER_STATUS_STYLE, type Sort, type SortField, humanizeStatus,
 } from '../_lib/partsOrderStyles';

@@ -6,7 +6,7 @@ import FeaturedBikes from '@/components/FeaturedBikes';
 import { FaqSection } from '@/components/FaqSection';
 import type { Bike } from "@/types/Bike";
 import type { Product } from "@/types/Product";
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import ServiceCTAV2 from '@/components/ServiceCTAV2';
 import FeaturedEScooters from '@/components/FeaturedEScooters';

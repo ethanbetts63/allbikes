@@ -3,7 +3,7 @@ import DetailRow from '@/components/ui/detail-row';
 
 /** Where a product order ships. Deposits have nothing to deliver. */
 export default function OrderDeliveryAddress({ order }: { order: Order }) {
-  if (order.payment_type === 'deposit') return null;
+  if (order.order_kind === 'bike') return null;
 
   const address = [
     order.address_line1,

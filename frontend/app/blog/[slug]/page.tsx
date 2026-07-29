@@ -6,7 +6,7 @@ import type { Article } from '@/lib/articles';
 import type { FaqItem } from '@/types/FaqItem';
 import { notFound } from 'next/navigation';
 import { getAllArticleSlugs, getArticleBySlug } from '@/lib/articles';
-import { getArticleFaqs } from '@/lib/articleFaqs';
+import { getArticleFaqs } from '@/app/blog/[slug]/_lib/articleFaqs';
 import { getArticlePageMeta } from '@/lib/articleMeta';
 import { buildMetadata, buildArticleSchema, buildFaqSchema, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';

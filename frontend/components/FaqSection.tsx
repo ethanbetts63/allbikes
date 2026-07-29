@@ -1,7 +1,11 @@
 import { Card, CardContent } from "./ui/card";
 import { ChevronDown } from 'lucide-react';
+import type { FaqItem } from '@/types/FaqItem';
 
-import type { FaqSectionProps } from '@/types/FaqSectionProps';
+export interface FaqSectionProps {
+  title: string;
+  faqData: FaqItem[];
+}
 
 export const FaqSection = ({ title, faqData }: FaqSectionProps) => {
   return (

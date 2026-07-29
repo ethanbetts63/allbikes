@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import stripeLogo from '@/assets/stripe-ar21.svg';
-import { assetUrl } from '@/utils/assetUrl';
+import { assetUrl } from '@/lib/assetUrl';
 
 const LINK_CLASS = 'text-[var(--text-light-secondary)] hover:text-[var(--highlight)] transition-colors duration-200 text-sm';
 

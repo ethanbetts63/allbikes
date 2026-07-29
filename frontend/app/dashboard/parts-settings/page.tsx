@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { adminGetPartsSettings, adminUpdatePartsSettings } from '@/services/partsSettingsService';
+import { adminGetPartsSettings, adminUpdatePartsSettings } from '@/app/dashboard/_lib/partsSettingsService';
 import PartsSettingsForm from './_components/PartsSettingsForm';
 import {
   NUMERIC_FIELDS, type PartsSettings, settingsAreDirty,

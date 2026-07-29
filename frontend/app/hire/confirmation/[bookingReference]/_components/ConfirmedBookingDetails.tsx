@@ -1,4 +1,4 @@
-import { formatDate } from '@/lib/hire';
+import { formatDate } from '@/app/hire/_lib/hire';
 import type { HireBooking } from '@/types/HireBooking';
 
 /** Reference, dates and the payment breakdown for a confirmed booking. */

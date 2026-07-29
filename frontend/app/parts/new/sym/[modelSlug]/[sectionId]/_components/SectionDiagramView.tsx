@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import CalloutRow from '@/components/parts/CalloutRow';
+import CalloutRow from '@/app/parts/new/sym/[modelSlug]/[sectionId]/_components/CalloutRow';
 import type { SectionDetail } from '@/types/parts';
 
 /** Exploded diagram beside its callout list, for one model section. */

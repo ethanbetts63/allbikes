@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import {
   adminGetHireExtras, adminCreateHireExtra, adminUpdateHireExtra, adminDeleteHireExtra,
-} from '@/api';
+} from '@/lib/api';
 import type { HireExtra } from '@/types/HireBooking';
 import { Spinner } from '@/components/ui/spinner';
 import AddHireExtraForm from './_components/AddHireExtraForm';

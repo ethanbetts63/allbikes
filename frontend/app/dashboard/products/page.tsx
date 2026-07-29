@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { PlusSquare } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { adminGetProducts, deleteProduct } from '@/api';
+import { adminGetProducts, deleteProduct } from '@/lib/api';
 import type { Product } from '@/types/Product';
 import ProductsTable from './_components/ProductsTable';
 

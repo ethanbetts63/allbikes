@@ -1,6 +1,6 @@
-import type { PartsSettings } from '@/types/partsSettings';
+import type { PartsSettings } from '@/app/dashboard/_lib/partsSettings';
 
-export type { PartsSettings } from '@/types/partsSettings';
+export type { PartsSettings } from '@/app/dashboard/_lib/partsSettings';
 
 /** The two money/percentage fields, which share a control shape. */
 export type EditableField = 'markup_percentage' | 'shipping_fee';

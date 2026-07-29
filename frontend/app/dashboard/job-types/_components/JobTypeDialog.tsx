@@ -9,7 +9,7 @@ import {
   Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
-import type { JobType } from '@/types/JobType';
+import type { JobType } from '@/app/dashboard/job-types/_lib/JobType';
 
 /** Create/edit dialog. `jobType` being null means create. */
 export default function JobTypeDialog({ open, jobType, isSubmitting, onOpenChange, onSubmit }: {

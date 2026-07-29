@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from 'lucide-react';
 
 import type { Booking, BookingStatus } from '@/types/Booking';
-import { BOOKING_STATUSES } from '@/lib/bookingStatus';
+import { BOOKING_STATUSES } from '@/app/dashboard/service-diary/_lib/bookingStatus';
 
 /**
  * Quick actions for a job tile. Rendered fixed-position at the click point so

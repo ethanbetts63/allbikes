@@ -1,6 +1,6 @@
 import croxLifestyle from '@/assets/Crox 50 9.webp';
 import symImage from '@/assets/sym_22.webp';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import {
   activeLandingBikes,
   carouselBikes,

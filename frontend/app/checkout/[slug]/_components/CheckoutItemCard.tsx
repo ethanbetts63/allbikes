@@ -1,4 +1,4 @@
-import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
+import type { CheckoutItemSummary } from '@/app/checkout/[slug]/_lib/CheckoutItemSummary';
 import type { CheckoutType } from '../_lib/checkout';
 
 /** What the customer is about to pay for, shown above the form. */

@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Elements } from '@stripe/react-stripe-js';
 
-import CheckoutSteps from '@/components/parts/CheckoutSteps';
-import OrderSummary from '@/components/parts/OrderSummary';
+import CheckoutSteps from '@/app/parts/checkout/_components/CheckoutSteps';
+import OrderSummary from '@/app/parts/checkout/_components/OrderSummary';
 import StripePaymentForm from '@/components/payments/StripePaymentForm';
 import { stripePromise } from '@/lib/stripe';
 import {
   createPartsPaymentIntent, getPartsOrder, type PartsOrderDetail,
-} from '@/lib/partsCheckoutApi';
+} from '@/app/parts/checkout/_lib/partsCheckoutApi';
 
 export default function PartsCheckoutPaymentScreen() {
   const router = useRouter();

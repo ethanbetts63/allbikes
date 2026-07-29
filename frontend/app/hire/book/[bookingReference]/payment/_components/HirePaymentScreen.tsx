@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Elements } from '@stripe/react-stripe-js';
 
-import type { HireBookingSummary } from '@/types/HireBookingSummary';
-import { createHirePaymentIntent, getHireBookingByReference } from '@/api';
+import type { HireBookingSummary } from '@/app/hire/book/[bookingReference]/payment/_lib/HireBookingSummary';
+import { createHirePaymentIntent, getHireBookingByReference } from '@/lib/api';
 import { Spinner } from '@/components/ui/spinner';
 import StripePaymentForm from '@/components/payments/StripePaymentForm';
 import { stripePromise } from '@/lib/stripe';

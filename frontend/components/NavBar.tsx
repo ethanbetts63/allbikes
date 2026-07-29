@@ -2,7 +2,7 @@ import Link from "next/link";
 import NextImage from "next/image";
 import logoImage from "../assets/logo.webp";
 import { cn } from "@/lib/utils";
-import { siteSettings } from "@/config/siteSettings";
+import { siteSettings } from "@/lib/siteSettings";
 import { MapPin, Phone, Mail } from "lucide-react";
 import MobileNavMenu from "@/components/MobileNavMenu";
 import DesktopScootersMenu from "@/components/DesktopScootersMenu";

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
 
-import { adminGetBooking, adminUpdateBooking, adminDeleteBooking } from '@/api';
+import { adminGetBooking, adminUpdateBooking, adminDeleteBooking } from '@/lib/api';
 import type { Booking, BookingInput } from '@/types/Booking';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';

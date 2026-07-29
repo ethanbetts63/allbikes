@@ -19,11 +19,19 @@ LOAD_ORDER = [
     'inventory.motorcycleimage.json',
     'product.product.json',
     'product.productimage.json',
+    'parts.partssettings.json',
+    'parts.partsmodel.json',
+    'parts.partsection.json',
+    'parts.part.json',
+    'parts.sectionpart.json',
 
     # Bookings/orders before payments and selected booking extras.
     'hire.hirebooking.json',
     'hire.hirebookingextra.json',
-    'payments.order.json',
+    'product.productorder.json',
+    'inventory.bikeorder.json',
+    'parts.partsorder.json',
+    'parts.partsorderitem.json',
     'payments.payment.json',
 
     # Logs/messages last because they may reference transactional objects.

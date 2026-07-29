@@ -1,0 +1,10 @@
+{% extends "notifications/emails/base.html" %}
+{% block title %}Order confirmed — {{ order.order_reference }}{% endblock %}
+{% block preheader %}Your product order has been confirmed.{% endblock %}
+{% block content %}
+<h1>Order confirmed</h1>
+<p>Hi {{ order.customer_name }}, your payment was received.</p>
+<p><strong>{{ order.order_reference }}</strong></p>
+<p>{{ order.product.name }} — ${{ order.unit_price_incl_gst }} incl. GST</p>
+<p>Delivery: {{ order.address_line1 }}{% if order.address_line2 %}, {{ order.address_line2 }}{% endif %}, {{ order.suburb }} {{ order.state }} {{ order.postcode }}</p>
+{% endblock %}

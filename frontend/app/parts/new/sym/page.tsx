@@ -1,5 +1,5 @@
 import { CC_CLASS_LABELS, CC_CLASS_ORDER, getPartsModels } from '@/lib/partsApi';
-import ModelCard from '@/components/parts/ModelCard';
+import ModelCard from '@/app/parts/_components/ModelCard';
 import type { PartsModelListItem } from '@/types/parts';
 import type { Metadata } from 'next';
 import Link from 'next/link';

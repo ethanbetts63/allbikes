@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage
+from .models import Product, ProductImage, ProductOrder
 
 
 class ProductImageInline(admin.TabularInline):
@@ -17,3 +17,11 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ProductImage)
+
+
+@admin.register(ProductOrder)
+class ProductOrderAdmin(admin.ModelAdmin):
+    list_display = ('order_reference', 'product', 'customer_name', 'status', 'total', 'created_at')
+    list_filter = ('status',)
+    search_fields = ('order_reference', 'customer_name', 'customer_email')
+    readonly_fields = ('order_reference', 'access_token', 'created_at', 'updated_at')

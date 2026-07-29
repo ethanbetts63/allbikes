@@ -1,5 +1,5 @@
 from django.db import models
-from .order import Order
+from django.db.models import Q
 
 
 class Payment(models.Model):
@@ -9,8 +9,13 @@ class Payment(models.Model):
         ('failed', 'Failed'),
     ]
 
-    order = models.OneToOneField(
-        Order, null=True, blank=True, on_delete=models.CASCADE, related_name='payment'
+    product_order = models.OneToOneField(
+        'product.ProductOrder', null=True, blank=True,
+        on_delete=models.CASCADE, related_name='payment',
+    )
+    bike_order = models.OneToOneField(
+        'inventory.BikeOrder', null=True, blank=True,
+        on_delete=models.CASCADE, related_name='payment',
     )
     hire_booking = models.OneToOneField(
         'hire.HireBooking', null=True, blank=True, on_delete=models.CASCADE, related_name='payment'
@@ -23,6 +28,19 @@ class Payment(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    Q(product_order__isnull=False, bike_order__isnull=True, hire_booking__isnull=True, parts_order__isnull=True)
+                    | Q(product_order__isnull=True, bike_order__isnull=False, hire_booking__isnull=True, parts_order__isnull=True)
+                    | Q(product_order__isnull=True, bike_order__isnull=True, hire_booking__isnull=False, parts_order__isnull=True)
+                    | Q(product_order__isnull=True, bike_order__isnull=True, hire_booking__isnull=True, parts_order__isnull=False)
+                ),
+                name='payment_exactly_one_target',
+            ),
+        ]
 
     def __str__(self):
         return f"Payment {self.stripe_payment_intent_id} — {self.status}"

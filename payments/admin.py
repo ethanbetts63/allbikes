@@ -1,10 +1,9 @@
 from django.contrib import admin
-from .models import Order
+from .models import Payment
 
 
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_reference', 'product', 'selected_colour', 'customer_name', 'customer_email', 'status', 'created_at']
-    list_filter = ['status']
-    search_fields = ['order_reference', 'customer_name', 'customer_email']
-    readonly_fields = ['order_reference', 'created_at', 'updated_at']
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('stripe_payment_intent_id', 'amount', 'status', 'created_at')
+    list_filter = ('status',)
+    search_fields = ('stripe_payment_intent_id',)

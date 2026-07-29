@@ -1,12 +1,12 @@
 import StructuredDataScript from '@/components/StructuredDataScript';
-import EScooterHero from '@/components/EScooterHero';
-import EScooterUSPs from '@/components/EScooterUSPs';
-import EScooterWhyBuySection from '@/components/EScooterWhyBuySection';
-import EScooterMopedsSection from '@/components/EScooterMopedsSection';
+import EScooterHero from '@/app/escooters/_components/EScooterHero';
+import EScooterUSPs from '@/app/escooters/_components/EScooterUSPs';
+import EScooterWhyBuySection from '@/app/escooters/_components/EScooterWhyBuySection';
+import EScooterMopedsSection from '@/app/escooters/_components/EScooterMopedsSection';
 import PayLaterSection from '@/components/PayLaterSection';
 import { FaqSection } from '@/components/FaqSection';
-import ProductCard from '@/components/ProductCard';
-import ProductFilterForm from '@/components/ProductFilterForm';
+import ProductCard from '@/app/escooters/_components/ProductCard';
+import ProductFilterForm from '@/app/escooters/_components/ProductFilterForm';
 import {
   Pagination,
   PaginationContent,
@@ -16,11 +16,11 @@ import {
 } from '@/components/ui/pagination';
 import type { Product } from '@/types/Product';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import { buildLocalBusinessSchema, buildBreadcrumbSchema, buildFaqSchema } from '@/lib/seo';
 import { buildListHref } from '@/lib/listQuery';
 import { buildMetadata, buildProductListSchema } from '@/lib/seo';
-import { getInitialProductList } from '@/lib/productList';
+import { getInitialProductList } from '@/app/escooters/_lib/productList';
 import type { ListSearchParams } from '@/lib/listQuery';
 
 export const metadata = buildMetadata({

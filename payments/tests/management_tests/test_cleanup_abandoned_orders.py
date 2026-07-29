@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from hire.models import HireBooking
 from hire.tests.factories.hire_booking_factory import HireBookingFactory
-from payments.models import Order
+from product.models import ProductOrder
 from payments.tests.factories.order_factory import OrderFactory
 from parts.checkout import create_parts_order
 from parts.models import Part, PartsSettings
@@ -39,7 +39,7 @@ class TestCleanupAbandonedOrdersCommand:
         THEN the order status becomes cancelled.
         """
         order = OrderFactory(status='pending_payment')
-        Order.objects.filter(pk=order.pk).update(
+        ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=8)
         )
 
@@ -55,7 +55,7 @@ class TestCleanupAbandonedOrdersCommand:
         THEN the order status remains pending_payment.
         """
         order = OrderFactory(status='pending_payment')
-        Order.objects.filter(pk=order.pk).update(
+        ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=6)
         )
 
@@ -71,7 +71,7 @@ class TestCleanupAbandonedOrdersCommand:
         THEN the order status is not changed.
         """
         order = OrderFactory(status='paid')
-        Order.objects.filter(pk=order.pk).update(
+        ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=14)
         )
 
@@ -88,7 +88,7 @@ class TestCleanupAbandonedOrdersCommand:
         """
         for _ in range(2):
             order = OrderFactory(status='pending_payment')
-            Order.objects.filter(pk=order.pk).update(
+            ProductOrder.objects.filter(pk=order.pk).update(
                 created_at=timezone.now() - timedelta(days=8)
             )
 
@@ -104,7 +104,7 @@ class TestCleanupAbandonedOrdersCommand:
         THEN the order is cancelled (strictly older than 7 days is caught).
         """
         order = OrderFactory(status='pending_payment')
-        Order.objects.filter(pk=order.pk).update(
+        ProductOrder.objects.filter(pk=order.pk).update(
             created_at=timezone.now() - timedelta(days=7, seconds=1)
         )
 

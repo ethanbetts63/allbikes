@@ -1,4 +1,4 @@
-import type { AdminPartsOrder } from '@/types/partsAdmin';
+import type { AdminPartsOrder } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
 
 /** Who the order is for and where it ships. */
 export default function CustomerSummary({ order }: { order: AdminPartsOrder }) {

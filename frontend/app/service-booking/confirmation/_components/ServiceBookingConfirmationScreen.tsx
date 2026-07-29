@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 
 import MotorcycleMovers from '@/components/MotorcycleMovers';
-import type { ServiceBookingConfirmationState } from '@/types/ServiceBookingConfirmationState';
+import type { ServiceBookingConfirmationState } from '@/app/service-booking/confirmation/_lib/ServiceBookingConfirmationState';
 import SubmittedRequestDetails from './SubmittedRequestDetails';
 
 const CONFIRMATION_STORAGE_KEY = 'serviceBookingConfirmation';

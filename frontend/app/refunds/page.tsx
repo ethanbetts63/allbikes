@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Hero from '@/components/Hero';
 import { Mail, Phone } from 'lucide-react';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import SegwayImage from '@/assets/segway_1.webp';
 import { buildMetadata } from '@/lib/seo';
 

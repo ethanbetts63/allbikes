@@ -4,6 +4,23 @@ Each function returns a plain string for sending via Twilio.
 """
 
 
+def admin_new_product_order(order):
+    return (
+        f"New product order: {order.order_reference} — {order.product.name} — "
+        f"${order.amount_paid}. Customer: {order.customer_name} {order.customer_phone or ''}"
+    ).strip()
+
+
+def admin_new_bike_order(order):
+    motorcycle = str(order.motorcycle)
+    if order.selected_colour:
+        motorcycle += f" ({order.selected_colour})"
+    return (
+        f"New bike deposit: {order.order_reference} — {motorcycle} — "
+        f"${order.amount_paid}. Customer: {order.customer_name} {order.customer_phone}"
+    ).strip()
+
+
 def admin_new_order(order):
     if order.payment_type == 'deposit':
         motorcycle = str(order.motorcycle)

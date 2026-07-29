@@ -1,4 +1,4 @@
-import type { CustomerDetails } from '@/lib/partsCheckoutApi';
+import type { CustomerDetails } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 
 export const STORAGE_KEY = 'parts_checkout_details_v1';
 

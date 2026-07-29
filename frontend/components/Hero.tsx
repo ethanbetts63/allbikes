@@ -1,5 +1,13 @@
 import NextImage from 'next/image';
-import type { HeroProps } from '@/types/HeroProps';
+import type React from 'react';
+import type { StaticImageData } from 'next/image';
+
+export interface HeroProps {
+  title: React.ReactNode;
+  description: string;
+  image: StaticImageData;
+  centered?: boolean;
+}
 
 const Hero = ({ title, description, image, centered }: HeroProps) => {
   return (

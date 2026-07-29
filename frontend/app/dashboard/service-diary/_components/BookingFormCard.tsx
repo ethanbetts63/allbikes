@@ -1,5 +1,5 @@
 import type { BookingInput } from '@/types/Booking';
-import BookingForm from '@/forms/BookingForm';
+import BookingForm from '@/app/dashboard/service-diary/_components/BookingForm';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 /**

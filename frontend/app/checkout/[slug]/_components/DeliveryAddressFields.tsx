@@ -2,7 +2,7 @@ import type { FieldErrors, UseFormGetValues, UseFormRegister } from 'react-hook-
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { CheckoutFormData } from '@/types/CheckoutFormData';
+import type { CheckoutFormData } from '@/app/checkout/[slug]/_lib/CheckoutFormData';
 import { AUSTRALIAN_STATES, postcodeMatchesState } from '@/lib/australianAddresses';
 
 /** Shipping address. Only product orders are delivered, so deposits skip this. */

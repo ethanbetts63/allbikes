@@ -1,4 +1,9 @@
-import type { PriceDisplayProps } from '@/types/PriceDisplayProps';
+
+export interface PriceDisplayProps {
+    price: string;
+    discount_price?: string | null;
+    subtitle?: React.ReactNode;
+}
 
 const PriceDisplay = ({ price, discount_price, subtitle }: PriceDisplayProps) => (
     <div className="mb-6 pb-4 border-b border-border-light">

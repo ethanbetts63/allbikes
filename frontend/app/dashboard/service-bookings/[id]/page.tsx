@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import { adminGetBookingLog, adminDeleteBookingLog } from '@/api';
+import { adminGetBookingLog, adminDeleteBookingLog } from '@/lib/api';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Spinner } from '@/components/ui/spinner';
 import { Alert, AlertDescription } from '@/components/ui/alert';

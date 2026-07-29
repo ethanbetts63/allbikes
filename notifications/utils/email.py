@@ -132,6 +132,47 @@ def send_customer_confirmation(order):
         _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'failed', str(e))
 
 
+def send_product_customer_confirmation(order):
+    to = order.customer_email
+    subject = f"Order confirmed — {order.order_reference}"
+    text_body = (
+        f"Hi {order.customer_name},\n\nYour ScooterShop order has been confirmed!\n\n"
+        f"Order reference: {order.order_reference}\nProduct: {order.product.name}\n"
+        f"Price: ${order.unit_price_incl_gst} incl. GST · Free delivery Australia-wide\n"
+        f"Delivery to: {order.address_line1}, {order.suburb} {order.state} {order.postcode}\n"
+        f"Contact: {order.customer_email}"
+        + (f" / {order.customer_phone}" if order.customer_phone else "")
+        + "\n\nWe'll be in touch when your order is dispatched."
+    )
+    html_body = render_to_string('notifications/emails/product_order_confirmation.html', {'order': order})
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'sent')
+    except Exception as e:
+        logger.error("Failed to send product confirmation for %s: %s", order.order_reference, e)
+        _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'failed', str(e))
+
+
+def send_bike_customer_confirmation(order):
+    to = order.customer_email
+    motorcycle_name = str(order.motorcycle)
+    subject = f"Deposit confirmed — {order.order_reference}"
+    colour_line = f"Colour: {order.selected_colour}\n" if order.selected_colour else ""
+    text_body = (
+        f"Hi {order.customer_name},\n\nYour deposit for {motorcycle_name} has been received.\n\n"
+        f"Deposit reference: {order.order_reference}\nMotorcycle: {motorcycle_name}\n"
+        f"{colour_line}Deposit paid: ${order.amount_paid}\n\n"
+        "Our team will contact you to confirm availability and organise the next steps."
+    )
+    html_body = render_to_string('notifications/emails/bike_order_confirmation.html', {'order': order})
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'sent')
+    except Exception as e:
+        logger.error("Failed to send bike deposit confirmation for %s: %s", order.order_reference, e)
+        _record(order, 'customer_confirmation', to, subject, text_body, html_body, 'failed', str(e))
+
+
 def send_hire_confirmation(booking):
     to = booking.customer_email
     subject = f"Hire booking confirmed — {booking.booking_reference}"
@@ -461,6 +502,52 @@ def send_parts_customer_update(parts_order, update_type, *, backorder_days):
         logger.error('Failed to send %s for %s: %s', update_type, parts_order.order_reference, e)
         _record(parts_order, message_type, parts_order.customer_email, subject, text_body, html_body, 'failed', str(e))
         return False
+
+
+def send_product_admin_new_order(order):
+    recipients = _admin_recipients()
+    if not recipients:
+        return
+    subject = f"New product order — {order.order_reference}"
+    text_body = (
+        f"New product order: {order.order_reference}\n"
+        f"Product: {order.product.name}\nPrice paid: ${order.amount_paid}\n\n"
+        f"Customer: {order.customer_name}\nEmail: {order.customer_email}\n"
+        f"Phone: {order.customer_phone or 'not provided'}\n"
+        f"Address: {order.address_line1}, {order.suburb} {order.state} {order.postcode}\n"
+    )
+    html_body = render_to_string('notifications/emails/product_admin_new_order.html', {'order': order})
+    for to in recipients:
+        try:
+            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            _record(order, 'admin_new_order', to, subject, text_body, html_body, 'sent')
+        except Exception as e:
+            logger.error("Failed to send product admin order %s: %s", order.order_reference, e)
+            _record(order, 'admin_new_order', to, subject, text_body, html_body, 'failed', str(e))
+    _send_admin_sms(sms_messages.admin_new_product_order(order))
+
+
+def send_bike_admin_new_order(order):
+    recipients = _admin_recipients()
+    if not recipients:
+        return
+    subject = f"New bike deposit — {order.order_reference}"
+    colour = f"\nColour: {order.selected_colour}" if order.selected_colour else ''
+    text_body = (
+        f"New bike deposit: {order.order_reference}\nMotorcycle: {order.motorcycle}{colour}\n"
+        f"Deposit paid: ${order.amount_paid}\n\nCustomer: {order.customer_name}\n"
+        f"Phone: {order.customer_phone}\nEmail: {order.customer_email}\n\n"
+        "Contact the customer to confirm availability and organise the next steps."
+    )
+    html_body = render_to_string('notifications/emails/bike_admin_new_order.html', {'order': order})
+    for to in recipients:
+        try:
+            _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+            _record(order, 'admin_new_order', to, subject, text_body, html_body, 'sent')
+        except Exception as e:
+            logger.error("Failed to send bike admin order %s: %s", order.order_reference, e)
+            _record(order, 'admin_new_order', to, subject, text_body, html_body, 'failed', str(e))
+    _send_admin_sms(sms_messages.admin_new_bike_order(order))
 
 
 def send_admin_new_order(order):

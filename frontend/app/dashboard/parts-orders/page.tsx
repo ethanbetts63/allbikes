@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
-import { adminGetPartsOrders } from '@/services/partsAdminService';
-import type { AdminPartsOrderListItem } from '@/types/partsAdmin';
-import { adminGetPartsSettings } from '@/services/partsSettingsService';
+import { adminGetPartsOrders } from '@/app/dashboard/parts-orders/_lib/partsAdminService';
+import type { AdminPartsOrderListItem } from '@/app/dashboard/parts-orders/_lib/partsAdmin';
+import { adminGetPartsSettings } from '@/app/dashboard/_lib/partsSettingsService';
 import HowItWorks from './_components/HowItWorks';
 import OrdersFilterBar from './_components/OrdersFilterBar';
 import OrdersPagination from './_components/OrdersPagination';

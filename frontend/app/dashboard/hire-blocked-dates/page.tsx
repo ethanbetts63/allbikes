@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import {
   adminGetHireBlockedDates, adminCreateHireBlockedDate, adminDeleteHireBlockedDate, getHireBikes,
-} from '@/api';
+} from '@/lib/api';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { Bike } from '@/types/Bike';
 import AddBlockedDateForm, { type NewBlockedDate } from './_components/AddBlockedDateForm';

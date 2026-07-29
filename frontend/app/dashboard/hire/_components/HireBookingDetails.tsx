@@ -1,4 +1,4 @@
-import { formatDate } from '@/utils/formatting';
+import { formatDate } from '@/lib/formatting';
 import type { HireBooking } from '@/types/HireBooking';
 import DetailRow from '@/components/ui/detail-row';
 import { hireDays } from '../_lib/hireStatus';

@@ -1,7 +1,7 @@
 import symHero from '@/assets/sym_22.webp';
 import symWarrantyImage from '@/assets/sym_warranty_image.png';
 import symWorkshopImage from '@/assets/close_up.jpg';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import {
   activeLandingBikes,
   carouselBikes,

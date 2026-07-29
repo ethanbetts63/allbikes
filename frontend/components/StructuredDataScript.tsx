@@ -1,4 +1,7 @@
-import type { StructuredDataScriptProps } from '@/types/StructuredDataScriptProps';
+
+export interface StructuredDataScriptProps {
+  structuredData?: object | object[];
+}
 
 const StructuredDataScript = ({ structuredData }: StructuredDataScriptProps) => {
   if (!structuredData) return null;

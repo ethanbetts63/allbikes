@@ -1,4 +1,13 @@
-import type { ProductImage } from './ProductImage';
+
+
+export interface ProductImage {
+  id: number;
+  image: string;
+  thumbnail: string | null;
+  medium: string;
+  order: number;
+  product: number;
+}
 
 export interface Product {
   id: number;

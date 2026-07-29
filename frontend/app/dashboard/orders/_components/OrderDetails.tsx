@@ -1,4 +1,4 @@
-import { formatDate } from '@/utils/formatting';
+import { formatDate } from '@/lib/formatting';
 import type { Order } from '@/types/Order';
 import DetailRow from '@/components/ui/detail-row';
 
@@ -7,8 +7,8 @@ import DetailRow from '@/components/ui/detail-row';
  * a full order is against a product and shows its price.
  */
 export default function OrderDetails({ order }: { order: Order }) {
-  const isDeposit = order.payment_type === 'deposit';
-  const displayPrice = order.amount_paid ?? '0';
+  const isDeposit = order.order_kind === 'bike';
+  const displayPrice = order.amount_paid ?? (isDeposit ? order.deposit_amount : order.total);
 
   return (
     <div className="mb-6">

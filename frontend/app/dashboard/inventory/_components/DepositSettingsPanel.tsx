@@ -3,7 +3,7 @@
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 
-import { getDepositSettings, adminUpdateDepositSettings } from '@/api';
+import { getDepositSettings, adminUpdateDepositSettings } from '@/lib/api';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 

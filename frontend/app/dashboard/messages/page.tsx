@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-import { adminGetSentMessages } from '@/api';
+import { adminGetSentMessages } from '@/lib/api';
 import type { SentMessage } from '@/types/SentMessage';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import PaginationBar from '@/components/ui/pagination-bar';

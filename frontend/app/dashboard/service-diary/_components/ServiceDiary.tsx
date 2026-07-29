@@ -13,7 +13,7 @@ import {
   adminGetServiceSettings,
   adminUpdateBooking,
   adminDeleteBooking,
-} from '@/api';
+} from '@/lib/api';
 import type { Booking, BookingStatus } from '@/types/Booking';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

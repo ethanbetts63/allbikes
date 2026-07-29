@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { LoginForm } from '@/forms/LoginForm';
-import { checkSession } from '@/api';
+import { LoginForm } from '@/app/login/_components/LoginForm';
+import { checkSession } from '@/lib/api';
 
 /** Sends an already-signed-in admin straight through to the dashboard. */
 export default function LoginScreen() {

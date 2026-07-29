@@ -11,7 +11,7 @@ import type {
   HomeHeroProps,
   HomeHeroServiceConfig,
 } from '@/types/HomeHeroProps';
-import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
+import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 
 interface SlotState {
   a: string;

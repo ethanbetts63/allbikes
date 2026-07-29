@@ -10,7 +10,7 @@ import { Spinner } from '@/components/ui/spinner';
 import {
   adminGetPartsSupplierEmailDraft, adminSendPartsSupplierEmail,
   type SupplierEmailDraft,
-} from '@/services/partsAdminService';
+} from '@/app/dashboard/parts-orders/_lib/partsAdminService';
 import SupplierEmailComposer from '../../_components/SupplierEmailComposer';
 
 export default function SupplierEmailPage() {

@@ -1,0 +1,11 @@
+{% extends "notifications/emails/base.html" %}
+{% block title %}Deposit confirmed — {{ order.order_reference }}{% endblock %}
+{% block preheader %}Your motorcycle deposit has been received.{% endblock %}
+{% block content %}
+<h1>Deposit confirmed</h1>
+<p>Hi {{ order.customer_name }}, your deposit for {{ order.motorcycle }} was received.</p>
+<p><strong>{{ order.order_reference }}</strong></p>
+{% if order.selected_colour %}<p>Colour: {{ order.selected_colour }}</p>{% endif %}
+<p>Deposit paid: ${{ order.amount_paid }}</p>
+<p>Our team will contact you to confirm availability and organise the next steps.</p>
+{% endblock %}

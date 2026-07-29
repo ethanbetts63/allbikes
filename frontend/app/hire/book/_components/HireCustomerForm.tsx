@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { HireBookingFormData } from '@/types/HireBookingFormData';
+import type { HireBookingFormData } from '@/app/hire/book/_lib/HireBookingFormData';
 
 /**
  * Customer details plus the three consents.

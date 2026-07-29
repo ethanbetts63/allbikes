@@ -1,6 +1,6 @@
 import jetLifestyle from '@/assets/Jet 14 EVO 125 2.webp';
 import symImage from '@/assets/sym_22.webp';
-import { siteSettings } from '@/config/siteSettings';
+import { siteSettings } from '@/lib/siteSettings';
 import {
   activeLandingBikes,
   carouselBikes,

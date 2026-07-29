@@ -7,9 +7,14 @@ import { Elements } from '@stripe/react-stripe-js';
 import { Spinner } from '@/components/ui/spinner';
 import StripePaymentForm from '@/components/payments/StripePaymentForm';
 import { stripePromise } from '@/lib/stripe';
-import { createPaymentIntent, getOrderByReference } from '@/api';
+import {
+  createBikePaymentIntent,
+  createProductPaymentIntent,
+  getBikeOrder,
+  getProductOrder,
+} from '@/lib/api';
 import type { Order } from '@/types/Order';
-import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
+import type { CheckoutItemSummary } from '@/app/checkout/[slug]/_lib/CheckoutItemSummary';
 import { buildSummaryFromOrder } from '../_lib/checkoutPayment';
 
 export default function CheckoutPaymentScreen() {
@@ -18,6 +23,8 @@ export default function CheckoutPaymentScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderReference = searchParams.get('ref');
+  const accessToken = searchParams.get('token');
+  const orderKind = searchParams.get('kind');
 
   const [itemSummary, setItemSummary] = useState<CheckoutItemSummary | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -26,7 +33,7 @@ export default function CheckoutPaymentScreen() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!orderReference) {
+    if (!orderReference || !accessToken || (orderKind !== 'product' && orderKind !== 'bike')) {
       router.push(`/checkout/${slug}`);
       return;
     }
@@ -34,8 +41,12 @@ export default function CheckoutPaymentScreen() {
     let cancelled = false;
     const loadPayment = async () => {
       try {
-        const order: Order = await getOrderByReference(orderReference);
-        const paymentIntent = await createPaymentIntent(order.id);
+        const order: Order = orderKind === 'bike'
+          ? await getBikeOrder(orderReference, accessToken)
+          : await getProductOrder(orderReference, accessToken);
+        const paymentIntent = orderKind === 'bike'
+          ? await createBikePaymentIntent(orderReference, accessToken)
+          : await createProductPaymentIntent(orderReference, accessToken);
         if (cancelled) return;
         setClientSecret(paymentIntent.clientSecret);
         setItemSummary(buildSummaryFromOrder(order));
@@ -49,7 +60,7 @@ export default function CheckoutPaymentScreen() {
 
     loadPayment();
     return () => { cancelled = true; };
-  }, [orderReference, router, slug]);
+  }, [accessToken, orderKind, orderReference, router, slug]);
 
   if (isLoadingSummary) {
     return (
@@ -110,8 +121,8 @@ export default function CheckoutPaymentScreen() {
 
         <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
           <StripePaymentForm
-            returnUrl={`${window.location.origin}/checkout/processing?ref=${orderReference}&slug=${slug}`}
-            onSucceeded={() => router.push(`/checkout/processing?ref=${orderReference}`)}
+            returnUrl={`${window.location.origin}/checkout/processing?${new URLSearchParams({ ref: orderReference, slug, token: accessToken!, kind: orderKind! }).toString()}`}
+            onSucceeded={() => router.push(`/checkout/processing?${new URLSearchParams({ ref: orderReference, slug, token: accessToken!, kind: orderKind! }).toString()}`)}
           />
         </Elements>
       </div>

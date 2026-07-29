@@ -3,7 +3,7 @@
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 
-import { adminGetHireSettings, adminUpdateHireSettings } from '@/api';
+import { adminGetHireSettings, adminUpdateHireSettings } from '@/lib/api';
 import type { HireSettings } from '@/types/HireBooking';
 import { Spinner } from '@/components/ui/spinner';
 import HireSettingsForm from './_components/HireSettingsForm';

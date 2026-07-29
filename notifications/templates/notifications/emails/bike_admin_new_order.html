@@ -1,0 +1,7 @@
+{% extends "notifications/emails/base.html" %}
+{% block title %}New bike deposit — {{ order.order_reference }}{% endblock %}
+{% block content %}
+<h1>New bike deposit</h1><p><strong>{{ order.order_reference }}</strong></p>
+<p>{{ order.motorcycle }}{% if order.selected_colour %}<br>Colour: {{ order.selected_colour }}{% endif %}<br>Deposit: ${{ order.amount_paid }}</p>
+<p>{{ order.customer_name }}<br>{{ order.customer_email }}<br>{{ order.customer_phone }}</p>
+{% endblock %}

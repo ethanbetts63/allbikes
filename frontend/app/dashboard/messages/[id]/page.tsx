@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
-import { adminGetSentMessage } from '@/api';
-import { formatDateTime } from '@/utils/formatting';
+import { adminGetSentMessage } from '@/lib/api';
+import { formatDateTime } from '@/lib/formatting';
 import type { SentMessage } from '@/types/SentMessage';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';

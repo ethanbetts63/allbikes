@@ -1,7 +1,7 @@
 import { CalendarDays } from 'lucide-react';
 
-import { formatDate } from '@/lib/hire';
-import type { HireBookingSummary } from '@/types/HireBookingSummary';
+import { formatDate } from '@/app/hire/_lib/hire';
+import type { HireBookingSummary } from '@/app/hire/book/[bookingReference]/payment/_lib/HireBookingSummary';
 
 /** What is being paid for, and what is still owed at pickup. */
 export default function HirePaymentSummary({ summary }: { summary: HireBookingSummary }) {

@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
 
-import { useAuth } from '@/context/AuthContext';
-import { adminGetNotifications } from '@/api';
+import { useAuth } from '@/app/dashboard/_components/AuthContext';
+import { adminGetNotifications } from '@/lib/api';
 import type { AdminNotifications } from '@/types/AdminNotifications';
 import { Spinner } from '@/components/ui/spinner';
 import HireBookings from './_components/HireBookings';
@@ -16,7 +16,8 @@ import ReservedMotorcycles from './_components/ReservedMotorcycles';
 /** Total outstanding items, which also decides whether to show "All clear". */
 const outstandingCount = (n: AdminNotifications) =>
   n.parts_orders_to_action.length +
-  n.paid_orders.length +
+  n.product_orders_to_action.length +
+  n.bike_orders_to_action.length +
   n.reserved_bikes.length +
   n.active_hire_bookings.length +
   n.attention_products.length;
@@ -62,7 +63,10 @@ export default function AdminNotificationsPage() {
       {!isLoading && notifications && !allClear && (
         <div className="space-y-8">
           <PartsOrdersToAction orders={notifications.parts_orders_to_action} />
-          <OrdersToAction orders={notifications.paid_orders} />
+          <OrdersToAction orders={[
+            ...notifications.product_orders_to_action.map(order => ({ ...order, order_kind: 'product' as const, item_name: order.product_name })),
+            ...notifications.bike_orders_to_action.map(order => ({ ...order, order_kind: 'bike' as const, item_name: order.motorcycle_name })),
+          ]} />
           <ReservedMotorcycles bikes={notifications.reserved_bikes} />
           <HireBookings bookings={notifications.active_hire_bookings} />
           <ProductStock products={notifications.attention_products} />
