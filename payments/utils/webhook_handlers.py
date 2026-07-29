@@ -44,11 +44,8 @@ def handle_payment_intent_succeeded(payment_intent):
             parts_order.status = 'paid'
             parts_order.amount_paid = payment.amount
             parts_order.save(update_fields=['status', 'amount_paid', 'updated_at'])
-            # Start the 14-day backorder hold clock for understocked lines.
-            from django.utils import timezone
-            parts_order.items.filter(
-                backordered=True, backorder_since__isnull=True
-            ).update(backorder_since=timezone.now().date())
+            # No backorder clock to start here — the hold is counted from the
+            # order date by PartsOrder.backorder_days_remaining().
         else:
             order = payment.order
             order.status = 'paid'

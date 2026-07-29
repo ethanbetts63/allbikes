@@ -21,8 +21,7 @@ def client():
 def settings_fixture():
     s = PartsSettings.get()
     s.markup_percentage = Decimal('20')
-    s.domestic_shipping_fee = Decimal('15')
-    s.international_shipping_fee = Decimal('50')
+    s.shipping_fee = Decimal('15')
     s.save()
     return s
 
@@ -65,12 +64,14 @@ class TestCreatePartsOrderService:
         assert order.items.count() == 1
         assert order.order_reference.startswith('SP-')
 
-    def test_international_shipping(self, settings_fixture):
+    def test_checkout_is_australia_only(self, settings_fixture):
+        """A non-Australian country is ignored — we only ship domestically."""
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
         order = create_parts_order(customer=_customer(country='New Zealand'), items=[{'part_number': 'A-1', 'quantity': 1}])
-        assert order.is_international is True
-        assert order.shipping == Decimal('50.00')
+        assert order.country == 'Australia'
+        assert order.is_international is False
+        assert order.shipping == Decimal('15.00')
 
     def test_backorder_flag(self, settings_fixture):
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=0, in_pa_feed=True)
@@ -165,7 +166,7 @@ class TestCheckoutViews:
 
 
 class TestWebhookPartsBranch:
-    def test_paid_marks_order_and_backorder_clock(self, settings_fixture):
+    def test_paid_marks_order_and_keeps_backorder_flag(self, settings_fixture):
         from payments.utils.webhook_handlers import handle_payment_intent_succeeded
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=0, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
@@ -179,7 +180,8 @@ class TestWebhookPartsBranch:
         assert order.amount_paid == order.total
         item = order.items.first()
         assert item.backordered is True
-        assert item.backorder_since is not None
+        # The hold clock is derived from the order date, not stamped on payment.
+        assert order.backorder_days_remaining(hold_days=14) == 14
 
     def test_webhook_idempotent(self, settings_fixture):
         from payments.utils.webhook_handlers import handle_payment_intent_succeeded

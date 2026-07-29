@@ -24,7 +24,8 @@ def admin_client():
 def settings_fixture():
     s = PartsSettings.get()
     s.markup_percentage = Decimal('20')
-    s.domestic_shipping_fee = Decimal('15')
+    s.shipping_fee = Decimal('15')
+    s.backorder_hold_days = 14
     s.save()
     return s
 
@@ -74,13 +75,39 @@ class TestAdminDetailAndUpdate:
         order = _order()
         from payments.models import Payment
         Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_abc', amount=order.total, status='succeeded')
-        data = admin_client.get(f'/api/parts/admin/orders/{order.id}/').json()
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
         assert len(data['items']) == 1
         assert data['stripe_payment_intent_id'] == 'pi_abc'
 
+    def test_detail_exposes_order_level_backorder_window(self, admin_client):
+        order = _order()
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
+        assert data['backorder_hold_days'] == 14
+        assert data['backorder_days_remaining'] == 14
+        assert data['backorder_window_expired'] is False
+        # the window is a property of the order, not of each line
+        assert 'backorder_days_remaining' not in data['items'][0]
+        assert 'backorder_since' not in data['items'][0]
+        assert 'backorder_overdue' not in data['items'][0]
+
+    def test_detail_reports_an_expired_window_for_an_old_order(self, admin_client):
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from parts.models import PartsOrder
+
+        order = _order()
+        PartsOrder.objects.filter(pk=order.pk).update(
+            created_at=timezone.now() - timedelta(days=20)
+        )
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
+        assert data['backorder_days_remaining'] == -6
+        assert data['backorder_window_expired'] is True
+
     def test_update_status_and_notes(self, admin_client):
         order = _order()
-        resp = admin_client.patch(f'/api/parts/admin/orders/{order.id}/',
+        resp = admin_client.patch(f'/api/parts/admin/orders/{order.order_reference}/',
                                   {'status': 'dispatched', 'admin_notes': 'called SP'}, format='json')
         assert resp.status_code == 200
         assert resp.json()['status'] == 'dispatched'
@@ -99,18 +126,18 @@ class TestAdminPartsSettings:
         response = admin_client.patch(
             '/api/parts/admin/settings/',
             {
-                'markup_percentage': '25.00', 'domestic_shipping_fee': '19.50',
-                'international_shipping_fee': '65.00', 'enable_new_part_sales': False,
+                'markup_percentage': '25.00', 'shipping_fee': '19.50',
+                'enable_new_part_sales': False,
             },
             format='json',
         )
         assert response.status_code == 200
         assert response.json()['markup_percentage'] == '25.00'
-        assert response.json()['domestic_shipping_fee'] == '19.50'
+        assert response.json()['shipping_fee'] == '19.50'
         assert response.json()['enable_new_part_sales'] is False
 
     def test_rejects_negative_amounts(self, admin_client):
-        response = admin_client.patch('/api/parts/admin/settings/', {'domestic_shipping_fee': '-1.00'}, format='json')
+        response = admin_client.patch('/api/parts/admin/settings/', {'shipping_fee': '-1.00'}, format='json')
         assert response.status_code == 400
 
 
@@ -119,7 +146,7 @@ class TestSupplierEmail:
         order = _order()
         order.status = 'paid'
         order.save()
-        response = admin_client.get(f'/api/parts/admin/orders/{order.id}/supplier-email/')
+        response = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/supplier-email/')
         assert response.status_code == 200
         data = response.json()
         assert data['to'] == ''
@@ -143,11 +170,11 @@ class TestSupplierEmail:
         send = MagicMock(return_value=True)
         monkeypatch.setattr('parts.views.admin_order_views.send_parts_supplier_dispatch', send)
 
-        missing = admin_client.post(f'/api/parts/admin/orders/{order.id}/supplier-email/', {}, format='json')
+        missing = admin_client.post(f'/api/parts/admin/orders/{order.order_reference}/supplier-email/', {}, format='json')
         assert missing.status_code == 400
 
         response = admin_client.post(
-            f'/api/parts/admin/orders/{order.id}/supplier-email/',
+            f'/api/parts/admin/orders/{order.order_reference}/supplier-email/',
             {'to': 'parts@supplier.test', 'subject': 'Order', 'body': 'Hello'}, format='json',
         )
         assert response.status_code == 200
@@ -156,15 +183,53 @@ class TestSupplierEmail:
         assert order.status == 'paid'
 
 
+class TestDerivedItemCompletion:
+    def test_lines_read_to_order_while_the_order_is_open(self, admin_client):
+        order = _order()
+        order.status = 'paid'
+        order.save()
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
+        assert data['items'][0]['status'] == 'to_order'
+
+    def test_completing_the_order_completes_every_unrefunded_line(self, admin_client):
+        order = _order()
+        order.items.create(part_number='B-2', description='x', quantity=1,
+                           unit_price=Decimal('60'), line_total=Decimal('60'))
+        order.status = 'completed'
+        order.save()
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
+        assert [i['status'] for i in data['items']] == ['completed', 'completed']
+
+    def test_a_refunded_line_stays_refunded_on_a_completed_order(self, admin_client):
+        order = _order()
+        item = order.items.first()
+        item.status = 'refunded'
+        item.save()
+        order.status = 'completed'
+        order.save()
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
+        assert data['items'][0]['status'] == 'refunded'
+
+    def test_completion_is_not_stored_on_the_row(self, admin_client):
+        """The DB keeps to_order; only the wire value changes."""
+        from parts.models import PartsOrderItem
+
+        order = _order()
+        order.status = 'completed'
+        order.save()
+        admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/')
+        assert PartsOrderItem.objects.get(pk=order.items.first().pk).status == 'to_order'
+
+
 class TestAdminItemActions:
     def test_place_and_remove_backorder(self, admin_client):
         order = _order(available=5)
         item_id = order.items.first().id
         r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'place_backorder'}, format='json')
         item = next(i for i in r.json()['items'] if i['id'] == item_id)
-        assert item['backordered'] is True and item['backorder_since'] is not None
-        assert item['backorder_days_remaining'] == 14
+        assert item['backordered'] is True
         assert r.json()['has_backorder'] is True
+        assert r.json()['backorder_days_remaining'] == 14
 
         r2 = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'remove_backorder'}, format='json')
         assert r2.json()['has_backorder'] is False
@@ -197,3 +262,68 @@ class TestAdminItemActions:
         item_id = order.items.first().id
         r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'nope'}, format='json')
         assert r.status_code == 400
+
+    def test_mark_fulfilled_is_no_longer_an_action(self, admin_client):
+        order = _order()
+        item_id = order.items.first().id
+        r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'mark_fulfilled'}, format='json')
+        assert r.status_code == 400
+
+    def test_mark_to_order_undoes_a_refund(self, admin_client):
+        order = _order()
+        item_id = order.items.first().id
+        admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'mark_refunded'}, format='json')
+        r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'mark_to_order'}, format='json')
+        item = next(i for i in r.json()['items'] if i['id'] == item_id)
+        assert item['status'] == 'to_order'
+
+    def test_place_backorder_blocked_once_the_window_has_closed(self, admin_client):
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from parts.models import PartsOrder, PartsOrderItem
+
+        order = _order()
+        PartsOrder.objects.filter(pk=order.pk).update(
+            created_at=timezone.now() - timedelta(days=20)
+        )
+        item_id = order.items.first().id
+        r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'place_backorder'}, format='json')
+        assert r.status_code == 400
+        assert 'backorder window' in r.json()['detail'].lower()
+        assert PartsOrderItem.objects.get(pk=item_id).backordered is False
+
+    def test_place_backorder_blocked_exactly_on_the_boundary(self, admin_client):
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from parts.models import PartsOrder
+
+        order = _order()
+        PartsOrder.objects.filter(pk=order.pk).update(
+            created_at=timezone.now() - timedelta(days=14)
+        )
+        item_id = order.items.first().id
+        r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'place_backorder'}, format='json')
+        assert r.status_code == 400
+
+    def test_remove_backorder_still_allowed_after_the_window_closes(self, admin_client):
+        """An operator must always be able to clear a stale flag."""
+        from datetime import timedelta
+
+        from django.utils import timezone
+
+        from parts.models import PartsOrder
+
+        order = _order()
+        item = order.items.first()
+        item.backordered = True
+        item.save()
+        PartsOrder.objects.filter(pk=order.pk).update(
+            created_at=timezone.now() - timedelta(days=20)
+        )
+        r = admin_client.patch(f'/api/parts/admin/items/{item.id}/', {'action': 'remove_backorder'}, format='json')
+        assert r.status_code == 200
+        assert r.json()['has_backorder'] is False

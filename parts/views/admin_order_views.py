@@ -1,6 +1,4 @@
 """Admin parts-order management (IsAdminUser)."""
-from datetime import date
-
 from decimal import Decimal
 
 from django.db.models import Case, IntegerField, Q, Value, When
@@ -16,9 +14,10 @@ from parts.serializers.admin_order_serializers import (
     AdminPartsOrderDetailSerializer,
     AdminPartsOrderListSerializer,
     AdminPartsOrderUpdateSerializer,
+    supplier_price_map,
 )
 
-ITEM_ACTIONS = {'place_backorder', 'remove_backorder', 'mark_fulfilled', 'mark_refunded', 'mark_ordered'}
+ITEM_ACTIONS = {'place_backorder', 'remove_backorder', 'mark_refunded', 'mark_to_order'}
 
 # Default "to-do first" ordering: actionable statuses float to the top.
 STATUS_PRIORITY = {
@@ -34,9 +33,9 @@ STATUS_PRIORITY = {
 ORDERABLE_FIELDS = {'created_at', 'total', 'customer_name', 'status'}
 
 
-def _get_order_or_404(pk):
+def _get_order_or_404(order_reference):
     try:
-        return PartsOrder.objects.prefetch_related('items').get(pk=pk)
+        return PartsOrder.objects.prefetch_related('items').get(order_reference=order_reference)
     except PartsOrder.DoesNotExist:
         return None
 
@@ -102,7 +101,9 @@ def _supplier_email_draft(order):
         )
 
     location = ' '.join(part for part in [order.suburb, order.state] if part)
-    subject = f'Drop-ship SYM parts order {order.order_reference}' + (f' — {location}' if location else '')
+    subject = f'SYM parts order {order.order_reference}' + (f' — {location}' if location else '')
+    hold_days = PartsSettings.get().backorder_hold_days
+    hold_period = f"{hold_days} {'day' if hold_days == 1 else 'days'}"
     body = (
         'Hello,\n\n'
         f'Please arrange the following {part_count} SYM parts to be shipped directly to:\n\n'
@@ -112,6 +113,8 @@ def _supplier_email_draft(order):
         + f'\n\nSupplier parts total (incl. GST): ${total:.2f}\n\n'
         'If you cannot fulfil the order in full with current stock, please do not ship any part of the order. '
         'Please let us know which parts are missing and an ETA for when they are expected back in stock.\n\n'
+        f'Parts that cannot be obtained within {hold_period} will be removed from the customer’s order. '
+        'We will then resubmit an amended order to you.\n\n'
         'Regards,\nScooterShop\nadmin@scootershop.com.au'
     )
     return {
@@ -192,24 +195,26 @@ class AdminPartsOrderListView(APIView):
 class AdminPartsOrderDetailView(APIView):
     permission_classes = [IsAdminUser]
 
-    def get(self, request, pk):
+    def get(self, request, order_reference):
         try:
-            order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=pk)
+            order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(
+                order_reference=order_reference
+            )
         except PartsOrder.DoesNotExist:
             return Response({'detail': 'Order not found.'}, status=404)
-        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context()).data)
+        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context(order)).data)
 
-    def patch(self, request, pk):
+    def patch(self, request, order_reference):
         try:
-            order = PartsOrder.objects.get(pk=pk)
+            order = PartsOrder.objects.get(order_reference=order_reference)
         except PartsOrder.DoesNotExist:
             return Response({'detail': 'Order not found.'}, status=404)
         serializer = AdminPartsOrderUpdateSerializer(order, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
         serializer.save()
-        order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=pk)
-        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context()).data)
+        order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=order.pk)
+        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context(order)).data)
 
 
 class AdminPartsOrderItemView(APIView):
@@ -226,32 +231,38 @@ class AdminPartsOrderItemView(APIView):
             return Response({'detail': f'action must be one of {sorted(ITEM_ACTIONS)}.'}, status=400)
 
         if action == 'place_backorder':
+            if item.parts_order.backorder_window_expired():
+                return Response(
+                    {'detail': 'The backorder window has already closed for this order. '
+                               'Refund this line instead.'},
+                    status=400,
+                )
             item.backordered = True
-            if not item.backorder_since:
-                item.backorder_since = date.today()
-            item.status = 'ordered'
+            item.status = 'to_order'
         elif action == 'remove_backorder':
-            item.backordered = False
-            item.backorder_since = None
-        elif action == 'mark_fulfilled':
-            item.status = 'fulfilled'
             item.backordered = False
         elif action == 'mark_refunded':
             item.status = 'refunded'
             item.backordered = False
-        elif action == 'mark_ordered':
-            item.status = 'ordered'
+        elif action == 'mark_to_order':
+            item.status = 'to_order'
 
         item.save()
         order = item.parts_order
         order.recompute_rollup()
 
         order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=order.pk)
-        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context()).data)
+        return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context(order)).data)
 
 
-def _admin_order_context():
-    return {'backorder_hold_days': PartsSettings.get().backorder_hold_days}
+def _admin_order_context(order):
+    # Resolve supplier prices once per request so the item serializer doesn't
+    # hit the DB per line.
+    return {
+        'backorder_hold_days': PartsSettings.get().backorder_hold_days,
+        'supplier_prices': supplier_price_map(order),
+        'order_status': order.status,
+    }
 
 
 class AdminPartsSupplierEmailView(APIView):
@@ -262,16 +273,16 @@ class AdminPartsSupplierEmailView(APIView):
     """
     permission_classes = [IsAdminUser]
 
-    def get(self, request, pk):
-        order = _get_order_or_404(pk)
+    def get(self, request, order_reference):
+        order = _get_order_or_404(order_reference)
         if not order:
             return Response({'detail': 'Order not found.'}, status=404)
         if order.status != 'paid':
             return Response({'detail': 'Supplier emails are only available for paid orders.'}, status=400)
         return Response(_supplier_email_draft(order))
 
-    def post(self, request, pk):
-        order = _get_order_or_404(pk)
+    def post(self, request, order_reference):
+        order = _get_order_or_404(order_reference)
         if not order:
             return Response({'detail': 'Order not found.'}, status=404)
         if order.status != 'paid':
@@ -296,8 +307,8 @@ class AdminPartsSupplierEmailView(APIView):
 class AdminPartsCustomerUpdateView(APIView):
     permission_classes = [IsAdminUser]
 
-    def post(self, request, pk):
-        order = _get_order_or_404(pk)
+    def post(self, request, order_reference):
+        order = _get_order_or_404(order_reference)
         if not order:
             return Response({'detail': 'Order not found.'}, status=404)
         update_type = request.data.get('type')
