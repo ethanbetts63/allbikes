@@ -152,7 +152,9 @@ export default function PartsOrderDetailPage() {
               <Badge variant="outline" className={PARTS_STATUS_BADGE[order.status] ?? 'border-gray-400'}>
                 {order.status.replace(/_/g, ' ')}
               </Badge>
-              {order.has_backorder && <Badge variant="outline" className="border-orange-500 text-orange-600">Backorder</Badge>}
+              {order.has_backorder && order.status !== 'completed' && (
+                <Badge variant="outline" className="border-orange-500 text-orange-600">Backorder</Badge>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -369,7 +371,9 @@ function ItemRow({ item, busy, daysRemaining, windowExpired, holdDays, onAction 
           <Badge variant="outline" className={ITEM_STATUS_BADGE[item.status] ?? 'border-gray-400'}>
             {item.status.replace(/_/g, ' ')}
           </Badge>
-          {item.backordered && (
+          {/* A settled line has nothing left to wait for, so the countdown is
+              suppressed even though `backordered` is still set on the row. */}
+          {item.backordered && !settled && (
             <span className={`text-xs font-medium ${daysRemaining < 0 ? 'text-red-600' : 'text-orange-600'}`}>
               Backorder · {daysRemaining < 0 ? `${-daysRemaining}d overdue` : `${daysRemaining}d left`}
             </span>
@@ -399,7 +403,7 @@ function ItemRow({ item, busy, daysRemaining, windowExpired, holdDays, onAction 
           )}
         </div>
         {!settled && !item.backordered && windowExpired && (
-          <p className="mt-1 max-w-[14rem] text-xs italic text-[var(--text-dark-secondary)]">
+          <p className="mt-1 w-48 whitespace-normal text-xs italic text-[var(--text-dark-secondary)]">
             Order is {daysOld}d old; exceeds the {holdDays}-day backorder window. Refund instead.
           </p>
         )}
