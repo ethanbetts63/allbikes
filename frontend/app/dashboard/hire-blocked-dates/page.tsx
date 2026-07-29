@@ -8,7 +8,8 @@ import {
 } from '@/lib/api';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { Bike } from '@/types/Bike';
-import AddBlockedDateForm, { type NewBlockedDate } from './_components/AddBlockedDateForm';
+import AddBlockedDateForm from './_components/AddBlockedDateForm';
+import type { NewBlockedDate } from './_lib/blockedDates';
 import PerBikeBlocks from './_components/PerBikeBlocks';
 import ShopWideClosures from './_components/ShopWideClosures';
 

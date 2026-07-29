@@ -1,5 +1,6 @@
 // src/api.ts
 import { authedFetch } from './apiClient';
+import { CUSTOMER_ACCESS_TOKEN_HEADER } from './customerAccess';
 import type { UserProfile } from '@/types/UserProfile';
 import type { Bike } from '@/types/Bike';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
@@ -315,12 +316,16 @@ export async function createBikeOrder(data: CreateBikeOrderData): Promise<import
 }
 
 export async function getProductOrder(reference: string, token: string): Promise<import('@/types/Order').ProductOrder> {
-    const response = await fetch(`/api/product/orders/${reference}/?token=${encodeURIComponent(token)}`);
+    const response = await fetch(`/api/product/orders/${reference}/`, {
+        headers: { [CUSTOMER_ACCESS_TOKEN_HEADER]: token },
+    });
     return handleResponse(response);
 }
 
 export async function getBikeOrder(reference: string, token: string): Promise<import('@/types/Order').BikeOrder> {
-    const response = await fetch(`/api/inventory/bike-orders/${reference}/?token=${encodeURIComponent(token)}`);
+    const response = await fetch(`/api/inventory/bike-orders/${reference}/`, {
+        headers: { [CUSTOMER_ACCESS_TOKEN_HEADER]: token },
+    });
     return handleResponse(response);
 }
 
@@ -568,7 +573,7 @@ export async function createHirePaymentIntent(reference: string, token: string):
 
 export async function getHireBookingByReference(reference: string, token: string): Promise<HireBooking> {
     const response = await fetch(`/api/hire/bookings/${reference}/`, {
-        headers: { 'X-Booking-Token': token },
+        headers: { [CUSTOMER_ACCESS_TOKEN_HEADER]: token },
     });
     return handleResponse(response);
 }

@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from allbikes.customer_access import get_customer_access_token
 from parts.checkout import CheckoutError, create_parts_order
 from parts.models import PartsOrder
 from parts.serializers.order_serializers import (
@@ -47,7 +48,7 @@ class RetrievePartsOrderConfirmationView(PublicAPIView):
     """Token-protected, PII-free data required by the checkout confirmation UI."""
 
     def get(self, request, order_reference):
-        token = (request.query_params.get('token') or '').strip()
+        token = get_customer_access_token(request)
         if not token:
             return Response({'detail': 'Order access token is required.'}, status=403)
         order = get_object_or_404(

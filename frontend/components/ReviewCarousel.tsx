@@ -1,14 +1,8 @@
 import { Star } from "lucide-react";
 
-const GOOGLE_REVIEWS_URL = "https://www.google.com/search?sca_esv=c50016dede84fb5a&cs=1&sxsrf=ANbL-n7auNsA8EF9qA71_DeC0xkkejRXgQ:1773338332751&q=Scooter+Shop+Reviews&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxIxNDCzMDUxNDAxMjc3tzCysACSGxgZXzGKBCfn55ekFikEZ-QXKASllmWmlhcvYsUqDADhIHceSQAAAA&rldimm=10685410427778288778&tbm=lcl&hl=en-DK&sa=X&ved=2ahUKEwipoY6L-JqTAxXK3AIHHQwDItoQ9fQKegQIEBAG&biw=1440&bih=731&dpr=2#lkt=LocalPoiReviews";
+import type { Review } from '@/types/Review';
 
-export interface Review {
-  pk: number;
-  author_name: string;
-  text: string;
-  date: string;
-  display_order: number;
-}
+const GOOGLE_REVIEWS_URL = "https://www.google.com/search?sca_esv=c50016dede84fb5a&cs=1&sxsrf=ANbL-n7auNsA8EF9qA71_DeC0xkkejRXgQ:1773338332751&q=Scooter+Shop+Reviews&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxIxNDCzMDUxNDAxMjc3tzCysACSGxgZXzGKBCfn55ekFikEZ-QXKASllmWmlhcvYsUqDADhIHceSQAAAA&rldimm=10685410427778288778&tbm=lcl&hl=en-DK&sa=X&ved=2ahUKEwipoY6L-JqTAxXK3AIHHQwDItoQ9fQKegQIEBAG&biw=1440&bih=731&dpr=2#lkt=LocalPoiReviews";
 
 const reviewData: Review[] = [
   {

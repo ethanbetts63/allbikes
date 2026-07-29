@@ -3,7 +3,7 @@ import type { PartsSettings } from '@/app/dashboard/_lib/partsSettings';
 export type { PartsSettings } from '@/app/dashboard/_lib/partsSettings';
 
 /** The two money/percentage fields, which share a control shape. */
-export type EditableField = 'markup_percentage' | 'shipping_fee';
+type EditableField = 'markup_percentage' | 'shipping_fee';
 
 export const NUMERIC_FIELDS: Array<{
   key: EditableField;

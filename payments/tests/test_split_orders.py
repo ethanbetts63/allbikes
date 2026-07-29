@@ -82,8 +82,20 @@ def test_customer_detail_requires_matching_access_token():
     order = ProductOrderFactory()
     url = reverse('product:order-detail', args=[order.order_reference])
     assert APIClient().get(url).status_code == 403
-    assert APIClient().get(url, {'token': 'wrong'}).status_code == 404
-    assert APIClient().get(url, {'token': order.access_token}).status_code == 200
+    assert APIClient().get(url, {'token': order.access_token}).status_code == 403
+    assert APIClient().get(url, HTTP_X_CUSTOMER_ACCESS_TOKEN='wrong').status_code == 404
+    assert APIClient().get(
+        url, HTTP_X_CUSTOMER_ACCESS_TOKEN=order.access_token
+    ).status_code == 200
+
+
+def test_bike_customer_detail_requires_token_header():
+    order = BikeOrderFactory()
+    url = reverse('inventory:bike-order-detail', args=[order.order_reference])
+    assert APIClient().get(url, {'token': order.access_token}).status_code == 403
+    assert APIClient().get(
+        url, HTTP_X_CUSTOMER_ACCESS_TOKEN=order.access_token
+    ).status_code == 200
 
 
 def test_admin_cannot_mark_paid_without_payment(admin_client):

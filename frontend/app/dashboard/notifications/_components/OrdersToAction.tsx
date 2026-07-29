@@ -1,7 +1,8 @@
 import { useRouter } from 'next/navigation';
 
 import type { NotificationOrder } from '@/types/AdminNotifications';
-import NotificationSection, { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from './NotificationSection';
+import NotificationSection from './NotificationSection';
+import { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from '../_lib/notificationStyles';
 
 /** Shop orders that are paid but not yet dispatched. */
 export default function OrdersToAction({ orders }: { orders: NotificationOrder[] }) {

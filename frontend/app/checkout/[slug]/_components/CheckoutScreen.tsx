@@ -5,6 +5,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 import { Spinner } from '@/components/ui/spinner';
 import { createBikeOrder, createProductOrder, getProductById, getBikeById, getDepositSettings } from '@/lib/api';
+import { storeCustomerAccessToken } from '@/lib/customerAccess';
 import type { Product } from '@/types/Product';
 import type { Bike } from '@/types/Bike';
 import type { CheckoutFormData } from '@/app/checkout/[slug]/_lib/CheckoutFormData';
@@ -93,9 +94,9 @@ export default function CheckoutScreen() {
           })
         : await createProductOrder({ product: product!.id, ...formData, terms_accepted: true });
 
+      storeCustomerAccessToken(order.order_kind, order.order_reference, order.access_token);
       const query = new URLSearchParams({
         ref: order.order_reference,
-        token: order.access_token,
         kind: order.order_kind,
       });
       router.push(`/checkout/${slug}/payment?${query.toString()}`);

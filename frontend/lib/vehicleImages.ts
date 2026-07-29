@@ -5,7 +5,7 @@ type VehicleImage = {
   order?: number | null;
 };
 
-export type VehicleImageUse = 'thumbnail' | 'card' | 'detail';
+type VehicleImageUse = 'thumbnail' | 'card' | 'detail';
 
 export function getPrimaryVehicleImage(
   images: VehicleImage[] | null | undefined,

@@ -9,7 +9,7 @@ import { stripePromise } from '@/lib/stripe';
 const MAX_POLLS = 15;
 const POLL_INTERVAL_MS = 2000; // ~30s total
 
-export interface PaymentProcessingProps {
+interface PaymentProcessingProps {
   /** Order or booking reference from the URL. */
   reference: string | null;
   /** Present only when Stripe redirected back from 3DS. */

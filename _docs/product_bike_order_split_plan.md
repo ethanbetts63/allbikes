@@ -20,6 +20,8 @@ than a multi-release production rollout.
 - `product.ProductOrder` and `inventory.BikeOrder` are independent models.
 - New references use `PR-` and `BK-`; migrated references are preserved.
 - Public detail/payment calls require the high-entropy access token.
+- Checkout tokens are stored in tab-scoped `sessionStorage`, excluded from
+  URLs, and sent in `X-Customer-Access-Token` for detail reads.
 - Product price and bike deposit amounts are snapshotted at order creation.
 - `Payment` has four explicit targets and a database exactly-one constraint.
 - Legacy rows, payments, and notification content types are migrated before the
@@ -43,7 +45,7 @@ The existing `payments.Order` is two workflows sharing one row:
 | Charge | Full live product/discount price | Live `DepositSettings.deposit_amount` |
 | Required customer data | Australian delivery address; phone optional | Phone required; no delivery address |
 | Item-specific data | Product and stock | Motorcycle and selected colour |
-| Successful webhook | Marks paid and decrements product stock | Marks deposit order paid; motorcycle status stays manually managed |
+| Successful webhook | Marks paid and decrements product stock | Marks deposit paid and changes `for_sale` motorcycle to `reserved` |
 | Customer/admin copy | Product purchase and delivery | Deposit/reservation and pickup contact |
 
 The mixed model therefore needs nullable `product` and `motorcycle` fields,
@@ -113,21 +115,22 @@ Suggested fields:
 - `amount_paid`.
 - `status`, `terms_accepted`, `created_at`, `updated_at`.
 
-Initially preserve the existing statuses and manual motorcycle-availability
-policy. Do not silently make a paid deposit change `Motorcycle.status` during
-this structural migration.
+The original structural migration preserved manual motorcycle availability.
+Subsequent payment-safety work now changes `for_sale` to `reserved` after a
+successful deposit without overwriting stronger manual states.
 
 ### `payments.Payment`
 
 Replace `order` with:
 
-- `product_order` — nullable one-to-one.
-- `bike_order` — nullable one-to-one.
-- Existing `hire_booking` — nullable one-to-one.
-- Existing `parts_order` — nullable one-to-one.
+- `product_order` — nullable foreign key.
+- `bike_order` — nullable foreign key.
+- Existing `hire_booking` — nullable foreign key.
+- Existing `parts_order` — nullable foreign key.
 
 Add a database `CheckConstraint` requiring **exactly one** target. Keep the
-unique Stripe PaymentIntent ID and one-payment-per-target relationships.
+unique Stripe PaymentIntent ID. Multiple attempts per target are retained for
+audit history.
 
 Do not use `GenericForeignKey` for payments. Explicit foreign keys provide
 database integrity, predictable joins and safe cascades.
@@ -163,11 +166,11 @@ project's final routing convention, but the resources should be separate:
 
 ```text
 POST /api/product/orders/
-GET  /api/product/orders/:reference/?token=...
+GET  /api/product/orders/:reference/  [X-Customer-Access-Token]
 POST /api/product/orders/:reference/payment-intent/
 
 POST /api/inventory/bike-orders/
-GET  /api/inventory/bike-orders/:reference/?token=...
+GET  /api/inventory/bike-orders/:reference/  [X-Customer-Access-Token]
 POST /api/inventory/bike-orders/:reference/payment-intent/
 ```
 

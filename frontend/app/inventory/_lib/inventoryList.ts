@@ -4,7 +4,7 @@ import { buildBikeListQuery, type ListSearchParams } from '@/lib/listQuery';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 import { INVENTORY_PAGE_SIZE } from '@/lib/siteSettings';
 
-export interface InitialBikeList {
+interface InitialBikeList {
   bikes: Bike[];
   totalPages: number;
   currentPage: number;

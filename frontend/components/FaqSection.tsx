@@ -2,7 +2,7 @@ import { Card, CardContent } from "./ui/card";
 import { ChevronDown } from 'lucide-react';
 import type { FaqItem } from '@/types/FaqItem';
 
-export interface FaqSectionProps {
+interface FaqSectionProps {
   title: string;
   faqData: FaqItem[];
 }

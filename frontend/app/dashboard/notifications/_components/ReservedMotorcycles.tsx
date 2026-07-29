@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import type { NotificationBike } from '@/types/AdminNotifications';
-import NotificationSection, { LIST_PANEL } from './NotificationSection';
+import NotificationSection from './NotificationSection';
+import { LIST_PANEL } from '../_lib/notificationStyles';
 
 /** Bikes held for a customer, which need chasing or releasing. */
 export default function ReservedMotorcycles({ bikes }: { bikes: NotificationBike[] }) {

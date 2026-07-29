@@ -3,8 +3,9 @@ import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import StatusBadge from '@/components/ui/status-badge';
 import type { NotificationPartsOrder } from '@/types/AdminNotifications';
-import { PARTS_STATUS_BADGE } from '../../parts-orders/_lib/partsOrderStyles';
-import NotificationSection, { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from './NotificationSection';
+import { PARTS_STATUS_BADGE } from '../../_lib/partsOrderStatus';
+import NotificationSection from './NotificationSection';
+import { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from '../_lib/notificationStyles';
 
 /** Parts orders that have not reached completed / cancelled / refunded. */
 export default function PartsOrdersToAction({ orders }: { orders: NotificationPartsOrder[] }) {

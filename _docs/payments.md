@@ -17,9 +17,10 @@ creation, retrieval, cancellation, minimum-amount handling and local Payment
 creation. Each domain remains responsible for checking eligibility and supplying
 its snapshotted amount.
 
-Customer payment endpoints are token-protected. Product, bike and parts use
-order access tokens; hire uses `HireBooking.access_token`. Hire tokens are sent
-in the `X-Booking-Token` header for reads and request body for payment creation.
+Customer payment endpoints are token-protected. The frontend keeps all four
+domains' tokens in tab-scoped `sessionStorage`, sends
+`X-Customer-Access-Token` for reads, and sends the token in the JSON body for
+payment-intent creation. Tokens are never included in checkout URLs.
 
 ## Webhooks
 
@@ -27,7 +28,7 @@ in the `X-Booking-Token` header for reads and request body for payment creation.
 `payment_intent.succeeded` or `payment_intent.payment_failed`.
 
 Successful product payments mark the order paid and decrement stock. Bike
-payments mark the deposit paid but do not automatically reserve the motorcycle.
+payments mark the deposit paid and change a `for_sale` motorcycle to `reserved`.
 Hire payments confirm the booking. Parts payments mark the order paid. Domain
 specific customer/admin notifications run after the database transaction.
 
@@ -35,6 +36,7 @@ specific customer/admin notifications run after the database transaction.
 
 - Stripe PaymentIntent IDs are unique.
 - Every Payment has exactly one explicit domain target.
+- Orders/bookings retain every failed, cancelled and successful payment attempt.
 - Product prices, bike deposits, hire rates/extras and parts totals are snapshots.
 - Admin product/bike `paid` and `refunded` status updates require a Payment row.
 

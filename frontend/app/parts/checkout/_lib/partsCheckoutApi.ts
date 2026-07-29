@@ -1,6 +1,7 @@
 'use client';
 
 import type { PartsCartItem } from '@/types/parts';
+import { CUSTOMER_ACCESS_TOKEN_HEADER } from '@/lib/customerAccess';
 import { partsJson } from '@/lib/partsHttp';
 
 interface PartsOrderItemDetail {
@@ -37,7 +38,7 @@ export interface PartsOrderDetail {
   items: PartsOrderItemDetail[];
 }
 
-export interface PartsOrderCreated {
+interface PartsOrderCreated {
   order_reference: string;
   access_token: string;
 }
@@ -75,7 +76,9 @@ export async function createPartsOrder(
 }
 
 export async function getPartsOrder(reference: string, accessToken: string): Promise<PartsOrderDetail> {
-  const res = await fetch(`/api/parts/orders/${reference}/confirmation/?token=${encodeURIComponent(accessToken)}`);
+  const res = await fetch(`/api/parts/orders/${reference}/confirmation/`, {
+    headers: { [CUSTOMER_ACCESS_TOKEN_HEADER]: accessToken },
+  });
   return partsJson<PartsOrderDetail>(res, 'Order not found.');
 }
 

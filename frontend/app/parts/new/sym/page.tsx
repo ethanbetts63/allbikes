@@ -1,8 +1,16 @@
-import { CC_CLASS_LABELS, CC_CLASS_ORDER, getPartsModels } from '@/lib/partsApi';
+import { getPartsModels } from '@/lib/partsApi';
 import ModelCard from '@/app/parts/_components/ModelCard';
-import type { PartsModelListItem } from '@/types/parts';
+import type { CcClass, PartsModelListItem } from '@/types/parts';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+
+const CC_CLASS_LABELS: Record<CcClass, string> = {
+  '50': '50cc',
+  '100_165': '100cc – 165cc',
+  '200_400': '200cc – 400cc',
+  atv: 'ATV',
+};
+const CC_CLASS_ORDER: CcClass[] = ['50', '100_165', '200_400', 'atv'];
 
 export const metadata: Metadata = {
   title: 'New Genuine SYM Parts | ScooterShop',

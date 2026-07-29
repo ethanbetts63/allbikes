@@ -9,6 +9,7 @@ import OrderSummary from '@/app/parts/checkout/_components/OrderSummary';
 import { createPartsOrder, type CustomerDetails } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 import { australianAddressError } from '@/lib/australianAddresses';
 import { stockState } from '@/app/parts/_lib/partsStock';
+import { storeCustomerAccessToken } from '@/lib/customerAccess';
 import PartsCustomerForm from './PartsCustomerForm';
 import {
   EMPTY_DETAILS, STORAGE_KEY, persistableDetails, readStoredDetails,
@@ -50,9 +51,8 @@ export default function PartsCheckoutDetailsScreen() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(persistableDetails(form)));
       const order = await createPartsOrder(form, items);
-      router.push(
-        `/parts/checkout/payment?ref=${order.order_reference}&token=${encodeURIComponent(order.access_token)}`,
-      );
+      storeCustomerAccessToken('parts', order.order_reference, order.access_token);
+      router.push(`/parts/checkout/payment?ref=${order.order_reference}`);
     } catch (err) {
       const failure = err as Error & { unavailable?: string[] };
       setError(

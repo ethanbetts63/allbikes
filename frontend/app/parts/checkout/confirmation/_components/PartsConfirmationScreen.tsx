@@ -5,19 +5,23 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { usePartsCart } from '@/app/parts/_components/PartsCartContext';
 import CheckoutSteps from '@/app/parts/checkout/_components/CheckoutSteps';
+import { getCustomerAccessToken } from '@/lib/customerAccess';
 import { getPartsOrder, type PartsOrderDetail } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 import {
   ConfirmationFailed, ConfirmationSuccess, ConfirmationTimeout, ConfirmationWaiting,
 } from './ConfirmationStates';
-import {
-  type ConfirmationMode, FAILED_STATES, MAX_ATTEMPTS, PAID_STATES, POLL_INTERVAL_MS,
-} from '../_lib/confirmationPolling';
+
+const POLL_INTERVAL_MS = 2000;
+const MAX_ATTEMPTS = 15;
+const PAID_STATES = ['paid', 'dispatched', 'completed', 'partially_refunded', 'refunded'];
+const FAILED_STATES = ['cancelled'];
+
+type ConfirmationMode = 'waiting' | 'confirmed' | 'failed' | 'timeout';
 
 export default function PartsConfirmationScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reference = searchParams.get('ref');
-  const accessToken = searchParams.get('token');
   const { clear } = usePartsCart();
 
   const [mode, setMode] = useState<ConfirmationMode>('waiting');
@@ -30,7 +34,12 @@ export default function PartsConfirmationScreen() {
   }, []);
 
   useEffect(() => {
-    if (!reference || !accessToken) {
+    if (!reference) {
+      router.replace('/parts/new/sym');
+      return;
+    }
+    const accessToken = getCustomerAccessToken('parts', reference);
+    if (!accessToken) {
       router.replace('/parts/new/sym');
       return;
     }
@@ -71,7 +80,7 @@ export default function PartsConfirmationScreen() {
       cancelled = true;
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [reference, accessToken, router, clear]);
+  }, [reference, router, clear]);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">

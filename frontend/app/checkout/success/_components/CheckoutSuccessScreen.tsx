@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 
 import { Spinner } from '@/components/ui/spinner';
+import { getCustomerAccessToken } from '@/lib/customerAccess';
 import { getBikeOrder, getProductOrder } from '@/lib/api';
 import type { Order } from '@/types/Order';
 import OrderConfirmationDetails from './OrderConfirmationDetails';
@@ -13,29 +14,42 @@ import OrderConfirmationDetails from './OrderConfirmationDetails';
 export default function CheckoutSuccessScreen() {
   const searchParams = useSearchParams();
   const ref = searchParams.get('ref');
-  const token = searchParams.get('token');
   const kind = searchParams.get('kind');
-  const hasSecureOrderLink = Boolean(ref && token && (kind === 'product' || kind === 'bike'));
+  const hasOrderContext = Boolean(ref && (kind === 'product' || kind === 'bike'));
   const [order, setOrder] = useState<Order | null>(null);
-  const [isLoading, setIsLoading] = useState(hasSecureOrderLink);
+  const [isLoading, setIsLoading] = useState(hasOrderContext);
   const [error, setError] = useState<string | null>(
-    hasSecureOrderLink ? null : 'The secure order link is incomplete.',
+    hasOrderContext ? null : 'The secure order link is incomplete.',
   );
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!ref || !token || (kind !== 'product' && kind !== 'bike')) {
+    if (!ref || (kind !== 'product' && kind !== 'bike')) {
       return;
     }
 
     let cancelled = false;
-    const request = kind === 'bike' ? getBikeOrder(ref, token) : getProductOrder(ref, token);
-    request
-      .then((data) => { if (!cancelled) setOrder(data); })
-      .catch(() => { if (!cancelled) setError('Order not found.'); })
-      .finally(() => { if (!cancelled) setIsLoading(false); });
+    const loadOrder = async () => {
+      const token = getCustomerAccessToken(kind, ref);
+      if (!token) {
+        if (!cancelled) {
+          setError('The secure checkout session has expired.');
+          setIsLoading(false);
+        }
+        return;
+      }
+      try {
+        const data = kind === 'bike' ? await getBikeOrder(ref, token) : await getProductOrder(ref, token);
+        if (!cancelled) setOrder(data);
+      } catch {
+        if (!cancelled) setError('Order not found.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    loadOrder();
     return () => { cancelled = true; };
-  }, [kind, ref, token]);
+  }, [kind, ref]);
 
   if (isLoading) {
     return (

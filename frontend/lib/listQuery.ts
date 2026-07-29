@@ -21,7 +21,7 @@ const PRODUCT_FILTER_KEYS = [
 
 type ListFilterKey = typeof BIKE_FILTER_KEYS[number] | typeof PRODUCT_FILTER_KEYS[number];
 
-export interface ListQueryState {
+interface ListQueryState {
   page: number;
   filters: FilterSortOptions;
   params: URLSearchParams;

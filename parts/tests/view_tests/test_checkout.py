@@ -199,7 +199,14 @@ class TestCheckoutViews:
         order = create_parts_order(customer=_customer(), items=[_item('A-1')])
         resp = client.get(f'/api/parts/orders/{order.order_reference}/')
         assert resp.status_code in (401, 403)
-        resp = client.get(f'/api/parts/orders/{order.order_reference}/confirmation/?token={order.access_token}')
+        resp = client.get(
+            f'/api/parts/orders/{order.order_reference}/confirmation/?token={order.access_token}'
+        )
+        assert resp.status_code == 403
+        resp = client.get(
+            f'/api/parts/orders/{order.order_reference}/confirmation/',
+            HTTP_X_CUSTOMER_ACCESS_TOKEN=order.access_token,
+        )
         assert resp.status_code == 200
         assert resp.json()['order_reference'] == order.order_reference
         assert 'customer_email' not in resp.json()

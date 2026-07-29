@@ -8,6 +8,7 @@ import CheckoutSteps from '@/app/parts/checkout/_components/CheckoutSteps';
 import OrderSummary from '@/app/parts/checkout/_components/OrderSummary';
 import StripePaymentForm from '@/components/payments/StripePaymentForm';
 import { stripePromise } from '@/lib/stripe';
+import { getCustomerAccessToken } from '@/lib/customerAccess';
 import {
   createPartsPaymentIntent, getPartsOrder, type PartsOrderDetail,
 } from '@/app/parts/checkout/_lib/partsCheckoutApi';
@@ -16,7 +17,6 @@ export default function PartsCheckoutPaymentScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const reference = searchParams.get('ref');
-  const accessToken = searchParams.get('token');
 
   const [order, setOrder] = useState<PartsOrderDetail | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -25,21 +25,27 @@ export default function PartsCheckoutPaymentScreen() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!reference || !accessToken) {
+    if (!reference) {
       router.replace('/parts/cart');
       return;
     }
 
     let cancelled = false;
     (async () => {
+      const accessToken = getCustomerAccessToken('parts', reference);
+      if (!accessToken) {
+        if (!cancelled) {
+          setError('The secure checkout session has expired. Please start again.');
+          setLoading(false);
+        }
+        return;
+      }
       try {
         const ord = await getPartsOrder(reference, accessToken);
         if (cancelled) return;
         // Already paid — send them to the confirmation rather than charging twice.
         if (ord.status !== 'pending_payment') {
-          router.replace(
-            `/parts/checkout/confirmation?ref=${reference}&token=${encodeURIComponent(accessToken)}`,
-          );
+          router.replace(`/parts/checkout/confirmation?ref=${reference}`);
           return;
         }
         const intent = await createPartsPaymentIntent(reference, accessToken);
@@ -53,7 +59,7 @@ export default function PartsCheckoutPaymentScreen() {
       }
     })();
     return () => { cancelled = true; };
-  }, [reference, accessToken, router]);
+  }, [reference, router]);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -66,7 +72,7 @@ export default function PartsCheckoutPaymentScreen() {
         <div className="rounded-md border border-gray-300 bg-gray-50 p-4 text-sm text-black">{error}</div>
       )}
 
-      {!loading && order && clientSecret && accessToken && (
+      {!loading && order && clientSecret && (
         <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
           <div>
             <p className="mb-6 text-sm text-gray-600">
@@ -77,7 +83,7 @@ export default function PartsCheckoutPaymentScreen() {
               <StripePaymentForm
                 returnUrl={`${window.location.origin}/parts/checkout/confirmation?ref=${order.order_reference}`}
                 onSucceeded={() => router.push(
-                  `/parts/checkout/confirmation?ref=${order.order_reference}&token=${encodeURIComponent(accessToken)}`,
+                  `/parts/checkout/confirmation?ref=${order.order_reference}`,
                 )}
                 submitLabel="Pay now"
                 buttonClassName="w-full rounded-md bg-black px-6 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-gray-800 disabled:bg-gray-300"

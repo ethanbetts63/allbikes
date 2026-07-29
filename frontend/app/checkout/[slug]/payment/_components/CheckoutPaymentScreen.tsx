@@ -7,6 +7,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { Spinner } from '@/components/ui/spinner';
 import StripePaymentForm from '@/components/payments/StripePaymentForm';
 import { stripePromise } from '@/lib/stripe';
+import { getCustomerAccessToken } from '@/lib/customerAccess';
 import {
   createBikePaymentIntent,
   createProductPaymentIntent,
@@ -23,7 +24,6 @@ export default function CheckoutPaymentScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderReference = searchParams.get('ref');
-  const accessToken = searchParams.get('token');
   const orderKind = searchParams.get('kind');
 
   const [itemSummary, setItemSummary] = useState<CheckoutItemSummary | null>(null);
@@ -33,13 +33,21 @@ export default function CheckoutPaymentScreen() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!orderReference || !accessToken || (orderKind !== 'product' && orderKind !== 'bike')) {
+    if (!orderReference || (orderKind !== 'product' && orderKind !== 'bike')) {
       router.push(`/checkout/${slug}`);
       return;
     }
 
     let cancelled = false;
     const loadPayment = async () => {
+      const accessToken = getCustomerAccessToken(orderKind, orderReference);
+      if (!accessToken) {
+        if (!cancelled) {
+          setLoadError('The secure checkout session has expired. Please start again.');
+          setIsLoadingSummary(false);
+        }
+        return;
+      }
       try {
         const order: Order = orderKind === 'bike'
           ? await getBikeOrder(orderReference, accessToken)
@@ -60,7 +68,7 @@ export default function CheckoutPaymentScreen() {
 
     loadPayment();
     return () => { cancelled = true; };
-  }, [accessToken, orderKind, orderReference, router, slug]);
+  }, [orderKind, orderReference, router, slug]);
 
   if (isLoadingSummary) {
     return (
@@ -121,8 +129,8 @@ export default function CheckoutPaymentScreen() {
 
         <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
           <StripePaymentForm
-            returnUrl={`${window.location.origin}/checkout/processing?${new URLSearchParams({ ref: orderReference, slug, token: accessToken!, kind: orderKind! }).toString()}`}
-            onSucceeded={() => router.push(`/checkout/processing?${new URLSearchParams({ ref: orderReference, slug, token: accessToken!, kind: orderKind! }).toString()}`)}
+            returnUrl={`${window.location.origin}/checkout/processing?${new URLSearchParams({ ref: orderReference, slug, kind: orderKind! }).toString()}`}
+            onSucceeded={() => router.push(`/checkout/processing?${new URLSearchParams({ ref: orderReference, slug, kind: orderKind! }).toString()}`)}
           />
         </Elements>
       </div>

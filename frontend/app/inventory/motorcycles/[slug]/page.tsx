@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Bike } from '@/types/Bike';
-import type { Specification } from '@/app/inventory/motorcycles/[slug]/_lib/Specification';
+import type { ElementType } from 'react';
 import StructuredDataScript from '@/components/StructuredDataScript';
 import DesktopOnly from '@/app/inventory/motorcycles/[slug]/_components/DesktopOnly';
 import FeaturedBikes from '@/components/FeaturedBikes';
@@ -35,6 +35,13 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { preload } from 'react-dom';
 import { getBikeMetadata, buildBikeSchema } from '@/lib/seo';
 import { getServerBikeById, getServerBikes, getServerDepositSettings } from '@/lib/serverApi';
+
+interface Specification {
+  label: string;
+  value: string | number | null | undefined;
+  icon: ElementType;
+  formatter?: (val: unknown) => string;
+}
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }

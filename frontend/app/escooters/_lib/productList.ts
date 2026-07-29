@@ -3,7 +3,7 @@ import { getServerProducts } from '@/lib/serverApi';
 import { buildProductListQuery, type ListSearchParams } from '@/lib/listQuery';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 
-export interface InitialProductList {
+interface InitialProductList {
   products: Product[];
   totalPages: number;
   currentPage: number;

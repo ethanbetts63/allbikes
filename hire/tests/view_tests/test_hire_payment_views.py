@@ -100,13 +100,15 @@ class TestHireBookingRetrieveView:
 
     def test_wrong_token_returns_404(self, api_client):
         booking = HireBookingFactory()
-        response = api_client.get(self.url(booking), HTTP_X_BOOKING_TOKEN='wrong')
+        response = api_client.get(
+            self.url(booking), HTTP_X_CUSTOMER_ACCESS_TOKEN='wrong'
+        )
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_matching_token_returns_customer_safe_summary(self, api_client):
         booking = HireBookingFactory(status='confirmed')
         response = api_client.get(
-            self.url(booking), HTTP_X_BOOKING_TOKEN=booking.access_token
+            self.url(booking), HTTP_X_CUSTOMER_ACCESS_TOKEN=booking.access_token
         )
         assert response.status_code == status.HTTP_200_OK
         assert response.data['booking_reference'] == booking.booking_reference

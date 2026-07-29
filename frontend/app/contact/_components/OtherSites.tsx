@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import type { OtherSite } from '@/app/contact/_lib/OtherSite';
 
-export interface OtherSitesProps {
+interface OtherSitesProps {
   sites: OtherSite[];
 }
 

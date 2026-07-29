@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import type { NotificationProduct } from '@/types/AdminNotifications';
-import NotificationSection, { LIST_PANEL } from './NotificationSection';
+import NotificationSection from './NotificationSection';
+import { LIST_PANEL } from '../_lib/notificationStyles';
 
 /** Active products that are out of stock or under the low-stock threshold. */
 export default function ProductStock({ products }: { products: NotificationProduct[] }) {

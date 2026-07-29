@@ -10,7 +10,8 @@ created.
    extras. It returns the booking reference and a high-entropy access token.
 2. The frontend stores the token in tab-scoped `sessionStorage`; it is not put
    in page URLs.
-3. `GET /api/hire/bookings/:reference/` requires `X-Booking-Token`.
+3. `GET /api/hire/bookings/:reference/` requires
+   `X-Customer-Access-Token`.
 4. `POST /api/hire/bookings/:reference/payment-intent/` requires the token in
    the JSON body and charges the snapshotted hire total.
 5. The signed Stripe webhook changes `pending_payment` to `confirmed` and sends

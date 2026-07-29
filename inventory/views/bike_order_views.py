@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from allbikes.customer_access import get_customer_access_token
 from inventory.models import BikeOrder
 from inventory.serializers import (
     BikeOrderCreateSerializer,
@@ -30,7 +31,7 @@ class BikeOrderCreateView(PublicView):
 
 class BikeOrderDetailView(PublicView):
     def get(self, request, order_reference):
-        token = (request.query_params.get('token') or '').strip()
+        token = get_customer_access_token(request)
         if not token:
             return Response({'detail': 'Order access token is required.'}, status=403)
         try:

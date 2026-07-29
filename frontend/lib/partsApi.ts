@@ -35,12 +35,3 @@ export async function getPartsSection(modelSlug: string, sectionCode: string): P
     60,
   );
 }
-
-export const CC_CLASS_LABELS: Record<CcClass, string> = {
-  '50': '50cc',
-  '100_165': '100cc – 165cc',
-  '200_400': '200cc – 400cc',
-  atv: 'ATV',
-};
-
-export const CC_CLASS_ORDER: CcClass[] = ['50', '100_165', '200_400', 'atv'];

@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
+from allbikes.customer_access import get_customer_access_token
 from inventory.models import Motorcycle
 from payments.payment_intents import PaymentIntentError, create_or_reuse_payment_intent
 from ..models import HireBooking, HireBookingExtra, HireExtra, HireSettings
@@ -231,7 +232,7 @@ class HireBookingRetrieveView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, booking_reference):
-        access_token = (request.headers.get('X-Booking-Token') or '').strip()
+        access_token = get_customer_access_token(request)
         if not access_token:
             return Response({'detail': 'Booking access token is required.'}, status=403)
         try:

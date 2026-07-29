@@ -75,7 +75,9 @@ and checkout, payment confirmation, and the operator’s supplier-email workflow
 ```
 Create order
   └─ returns order reference + high-entropy access token
-       ├─ token authorises the payment/confirmation flow
+       ├─ token is stored in tab-scoped sessionStorage, never in page URLs
+       ├─ confirmation reads send it in X-Customer-Access-Token
+       ├─ payment creation sends it in the JSON request body
        └─ public confirmation payload contains no customer PII
 
 Stripe webhook

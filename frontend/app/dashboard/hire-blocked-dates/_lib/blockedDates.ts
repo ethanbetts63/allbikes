@@ -1,5 +1,12 @@
 import type { Bike } from '@/types/Bike';
 
+export interface NewBlockedDate {
+  date_from: string;
+  date_to: string;
+  reason?: string;
+  motorcycle: number | null;
+}
+
 /** "3 Apr 2026", or "3 Apr 2026 – 7 Apr 2026" when the block spans days. */
 export const formatDateRange = (from: string, to: string) => {
   const fmt = (d: string) =>

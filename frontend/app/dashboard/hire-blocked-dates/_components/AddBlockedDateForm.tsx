@@ -6,14 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { Bike } from '@/types/Bike';
 import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
-import { bikeLabel } from '../_lib/blockedDates';
-
-export type NewBlockedDate = {
-  date_from: string;
-  date_to: string;
-  reason?: string;
-  motorcycle: number | null;
-};
+import { bikeLabel, type NewBlockedDate } from '../_lib/blockedDates';
 
 /**
  * Adds one closure. Leaving the motorcycle blank blocks the whole shop, which

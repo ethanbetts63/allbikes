@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 
 import PaymentProcessing from '@/components/payments/PaymentProcessing';
 import { getHireBookingByReference } from '@/lib/api';
-import { getHireBookingToken } from '@/app/hire/book/_lib/hireBookingAccess';
+import { getCustomerAccessToken } from '@/lib/customerAccess';
 
 export default function HireProcessingScreen() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function HireProcessingScreen() {
       reference={searchParams.get('ref')}
       clientSecret={searchParams.get('payment_intent_client_secret')}
       checkComplete={async (ref) => {
-        const token = getHireBookingToken(ref);
+        const token = getCustomerAccessToken('hire', ref);
         if (!token) return false;
         return (await getHireBookingByReference(ref, token)).status === 'confirmed';
       }}

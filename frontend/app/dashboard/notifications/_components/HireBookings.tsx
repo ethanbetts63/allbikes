@@ -2,7 +2,8 @@ import { useRouter } from 'next/navigation';
 
 import StatusBadge from '@/components/ui/status-badge';
 import type { NotificationHireBooking } from '@/types/AdminNotifications';
-import NotificationSection, { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from './NotificationSection';
+import NotificationSection from './NotificationSection';
+import { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from '../_lib/notificationStyles';
 
 const HIRE_STATUS_BADGE: Record<string, string> = {
   confirmed: 'border-green-600 text-green-700',

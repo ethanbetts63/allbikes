@@ -16,7 +16,7 @@ import {
   buildMetadata,
 } from '@/lib/seo';
 import SearchLandingPage from '@/components/SearchLandingPage';
-import { vespaReviews } from '@/components/VespaServicePage';
+import { vespaReviews } from '@/lib/vespaReviews';
 
 const path = '/vespa-perth';
 const usedInventoryPath = '/inventory/scooters/used';
