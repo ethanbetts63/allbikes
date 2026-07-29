@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Hero from '@/components/Hero';
-import { FaqSection } from '@/components/FaqSection';
+import Hero from '@/components/marketing/Hero';
+import { FaqSection } from '@/components/marketing/FaqSection';
 import HeroImage from '@/assets/sym_22.webp';
 import type { Article } from '@/lib/articles';
 import type { FaqItem } from '@/types/FaqItem';

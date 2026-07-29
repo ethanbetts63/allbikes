@@ -1,0 +1,88 @@
+import json
+import re
+
+from parts.ingestion import storage
+from parts.ingestion.importer import import_book
+from parts.ingestion.xls_parser import parse_book, read_model_code
+from parts.models import PartsModel
+
+
+def _metadata(path):
+    sidecar = path.with_name(f'{path.name}.json')
+    if not sidecar.exists():
+        return {}
+    return json.loads(sidecar.read_text())
+
+
+def _fallback_cc_class(*values):
+    text = ' '.join(str(value or '') for value in values)
+    if re.search(r'\b(?:ATV|QUAD)', text, re.I):
+        return 'atv'
+    if re.search(r'(?<!\d)(?:200|250|300|350|400)(?!\d)', text):
+        return '200_400'
+    if re.search(r'(?<!\d)50(?!\d)', text):
+        return '50'
+    return '100_165'
+
+
+def _latest_archived_books(*, stderr):
+    latest = {}
+    for path in storage.archive_dir('books').glob('*.xls'):
+        try:
+            model_code = read_model_code(str(path))
+        except Exception as exc:
+            stderr.write(f'Could not identify archived book {path.name}: {exc}')
+            continue
+        if not model_code:
+            stderr.write(f'Could not identify archived book {path.name}: no model code.')
+            continue
+        candidate_key = (path.stat().st_mtime_ns, path.name)
+        current = latest.get(model_code)
+        if current is None or candidate_key > current[0]:
+            latest[model_code] = (candidate_key, path)
+    return [latest[code][1] for code in sorted(latest)]
+
+
+def _import_one(path, *, stdout, remove_after=False):
+    meta = _metadata(path)
+    book_hash = storage.sha256_file(path)
+    if PartsModel.objects.filter(book_hash=book_hash).exists():
+        stdout.write(f'Skipped {path.name}: already imported (hash match).')
+    else:
+        parsed = parse_book(str(path))
+        display_name = meta.get('name') or parsed.get('model_name_hint') or parsed['model_code']
+        model = import_book(
+            parsed,
+            name=display_name,
+            cc_class=meta.get('cc_class') or _fallback_cc_class(
+                display_name, parsed['model_code'], path.name
+            ),
+            source_url=meta.get('url', ''),
+            source_filename=path.name,
+            book_hash=book_hash,
+        )
+        stdout.write(f'Imported {model} — {model.sections.count()} sections.')
+
+    if remove_after:
+        path.unlink()
+        sidecar = path.with_name(f'{path.name}.json')
+        if sidecar.exists():
+            sidecar.unlink()
+
+
+def run(*, stdout, stderr, archive=False):
+    if archive:
+        files = _latest_archived_books(stderr=stderr)
+        source_label = 'parts archive'
+    else:
+        files = sorted(storage.inbox_dir('books').glob('*.xls'))
+        source_label = 'parts inbox'
+
+    if not files:
+        stdout.write(f'No model books found in the {source_label}.')
+        return 0
+
+    for path in files:
+        _import_one(path, stdout=stdout, remove_after=not archive)
+    stdout.write(f'Updated parts from {len(files)} model books in the {source_label}.')
+    return len(files)

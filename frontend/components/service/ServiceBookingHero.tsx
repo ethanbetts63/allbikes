@@ -1,5 +1,5 @@
 import { CheckCircle2 } from 'lucide-react';
-import BookingStarterCard from '@/components/BookingStarterCard';
+import BookingStarterCard from '@/components/service/BookingStarterCard';
 
 const defaultCheckItems = [
     'Full mechanical servicing & repairs',

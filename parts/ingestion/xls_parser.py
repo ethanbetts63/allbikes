@@ -46,6 +46,15 @@ def parse_model_code(book):
     return ""
 
 
+def read_model_code(path):
+    """Read only a book's stable model code without extracting its diagrams."""
+    book = xlrd.open_workbook(path, formatting_info=False, on_demand=True)
+    try:
+        return parse_model_code(book)
+    finally:
+        book.release_resources()
+
+
 def parse_model_name_hint(book):
     """A model display-name hint from a section header, e.g. 'FIDDLE II'.
 

@@ -1,6 +1,6 @@
 import HireAvailabilitySection from '@/app/hire/_components/HireAvailabilitySection';
 import HireConfidenceSection from '@/app/hire/_components/HireConfidenceSection';
-import FeaturedBikes from '@/components/FeaturedBikes';
+import FeaturedBikes from '@/components/catalog/FeaturedBikes';
 import type { Bike } from '@/types/Bike';
 import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { PublicHireSettings } from '@/types/PublicHireSettings';

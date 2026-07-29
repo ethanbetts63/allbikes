@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 
-import MotorcycleMovers from '@/components/MotorcycleMovers';
+import MotorcycleMovers from '@/components/service/MotorcycleMovers';
 import type { ServiceBookingConfirmationState } from '@/app/service-booking/confirmation/_lib/ServiceBookingConfirmationState';
 import SubmittedRequestDetails from './SubmittedRequestDetails';
 

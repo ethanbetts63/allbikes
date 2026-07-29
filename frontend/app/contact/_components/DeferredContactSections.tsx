@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import type { FaqItem } from '@/types/FaqItem';
 import type { OtherSite } from '@/app/contact/_lib/OtherSite';
 
-const FaqSection = dynamic(() => import('@/components/FaqSection').then((module) => module.FaqSection), {
+const FaqSection = dynamic(() => import('@/components/marketing/FaqSection').then((module) => module.FaqSection), {
   ssr: false,
 });
 const OtherSites = dynamic(() => import('@/app/contact/_components/OtherSites'), {

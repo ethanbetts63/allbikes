@@ -1,4 +1,4 @@
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ChevronDown } from 'lucide-react';
 import type { FaqItem } from '@/types/FaqItem';
 

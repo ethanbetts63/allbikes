@@ -4,13 +4,13 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import type { FaqItem } from '@/types/FaqItem';
 
-const PayLaterSection = dynamic(() => import('@/components/PayLaterSection'), {
+const PayLaterSection = dynamic(() => import('@/components/marketing/PayLaterSection'), {
   ssr: false,
 });
 const HireAreasSection = dynamic(() => import('@/app/hire/_components/HireAreasSection'), {
   ssr: false,
 });
-const FaqSection = dynamic(() => import('@/components/FaqSection').then((module) => module.FaqSection), {
+const FaqSection = dynamic(() => import('@/components/marketing/FaqSection').then((module) => module.FaqSection), {
   ssr: false,
 });
 

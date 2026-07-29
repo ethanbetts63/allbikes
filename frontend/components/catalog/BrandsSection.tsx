@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 // Import images
-import symImage from '../assets/sym_22.webp';
-import segwayImage from '../assets/segway_1.webp';
+import symImage from '../../assets/sym_22.webp';
+import segwayImage from '../../assets/segway_1.webp';
 
 import type { BrandProps } from '@/types/BrandProps';
 

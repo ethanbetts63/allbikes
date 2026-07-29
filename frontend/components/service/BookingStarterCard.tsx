@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import BookingDetailsForm from '@/components/ServiceBookingDetailsForm';
+import BookingDetailsForm from '@/components/service/ServiceBookingDetailsForm';
 import { Spinner } from '@/components/ui/spinner';
 import { useBookingProgress } from '@/lib/serviceBookingProgress';
 

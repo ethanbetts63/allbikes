@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import StructuredDataScript from '@/components/StructuredDataScript';
-import MotorcycleMovers from '@/components/MotorcycleMovers';
-import { FaqSection } from '@/components/FaqSection';
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
+import MotorcycleMovers from '@/components/service/MotorcycleMovers';
+import { FaqSection } from '@/components/marketing/FaqSection';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Activity, CircleDot, ArrowRight, Award } from 'lucide-react';
-import ServiceBookingHero from '@/components/ServiceBookingHero';
-import ServiceAreasSection from '@/components/ServiceAreasSection';
-import ReviewCarousel from '@/components/ReviewCarousel';
+import ServiceBookingHero from '@/components/service/ServiceBookingHero';
+import ServiceAreasSection from '@/components/service/ServiceAreasSection';
+import ReviewCarousel from '@/components/marketing/ReviewCarousel';
 import { vespaReviews } from '@/lib/vespaReviews';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 

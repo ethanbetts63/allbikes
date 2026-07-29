@@ -1,10 +1,10 @@
-import StructuredDataScript from '@/components/StructuredDataScript';
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
 import EScooterHero from '@/app/escooters/_components/EScooterHero';
 import EScooterUSPs from '@/app/escooters/_components/EScooterUSPs';
 import EScooterWhyBuySection from '@/app/escooters/_components/EScooterWhyBuySection';
 import EScooterMopedsSection from '@/app/escooters/_components/EScooterMopedsSection';
-import PayLaterSection from '@/components/PayLaterSection';
-import { FaqSection } from '@/components/FaqSection';
+import PayLaterSection from '@/components/marketing/PayLaterSection';
+import { FaqSection } from '@/components/marketing/FaqSection';
 import ProductCard from '@/app/escooters/_components/ProductCard';
 import ProductFilterForm from '@/app/escooters/_components/ProductFilterForm';
 import {

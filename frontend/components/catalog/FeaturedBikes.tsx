@@ -1,5 +1,5 @@
-import SmallBikeCard from "@/components/SmallBikeCard";
-import FeaturedBikesCarouselControls from "@/components/FeaturedBikesCarouselControls";
+import SmallBikeCard from "@/components/catalog/SmallBikeCard";
+import FeaturedBikesCarouselControls from "@/components/catalog/FeaturedBikesCarouselControls";
 import type { FeaturedBikesProps } from "@/types/FeaturedBikesProps";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";

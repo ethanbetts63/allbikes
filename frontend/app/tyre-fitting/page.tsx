@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import StructuredDataScript from '@/components/StructuredDataScript';
-import MotorcycleMovers from "@/components/MotorcycleMovers";
-import { FaqSection } from "@/components/FaqSection";
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
+import MotorcycleMovers from "@/components/service/MotorcycleMovers";
+import { FaqSection } from "@/components/marketing/FaqSection";
 import { Button } from '@/components/ui/button';
 import { CircleDot, Wrench, CheckCircle2, ArrowRight } from 'lucide-react';
-import ServiceBookingHero from '@/components/ServiceBookingHero';
-import ServiceAreasSection from '@/components/ServiceAreasSection';
-import ReviewCarousel from '@/components/ReviewCarousel';
+import ServiceBookingHero from '@/components/service/ServiceBookingHero';
+import ServiceAreasSection from '@/components/service/ServiceAreasSection';
+import ReviewCarousel from '@/components/marketing/ReviewCarousel';
 import type { Review } from '@/types/Review';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '@/lib/seo';
 import { buildMetadata } from '@/lib/seo';

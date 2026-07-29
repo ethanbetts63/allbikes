@@ -14,7 +14,7 @@ import {
   buildLocalBusinessSchema,
   buildMetadata,
 } from '@/lib/seo';
-import SearchLandingPage from '@/components/SearchLandingPage';
+import SearchLandingPage from '@/components/marketing/SearchLandingPage';
 
 const path = '/sym';
 const newInventoryPath = '/inventory/scooters/new?make=SYM';

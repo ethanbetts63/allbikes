@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Hero from '@/components/Hero';
+import Hero from '@/components/marketing/Hero';
 import HeroImage from '@/assets/sym_22.webp';
 import type { ArticleMeta } from '@/lib/articles';
 import { getAllArticleMeta } from '@/lib/articles';

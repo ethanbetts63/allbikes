@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import type { Bike } from '@/types/Bike';
 import type { ElementType } from 'react';
-import StructuredDataScript from '@/components/StructuredDataScript';
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
 import DesktopOnly from '@/app/inventory/motorcycles/[slug]/_components/DesktopOnly';
-import FeaturedBikes from '@/components/FeaturedBikes';
+import FeaturedBikes from '@/components/catalog/FeaturedBikes';
 import {
     Hash,
     Gauge,
@@ -20,12 +20,12 @@ import {
 } from 'lucide-react';
 import clickIcon from '@/assets/click.svg';
 import { siteSettings } from '@/lib/siteSettings';
-import PayLaterSection from '@/components/PayLaterSection';
-import MediaGallery from '@/components/MediaGallery';
-import PriceDisplay from '@/components/PriceDisplay';
-import { ErrorScreen } from '@/components/DetailPageStates';
+import PayLaterSection from '@/components/marketing/PayLaterSection';
+import MediaGallery from '@/components/catalog/MediaGallery';
+import PriceDisplay from '@/components/catalog/PriceDisplay';
+import { ErrorScreen } from '@/components/catalog/DetailPageStates';
 import { getYouTubeVideoId } from '@/lib/youtube';
-import PopularBadge from '@/components/PopularBadge';
+import PopularBadge from '@/components/catalog/PopularBadge';
 import { assetUrl } from '@/lib/assetUrl';
 import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/lib/vehicleImages';
 import { buildBreadcrumbSchema } from '@/lib/seo';

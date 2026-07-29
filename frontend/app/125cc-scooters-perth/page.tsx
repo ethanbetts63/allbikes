@@ -13,7 +13,7 @@ import {
   buildLocalBusinessSchema,
   buildMetadata,
 } from '@/lib/seo';
-import SearchLandingPage from '@/components/SearchLandingPage';
+import SearchLandingPage from '@/components/marketing/SearchLandingPage';
 
 const path = '/125cc-scooters-perth';
 const newInventoryPath = '/inventory/scooters/new?max_engine_size=125';

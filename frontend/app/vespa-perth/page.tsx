@@ -15,7 +15,7 @@ import {
   buildLocalBusinessSchema,
   buildMetadata,
 } from '@/lib/seo';
-import SearchLandingPage from '@/components/SearchLandingPage';
+import SearchLandingPage from '@/components/marketing/SearchLandingPage';
 import { vespaReviews } from '@/lib/vespaReviews';
 
 const path = '/vespa-perth';

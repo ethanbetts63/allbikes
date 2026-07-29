@@ -7,11 +7,11 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from '@/components/ui/pagination';
-import Hero from '@/components/Hero';
+import Hero from '@/components/marketing/Hero';
 import SymImage from '@/assets/sym_22.webp';
 import BikeFilterForm from '@/app/inventory/_components/BikeFilterForm';
-import { FaqSection } from '@/components/FaqSection';
-import StructuredDataScript from '@/components/StructuredDataScript';
+import { FaqSection } from '@/components/marketing/FaqSection';
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
 import { buildFaqSchema } from '@/lib/seo';
 import { buildListHref } from '@/lib/listQuery';
 
