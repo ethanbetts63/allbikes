@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { adminGetSentMessages } from '@/api';
 import type { SentMessage } from '@/types/SentMessage';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import MessagesPagination from './_components/MessagesPagination';
+import PaginationBar from '@/components/ui/pagination-bar';
 import SentMessagesTable from './_components/SentMessagesTable';
 
 export default function AdminSentMessagesPage() {
@@ -55,9 +55,9 @@ export default function AdminSentMessagesPage() {
         ) : (
           <>
             <SentMessagesTable messages={messages} />
-            <MessagesPagination
-              totalCount={totalCount}
-              hasPrev={hasPrev}
+            <PaginationBar
+              summary={`${totalCount} message${totalCount !== 1 ? 's' : ''} total`}
+              hasPrevious={hasPrev}
               hasNext={hasNext}
               onPrevious={() => goToPage(page - 1)}
               onNext={() => goToPage(page + 1)}

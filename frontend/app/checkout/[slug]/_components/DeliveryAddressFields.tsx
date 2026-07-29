@@ -1,13 +1,14 @@
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import type { FieldErrors, UseFormGetValues, UseFormRegister } from 'react-hook-form';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { CheckoutFormData } from '@/types/CheckoutFormData';
-import { AU_STATES } from '../_lib/checkout';
+import { AUSTRALIAN_STATES, postcodeMatchesState } from '@/lib/australianAddresses';
 
 /** Shipping address. Only product orders are delivered, so deposits skip this. */
-export default function DeliveryAddressFields({ register, errors }: {
+export default function DeliveryAddressFields({ register, getValues, errors }: {
   register: UseFormRegister<CheckoutFormData>;
+  getValues: UseFormGetValues<CheckoutFormData>;
   errors: FieldErrors<CheckoutFormData>;
 }) {
   return (
@@ -41,7 +42,9 @@ export default function DeliveryAddressFields({ register, errors }: {
             className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
             <option value="">Select</option>
-            {AU_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+            {AUSTRALIAN_STATES.map(state => (
+              <option key={state.value} value={state.value}>{state.label} ({state.value})</option>
+            ))}
           </select>
           {errors.state && <p className="text-destructive text-sm">{errors.state.message}</p>}
         </div>
@@ -52,8 +55,11 @@ export default function DeliveryAddressFields({ register, errors }: {
             {...register('postcode', {
               required: 'Postcode is required.',
               pattern: { value: /^\d{4}$/, message: 'Enter a 4-digit postcode.' },
+              validate: value => postcodeMatchesState(value, getValues('state'))
+                || `Postcode ${value} does not match ${getValues('state')}.`,
             })}
             placeholder="6059"
+            inputMode="numeric"
             maxLength={4}
           />
           {errors.postcode && <p className="text-destructive text-sm">{errors.postcode.message}</p>}

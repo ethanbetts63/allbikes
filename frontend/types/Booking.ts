@@ -16,6 +16,7 @@ export interface Booking {
   customer_email: string;
   street_address: string;
   suburb: string;
+  state: string;
   postcode: string;
   registration: string;
   make: string;
@@ -42,6 +43,7 @@ export interface BookingInput {
   customer_email?: string;
   street_address?: string;
   suburb?: string;
+  state?: string;
   postcode?: string;
   registration?: string;
   make?: string;

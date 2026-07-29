@@ -15,7 +15,7 @@ def api_client():
 BASE_PAYLOAD = {
     "first_name": "Test", "last_name": "User", "phone": "123456", "email": "test@example.com",
     "registration_number": "TEST1", "make": "Honda", "model": "CBR",
-    "street_line": "12 Test St", "suburb": "Dianella", "postcode": "6059",
+    "street_line": "12 Test St", "suburb": "Dianella", "state": "WA", "postcode": "6059",
     "drop_off_time": "25/12/2026 10:00", "job_type_names": ["Annual Service"],
     "terms_accepted": True,
 }
@@ -43,6 +43,7 @@ class TestBookingDualWrite:
         assert booking.registration == "TEST1"
         assert booking.street_address == "12 Test St"
         assert booking.suburb == "Dianella"
+        assert booking.state == "WA"
         assert booking.postcode == "6059"
         assert booking.booking_log is not None
 

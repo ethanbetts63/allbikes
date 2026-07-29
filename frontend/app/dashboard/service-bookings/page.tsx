@@ -6,7 +6,7 @@ import { adminGetBookingLogs, adminDeleteBookingLog } from '@/api';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import BookingLogFilters from './_components/BookingLogFilters';
-import BookingLogsPagination from './_components/BookingLogsPagination';
+import PaginationBar from '@/components/ui/pagination-bar';
 import BookingLogsTable from './_components/BookingLogsTable';
 import type { BookingLogFilter } from './_lib/bookingLogStatus';
 
@@ -78,9 +78,9 @@ export default function AdminServiceBookingsDashboardPage() {
         ) : (
           <>
             <BookingLogsTable logs={data} onDelete={handleDelete} />
-            <BookingLogsPagination
-              totalCount={totalCount}
-              hasPrev={hasPrev}
+            <PaginationBar
+              summary={`${totalCount} booking${totalCount !== 1 ? 's' : ''} total`}
+              hasPrevious={hasPrev}
               hasNext={hasNext}
               onPrevious={() => goToPage(page - 1)}
               onNext={() => goToPage(page + 1)}

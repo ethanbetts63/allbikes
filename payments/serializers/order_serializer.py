@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from allbikes.australian_addresses import australian_address_errors
 from ..models import Order
 
 
@@ -56,9 +58,17 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'selected_colour': 'A colour can only be selected for a motorcycle reservation.'
                 })
-            for field in ('address_line1', 'suburb', 'state', 'postcode'):
+            for field in ('address_line1', 'suburb'):
                 if not data.get(field):
                     raise serializers.ValidationError({field: 'This field is required.'})
+
+        address_errors = australian_address_errors(
+            state=data.get('state'),
+            postcode=data.get('postcode'),
+            required=not has_motorcycle,
+        )
+        if address_errors:
+            raise serializers.ValidationError(address_errors)
 
         return data
 

@@ -36,6 +36,7 @@ class Booking(models.Model):
     # Customer address (optional)
     street_address = models.CharField(max_length=255, blank=True)
     suburb = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=3, blank=True)
     postcode = models.CharField(max_length=10, blank=True)
 
     # Vehicle (freeform)

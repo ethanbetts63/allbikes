@@ -7,6 +7,7 @@ import { usePartsCart } from '@/context/PartsCartContext';
 import CheckoutSteps from '@/components/parts/CheckoutSteps';
 import OrderSummary from '@/components/parts/OrderSummary';
 import { createPartsOrder, type CustomerDetails } from '@/lib/partsCheckoutApi';
+import { australianAddressError } from '@/lib/australianAddresses';
 import { stockState } from '@/lib/partsStock';
 import PartsCustomerForm from './PartsCustomerForm';
 import {
@@ -39,6 +40,11 @@ export default function PartsCheckoutDetailsScreen() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    const addressError = australianAddressError(form.state, form.postcode, true);
+    if (addressError) {
+      setError(addressError);
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {

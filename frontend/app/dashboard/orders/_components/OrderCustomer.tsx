@@ -1,5 +1,5 @@
 import type { Order } from '@/types/Order';
-import DetailRow from './DetailRow';
+import DetailRow from '@/components/ui/detail-row';
 
 /** Who placed the order. */
 export default function OrderCustomer({ order }: { order: Order }) {

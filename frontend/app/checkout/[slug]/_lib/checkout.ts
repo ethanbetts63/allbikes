@@ -3,8 +3,6 @@ import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
 import type { Product } from '@/types/Product';
 import { getPrimaryVehicleImage } from '@/utils/vehicleImages';
 
-export const AU_STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'];
-
 export type CheckoutType = 'product' | 'deposit';
 
 const EMPTY_SUMMARY: CheckoutItemSummary = {

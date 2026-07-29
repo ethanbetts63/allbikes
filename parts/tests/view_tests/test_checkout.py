@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 
 from parts.checkout import CheckoutError, create_parts_order
 from parts.models import Part, PartsOrder, PartsSettings, SectionPart
+from parts.serializers.order_serializers import PartsCheckoutSerializer
 from parts.tests.factories import PartFactory, PartSectionFactory, SectionPartFactory
 from payments.models import Payment
 
@@ -49,6 +50,52 @@ def _item(part_number, quantity=1):
         'fitment_key': fitment.fitment_key if fitment else 'missing-fitment',
         'quantity': quantity,
     }
+
+
+def _checkout_payload(**customer_overrides):
+    return {
+        **_customer(**customer_overrides),
+        'items': [{'part_number': 'A-1', 'fitment_key': 'model:section:1:A-1:original'}],
+    }
+
+
+class TestAustralianAddressValidation:
+    @pytest.mark.parametrize('state,postcode', [
+        ('ACT', '2600'),
+        ('NSW', '2000'),
+        ('NT', '0800'),
+        ('QLD', '4000'),
+        ('SA', '5000'),
+        ('TAS', '7000'),
+        ('VIC', '3000'),
+        ('WA', '6000'),
+    ])
+    def test_accepts_compatible_state_and_postcode(self, state, postcode):
+        serializer = PartsCheckoutSerializer(data=_checkout_payload(state=state, postcode=postcode))
+        assert serializer.is_valid(), serializer.errors
+
+    @pytest.mark.parametrize('postcode', ['605', '06059', '60A9', ''])
+    def test_rejects_non_four_digit_postcode(self, postcode):
+        serializer = PartsCheckoutSerializer(data=_checkout_payload(postcode=postcode))
+        assert not serializer.is_valid()
+        assert 'postcode' in serializer.errors
+
+    def test_rejects_missing_state(self):
+        payload = _checkout_payload()
+        del payload['state']
+        serializer = PartsCheckoutSerializer(data=payload)
+        assert not serializer.is_valid()
+        assert 'state' in serializer.errors
+
+    def test_rejects_unknown_state(self):
+        serializer = PartsCheckoutSerializer(data=_checkout_payload(state='XX'))
+        assert not serializer.is_valid()
+        assert 'state' in serializer.errors
+
+    def test_rejects_postcode_from_another_state(self):
+        serializer = PartsCheckoutSerializer(data=_checkout_payload(state='WA', postcode='2000'))
+        assert not serializer.is_valid()
+        assert serializer.errors['postcode'][0] == 'Postcode 2000 does not match WA.'
 
 
 class TestCreatePartsOrderService:

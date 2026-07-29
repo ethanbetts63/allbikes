@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 
-import { Badge } from '@/components/ui/badge';
+import StatusBadge from '@/components/ui/status-badge';
 import type { NotificationHireBooking } from '@/types/AdminNotifications';
 import NotificationSection, { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from './NotificationSection';
 
@@ -35,9 +35,7 @@ export default function HireBookings({ bookings }: { bookings: NotificationHireB
                 <td className={TD_MUTED}>{booking.customer_name}</td>
                 <td className={TD_MUTED}>{booking.hire_start} → {booking.hire_end}</td>
                 <td className="px-4 py-3">
-                  <Badge variant="outline" className={`text-xs ${HIRE_STATUS_BADGE[booking.status] ?? ''}`}>
-                    {booking.status}
-                  </Badge>
+                  <StatusBadge status={booking.status} map={HIRE_STATUS_BADGE} label={booking.status} className="text-xs" />
                 </td>
               </tr>
             ))}

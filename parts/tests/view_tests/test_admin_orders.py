@@ -129,6 +129,36 @@ class TestAdminDetailAndUpdate:
         assert resp.json()['status'] == 'dispatched'
         assert resp.json()['admin_notes'] == 'called SP'
 
+    @pytest.mark.parametrize('restricted_status', ['paid', 'refunded', 'partially_refunded'])
+    def test_payment_statuses_require_a_payment_record(self, admin_client, restricted_status):
+        order = _order()
+        response = admin_client.patch(
+            f'/api/parts/admin/orders/{order.order_reference}/',
+            {'status': restricted_status},
+            format='json',
+        )
+        assert response.status_code == 400
+        assert 'payment record' in response.json()['status'][0].lower()
+        order.refresh_from_db()
+        assert order.status == 'pending_payment'
+
+    @pytest.mark.parametrize('restricted_status', ['paid', 'refunded', 'partially_refunded'])
+    def test_payment_record_allows_restricted_status(self, admin_client, restricted_status):
+        order = _order()
+        Payment.objects.create(
+            parts_order=order,
+            stripe_payment_intent_id=f'pi_{restricted_status}',
+            amount=order.total,
+            status='pending',
+        )
+        response = admin_client.patch(
+            f'/api/parts/admin/orders/{order.order_reference}/',
+            {'status': restricted_status},
+            format='json',
+        )
+        assert response.status_code == 200
+        assert response.json()['status'] == restricted_status
+
 
 class TestAdminPartsSettings:
     def test_requires_admin(self):
@@ -381,9 +411,7 @@ class TestAdminItemActions:
         assert r2.json()['has_backorder'] is False
 
     def test_mark_refunded_rolls_up(self, admin_client):
-        order = _order()
-        order.status = 'paid'
-        order.save()
+        order = _mark_paid(_order())
         item_id = order.items.first().id
         r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'mark_refunded'}, format='json')
         # single-line order fully refunded -> order refunded
@@ -393,12 +421,10 @@ class TestAdminItemActions:
         # two lines, refund one -> partially_refunded
         p2 = PartFactory(part_number='B-2', wholesale_price_incl_gst=Decimal('50'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='2', part=p2)
-        order = _order()
+        order = _mark_paid(_order())
         from parts.models import PartsOrderItem, Part
         # add a second line manually
         order.items.create(part_number='B-2', description='x', quantity=1, unit_price=Decimal('60'), line_total=Decimal('60'))
-        order.status = 'paid'
-        order.save()
         first = order.items.first()
         r = admin_client.patch(f'/api/parts/admin/items/{first.id}/', {'action': 'mark_refunded'}, format='json')
         assert r.json()['status'] == 'partially_refunded'
@@ -416,12 +442,27 @@ class TestAdminItemActions:
         assert r.status_code == 400
 
     def test_mark_to_order_undoes_a_refund(self, admin_client):
-        order = _order()
+        order = _mark_paid(_order())
         item_id = order.items.first().id
         admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'mark_refunded'}, format='json')
         r = admin_client.patch(f'/api/parts/admin/items/{item_id}/', {'action': 'mark_to_order'}, format='json')
         item = next(i for i in r.json()['items'] if i['id'] == item_id)
         assert item['status'] == 'to_order'
+
+    def test_mark_refunded_requires_a_payment_record(self, admin_client):
+        order = _order()
+        item = order.items.first()
+        response = admin_client.patch(
+            f'/api/parts/admin/items/{item.id}/',
+            {'action': 'mark_refunded'},
+            format='json',
+        )
+        assert response.status_code == 400
+        assert 'payment record' in response.json()['detail'].lower()
+        item.refresh_from_db()
+        order.refresh_from_db()
+        assert item.status == 'to_order'
+        assert order.status == 'pending_payment'
 
     def test_place_backorder_blocked_once_the_window_has_closed(self, admin_client):
         from datetime import timedelta

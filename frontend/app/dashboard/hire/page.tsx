@@ -6,8 +6,8 @@ import { adminGetHireBookings, adminDeleteHireBooking } from '@/api';
 import type { HireBooking } from '@/types/HireBooking';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 import { Spinner } from '@/components/ui/spinner';
+import PaginationBar from '@/components/ui/pagination-bar';
 import HireBookingsTable from './_components/HireBookingsTable';
-import HirePagination from './_components/HirePagination';
 import { FILTER_STATUS_OPTIONS } from './_lib/hireStatus';
 
 export default function AdminHireDashboardPage() {
@@ -70,13 +70,15 @@ export default function AdminHireDashboardPage() {
       ) : (
         <>
           <HireBookingsTable bookings={data?.results ?? []} onDelete={handleDelete} />
-          <HirePagination
-            count={data?.count ?? 0}
-            hasPrevious={Boolean(data?.previous)}
-            hasNext={Boolean(data?.next)}
-            onPrevious={() => goToPage(page - 1)}
-            onNext={() => goToPage(page + 1)}
-          />
+          {(data?.count ?? 0) > 50 && (
+            <PaginationBar
+              summary={`${data?.count ?? 0} total`}
+              hasPrevious={Boolean(data?.previous)}
+              hasNext={Boolean(data?.next)}
+              onPrevious={() => goToPage(page - 1)}
+              onNext={() => goToPage(page + 1)}
+            />
+          )}
         </>
       )}
     </div>

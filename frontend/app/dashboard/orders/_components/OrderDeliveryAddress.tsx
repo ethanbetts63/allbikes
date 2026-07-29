@@ -1,5 +1,5 @@
 import type { Order } from '@/types/Order';
-import DetailRow from './DetailRow';
+import DetailRow from '@/components/ui/detail-row';
 
 /** Where a product order ships. Deposits have nothing to deliver. */
 export default function OrderDeliveryAddress({ order }: { order: Order }) {

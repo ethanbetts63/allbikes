@@ -50,6 +50,7 @@ class TestBookingAdminViewSet:
             'model': 'CB125',
             'street_address': '1 Test St',
             'suburb': 'Dianella',
+            'state': 'WA',
             'postcode': '6059',
         }
         response = admin_client.post('/api/service/admin/bookings/', payload, format='json')
@@ -59,8 +60,28 @@ class TestBookingAdminViewSet:
         assert booking.make == 'Honda'
         assert booking.model == 'CB125'
         assert booking.suburb == 'Dianella'
+        assert booking.state == 'WA'
         # Model default status applies when not supplied.
         assert booking.status == Booking.Status.ACCEPTED
+
+    def test_manual_create_rejects_postcode_from_another_state(self, admin_client):
+        response = admin_client.post('/api/service/admin/bookings/', {
+            'drop_off_date': '2026-01-10',
+            'customer_name': 'Walk In',
+            'state': 'WA',
+            'postcode': '2000',
+        }, format='json')
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert 'postcode' in response.data
+
+    def test_manual_create_allows_address_to_be_omitted(self, admin_client):
+        response = admin_client.post('/api/service/admin/bookings/', {
+            'drop_off_date': '2026-01-10',
+            'customer_name': 'Walk In',
+        }, format='json')
+
+        assert response.status_code == status.HTTP_201_CREATED
 
     def test_update_status(self, admin_client):
         booking = BookingFactory(status=Booking.Status.ACCEPTED)
@@ -72,6 +93,17 @@ class TestBookingAdminViewSet:
         assert response.status_code == status.HTTP_200_OK
         booking.refresh_from_db()
         assert booking.status == Booking.Status.FINISHED
+
+    def test_unrelated_update_allows_legacy_postcode_without_state(self, admin_client):
+        booking = BookingFactory(state='', postcode='6059', status=Booking.Status.ACCEPTED)
+
+        response = admin_client.patch(
+            f'/api/service/admin/bookings/{booking.id}/',
+            {'status': 'finished'},
+            format='json',
+        )
+
+        assert response.status_code == status.HTTP_200_OK
 
     def test_delete(self, admin_client):
         booking = BookingFactory()

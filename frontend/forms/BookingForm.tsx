@@ -5,6 +5,7 @@ import { BOOKING_STATUSES } from '@/lib/bookingStatus';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { AUSTRALIAN_STATES } from '@/lib/australianAddresses';
 
 interface BookingFormProps {
   value: BookingInput;
@@ -134,7 +135,7 @@ const BookingForm = ({ value, onChange, showStatus = true }: BookingFormProps) =
       </div>
 
       {/* Address (optional) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="space-y-2 sm:col-span-1">
           <Label htmlFor="street_address">Street address</Label>
           <Input
@@ -154,12 +155,29 @@ const BookingForm = ({ value, onChange, showStatus = true }: BookingFormProps) =
           />
         </div>
         <div className="space-y-2">
+          <Label htmlFor="state">State</Label>
+          <select
+            id="state"
+            value={value.state ?? ''}
+            onChange={e => set('state', e.target.value)}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            <option value="">Optional</option>
+            {AUSTRALIAN_STATES.map(state => (
+              <option key={state.value} value={state.value}>{state.value}</option>
+            ))}
+          </select>
+        </div>
+        <div className="space-y-2">
           <Label htmlFor="postcode">Postcode</Label>
           <Input
             id="postcode"
             placeholder="Optional"
             value={value.postcode ?? ''}
             onChange={e => set('postcode', e.target.value)}
+            inputMode="numeric"
+            pattern="[0-9]{4}"
+            maxLength={4}
           />
         </div>
       </div>

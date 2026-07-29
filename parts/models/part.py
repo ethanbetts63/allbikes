@@ -5,8 +5,9 @@ class Part(models.Model):
     """One unique part number — the pricing/stock join target from the PA feed.
 
     Colour variants are separate Part rows sharing a ``base_part_number`` and
-    differing by ``colour_suffix``. Wholesale price comes from the PA feed; the
-    customer price (wholesale x markup) is computed at read time, never stored.
+    differing by ``colour_suffix``. The PA feed field historically called
+    ``wholesale_price_incl_gst`` contains RRP+GST; customer price is that value
+    plus the configured markup.
     """
 
     part_number = models.CharField(
@@ -25,7 +26,7 @@ class Part(models.Model):
 
     wholesale_price_incl_gst = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True,
-        help_text="From the PA 'RRP+GST' column; null = unknown.",
+        help_text="RRP including GST from the PA 'RRP+GST' column; null = unknown.",
     )
     available_qty = models.IntegerField(null=True, blank=True, help_text="From PA 'AVAILABLE'; null = not in the PA feed.")
     in_pa_feed = models.BooleanField(default=False, help_text="True if present in the latest PA CSV.")

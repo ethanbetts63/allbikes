@@ -50,6 +50,7 @@ def _create_local_booking(validated_data, booking_log):
             customer_email=validated_data.get('email', ''),
             street_address=validated_data.get('street_line', ''),
             suburb=validated_data.get('suburb', ''),
+            state=validated_data.get('state', ''),
             postcode=validated_data.get('postcode', ''),
             registration=validated_data.get('registration_number', ''),
             make=validated_data.get('make', ''),

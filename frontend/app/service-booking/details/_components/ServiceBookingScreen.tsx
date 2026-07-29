@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { createBooking } from '@/services/bookingService';
+import { australianAddressError } from '@/lib/australianAddresses';
 import BikeDetailsForm from '@/forms/ServiceBikeDetailsForm';
 import PersonalDetailsForm from '@/forms/ServicePersonalDetailsForm';
 import {
@@ -34,6 +35,11 @@ export default function ServiceBookingScreen() {
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
+    const addressError = australianAddressError(formData.state, formData.postcode);
+    if (addressError) {
+      setError(addressError);
+      return;
+    }
     setIsSubmitting(true);
     setError(null);
     try {

@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { statusBadgeClass } from '../_lib/bookingLogStatus';
+import StatusBadge from '@/components/ui/status-badge';
+import { STATUS_BADGE } from '../_lib/bookingLogStatus';
 
 /** Submitted booking requests and whether they reached MechanicDesk. */
 export default function BookingLogsTable({ logs, onDelete }: {
@@ -44,9 +45,7 @@ export default function BookingLogsTable({ logs, onDelete }: {
                   {log.vehicle_registration ?? '—'}
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className={statusBadgeClass(log.status)}>
-                    {log.status}
-                  </Badge>
+                  <StatusBadge status={log.status} map={STATUS_BADGE} label={log.status} />
                 </TableCell>
                 <TableCell className="text-[var(--text-dark-primary)] text-sm">
                   {formatDate(log.created_at)}

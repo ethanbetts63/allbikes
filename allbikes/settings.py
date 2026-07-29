@@ -42,6 +42,12 @@ ADMIN_NUMBER = os.environ.get("ADMIN_NUMBER")
 ADMIN_NUMBERS = _phone_list(os.environ.get("ADMIN_NUMBERS")) or _phone_list(ADMIN_NUMBER)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@scootershop.com.au")
 
+# Select Portal supplies an RRP+GST figure. This is the percentage discount
+# ScooterShop receives from that figure when purchasing genuine new SYM parts.
+PARTS_SUPPLIER_DISCOUNT_PERCENTAGE = os.environ.get(
+    "PARTS_SUPPLIER_DISCOUNT_PERCENTAGE", "30.00"
+)
+
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_MESSAGING_SERVICE_SID = os.environ.get("TWILIO_MESSAGING_SERVICE_SID")

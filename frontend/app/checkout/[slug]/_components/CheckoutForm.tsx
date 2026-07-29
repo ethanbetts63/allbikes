@@ -23,7 +23,7 @@ export default function CheckoutForm({
   submitError: string | null;
   onSubmit: (data: CheckoutFormData) => void;
 }) {
-  const { register, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>();
+  const { register, getValues, handleSubmit, formState: { errors } } = useForm<CheckoutFormData>();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [warrantyAccepted, setWarrantyAccepted] = useState(false);
 
@@ -70,7 +70,7 @@ export default function CheckoutForm({
         {errors.customer_phone && <p className="text-destructive text-sm">{errors.customer_phone.message}</p>}
       </div>
 
-      {!isDeposit && <DeliveryAddressFields register={register} errors={errors} />}
+      {!isDeposit && <DeliveryAddressFields register={register} getValues={getValues} errors={errors} />}
 
       {submitError && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">

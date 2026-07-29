@@ -9,7 +9,8 @@ from rest_framework.views import APIView
 
 from notifications.utils.email import send_parts_customer_update, send_parts_supplier_dispatch
 from parts.models import PartsOrder, PartsOrderItem
-from parts.order_costs import order_margin, supplier_cost_rows, supplier_price_map
+from parts.order_costs import order_margin, supplier_cost_rows
+from parts.order_policy import has_payment_record
 from parts.serializers.admin_order_serializers import (
     AdminPartsOrderDetailSerializer,
     AdminPartsOrderListSerializer,
@@ -47,16 +48,14 @@ def _has_successful_payment(order):
 
 
 def _supplier_email_draft(order):
-    """Build the operator-editable supplier email from current PA feed prices."""
+    """Build the operator-editable supplier email from checkout price snapshots."""
     rows = []
-    prices = supplier_price_map(order)
-    cost_rows = supplier_cost_rows(order, prices)
-    margin = order_margin(order, prices)
+    cost_rows = supplier_cost_rows(order)
+    margin = order_margin(order)
     for cost_row in cost_rows:
         item = cost_row['item']
-        unit_price = cost_row['unit_cost']
-        line_total = cost_row['line_cost']
-        gross_profit = cost_row['gross_profit']
+        unit_price = cost_row['unit_cost_incl_gst']
+        line_total = cost_row['line_cost_incl_gst']
         rows.append({
             'part_number': item.part_number,
             'description': item.description,
@@ -69,7 +68,8 @@ def _supplier_email_draft(order):
             'line_total': line_total,
             'customer_unit_price': item.unit_price,
             'customer_line_total': item.line_total,
-            'gross_profit': gross_profit,
+            'gross_profit_ex_gst': cost_row['gross_profit_ex_gst'],
+            'profit_margin_percentage': cost_row['profit_margin_percentage'],
         })
 
     part_count = sum(row['quantity'] for row in rows)
@@ -108,7 +108,7 @@ def _supplier_email_draft(order):
         + '\n'.join(address_lines)
         + '\n\nPARTS REQUIRED\n'
         + '\n\n'.join(item_lines)
-        + f"\n\nSupplier parts total (incl. GST): ${margin['supplier_parts_total']:.2f}\n\n"
+        + f"\n\nSupplier parts total (incl. GST): ${margin['supplier_parts_total_incl_gst']:.2f}\n\n"
         'If you cannot fulfil the order in full with current stock, please do not ship any part of the order. '
         'Please let us know which parts are missing and an ETA for when they are expected back in stock.\n\n'
         f'Parts that cannot be obtained within {hold_period} will be removed from the customer’s order. '
@@ -225,6 +225,12 @@ class AdminPartsOrderItemView(APIView):
         if action not in ITEM_ACTIONS:
             return Response({'detail': f'action must be one of {sorted(ITEM_ACTIONS)}.'}, status=400)
 
+        if action == 'mark_refunded' and not has_payment_record(item.parts_order):
+            return Response(
+                {'detail': 'An associated payment record is required before an item can be marked refunded.'},
+                status=400,
+            )
+
         if action == 'place_backorder':
             if item.parts_order.backorder_window_expired():
                 return Response(
@@ -251,12 +257,7 @@ class AdminPartsOrderItemView(APIView):
 
 
 def _admin_order_context(order):
-    # Resolve supplier prices once per request so the item serializer doesn't
-    # hit the DB per line.
-    return {
-        'supplier_prices': supplier_price_map(order),
-        'order_status': order.status,
-    }
+    return {'order_status': order.status}
 
 
 class AdminPartsSupplierEmailView(APIView):

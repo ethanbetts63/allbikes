@@ -9,7 +9,7 @@ import { formatDateTime } from '@/utils/formatting';
 import type { SentMessage } from '@/types/SentMessage';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
-import DetailRow from '../_components/DetailRow';
+import DetailRow from '@/components/ui/detail-row';
 import MessageBodyViewer from '../_components/MessageBodyViewer';
 import MessageHeader from '../_components/MessageHeader';
 

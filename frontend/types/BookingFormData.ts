@@ -1,5 +1,5 @@
 export interface BookingFormData {
-  [key: string]: any;
+  [key: string]: unknown;
   first_name: string;
   last_name: string;
   phone: string;
@@ -24,5 +24,6 @@ export interface BookingFormData {
   pickup_time?: string;
   job_type_names: string[];
   courtesy_vehicle_requested: boolean;
+  terms_accepted: boolean;
   note?: string;
 }

@@ -1,49 +1,39 @@
 from decimal import Decimal
 
-from parts.models import Part
+from parts.pricing import gross_profit_ex_gst, profit_margin_percentage
 
 
-def supplier_price_map(order):
-    """Map each ordered part number to its current supplier catalogue row."""
-    return Part.objects.in_bulk(
-        [item.part_number for item in order.items.all()], field_name='part_number'
-    )
-
-
-def supplier_cost_rows(order, prices=None):
-    """Calculate current supplier cost and gross profit once for every line."""
-    prices = supplier_price_map(order) if prices is None else prices
-    rows = []
-    for item in order.items.all():
-        part = prices.get(item.part_number)
-        unit_cost = part.wholesale_price_incl_gst if part else None
-        line_cost = unit_cost * item.quantity if unit_cost is not None else None
-        rows.append({
+def supplier_cost_rows(order):
+    """Return each line's immutable checkout pricing snapshots."""
+    return [
+        {
             'item': item,
-            'unit_cost': unit_cost,
-            'line_cost': line_cost,
-            'gross_profit': item.line_total - line_cost if line_cost is not None else None,
-        })
-    return rows
+            'rrp_unit_price_incl_gst': item.rrp_unit_price_incl_gst,
+            'rrp_line_total_incl_gst': item.rrp_line_total_incl_gst,
+            'unit_cost_incl_gst': item.supplier_unit_cost_incl_gst,
+            'line_cost_incl_gst': item.supplier_line_total_incl_gst,
+            'gross_profit_ex_gst': item.gross_profit_ex_gst,
+            'profit_margin_percentage': item.profit_margin_percentage,
+        }
+        for item in order.items.all()
+    ]
 
 
-def supplier_line_cost(item, prices):
-    part = prices.get(item.part_number)
-    if part is None or part.wholesale_price_incl_gst is None:
-        return None
-    return part.wholesale_price_incl_gst * item.quantity
-
-
-def order_margin(order, prices=None):
-    rows = supplier_cost_rows(order, prices)
+def order_margin(order):
+    rows = supplier_cost_rows(order)
+    priced_rows = [row for row in rows if row['line_cost_incl_gst'] is not None]
     supplier_total = sum(
-        (row['line_cost'] for row in rows if row['line_cost'] is not None),
-        start=Decimal('0.00'),
+        (row['line_cost_incl_gst'] for row in priced_rows), start=Decimal('0.00')
     )
-    customer_total = sum((row['item'].line_total for row in rows), start=Decimal('0.00'))
+    customer_total = sum(
+        (row['item'].line_total for row in priced_rows), start=Decimal('0.00')
+    )
+    gross_profit = gross_profit_ex_gst(customer_total, supplier_total)
+    margin_percentage = profit_margin_percentage(customer_total, supplier_total)
     return {
-        'supplier_parts_total': supplier_total,
-        'customer_parts_total': customer_total,
-        'gross_profit_total': customer_total - supplier_total,
-        'has_unpriced_items': any(row['line_cost'] is None for row in rows),
+        'supplier_parts_total_incl_gst': supplier_total,
+        'customer_parts_total_incl_gst': customer_total,
+        'gross_profit_ex_gst_total': gross_profit,
+        'profit_margin_percentage': margin_percentage,
+        'has_unpriced_items': len(priced_rows) != len(rows),
     }

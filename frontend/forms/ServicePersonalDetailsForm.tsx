@@ -7,15 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from 'next/link';
 import type { PersonalDetailsFormProps } from '@/types/PersonalDetailsFormProps';
+import { AUSTRALIAN_STATES } from '@/lib/australianAddresses';
 
 const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, isSubmitting, error }: PersonalDetailsFormProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData((prev: any) => ({ ...prev, [id]: value }));
+    setFormData(prev => ({ ...prev, [id]: value }));
   };
 
   const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev: any) => ({ ...prev, terms_accepted: checked }));
+    setFormData(prev => ({ ...prev, terms_accepted: checked }));
   };
 
   return (
@@ -49,14 +50,36 @@ const PersonalDetailsForm = ({ formData, setFormData, prevStep, handleSubmit, is
         <Label htmlFor="street_line">Street Address <span className="text-[var(--text-dark-secondary)] font-normal">(optional)</span></Label>
         <Input id="street_line" value={formData.street_line || ''} onChange={handleChange} placeholder="12 Cleveland Street" />
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="suburb">Suburb <span className="text-[var(--text-dark-secondary)] font-normal">(optional)</span></Label>
           <Input id="suburb" value={formData.suburb || ''} onChange={handleChange} placeholder="Dianella" />
         </div>
         <div className="space-y-1.5">
+          <Label htmlFor="state">State <span className="text-[var(--text-dark-secondary)] font-normal">(optional)</span></Label>
+          <select
+            id="state"
+            value={formData.state || ''}
+            onChange={(event) => setFormData(previous => ({ ...previous, state: event.target.value }))}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            <option value="">Select</option>
+            {AUSTRALIAN_STATES.map(state => (
+              <option key={state.value} value={state.value}>{state.value}</option>
+            ))}
+          </select>
+        </div>
+        <div className="space-y-1.5">
           <Label htmlFor="postcode">Postcode <span className="text-[var(--text-dark-secondary)] font-normal">(optional)</span></Label>
-          <Input id="postcode" value={formData.postcode || ''} onChange={handleChange} placeholder="6059" />
+          <Input
+            id="postcode"
+            value={formData.postcode || ''}
+            onChange={handleChange}
+            placeholder="6059"
+            inputMode="numeric"
+            pattern="[0-9]{4}"
+            maxLength={4}
+          />
         </div>
       </div>
 

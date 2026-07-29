@@ -22,6 +22,10 @@ export const initialBookingFormData: BookingFormData = {
     last_name: '',
     phone: '',
     email: '',
+    street_line: '',
+    suburb: '',
+    state: '',
+    postcode: '',
     // Bike
     registration_number: '',
     make: '',

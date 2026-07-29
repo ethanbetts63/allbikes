@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import BackToDiaryLink from '../_components/BackToDiaryLink';
 import BookingFormCard from '../_components/BookingFormCard';
-import { canSaveBooking, diaryWeekHref, emptyBooking } from '../_lib/diary';
+import { bookingValidationError, canSaveBooking, diaryWeekHref, emptyBooking } from '../_lib/diary';
 
 export default function AddBookingPage() {
   const router = useRouter();
@@ -20,8 +20,9 @@ export default function AddBookingPage() {
   const canSave = canSaveBooking(value);
 
   const handleSave = async () => {
-    if (!canSave) {
-      setError('A drop-off date and customer name are required.');
+    const validationError = bookingValidationError(value);
+    if (validationError) {
+      setError(validationError);
       return;
     }
     setSaving(true);

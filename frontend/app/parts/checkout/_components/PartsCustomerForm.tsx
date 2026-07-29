@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import type { CustomerDetails } from '@/lib/partsCheckoutApi';
+import { AUSTRALIAN_STATES } from '@/lib/australianAddresses';
 import CheckoutField from './CheckoutField';
 
 /** Name, delivery address and terms for a parts order. */
@@ -28,9 +29,32 @@ export default function PartsCustomerForm({ form, submitting, error, onChange, o
       <CheckoutField label="Address line 2" value={form.address_line2} onChange={set('address_line2')} />
       <div className="grid gap-4 sm:grid-cols-2">
         <CheckoutField label="Suburb" value={form.suburb} onChange={set('suburb')} required />
-        <CheckoutField label="State" value={form.state} onChange={set('state')} />
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-black">
+            State <span className="text-gray-400">*</span>
+          </span>
+          <select
+            value={form.state}
+            onChange={(e) => onChange({ ...form, state: e.target.value })}
+            required
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black focus:border-black focus:outline-none"
+          >
+            <option value="" disabled>Select state or territory</option>
+            {AUSTRALIAN_STATES.map((state) => (
+              <option key={state.value} value={state.value}>{state.label} ({state.value})</option>
+            ))}
+          </select>
+        </label>
       </div>
-      <CheckoutField label="Postcode" value={form.postcode} onChange={set('postcode')} required />
+      <CheckoutField
+        label="Postcode"
+        value={form.postcode}
+        onChange={set('postcode')}
+        inputMode="numeric"
+        pattern="[0-9]{4}"
+        maxLength={4}
+        required
+      />
       <p className="text-sm text-gray-600">Delivery is currently available within Australia only.</p>
 
       <label className="flex gap-2 text-sm text-gray-700">

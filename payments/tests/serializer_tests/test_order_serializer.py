@@ -83,6 +83,26 @@ class TestOrderCreateSerializer:
         assert not serializer.is_valid()
         assert 'address_line1' in serializer.errors
 
+    def test_product_order_rejects_postcode_from_another_state(self):
+        product = ProductFactory()
+        data = self._valid_payload(product.id)
+        data['postcode'] = '2000'
+
+        serializer = OrderCreateSerializer(data=data)
+
+        assert not serializer.is_valid()
+        assert 'postcode' in serializer.errors
+
+    def test_product_order_rejects_malformed_postcode(self):
+        product = ProductFactory()
+        data = self._valid_payload(product.id)
+        data['postcode'] = '600'
+
+        serializer = OrderCreateSerializer(data=data)
+
+        assert not serializer.is_valid()
+        assert 'postcode' in serializer.errors
+
     def test_deposit_order_requires_phone(self):
         """
         GIVEN a deposit order payload with no customer_phone

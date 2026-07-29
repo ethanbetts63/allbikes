@@ -6,7 +6,8 @@ from notifications.models import Message
 from rest_framework import serializers
 
 from parts.models import PartsOrder, PartsOrderItem
-from parts.order_costs import order_margin, supplier_line_cost, supplier_price_map
+from parts.order_costs import order_margin
+from parts.order_policy import PAYMENT_RECORD_REQUIRED_STATUSES, has_payment_record
 
 
 class AdminPartsOrderListSerializer(serializers.ModelSerializer):
@@ -25,16 +26,21 @@ class AdminPartsOrderListSerializer(serializers.ModelSerializer):
 
 class AdminPartsOrderItemSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
-    supplier_line_total = serializers.SerializerMethodField()
-    gross_profit = serializers.SerializerMethodField()
+    rrp_line_total_incl_gst = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    supplier_line_total_incl_gst = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    gross_profit_ex_gst = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
+    profit_margin_percentage = serializers.DecimalField(max_digits=7, decimal_places=2, read_only=True)
 
     class Meta:
         model = PartsOrderItem
         fields = [
             'id', 'part_number', 'description', 'colour_name', 'model_name', 'model_code',
-            'section_code', 'ref_number', 'quantity', 'unit_price', 'line_total',
+            'section_code', 'ref_number', 'quantity',
+            'rrp_unit_price_incl_gst', 'rrp_line_total_incl_gst',
+            'supplier_discount_percentage', 'supplier_unit_cost_incl_gst',
+            'supplier_line_total_incl_gst', 'markup_percentage', 'unit_price', 'line_total',
             'status', 'backordered',
-            'supplier_line_total', 'gross_profit',
+            'gross_profit_ex_gst', 'profit_margin_percentage',
         ]
 
     def get_status(self, obj):
@@ -50,21 +56,6 @@ class AdminPartsOrderItemSerializer(serializers.ModelSerializer):
         if obj.status != 'refunded' and order_status == 'completed':
             return 'completed'
         return obj.status
-
-    def _supplier_line_total(self, obj):
-        """Current supplier cost for this line, or None if the part has no live price."""
-        prices = self.context.get('supplier_prices')
-        if prices is None:
-            prices = supplier_price_map(obj.parts_order)
-        return supplier_line_cost(obj, prices)
-
-    def get_supplier_line_total(self, obj):
-        return self._supplier_line_total(obj)
-
-    def get_gross_profit(self, obj):
-        cost = self._supplier_line_total(obj)
-        return None if cost is None else obj.line_total - cost
-
 
 class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
     items = AdminPartsOrderItemSerializer(many=True, read_only=True)
@@ -99,7 +90,7 @@ class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
         Shipping is excluded — it isn't a supplier cost. Lines whose part has no
         live feed price are skipped from the cost total and flagged instead.
         """
-        return order_margin(obj, self.context.get('supplier_prices'))
+        return order_margin(obj)
 
     def get_stripe_payment_intent_id(self, obj):
         payment = getattr(obj, 'payment', None)
@@ -120,6 +111,13 @@ class AdminPartsOrderUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PartsOrder
         fields = ['status', 'admin_notes']
+
+    def validate_status(self, value):
+        if value in PAYMENT_RECORD_REQUIRED_STATUSES and not has_payment_record(self.instance):
+            raise serializers.ValidationError(
+                'This status requires an associated payment record.'
+            )
+        return value
 
     def update(self, instance, validated_data):
         if validated_data.get('status') == 'dispatched' and instance.dispatched_at is None:

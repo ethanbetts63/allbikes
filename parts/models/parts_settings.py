@@ -1,6 +1,8 @@
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import Decimal
 
 from django.db import models
+
+from parts.pricing import customer_unit_price
 
 
 class PartsSettings(models.Model):
@@ -44,5 +46,4 @@ class PartsSettings(models.Model):
         """Wholesale price with markup applied, rounded to 2dp. None if price is None."""
         if wholesale_price is None:
             return None
-        factor = Decimal(1) + (self.markup_percentage / Decimal(100))
-        return (wholesale_price * factor).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        return customer_unit_price(wholesale_price, self.markup_percentage)

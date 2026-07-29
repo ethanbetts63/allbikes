@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
+import StatusBadge from '@/components/ui/status-badge';
 import type { NotificationPartsOrder } from '@/types/AdminNotifications';
 import { PARTS_STATUS_BADGE } from '../../parts-orders/_lib/partsOrderStyles';
 import NotificationSection, { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from './NotificationSection';
@@ -35,9 +36,7 @@ export default function PartsOrdersToAction({ orders }: { orders: NotificationPa
                 <td className={TD_MUTED}>{order.item_count}</td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <Badge variant="outline" className={`text-xs ${PARTS_STATUS_BADGE[order.status] ?? 'border-gray-400'}`}>
-                      {order.status.replace(/_/g, ' ')}
-                    </Badge>
+                    <StatusBadge status={order.status} map={PARTS_STATUS_BADGE} className="text-xs" />
                     {order.has_backorder && (
                       <Badge variant="outline" className="text-xs border-orange-500 text-orange-600">
                         Backorder

@@ -22,7 +22,7 @@ export default function DepositSettingsPanel() {
         setSavedAmount(s.deposit_amount);
       })
       .catch(() => {
-        if (!cancelled) setMessage({ text: 'Failed to load deposit settings.', type: 'error' });
+        if (!cancelled) toast.error('Failed to load deposit settings.');
       });
     return () => { cancelled = true; };
   }, []);
@@ -30,16 +30,16 @@ export default function DepositSettingsPanel() {
   const handleSave = async () => {
     const parsed = parseFloat(amount);
     if (isNaN(parsed) || parsed <= 0) {
-      setMessage({ text: 'Enter a valid amount greater than $0.', type: 'error' });
+      toast.error('Enter a valid amount greater than $0.');
       return;
     }
     setIsSaving(true);
     try {
       const updated = await adminUpdateDepositSettings(parsed.toFixed(2));
       setSavedAmount(updated.deposit_amount);
-      setMessage({ text: 'Deposit amount updated.', type: 'success' });
+      toast.success('Deposit amount updated.');
     } catch {
-      setMessage({ text: 'Failed to save. Please try again.', type: 'error' });
+      toast.error('Failed to save. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -63,7 +63,7 @@ export default function DepositSettingsPanel() {
             min="1"
             step="0.01"
             value={amount}
-            onChange={e => { setAmount(e.target.value); setMessage(null); }}
+            onChange={e => setAmount(e.target.value)}
             className="w-28 text-[var(--text-dark-primary)]"
           />
           <Button onClick={handleSave} disabled={isSaving || !isDirty} size="sm">

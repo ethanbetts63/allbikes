@@ -4,7 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
-import { statusBadgeClass } from '../_lib/bookingLogStatus';
+import StatusBadge from '@/components/ui/status-badge';
+import { STATUS_BADGE } from '../_lib/bookingLogStatus';
 
 /** Customer, outcome, when it was submitted, and the delete action. */
 export default function BookingLogHeader({ log, onDelete }: {
@@ -15,7 +16,7 @@ export default function BookingLogHeader({ log, onDelete }: {
     <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
       <div>
         <h1 className="text-2xl font-bold text-[var(--text-dark-primary)] mb-1">{log.customer_name}</h1>
-        <Badge variant="outline" className={statusBadgeClass(log.status)}>{log.status}</Badge>
+        <StatusBadge status={log.status} map={STATUS_BADGE} label={log.status} />
       </div>
       <div className="flex items-center gap-3">
         <span className="text-sm text-[var(--text-dark-secondary)]">{formatDateTime(log.created_at)}</span>

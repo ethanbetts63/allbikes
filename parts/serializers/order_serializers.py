@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from allbikes.australian_addresses import AUSTRALIAN_STATES, postcode_matches_state
 from parts.models import PartsOrder, PartsOrderItem
 
 
@@ -24,8 +25,11 @@ class PartsCheckoutSerializer(serializers.Serializer):
     address_line1 = serializers.CharField(max_length=200)
     address_line2 = serializers.CharField(max_length=200, required=False, allow_blank=True)
     suburb = serializers.CharField(max_length=100)
-    state = serializers.CharField(max_length=50, required=False, allow_blank=True)
-    postcode = serializers.CharField(max_length=20)
+    state = serializers.ChoiceField(choices=AUSTRALIAN_STATES)
+    postcode = serializers.RegexField(
+        regex=r'^\d{4}$',
+        error_messages={'invalid': 'Enter a valid four-digit Australian postcode.'},
+    )
     terms_accepted = serializers.BooleanField()
     items = PartsCheckoutItemSerializer(many=True)
 
@@ -43,6 +47,16 @@ class PartsCheckoutSerializer(serializers.Serializer):
         if len(fitments) != len(set(fitments)):
             raise serializers.ValidationError("Each catalogue fitment can only appear once in your cart.")
         return value
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        state = attrs.get('state')
+        postcode = attrs.get('postcode')
+        if state and postcode and not postcode_matches_state(postcode, state):
+            raise serializers.ValidationError({
+                'postcode': f'Postcode {postcode} does not match {state}.',
+            })
+        return attrs
 
 
 class PartsOrderItemSerializer(serializers.ModelSerializer):

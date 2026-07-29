@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { messageTypeLabel, statusBadgeClass } from '../_lib/messageLabels';
+import StatusBadge from '@/components/ui/status-badge';
+import { STATUS_BADGE, messageTypeLabel } from '../_lib/messageLabels';
 
 /** Outbound email log. Clicking a row opens the full message. */
 export default function SentMessagesTable({ messages }: { messages: SentMessage[] }) {
@@ -39,7 +40,7 @@ export default function SentMessagesTable({ messages }: { messages: SentMessage[
                   {msg.subject || '—'}
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className={statusBadgeClass(msg.status)}>{msg.status}</Badge>
+                  <StatusBadge status={msg.status} map={STATUS_BADGE} label={msg.status} />
                 </TableCell>
                 <TableCell className="text-[var(--text-dark-primary)] text-sm">
                   {formatDateTime(msg.sent_at)}

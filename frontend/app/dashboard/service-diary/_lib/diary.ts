@@ -1,6 +1,7 @@
 import { format, isValid, startOfWeek } from 'date-fns';
 
 import type { Booking, BookingInput } from '@/types/Booking';
+import { australianAddressError } from '@/lib/australianAddresses';
 
 export const DIARY_PATH = '/dashboard/service-diary';
 
@@ -33,6 +34,7 @@ export const bookingToInput = (b: Booking): BookingInput => ({
   customer_email: b.customer_email,
   street_address: b.street_address,
   suburb: b.suburb,
+  state: b.state,
   postcode: b.postcode,
   registration: b.registration,
   make: b.make,
@@ -51,6 +53,7 @@ export const emptyBooking: BookingInput = {
   customer_email: '',
   street_address: '',
   suburb: '',
+  state: '',
   postcode: '',
   registration: '',
   make: '',
@@ -64,3 +67,8 @@ export const emptyBooking: BookingInput = {
 /** Both booking forms require at least these two fields. */
 export const canSaveBooking = (value: BookingInput) =>
   Boolean(value.drop_off_date && value.customer_name.trim());
+
+export const bookingValidationError = (value: BookingInput): string | null => {
+  if (!canSaveBooking(value)) return 'A drop-off date and customer name are required.';
+  return australianAddressError(value.state, value.postcode);
+};

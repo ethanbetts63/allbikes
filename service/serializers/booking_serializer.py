@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from allbikes.australian_addresses import AUSTRALIAN_STATES, australian_address_errors
+
 class BookingSerializer(serializers.Serializer):
     """
     Serializer to validate the incoming booking request data from the frontend.
@@ -12,8 +14,13 @@ class BookingSerializer(serializers.Serializer):
     email = serializers.EmailField()
     street_line = serializers.CharField(max_length=255, required=False, allow_blank=True)
     suburb = serializers.CharField(max_length=100, required=False, allow_blank=True)
-    state = serializers.CharField(max_length=50, required=False, allow_blank=True)
-    postcode = serializers.CharField(max_length=10, required=False, allow_blank=True)
+    state = serializers.ChoiceField(choices=AUSTRALIAN_STATES, required=False, allow_blank=True)
+    postcode = serializers.RegexField(
+        regex=r'^\d{4}$',
+        required=False,
+        allow_blank=True,
+        error_messages={'invalid': 'Enter a valid four-digit Australian postcode.'},
+    )
 
     # Vehicle details
     registration_number = serializers.CharField(max_length=20)
@@ -44,6 +51,12 @@ class BookingSerializer(serializers.Serializer):
         Combine first_name and last_name to create the full 'name' field,
         and convert numeric/boolean fields to strings for the MechanicDesk API.
         """
+        address_errors = australian_address_errors(
+            state=data.get('state'), postcode=data.get('postcode'), required=False,
+        )
+        if address_errors:
+            raise serializers.ValidationError(address_errors)
+
         data['name'] = f"{data['first_name']} {data['last_name']}".strip()
 
         # Convert numeric fields to strings if they exist

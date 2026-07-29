@@ -1,6 +1,6 @@
 import { formatDate } from '@/utils/formatting';
 import type { Order } from '@/types/Order';
-import DetailRow from './DetailRow';
+import DetailRow from '@/components/ui/detail-row';
 
 /**
  * What was bought. A deposit is against a motorcycle and shows the amount paid;

@@ -1,5 +1,7 @@
 from django.db import models
 
+from parts.pricing import gross_profit_ex_gst, profit_margin_percentage
+
 
 class PartsOrderItem(models.Model):
     """One line in a PartsOrder. Fields are snapshots so catalog re-imports never
@@ -19,6 +21,22 @@ class PartsOrderItem(models.Model):
     ref_number = models.CharField(max_length=20, blank=True)
 
     quantity = models.PositiveIntegerField(default=1)
+    rrp_unit_price_incl_gst = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True,
+        help_text="RRP+GST from the supplier feed at checkout.",
+    )
+    supplier_discount_percentage = models.DecimalField(
+        max_digits=6, decimal_places=2, null=True, blank=True,
+        help_text="Configured supplier discount snapshotted at checkout.",
+    )
+    supplier_unit_cost_incl_gst = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True,
+        help_text="Actual discounted unit cost including GST at checkout.",
+    )
+    markup_percentage = models.DecimalField(
+        max_digits=6, decimal_places=2, null=True, blank=True,
+        help_text="Parts Settings markup snapshotted at checkout.",
+    )
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Customer price incl. GST (marked up).")
     line_total = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -37,3 +55,29 @@ class PartsOrderItem(models.Model):
 
     def __str__(self):
         return f"{self.part_number} x{self.quantity}"
+
+    @property
+    def rrp_line_total_incl_gst(self):
+        if self.rrp_unit_price_incl_gst is None:
+            return None
+        return self.rrp_unit_price_incl_gst * self.quantity
+
+    @property
+    def supplier_line_total_incl_gst(self):
+        if self.supplier_unit_cost_incl_gst is None:
+            return None
+        return self.supplier_unit_cost_incl_gst * self.quantity
+
+    @property
+    def gross_profit_ex_gst(self):
+        cost = self.supplier_line_total_incl_gst
+        if cost is None:
+            return None
+        return gross_profit_ex_gst(self.line_total, cost)
+
+    @property
+    def profit_margin_percentage(self):
+        cost = self.supplier_line_total_incl_gst
+        if cost is None:
+            return None
+        return profit_margin_percentage(self.line_total, cost)

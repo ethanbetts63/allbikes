@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import BackToDiaryLink from '../_components/BackToDiaryLink';
 import BookingFormCard from '../_components/BookingFormCard';
-import { DIARY_PATH, bookingToInput, canSaveBooking } from '../_lib/diary';
+import { DIARY_PATH, bookingToInput, bookingValidationError } from '../_lib/diary';
 
 export default function AdminBookingDetailPage() {
   const router = useRouter();
@@ -39,8 +39,9 @@ export default function AdminBookingDetailPage() {
 
   const handleSave = async () => {
     if (!value) return;
-    if (!canSaveBooking(value)) {
-      setError('A drop-off date and customer name are required.');
+    const validationError = bookingValidationError(value);
+    if (validationError) {
+      setError(validationError);
       return;
     }
     setSaving(true);

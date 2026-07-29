@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import type { SentMessage } from '@/types/SentMessage';
+import StatusBadge from '@/components/ui/status-badge';
 import { STATUS_BADGE, messageTypeLabel } from '../_lib/messageLabels';
 
 /** What kind of message this was, whether it landed, and its id. */
@@ -12,7 +13,7 @@ export default function MessageHeader({ message }: { message: SentMessage }) {
           {messageTypeLabel(message.message_type)}
         </h1>
         {badge && (
-          <Badge variant="outline" className={`text-sm px-3 py-1 ${badge}`}>{message.status}</Badge>
+          <StatusBadge status={message.status} map={STATUS_BADGE} label={message.status} className="text-sm px-3 py-1" />
         )}
       </div>
       <span className="text-sm text-[var(--text-dark-secondary)] font-mono">#{message.id}</span>

@@ -1,5 +1,5 @@
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
-import DetailRow from './DetailRow';
+import DetailRow from '@/components/ui/detail-row';
 import { type BookingLogPayload, payloadText } from '../_lib/bookingLogStatus';
 
 /**
@@ -21,28 +21,29 @@ export default function BookingLogRequest({ log, payload }: {
     <>
       <div className="mb-6">
         <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Customer</h2>
-        <DetailRow label="Name" value={log.customer_name} />
-        <DetailRow label="Email" value={log.customer_email} />
-        {payload.phone ? <DetailRow label="Phone" value={payloadText(payload.phone)} /> : null}
+        <DetailRow labelWidth="w-40" label="Name" value={log.customer_name} />
+        <DetailRow labelWidth="w-40" label="Email" value={log.customer_email} />
+        {payload.phone ? <DetailRow labelWidth="w-40" label="Phone" value={payloadText(payload.phone)} /> : null}
       </div>
 
       <div className="mb-6">
         <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Vehicle</h2>
-        {log.vehicle_registration && <DetailRow label="Registration" value={log.vehicle_registration} />}
-        {payload.make ? <DetailRow label="Make" value={payloadText(payload.make)} /> : null}
-        {payload.model ? <DetailRow label="Model" value={payloadText(payload.model)} /> : null}
-        {payload.year ? <DetailRow label="Year" value={payloadText(payload.year)} /> : null}
-        {payload.odometer ? <DetailRow label="Odometer" value={payloadText(payload.odometer)} /> : null}
+        {log.vehicle_registration && <DetailRow labelWidth="w-40" label="Registration" value={log.vehicle_registration} />}
+        {payload.make ? <DetailRow labelWidth="w-40" label="Make" value={payloadText(payload.make)} /> : null}
+        {payload.model ? <DetailRow labelWidth="w-40" label="Model" value={payloadText(payload.model)} /> : null}
+        {payload.year ? <DetailRow labelWidth="w-40" label="Year" value={payloadText(payload.year)} /> : null}
+        {payload.odometer ? <DetailRow labelWidth="w-40" label="Odometer" value={payloadText(payload.odometer)} /> : null}
       </div>
 
       <div className="mb-6">
         <h2 className="text-[var(--text-dark-primary)] font-bold mb-2">Service Request</h2>
-        <DetailRow label="Job Types" value={jobTypes} />
+        <DetailRow labelWidth="w-40" label="Job Types" value={jobTypes} />
         {payload.drop_off_time ? (
-          <DetailRow label="Drop-off Time" value={payloadText(payload.drop_off_time)} />
+          <DetailRow labelWidth="w-40" label="Drop-off Time" value={payloadText(payload.drop_off_time)} />
         ) : null}
         {payload.courtesy_vehicle_requested ? (
           <DetailRow
+            labelWidth="w-40"
             label="Courtesy Vehicle"
             value={payload.courtesy_vehicle_requested === 'true' ? 'Yes' : 'No'}
           />

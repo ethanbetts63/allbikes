@@ -9,6 +9,7 @@ from decimal import Decimal
 from django.db import transaction
 
 from parts.models import Part, PartsOrder, PartsOrderItem, PartsSettings, SectionPart
+from parts.pricing import customer_unit_price, supplier_discount_percentage, supplier_unit_cost
 
 class CheckoutError(Exception):
     def __init__(self, message, unavailable=None):
@@ -35,6 +36,7 @@ def create_parts_order(*, customer, items):
     subtotal = Decimal('0')
     has_backorder = False
     unavailable = []
+    discount_percentage = supplier_discount_percentage()
 
     for line in items:
         part_number = (line.get('part_number') or '').strip()
@@ -59,7 +61,9 @@ def create_parts_order(*, customer, items):
             unavailable.append(part_number)
             continue
 
-        unit_price = settings.apply_markup(part.wholesale_price_incl_gst)
+        rrp_price = part.wholesale_price_incl_gst
+        unit_price = customer_unit_price(rrp_price, settings.markup_percentage)
+        actual_unit_cost = supplier_unit_cost(rrp_price, discount_percentage)
         line_total = unit_price * qty
         subtotal += line_total
         backordered = part.available_qty is None or part.available_qty < qty
@@ -70,6 +74,10 @@ def create_parts_order(*, customer, items):
             description=part.description,
             colour_name=part.colour_name,
             quantity=qty,
+            rrp_unit_price_incl_gst=rrp_price,
+            supplier_discount_percentage=discount_percentage,
+            supplier_unit_cost_incl_gst=actual_unit_cost,
+            markup_percentage=settings.markup_percentage,
             unit_price=unit_price,
             line_total=line_total,
             backordered=backordered,
