@@ -295,7 +295,7 @@ export default function PartsOrdersListPage() {
           <li>Admin receives an email and SMS for each paid order. Open it here, review it, choose <strong>Email supplier</strong>, check the draft and send it to Select Scooters.</li>
           <li>Select Scooters should fulfil only complete orders. If anything is unavailable, they should email us with the missing parts and expected restock date.</li>
           <li>If one or more items go on backorder, mark those items and use <strong>Email backorder update</strong> to send the customer a full line-by-line update.</li>
-          <li>Mark affected items as backordered or refunded. The {backorderDays}-day backorder window runs from the <strong>order date</strong>, not from when you flag the line — once it has passed you can no longer place a line on backorder and should refund it instead. Only use <strong>Email refund update</strong> after the relevant Stripe refund has been processed.</li>
+          <li>The {backorderDays}-day backorder window runs from the <strong>order date</strong>, once it has passed you can no longer place a line on backorder and should refund it instead. Only use <strong>Email refund update</strong> after the relevant Stripe refund has been processed.</li>
           <li>When you have arranged the order with the supplier, use <strong>Email order arranged</strong> to tell the customer their complete order has been arranged for shipment.</li>
           <li><strong>Planned next:</strong> admin will receive email and SMS reminders when an order exceeds that window. Then remove unavailable items and process the appropriate partial or full Stripe refund.</li>
         </ol>

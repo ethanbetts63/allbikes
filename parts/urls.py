@@ -34,9 +34,9 @@ urlpatterns = [
     # Admin (IsAdminUser)
     path("admin/orders/", AdminPartsOrderListView.as_view(), name="admin-order-list"),
     path("admin/settings/", AdminPartsSettingsView.as_view(), name="admin-settings"),
-    path("admin/orders/<int:pk>/", AdminPartsOrderDetailView.as_view(), name="admin-order-detail"),
-    path("admin/orders/<int:pk>/supplier-email/", AdminPartsSupplierEmailView.as_view(), name="admin-order-supplier-email"),
-    path("admin/orders/<int:pk>/customer-update/", AdminPartsCustomerUpdateView.as_view(), name="admin-order-customer-update"),
+    path("admin/orders/<str:order_reference>/", AdminPartsOrderDetailView.as_view(), name="admin-order-detail"),
+    path("admin/orders/<str:order_reference>/supplier-email/", AdminPartsSupplierEmailView.as_view(), name="admin-order-supplier-email"),
+    path("admin/orders/<str:order_reference>/customer-update/", AdminPartsCustomerUpdateView.as_view(), name="admin-order-customer-update"),
     path("admin/items/<int:pk>/", AdminPartsOrderItemView.as_view(), name="admin-order-item"),
     # Public order retrieval by reference — keep last so it doesn't shadow admin/.
     path("orders/<str:order_reference>/", RetrievePartsOrderView.as_view(), name="order-detail"),

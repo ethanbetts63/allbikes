@@ -20,11 +20,26 @@ import { PARTS_STATUS_BADGE, BTN_INACTIVE } from '../PartsOrdersListPage';
 
 const ORDER_STATUSES = ['pending_payment', 'paid', 'dispatched', 'completed', 'cancelled', 'refunded', 'partially_refunded'];
 
-const ITEM_STATUS_BADGE: Record<string, string> = {
-  to_order: 'border-gray-400 text-[var(--text-dark-primary)]',
-  completed: 'border-green-600 text-green-700',
-  refunded: 'border-orange-500 text-orange-600',
+// Whole-row tint + legend swatch per line state, mirroring the orders list page.
+// A line carries two axes — its own status and the backorder flag — but a row has
+// one colour, so backorder folds into the same key. Without that a backordered
+// line would look identical to an untouched one.
+const ITEM_STATE_STYLE: Record<string, { row: string; swatch: string; label: string }> = {
+  overdue: { row: 'bg-red-50 hover:bg-red-100', swatch: 'bg-red-400', label: 'Backorder overdue' },
+  backordered: { row: 'bg-orange-50 hover:bg-orange-100', swatch: 'bg-orange-300', label: 'On backorder' },
+  to_order: { row: 'bg-slate-50 hover:bg-slate-100', swatch: 'bg-slate-300', label: 'To order' },
+  completed: { row: 'bg-emerald-50 hover:bg-emerald-100', swatch: 'bg-emerald-300', label: 'Completed' },
+  refunded: { row: 'bg-rose-50 hover:bg-rose-100', swatch: 'bg-rose-300', label: 'Refunded' },
 };
+// Legend order = most actionable first, matching the list page's convention.
+const ITEM_LEGEND_ORDER = ['overdue', 'backordered', 'to_order', 'completed', 'refunded'];
+
+/** The single state a row is tinted by. Settled outcomes win over backorder. */
+function itemState(item: AdminPartsOrderItem, daysRemaining: number): string {
+  if (item.status === 'refunded' || item.status === 'completed') return item.status;
+  if (item.backordered) return daysRemaining < 0 ? 'overdue' : 'backordered';
+  return 'to_order';
+}
 
 /** A single outbound email the operator can trigger for this order. */
 type EmailAction = {
@@ -92,6 +107,7 @@ export default function PartsOrderDetailPage() {
   if (!order) return <p className="p-6 text-destructive">Order not found.</p>;
 
   const refundedItems = order.items.filter((i) => i.status === 'refunded');
+  const backorderedItems = order.items.filter((i) => i.backordered);
   const address = [order.address_line1, order.address_line2, `${order.suburb} ${order.state} ${order.postcode}`, order.country]
     .filter(Boolean).join(', ');
 
@@ -112,7 +128,8 @@ export default function PartsOrderDetailPage() {
       label: 'Order arranged',
       description: 'Tells the customer every part is available and shipment has been arranged with the supplier.',
       cta: 'Email',
-      disabled: false,
+      disabled: backorderedItems.length > 0,
+      disabledReason: 'One or more items are still on backorder — resolve or refund them first.',
       onClick: () => customerUpdate('arranged'),
     },
     {
@@ -127,7 +144,7 @@ export default function PartsOrderDetailPage() {
     {
       key: 'refund',
       label: 'Refund update',
-      description: 'Tells the customer the refund for cancelled lines has been processed. Send only after refunding in Stripe.',
+      description: 'Refund for cancelled/backorder expired lines processed and remaining parts have been released. Send after refunding in Stripe.',
       cta: 'Email',
       disabled: refundedItems.length === 0,
       disabledReason: 'No items are marked refunded.',
@@ -201,6 +218,18 @@ export default function PartsOrderDetailPage() {
 
         {/* Line items */}
         <h2 className="mb-2 font-bold">Items</h2>
+
+        {/* Colour key */}
+        <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-[var(--text-dark-secondary)]">
+          <span className="font-medium text-[var(--text-dark-primary)]">Row colour:</span>
+          {ITEM_LEGEND_ORDER.map((s) => (
+            <span key={s} className="inline-flex items-center gap-1.5">
+              <span className={`inline-block h-3 w-3 rounded-sm ${ITEM_STATE_STYLE[s].swatch}`} />
+              {ITEM_STATE_STYLE[s].label}
+            </span>
+          ))}
+        </div>
+
         <div className="mb-6 overflow-x-auto rounded-md border border-border-light">
           <Table>
             <TableHeader>
@@ -210,7 +239,6 @@ export default function PartsOrderDetailPage() {
                 <TableHead className="text-[var(--text-dark-primary)]">Sold</TableHead>
                 <TableHead className="text-[var(--text-dark-primary)]">Cost</TableHead>
                 <TableHead className="text-[var(--text-dark-primary)]">Profit</TableHead>
-                <TableHead className="text-[var(--text-dark-primary)]">Status</TableHead>
                 <TableHead className="text-[var(--text-dark-primary)]">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -349,9 +377,13 @@ function ItemRow({ item, busy, daysRemaining, windowExpired, holdDays, onAction 
   const btn = 'rounded border border-gray-300 px-2 py-1 text-xs hover:border-black disabled:opacity-40';
   const settled = item.status === 'refunded' || item.status === 'completed';
   const daysOld = holdDays - daysRemaining;
+  const state = ITEM_STATE_STYLE[itemState(item, daysRemaining)];
   return (
-    <TableRow className="border-border-light align-top">
+    <TableRow className={`border-border-light align-top ${state.row}`}>
       <TableCell>
+        {/* The row tint carries the state visually; this keeps it available to
+            screen readers, which cannot see the colour key. */}
+        <span className="sr-only">Status: {state.label}. </span>
         <div className="font-mono text-sm">{item.part_number}</div>
         <div className="text-xs text-[var(--text-dark-secondary)]">
           {item.description}{item.colour_name ? ` · ${item.colour_name}` : ''}
@@ -367,20 +399,14 @@ function ItemRow({ item, busy, daysRemaining, windowExpired, holdDays, onAction 
         {item.gross_profit == null ? '—' : `$${item.gross_profit.toFixed(2)}`}
       </TableCell>
       <TableCell>
-        <div className="flex flex-col gap-1">
-          <Badge variant="outline" className={ITEM_STATUS_BADGE[item.status] ?? 'border-gray-400'}>
-            {item.status.replace(/_/g, ' ')}
-          </Badge>
-          {/* A settled line has nothing left to wait for, so the countdown is
-              suppressed even though `backordered` is still set on the row. */}
-          {item.backordered && !settled && (
-            <span className={`text-xs font-medium ${daysRemaining < 0 ? 'text-red-600' : 'text-orange-600'}`}>
-              Backorder · {daysRemaining < 0 ? `${-daysRemaining}d overdue` : `${daysRemaining}d left`}
-            </span>
-          )}
-        </div>
-      </TableCell>
-      <TableCell>
+        {/* The colour says "on backorder"; only the countdown carries the number,
+            so it stays next to the buttons the operator is deciding between.
+            A settled line has nothing left to wait for. */}
+        {item.backordered && !settled && (
+          <div className={`mb-1 text-xs font-medium ${daysRemaining < 0 ? 'text-red-600' : 'text-orange-600'}`}>
+            {daysRemaining < 0 ? `${-daysRemaining}d overdue` : `${daysRemaining}d left`}
+          </div>
+        )}
         <div className="flex flex-wrap gap-1">
           {!settled && (
             <>

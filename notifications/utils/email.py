@@ -447,9 +447,13 @@ def send_parts_customer_update(parts_order, update_type, *, backorder_days):
     }
     message_type, subject = labels[update_type]
     refunded_total = sum((item.line_total for item in parts_order.items.filter(status='refunded')), start=0)
+    # Drives whether the refund email says the rest of the order has been
+    # released, or that there is nothing left to ship.
+    remaining_count = parts_order.items.exclude(status='refunded').count()
     context = {
         'order': parts_order, 'update_type': update_type,
         'backorder_days': backorder_days, 'refunded_total': refunded_total,
+        'remaining_count': remaining_count,
     }
     text_body = render_to_string('notifications/emails/parts_customer_update.txt', context)
     html_body = render_to_string('notifications/emails/parts_customer_update.html', context)

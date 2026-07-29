@@ -26,17 +26,17 @@ export async function adminGetPartsOrders(params: ListParams = {}): Promise<Pagi
   return res.json();
 }
 
-export async function adminGetPartsOrder(id: number): Promise<AdminPartsOrder> {
-  const res = await authedFetch(`/api/parts/admin/orders/${id}/`);
+export async function adminGetPartsOrder(reference: string): Promise<AdminPartsOrder> {
+  const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/`);
   if (!res.ok) throw new Error('Failed to load order.');
   return res.json();
 }
 
 export async function adminUpdatePartsOrder(
-  id: number,
+  reference: string,
   data: { status?: string; admin_notes?: string },
 ): Promise<AdminPartsOrder> {
-  const res = await authedFetch(`/api/parts/admin/orders/${id}/`, {
+  const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/`, {
     method: 'PATCH',
     body: JSON.stringify(data),
   });
@@ -75,14 +75,14 @@ export interface SupplierEmailDraft {
   has_unpriced_items: boolean;
 }
 
-export async function adminGetPartsSupplierEmailDraft(id: number): Promise<SupplierEmailDraft> {
-  const res = await authedFetch(`/api/parts/admin/orders/${id}/supplier-email/`);
+export async function adminGetPartsSupplierEmailDraft(reference: string): Promise<SupplierEmailDraft> {
+  const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/supplier-email/`);
   if (!res.ok) throw new Error('Failed to load supplier email draft.');
   return res.json();
 }
 
-export async function adminSendPartsSupplierEmail(id: number, data: { to: string; subject: string; body: string }): Promise<void> {
-  const res = await authedFetch(`/api/parts/admin/orders/${id}/supplier-email/`, {
+export async function adminSendPartsSupplierEmail(reference: string, data: { to: string; subject: string; body: string }): Promise<void> {
+  const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/supplier-email/`, {
     method: 'POST', body: JSON.stringify(data),
   });
   if (!res.ok) {
@@ -91,8 +91,8 @@ export async function adminSendPartsSupplierEmail(id: number, data: { to: string
   }
 }
 
-export async function adminSendPartsCustomerUpdate(id: number, type: 'backorder' | 'refund' | 'arranged'): Promise<void> {
-  const res = await authedFetch(`/api/parts/admin/orders/${id}/customer-update/`, {
+export async function adminSendPartsCustomerUpdate(reference: string, type: 'backorder' | 'refund' | 'arranged'): Promise<void> {
+  const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/customer-update/`, {
     method: 'POST', body: JSON.stringify({ type }),
   });
   if (!res.ok) {

@@ -41,7 +41,6 @@ export interface AdminPartsOrder {
   order_reference: string;
   status: string;
   has_backorder: boolean;
-  /** Days left in the hold, counted from the order date. Zero or negative means closed. */
   backorder_days_remaining: number;
   backorder_window_expired: boolean;
   backorder_hold_days: number;

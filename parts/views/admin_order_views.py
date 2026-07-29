@@ -316,6 +316,14 @@ class AdminPartsCustomerUpdateView(APIView):
             return Response({'detail': 'Invalid customer update type.'}, status=400)
         if update_type == 'backorder' and not order.items.filter(backordered=True).exists():
             return Response({'detail': 'No order items are currently on backorder.'}, status=400)
+        # "Order arranged" tells the customer every part is available. That is
+        # untrue while any line is still held on backorder.
+        if update_type == 'arranged' and order.items.filter(backordered=True).exists():
+            return Response(
+                {'detail': 'One or more items are still on backorder. Resolve or refund them '
+                           'before telling the customer the order has been arranged.'},
+                status=400,
+            )
         if update_type == 'refund' and not order.items.filter(status='refunded').exists():
             return Response({'detail': 'No order items are marked refunded.'}, status=400)
         sent = send_parts_customer_update(order, update_type, backorder_days=PartsSettings.get().backorder_hold_days)

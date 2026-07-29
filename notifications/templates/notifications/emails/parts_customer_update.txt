@@ -1,14 +1,23 @@
 Hi {{ order.customer_name }},
 
-{% if update_type == 'backorder' %}One or more items in your SYM parts order are now on backorder. We will hold the order for up to {{ backorder_days }} days. If an item cannot be obtained in that time, we will refund that item and arrange shipment of the remaining available parts.
-{% elif update_type == 'refund' %}Some parts in your SYM order could not be obtained within the {{ backorder_days }}-day backorder window. We have processed a refund of ${{ refunded_total }} for the cancelled lines. Refunds can take up to 14 days to appear, depending on your bank.
-{% else %}Good news — all parts in your order are available and we have arranged shipment to your delivery address. The supplier will send the order directly to you.
+{% if update_type == 'backorder' %}One or more items in your SYM parts order are now on backorder. We will hold the order for up to {{ backorder_days }} days. If a backordered part cannot be obtained in that time, we will refund that part and release the remaining items in your order for shipment.
+{% elif update_type == 'refund' %}We could not obtain some of the parts in your SYM order, and have processed a refund of ${{ refunded_total }} for those lines. Refunds can take up to 14 days to appear, depending on your bank.
+
+{% if remaining_count %}Any remaining non-refunded items in your order have now been released, and are on their way to your delivery address.{% else %}Every item in this order has been refunded. There is nothing further to ship.{% endif %}
+{% else %}Good news — every part in your order is available and we have arranged shipment to your delivery address. The supplier will send the order directly to you.
 {% endif %}
 
 Order reference: {{ order.order_reference }}
 
 ORDER STATUS
-{% for item in order.items.all %}{{ item.part_number }} — {{ item.description }} · Qty {{ item.quantity }} · {% if item.status == 'refunded' %}Refunded{% elif item.backordered %}On backorder{% else %}In progress{% endif %}
+{% for item in order.items.all %}{{ item.part_number }} — {{ item.description }} · QTY: {{ item.quantity }} · {% if item.status == 'refunded' %}Refunded{% elif item.backordered %}On backorder{% else %}In progress{% endif %}
 {% endfor %}
+
+SHIP TO
+{{ order.customer_name }}
+{{ order.address_line1 }}{% if order.address_line2 %}
+{{ order.address_line2 }}{% endif %}
+{{ order.suburb }} {{ order.state }} {{ order.postcode }}
+{{ order.country }}
 
 Questions? admin@scootershop.com.au

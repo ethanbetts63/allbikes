@@ -47,7 +47,7 @@
                 </tr>
                 {% for extra in booking.extras.all %}
                 <tr>
-                    <td style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c;">{{ extra.extra.name }} &times;{{ extra.quantity }}</td>
+                    <td style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c;">{{ extra.extra.name }} <strong style="color: #1c1917;">&times;&nbsp;{{ extra.quantity }}</strong></td>
                     <td align="right" style="padding: 3px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #1c1917;">${{ extra.total_amount }}</td>
                 </tr>
                 {% endfor %}

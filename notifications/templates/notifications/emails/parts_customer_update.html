@@ -1,8 +1,125 @@
-<html><body style="font-family:Arial,sans-serif;color:#1f2937;line-height:1.5">
-<h2>SYM parts order update</h2><p>Hi {{ order.customer_name }},</p>
-{% if update_type == 'backorder' %}<p>One or more items in your order are now on backorder. We will hold the order for up to <strong>{{ backorder_days }} days</strong>. If an item cannot be obtained, we will refund that item and arrange shipment of the remaining available parts.</p>
-{% elif update_type == 'refund' %}<p>Some parts could not be obtained within the {{ backorder_days }}-day backorder window. We have processed a refund of <strong>${{ refunded_total }}</strong> for the cancelled lines. Refunds can take up to 14 days to appear, depending on your bank.</p>
-{% else %}<p>Good news — all parts in your order are available and we have arranged shipment to your delivery address.</p>{% endif %}
-<p><strong>Order reference:</strong> {{ order.order_reference }}</p>
-<table style="border-collapse:collapse;width:100%"><thead><tr><th align="left">Part</th><th align="left">Qty</th><th align="left">Status</th></tr></thead><tbody>{% for item in order.items.all %}<tr><td style="border-top:1px solid #ddd;padding:8px 0">{{ item.part_number }}<br><small>{{ item.description }}</small></td><td style="border-top:1px solid #ddd">{{ item.quantity }}</td><td style="border-top:1px solid #ddd">{% if item.status == 'refunded' %}Refunded{% elif item.backordered %}On backorder{% else %}In progress{% endif %}</td></tr>{% endfor %}</tbody></table>
-<p>Questions? admin@scootershop.com.au</p></body></html>
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}{% if update_type == 'backorder' %}Backorder update{% elif update_type == 'refund' %}Refund processed{% else %}Order arranged{% endif %} — {{ order.order_reference }}{% endblock %}
+
+{% block preheader %}{% if update_type == 'backorder' %}One or more items in order {{ order.order_reference }} are on backorder.{% elif update_type == 'refund' %}A refund has been processed for order {{ order.order_reference }}.{% else %}Order {{ order.order_reference }} has been arranged for shipment.{% endif %}{% endblock %}
+
+{% block content %}
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">
+    {% if update_type == 'backorder' %}Backorder Update{% elif update_type == 'refund' %}Refund Processed{% else %}Order Arranged{% endif %}
+</h1>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0 0 24px 0; line-height: 26px;">
+    {% if update_type == 'backorder' %}
+    Hi {{ order.customer_name }}, one or more items in your SYM parts order are now on backorder.
+    {% elif update_type == 'refund' %}
+    Hi {{ order.customer_name }}, we could not obtain some of the parts in your SYM order, and have processed a refund for those lines.
+    {% else %}
+    Hi {{ order.customer_name }}, every part in your SYM order is available and we have arranged shipment to your delivery address.
+    {% endif %}
+</p>
+
+<!-- Order reference -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1c1917; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td align="center" style="padding: 16px 24px;">
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.2em; margin: 0 0 6px 0;">Order Reference</p>
+            <p style="font-family: 'Courier New', Courier, monospace; font-size: 22px; font-weight: bold; color: #ffffff; letter-spacing: 0.1em; margin: 0;">{{ order.order_reference }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Refund amount -->
+{% if update_type == 'refund' %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td align="center" style="padding: 16px 24px;">
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.2em; margin: 0 0 6px 0;">Amount Refunded</p>
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: bold; color: #1c1917; margin: 0;">${{ refunded_total }}</p>
+        </td>
+    </tr>
+</table>
+{% endif %}
+
+<!-- Items -->
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 8px 0 8px 0;">Order Status</p>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #44403c; margin-bottom: 16px;">
+    {% for item in order.items.all %}
+    <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e7e5e4; vertical-align: top;">
+            <span style="font-family: 'Courier New', Courier, monospace; color: #1c1917;">{{ item.part_number }}</span>
+            {% if item.colour_name %}<span style="color: #78716c;"> &middot; {{ item.colour_name }}</span>{% endif %}<br>
+            <span style="color: #78716c;">{{ item.description }}</span><br>
+            {% if item.status == 'refunded' %}
+            <span style="display: inline-block; padding: 1px 6px; border: 1px solid #be123c; border-radius: 3px; color: #be123c; font-size: 11px; font-weight: bold;">REFUNDED</span>
+            {% elif item.backordered %}
+            <span style="display: inline-block; padding: 1px 6px; border: 1px solid #b45309; border-radius: 3px; color: #b45309; font-size: 11px; font-weight: bold;">BACKORDER</span>
+            {% else %}
+            <span style="color: #16a34a; font-size: 12px;">In progress</span>
+            {% endif %}
+        </td>
+        <td align="center" style="padding: 10px 10px; border-bottom: 1px solid #e7e5e4; vertical-align: top; white-space: nowrap;">
+            <span style="display: inline-block; min-width: 22px; padding: 4px 9px; background-color: #1c1917; border-radius: 4px; color: #ffffff; font-size: 15px; font-weight: bold; line-height: 1.2;">&times;{{ item.quantity }}</span>
+        </td>
+        <td align="right" style="padding: 10px 0; border-bottom: 1px solid #e7e5e4; vertical-align: top; white-space: nowrap; font-weight: bold; color: #1c1917;">
+            ${{ item.line_total }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- What happens next -->
+{% if update_type == 'backorder' %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #92400e; line-height: 22px;">
+            <strong>We are holding your order for up to {{ backorder_days }} days.</strong>
+            If a backordered part cannot be obtained in that time, we will refund that part and release the remaining items in your order for shipment.
+        </td>
+    </tr>
+</table>
+{% elif update_type == 'refund' %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #166534; line-height: 22px;">
+            {% if remaining_count %}
+            <strong>Any remaining non-refunded items in your order have now been released.</strong>
+            They are on their way to your delivery address.
+            {% else %}
+            <strong>Every item in this order has been refunded.</strong>
+            There is nothing further to ship.
+            {% endif %}
+        </td>
+    </tr>
+</table>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #78716c; margin: 0 0 16px 0; line-height: 22px;">
+    Refunds can take up to 14 days to appear, depending on your bank.
+</p>
+{% else %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #166534; line-height: 22px;">
+            <strong>Your order is on its way.</strong>
+            The supplier will ship the parts directly to your delivery address.
+        </td>
+    </tr>
+</table>
+{% endif %}
+
+<!-- Ship to -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 24px;">
+    <tr>
+        <td style="padding: 20px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 24px;">
+            <p style="font-size: 11px; font-weight: bold; color: #78716c; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 10px 0;">Ship To</p>
+            <p style="margin: 0;">{{ order.customer_name }}<br>
+            {{ order.address_line1 }}{% if order.address_line2 %}<br>{{ order.address_line2 }}{% endif %}<br>
+            {{ order.suburb }} {{ order.state }} {{ order.postcode }}<br>{{ order.country }}</p>
+        </td>
+    </tr>
+</table>
+
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c; margin: 0; line-height: 24px;">
+    Questions? <a href="mailto:admin@scootershop.com.au" style="color: #1c1917;">admin@scootershop.com.au</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://www.scootershop.com.au/refunds" style="color: #1c1917;">Returns &amp; refunds policy</a>
+</p>
+{% endblock %}

@@ -141,6 +141,98 @@ class TestAdminPartsSettings:
         assert response.status_code == 400
 
 
+class TestCustomerUpdate:
+    """The three fixed customer emails and the guards on when they may be sent."""
+
+    def _send(self, admin_client, order, update_type):
+        return admin_client.post(
+            f'/api/parts/admin/orders/{order.order_reference}/customer-update/',
+            {'type': update_type}, format='json',
+        )
+
+    def test_arranged_blocked_while_a_line_is_on_backorder(self, admin_client):
+        order = _order()
+        item = order.items.first()
+        item.backordered = True
+        item.save()
+        r = self._send(admin_client, order, 'arranged')
+        assert r.status_code == 400
+        assert 'backorder' in r.json()['detail'].lower()
+
+    def test_arranged_allowed_once_no_line_is_on_backorder(self, admin_client, monkeypatch):
+        sent = {}
+        monkeypatch.setattr(
+            'parts.views.admin_order_views.send_parts_customer_update',
+            lambda o, t, **kw: sent.update(type=t) or True,
+        )
+        order = _order()
+        r = self._send(admin_client, order, 'arranged')
+        assert r.status_code == 200
+        assert sent['type'] == 'arranged'
+
+    def test_arranged_allowed_when_the_backordered_line_was_refunded(self, admin_client, monkeypatch):
+        """Refunding clears `backordered`, so the order can then be arranged."""
+        monkeypatch.setattr(
+            'parts.views.admin_order_views.send_parts_customer_update',
+            lambda o, t, **kw: True,
+        )
+        order = _order()
+        item = order.items.first()
+        item.backordered = True
+        item.save()
+        admin_client.patch(f'/api/parts/admin/items/{item.id}/', {'action': 'mark_refunded'}, format='json')
+        assert self._send(admin_client, order, 'arranged').status_code == 200
+
+
+class TestCustomerUpdateTemplates:
+    """The rendered bodies, since these are customer-facing and fixed copy."""
+
+    def _render(self, order, update_type):
+        from notifications.models import Message
+        from notifications.utils.email import send_parts_customer_update
+
+        assert send_parts_customer_update(order, update_type, backorder_days=14) is True
+        message = Message.objects.order_by('-id').first()
+        return message.body_text, message.body_html
+
+    def test_all_three_use_the_shared_html_shell(self, admin_client, monkeypatch):
+        monkeypatch.setattr('notifications.utils.email._send_mailgun', lambda *a, **kw: None)
+        order = _order()
+        for update_type in ('backorder', 'refund', 'arranged'):
+            _, html = self._render(order, update_type)
+            # Markers that only exist in notifications/emails/base.html
+            assert '<!DOCTYPE html>' in html
+            assert 'full-size-logo.png' in html
+            assert 'scootershop.com.au' in html
+
+    def test_refund_says_remaining_items_are_released(self, admin_client, monkeypatch):
+        monkeypatch.setattr('notifications.utils.email._send_mailgun', lambda *a, **kw: None)
+        p2 = PartFactory(part_number='B-2', wholesale_price_incl_gst=Decimal('50'), available_qty=5, in_pa_feed=True)
+        SectionPartFactory(section=PartSectionFactory(), ref_number='2', part=p2)
+        order = _order()
+        order.items.create(part_number='B-2', description='x', quantity=1,
+                           unit_price=Decimal('60'), line_total=Decimal('60'))
+        first = order.items.first()
+        first.status = 'refunded'
+        first.save()
+
+        text, html = self._render(order, 'refund')
+        assert 'remaining non-refunded items in your order have now been released' in text
+        assert 'remaining non-refunded items in your order have now been released' in html
+
+    def test_refund_says_nothing_left_to_ship_when_all_lines_refunded(self, admin_client, monkeypatch):
+        monkeypatch.setattr('notifications.utils.email._send_mailgun', lambda *a, **kw: None)
+        order = _order()
+        for item in order.items.all():
+            item.status = 'refunded'
+            item.save()
+
+        text, html = self._render(order, 'refund')
+        assert 'nothing further to ship' in text
+        assert 'nothing further to ship' in html
+        assert 'have now been released' not in text
+
+
 class TestSupplierEmail:
     def test_draft_uses_supplier_prices_and_keeps_recipient_blank(self, admin_client):
         order = _order()

@@ -11,10 +11,8 @@ import {
   type SupplierEmailDraft,
 } from '@/services/partsAdminService';
 
-const money = (value: number | null) => value == null ? 'Price unavailable' : `$${value.toFixed(2)}`;
-
 export default function SupplierEmailPage() {
-  const { id } = useParams<{ id: string }>();
+  const { reference } = useParams<{ reference: string }>();
   const router = useRouter();
   const [draft, setDraft] = useState<SupplierEmailDraft | null>(null);
   const [to, setTo] = useState('');
@@ -25,20 +23,20 @@ export default function SupplierEmailPage() {
   const [message, setMessage] = useState<{ text: string; error?: boolean } | null>(null);
 
   useEffect(() => {
-    if (!id) return;
-    adminGetPartsSupplierEmailDraft(Number(id))
+    if (!reference) return;
+    adminGetPartsSupplierEmailDraft(reference)
       .then((data) => { setDraft(data); setSubject(data.subject); setBody(data.body); })
       .catch(() => setMessage({ text: 'Failed to load the supplier email draft.', error: true }))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [reference]);
 
   const send = async () => {
     if (!to.trim()) { setMessage({ text: 'Enter the supplier email address before sending.', error: true }); return; }
     if (!confirm(`Send this supplier order email to ${to.trim()}?`)) return;
     setSending(true); setMessage(null);
     try {
-      await adminSendPartsSupplierEmail(Number(id), { to, subject, body });
-      router.push(`/dashboard/parts-orders/${id}`);
+      await adminSendPartsSupplierEmail(reference, { to, subject, body });
+      router.push(`/dashboard/parts-orders/${reference}`);
     } catch (error) {
       setMessage({ text: error instanceof Error ? error.message : 'Supplier email could not be sent.', error: true });
     } finally { setSending(false); }
@@ -55,42 +53,23 @@ export default function SupplierEmailPage() {
             <h1 className="text-2xl font-bold">Email supplier</h1>
             <p className="mt-1 text-sm text-[var(--text-dark-secondary)]">Review the order before sending. The recipient is deliberately blank.</p>
           </div>
-          <Link className="text-sm underline underline-offset-2" href={`/dashboard/parts-orders/${id}`}>← Back to order</Link>
+          <Link className="text-sm underline underline-offset-2" href={`/dashboard/parts-orders/${reference}`}>← Back to order</Link>
         </div>
 
         {message && <Alert variant={message.error ? 'destructive' : 'default'} className="mb-4"><AlertDescription>{message.text}</AlertDescription></Alert>}
         {draft.has_unpriced_items && <Alert variant="destructive" className="mb-4"><AlertDescription>One or more current supplier prices are unavailable. Check the email carefully before sending.</AlertDescription></Alert>}
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="space-y-4">
-            <label className="block text-sm font-medium">To
-              <input value={to} onChange={(e) => setTo(e.target.value)} type="email" autoComplete="off" placeholder="Enter supplier email address" className="mt-1 h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm" />
-            </label>
-            <label className="block text-sm font-medium">Subject
-              <input value={subject} onChange={(e) => setSubject(e.target.value)} className="mt-1 h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm" />
-            </label>
-            <label className="block text-sm font-medium">Email body
-              <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={24} className="mt-1 w-full rounded-md border border-input bg-transparent p-3 font-mono text-sm leading-6" />
-            </label>
-            <Button onClick={send} disabled={sending || !to.trim() || !subject.trim() || !body.trim()}>{sending ? 'Sending…' : 'Send supplier email'}</Button>
-          </div>
-
-          <aside className="h-fit rounded-md border border-border-light p-4">
-            <h2 className="mb-1 font-bold">Internal pricing</h2>
-            <p className="mb-4 text-xs text-[var(--text-dark-secondary)]">Current base prices from the supplier feed, before our markup.</p>
-            <div className="space-y-3 text-sm">
-              {draft.items.map((item) => <div key={item.part_number} className="border-b border-border-light pb-3 last:border-0">
-                <p className="font-mono text-xs font-bold">{item.part_number}</p>
-                <p className="text-xs text-[var(--text-dark-secondary)]">{item.description}</p>
-                <div className="mt-1 flex justify-between"><span>Supplier cost</span><strong>{money(item.line_total)}</strong></div>
-                <div className="mt-1 flex justify-between text-[var(--text-dark-secondary)]"><span>Sold for</span><span>${item.customer_line_total.toFixed(2)}</span></div>
-                <div className="mt-1 flex justify-between font-medium text-emerald-700"><span>Gross profit</span><span>{money(item.gross_profit)}</span></div>
-              </div>)}
-            </div>
-            <div className="mt-4 flex justify-between border-t border-border-light pt-3 text-sm font-bold"><span>Parts total incl. GST</span><span>${draft.supplier_parts_total.toFixed(2)}</span></div>
-            <div className="mt-1 flex justify-between text-sm text-[var(--text-dark-secondary)]"><span>Customer parts total</span><span>${draft.customer_parts_total.toFixed(2)}</span></div>
-            <div className="mt-1 flex justify-between text-sm font-bold text-emerald-700"><span>Gross profit</span><span>${draft.gross_profit_total.toFixed(2)}</span></div>
-          </aside>
+        <div className="space-y-4">
+          <label className="block text-sm font-medium">To
+            <input value={to} onChange={(e) => setTo(e.target.value)} type="email" autoComplete="off" placeholder="Enter supplier email address" className="mt-1 h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm" />
+          </label>
+          <label className="block text-sm font-medium">Subject
+            <input value={subject} onChange={(e) => setSubject(e.target.value)} className="mt-1 h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm" />
+          </label>
+          <label className="block text-sm font-medium">Email body
+            <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={24} className="mt-1 w-full rounded-md border border-input bg-transparent p-3 font-mono text-sm leading-6" />
+          </label>
+          <Button onClick={send} disabled={sending || !to.trim() || !subject.trim() || !body.trim()}>{sending ? 'Sending…' : 'Send supplier email'}</Button>
         </div>
       </div>
     </div>
