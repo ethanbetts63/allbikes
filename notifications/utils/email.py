@@ -426,7 +426,7 @@ def send_parts_supplier_dispatch(parts_order, *, to, subject, text_body):
     """
     html_body = render_to_string(
         'notifications/emails/parts_supplier_dispatch.html',
-        {'subject': subject, 'body': text_body},
+        {'subject': subject, 'body': text_body, 'order': parts_order},
     )
     try:
         _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)

@@ -12,7 +12,7 @@
     {% if update_type == 'backorder' %}
     Hi {{ order.customer_name }}, one or more items in your SYM parts order are now on backorder.
     {% elif update_type == 'refund' %}
-    Hi {{ order.customer_name }}, we could not obtain some of the parts in your SYM order, and have processed a refund for those lines.
+    Hi {{ order.customer_name }}, we could not obtain some of the parts in your SYM order, and have processed a refund for those items.
     {% else %}
     Hi {{ order.customer_name }}, every part in your SYM order is available and we have arranged shipment to your delivery address.
     {% endif %}
@@ -83,7 +83,6 @@
         <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #166534; line-height: 22px;">
             {% if remaining_count %}
             <strong>Any remaining non-refunded items in your order have now been released.</strong>
-            They are on their way to your delivery address.
             {% else %}
             <strong>Every item in this order has been refunded.</strong>
             There is nothing further to ship.
@@ -98,8 +97,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; margin-bottom: 16px;">
     <tr>
         <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #166534; line-height: 22px;">
-            <strong>Your order is on its way.</strong>
-            The supplier will ship the parts directly to your delivery address.
+            <strong>Your order has been released.</strong>
         </td>
     </tr>
 </table>

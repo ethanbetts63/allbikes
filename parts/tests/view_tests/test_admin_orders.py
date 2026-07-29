@@ -233,6 +233,39 @@ class TestCustomerUpdateTemplates:
         assert 'have now been released' not in text
 
 
+class TestSupplierEmailTemplate:
+    def test_uses_the_shared_shell_and_keeps_the_composed_body_verbatim(self, admin_client, monkeypatch):
+        """The compose screen is the safety gate, so the HTML must not rewrite the body."""
+        from notifications.models import Message
+        from notifications.utils.email import send_parts_supplier_dispatch
+
+        monkeypatch.setattr('notifications.utils.email._send_mailgun', lambda *a, **kw: None)
+        order = _order()
+        body = 'Please supply:\n  A-1 x2\n\nShip to: 1 St, Perth'
+        assert send_parts_supplier_dispatch(order, to='supplier@example.com',
+                                            subject='Parts order', text_body=body) is True
+
+        message = Message.objects.order_by('-id').first()
+        assert '<!DOCTYPE html>' in message.body_html
+        assert 'full-size-logo.png' in message.body_html
+        assert order.order_reference in message.body_html
+        # Operator copy is preserved exactly, newlines and all.
+        assert message.body_text == body
+        assert 'Please supply:\n  A-1 x2\n\nShip to: 1 St, Perth' in message.body_html
+
+    def test_composed_body_is_escaped_not_injected(self, admin_client, monkeypatch):
+        from notifications.models import Message
+        from notifications.utils.email import send_parts_supplier_dispatch
+
+        monkeypatch.setattr('notifications.utils.email._send_mailgun', lambda *a, **kw: None)
+        order = _order()
+        send_parts_supplier_dispatch(order, to='supplier@example.com', subject='x',
+                                     text_body='<script>alert(1)</script>')
+        message = Message.objects.order_by('-id').first()
+        assert '<script>alert(1)</script>' not in message.body_html
+        assert '&lt;script&gt;' in message.body_html
+
+
 class TestSupplierEmail:
     def test_draft_uses_supplier_prices_and_keeps_recipient_blank(self, admin_client):
         order = _order()

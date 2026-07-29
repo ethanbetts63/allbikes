@@ -2,6 +2,39 @@
 
 {% block title %}{{ subject }}{% endblock %}
 
+{% block preheader %}Parts order {{ order.order_reference }} from Allbikes &amp; Scooters.{% endblock %}
+
 {% block content %}
-<div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #44403c; line-height: 1.6; white-space: pre-wrap;">{{ body }}</div>
+<h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 900; color: #1c1917; text-transform: uppercase; font-style: italic; margin: 0 0 8px 0; line-height: 1.1;">Parts Order</h1>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #44403c; margin: 0 0 24px 0; line-height: 26px;">
+    Please supply the parts listed below and ship them directly to the delivery address.
+</p>
+
+<!-- Order reference -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1c1917; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td align="center" style="padding: 16px 24px;">
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.2em; margin: 0 0 6px 0;">Order Reference</p>
+            <p style="font-family: 'Courier New', Courier, monospace; font-size: 22px; font-weight: bold; color: #ffffff; letter-spacing: 0.1em; margin: 0;">{{ order.order_reference }}</p>
+        </td>
+    </tr>
+</table>
+
+<!-- Operator-composed body.
+
+     Rendered verbatim rather than rebuilt from order data on purpose: the
+     compose screen is the safety gate for this email, and the audit record
+     stores exactly this text. Regenerating a table here would let the HTML
+     drift from the copy a staff member actually reviewed and approved. -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f5f4f3; border-radius: 6px; margin-bottom: 16px;">
+    <tr>
+        <td style="padding: 20px 24px;">
+            <div style="font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #1c1917; line-height: 22px; white-space: pre-wrap;">{{ body }}</div>
+        </td>
+    </tr>
+</table>
+
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #78716c; margin: 0; line-height: 24px;">
+    Questions? <a href="mailto:admin@scootershop.com.au" style="color: #1c1917;">admin@scootershop.com.au</a>
+</p>
 {% endblock %}
