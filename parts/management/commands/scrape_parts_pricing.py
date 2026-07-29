@@ -5,7 +5,6 @@ archived), so the paired import command has work only when something changed.
 """
 import logging
 
-import requests
 from django.core.management.base import BaseCommand
 
 from parts.ingestion import source_page, storage
@@ -27,9 +26,7 @@ class Command(BaseCommand):
         if not pa_url:
             raise SystemExit("Could not find the Price & Availability link on the page.")
 
-        resp = requests.get(pa_url, headers=source_page.REQUEST_HEADERS, timeout=60)
-        resp.raise_for_status()
-        data = resp.content
+        data = source_page.download_bytes(pa_url, timeout=60)
         digest = storage.sha256_bytes(data)
 
         if not options["force"] and digest in storage.archived_hashes("pricing"):
@@ -40,6 +37,5 @@ class Command(BaseCommand):
         # A source URL may be replaced more than once on the same date. Include
         # its hash so archive/ remains an append-only audit trail.
         filename = f"PA-{stamp}-{digest[:12]}.csv"
-        (storage.archive_dir("pricing") / filename).write_bytes(data)
-        (storage.inbox_dir("pricing") / filename).write_bytes(data)
+        storage.queue_file("pricing", filename, data)
         self.stdout.write(self.style.SUCCESS(f"Scraped new PA file {filename} ({len(data)} bytes) -> inbox."))

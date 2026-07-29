@@ -44,6 +44,12 @@ def fetch_page(url=SOURCE_URL, timeout=30):
     return resp.text
 
 
+def download_bytes(url, *, timeout):
+    response = requests.get(url, headers=REQUEST_HEADERS, timeout=timeout)
+    response.raise_for_status()
+    return response.content
+
+
 def _cc_class_for(text):
     for pattern, code in _CC_CLASS_HEADINGS:
         if pattern.search(text or ""):

@@ -1,5 +1,3 @@
-from decimal import ROUND_HALF_UP, Decimal
-
 from django.db import models
 
 
@@ -45,10 +43,3 @@ class Part(models.Model):
     @property
     def is_orderable(self):
         return self.in_pa_feed and self.wholesale_price_incl_gst is not None
-
-    def customer_price(self, markup_percentage):
-        """Wholesale price with markup applied, rounded to 2dp. None if unpriced."""
-        if self.wholesale_price_incl_gst is None:
-            return None
-        factor = Decimal(1) + (Decimal(markup_percentage) / Decimal(100))
-        return (self.wholesale_price_incl_gst * factor).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)

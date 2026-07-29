@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import PartsSearchPage from './PartsSearchPage';
+
+import PartsSearchScreen from './_components/PartsSearchScreen';
 
 export const metadata: Metadata = {
   title: 'Search SYM Parts',
@@ -12,7 +13,7 @@ export default function Page() {
   // submit, rather than blocking the previous page until results return.
   return (
     <Suspense>
-      <PartsSearchPage />
+      <PartsSearchScreen />
     </Suspense>
   );
 }

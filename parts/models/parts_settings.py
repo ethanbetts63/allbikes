@@ -46,6 +46,3 @@ class PartsSettings(models.Model):
             return None
         factor = Decimal(1) + (self.markup_percentage / Decimal(100))
         return (wholesale_price * factor).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-
-    def current_shipping_fee(self):
-        return self.shipping_fee

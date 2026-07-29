@@ -61,8 +61,8 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; margin-bottom: 16px;">
     <tr>
         <td style="padding: 16px 20px; font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #92400e; line-height: 22px;">
-            <strong>Some items are on backorder.</strong> Backordered parts (marked above) are held for up to 14 days.
-            If we can&rsquo;t secure shipment within 14 days, that part is refunded.
+            <strong>Some items are on backorder.</strong> Backordered parts (marked above) are held for up to {{ order.backorder_hold_days }} days.
+            If we can&rsquo;t secure shipment within {{ order.backorder_hold_days }} days, that part is refunded.
         </td>
     </tr>
 </table>

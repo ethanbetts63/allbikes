@@ -4,7 +4,6 @@ Downloads each book linked on the source page and queues only those whose conten
 hash is not already archived. A JSON sidecar carries the display name + cc_class
 so the import command doesn't need the page.
 """
-import json
 import logging
 from urllib.parse import urlparse
 
@@ -34,22 +33,18 @@ class Command(BaseCommand):
         queued = 0
         for book in books:
             try:
-                resp = requests.get(book["url"], headers=source_page.REQUEST_HEADERS, timeout=120)
-                resp.raise_for_status()
+                data = source_page.download_bytes(book["url"], timeout=120)
             except requests.RequestException as exc:
                 logger.error("Failed to download %s: %s", book["url"], exc)
                 self.stderr.write(f"Failed: {book['name']} ({exc})")
                 continue
-            data = resp.content
             if not options["force"] and storage.sha256_bytes(data) in archived:
                 continue
             source_filename = urlparse(book["url"]).path.rsplit("/", 1)[-1] or f"{book['name']}.xls"
             stem, dot, suffix = source_filename.rpartition('.')
             filename = f"{stem or source_filename}-{storage.sha256_bytes(data)[:12]}.{suffix or 'xls'}"
-            (storage.archive_dir("books") / filename).write_bytes(data)
-            (storage.inbox_dir("books") / filename).write_bytes(data)
             sidecar = {"name": book["name"], "cc_class": book["cc_class"], "url": book["url"]}
-            (storage.inbox_dir("books") / f"{filename}.json").write_text(json.dumps(sidecar))
+            storage.queue_file("books", filename, data, metadata=sidecar)
             queued += 1
             self.stdout.write(f"Queued {filename} ({book['name']}).")
 

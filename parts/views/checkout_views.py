@@ -5,7 +5,7 @@ import stripe
 from django.conf import settings as django_settings
 from django.db import IntegrityError, transaction
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -17,14 +17,10 @@ from parts.serializers.order_serializers import (
 )
 
 from payments.models import Payment
+from parts.views.base import PublicAPIView
 
 stripe.api_key = django_settings.STRIPE_SECRET_KEY
 STRIPE_MINIMUM = Decimal('0.50')
-
-
-class PublicAPIView(APIView):
-    authentication_classes = []
-    permission_classes = [AllowAny]
 
 
 class CreatePartsOrderView(PublicAPIView):

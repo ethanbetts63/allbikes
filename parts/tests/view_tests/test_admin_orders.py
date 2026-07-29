@@ -8,6 +8,7 @@ from rest_framework.test import APIClient
 from parts.checkout import create_parts_order
 from parts.models import PartsSettings
 from parts.tests.factories import PartFactory, PartSectionFactory, SectionPartFactory
+from payments.models import Payment
 
 pytestmark = pytest.mark.django_db
 
@@ -43,8 +44,23 @@ def _customer(**over):
 def _order(available=5, qty=1, part_number='A-1'):
     p = PartFactory(part_number=part_number, wholesale_price_incl_gst=Decimal('100'),
                     available_qty=available, in_pa_feed=True)
-    SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-    return create_parts_order(customer=_customer(), items=[{'part_number': part_number, 'quantity': qty}])
+    fitment = SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
+    return create_parts_order(customer=_customer(), items=[{
+        'part_number': part_number, 'fitment_key': fitment.fitment_key, 'quantity': qty,
+    }])
+
+
+def _mark_paid(order):
+    Payment.objects.create(
+        parts_order=order,
+        stripe_payment_intent_id=f'pi_{order.order_reference}',
+        amount=order.total,
+        status='succeeded',
+    )
+    order.status = 'paid'
+    order.amount_paid = order.total
+    order.save(update_fields=['status', 'amount_paid', 'updated_at'])
+    return order
 
 
 class TestAdminList:
@@ -151,7 +167,7 @@ class TestCustomerUpdate:
         )
 
     def test_arranged_blocked_while_a_line_is_on_backorder(self, admin_client):
-        order = _order()
+        order = _mark_paid(_order())
         item = order.items.first()
         item.backordered = True
         item.save()
@@ -165,7 +181,7 @@ class TestCustomerUpdate:
             'parts.views.admin_order_views.send_parts_customer_update',
             lambda o, t, **kw: sent.update(type=t) or True,
         )
-        order = _order()
+        order = _mark_paid(_order())
         r = self._send(admin_client, order, 'arranged')
         assert r.status_code == 200
         assert sent['type'] == 'arranged'
@@ -176,12 +192,17 @@ class TestCustomerUpdate:
             'parts.views.admin_order_views.send_parts_customer_update',
             lambda o, t, **kw: True,
         )
-        order = _order()
+        order = _mark_paid(_order())
         item = order.items.first()
         item.backordered = True
         item.save()
         admin_client.patch(f'/api/parts/admin/items/{item.id}/', {'action': 'mark_refunded'}, format='json')
         assert self._send(admin_client, order, 'arranged').status_code == 200
+
+    def test_arranged_blocked_for_unpaid_order(self, admin_client):
+        response = self._send(admin_client, _order(), 'arranged')
+        assert response.status_code == 400
+        assert 'paid orders' in response.json()['detail'].lower()
 
 
 class TestCustomerUpdateTemplates:

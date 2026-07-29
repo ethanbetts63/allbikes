@@ -5,8 +5,14 @@ from parts.models import PartsOrder, PartsOrderItem
 
 class PartsCheckoutItemSerializer(serializers.Serializer):
     part_number = serializers.CharField(max_length=60)
-    section_part_id = serializers.IntegerField(min_value=1)
+    fitment_key = serializers.CharField(max_length=200, required=False)
+    section_part_id = serializers.IntegerField(min_value=1, required=False)
     quantity = serializers.IntegerField(min_value=1, default=1)
+
+    def validate(self, attrs):
+        if not attrs.get('fitment_key') and not attrs.get('section_part_id'):
+            raise serializers.ValidationError('A catalogue fitment is required.')
+        return attrs
 
 
 class PartsCheckoutSerializer(serializers.Serializer):
@@ -33,9 +39,9 @@ class PartsCheckoutSerializer(serializers.Serializer):
             raise serializers.ValidationError("Your cart is empty.")
         if len(value) > 50:
             raise serializers.ValidationError("Your cart can contain at most 50 different parts.")
-        part_numbers = [item['part_number'].strip() for item in value]
-        if len(part_numbers) != len(set(part_numbers)):
-            raise serializers.ValidationError("Each part can only appear once in your cart.")
+        fitments = [item.get('fitment_key') or f"legacy:{item.get('section_part_id')}" for item in value]
+        if len(fitments) != len(set(fitments)):
+            raise serializers.ValidationError("Each catalogue fitment can only appear once in your cart.")
         return value
 
 
@@ -56,7 +62,7 @@ class PartsOrderSerializer(serializers.ModelSerializer):
         fields = [
             'order_reference', 'status', 'customer_name', 'customer_email', 'customer_phone',
             'address_line1', 'address_line2', 'suburb', 'state', 'postcode', 'country',
-            'has_backorder', 'subtotal', 'shipping', 'total', 'amount_paid', 'items',
+            'has_backorder', 'backorder_hold_days', 'subtotal', 'shipping', 'total', 'amount_paid', 'items',
         ]
         read_only_fields = fields
 
@@ -75,5 +81,8 @@ class PartsOrderConfirmationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PartsOrder
-        fields = ['order_reference', 'status', 'has_backorder', 'subtotal', 'shipping', 'total', 'amount_paid', 'items']
+        fields = [
+            'order_reference', 'status', 'has_backorder', 'backorder_hold_days',
+            'subtotal', 'shipping', 'total', 'amount_paid', 'items',
+        ]
         read_only_fields = fields

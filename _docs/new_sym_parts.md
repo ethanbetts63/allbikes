@@ -20,7 +20,7 @@ and checkout, payment confirmation, and the operator’s supplier-email workflow
   └─ Select a section
        │
        ▼
-/parts/new/sym/:modelSlug/:sectionId
+/parts/new/sym/:modelSlug/:sectionCode
   ├─ Breadcrumb: Home / New SYM Parts / [Model] / [Section]
   ├─ Exploded diagram
   └─ Numbered parts list
@@ -40,7 +40,7 @@ and checkout, payment confirmation, and the operator’s supplier-email workflow
        ▼
 /parts/checkout
   ├─ Customer name, email, phone and shipping address
-  ├─ Country selects domestic or international flat shipping
+  ├─ Australian delivery address
   ├─ Customer accepts terms and backorder policy
   └─ Continue to payment
        │
@@ -54,7 +54,7 @@ and checkout, payment confirmation, and the operator’s supplier-email workflow
 /parts/checkout/confirmation
   ├─ Polls for the Stripe webhook result
   ├─ Shows a payment-confirmed order summary
-  └─ Shows the 14-day backorder policy when applicable
+  └─ Shows the order's Parts Settings backorder period when applicable
 ```
 
 ### Checkout safeguards
@@ -82,7 +82,7 @@ Stripe webhook
   └─ verifies the Stripe event and, once only:
        ├─ Payment → succeeded
        ├─ PartsOrder → paid
-       ├─ starts the 14-day clock on backordered lines
+       ├─ preserves the order's snapshotted backorder policy
        ├─ sends customer confirmation email
        └─ sends admin email and SMS
 ```
@@ -98,6 +98,7 @@ The full order endpoint is staff-only. It is not exposed just by knowing an
 /dashboard/parts-settings
   ├─ Markup percentage
   ├─ Australian shipping fee
+  ├─ Backorder hold period
   └─ Enable new parts sales
 
 /dashboard/parts-orders
@@ -130,9 +131,9 @@ fulfilment state and any backorder/refund actions under manual control.
 
 The Price & Availability feed is advisory, not a live reservation. We request
 that the supplier does not ship a partial order when any part is unavailable and
-instead tells us the missing parts and ETA. Customer orders are held for up to
-14 days; if the missing part cannot be secured, its line is refunded and the
-remainder may be shipped.
+instead tells us the missing parts and ETA. The hold period is configured in
+Parts Settings and snapshotted onto each order. If a missing part cannot be
+secured in that period, its line is refunded and the remainder may be shipped.
 
 ---
 
@@ -158,8 +159,11 @@ Catalog database
   before it can change catalog availability.
 - Customer price is `supplier base price × (1 + markup percentage)`, rounded to
   cents. Prices displayed to customers include GST.
-- Re-importing a book replaces its diagrams/sections while preserving historical
-  order snapshots.
+- Models use their SYM model code as a stable key; sections use model + section
+  code; fitments use model + section + callout + part number + effective date.
+- Re-importing a book updates those stable records in place, removes source rows
+  that disappeared, and preserves public section URLs and browser carts.
+- Historical order line snapshots remain independent of later catalogue imports.
 - The abandoned-order cleanup cron cancels pending parts orders older than seven
   days, alongside the existing product and hire cleanup.
 

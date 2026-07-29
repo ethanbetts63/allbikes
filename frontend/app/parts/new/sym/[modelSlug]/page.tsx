@@ -62,7 +62,7 @@ function SectionGroup({ title, slug, sections }: { title: string; slug: string; 
       <h2 className="mb-3 text-lg font-semibold text-black">{title}</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {sections.map((section) => (
-          <Link key={section.id} href={`/parts/new/sym/${slug}/${section.id}`} className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-black">
+          <Link key={section.id} href={`/parts/new/sym/${slug}/${section.code}`} className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-black">
             <div className="relative flex h-32 items-center justify-center bg-white">
               {section.diagram_thumb ? <Image src={section.diagram_thumb} alt={`${section.name} diagram`} fill sizes="(max-width: 640px) 50vw, 25vw" unoptimized className="object-contain p-2" /> : <span className="text-xs text-gray-400">No diagram</span>}
             </div>

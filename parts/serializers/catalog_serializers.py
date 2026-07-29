@@ -75,19 +75,17 @@ def _build_variant(section_part, axis, settings):
     part = section_part.part
     price = settings.apply_markup(part.wholesale_price_incl_gst)
     orderable = part.is_orderable
-    backorder = orderable and (part.available_qty is None or part.available_qty < section_part.quantity)
     return {
-        "section_part_id": section_part.id,
+        "fitment_key": section_part.fitment_key,
         "part_number": part.part_number,
         "description": section_part.description or part.description,
         "colour_name": part.colour_name or None,
         "paint_code": part.paint_code or None,
         "effective_date": section_part.effective_date,
         "variant_label": _variant_label(section_part, axis),
-        "quantity": section_part.quantity,
+        "required_quantity": section_part.quantity,
         "price": str(price) if price is not None else None,
         "available_qty": part.available_qty,
-        "backorder": backorder,
         "orderable": orderable,
     }
 
@@ -128,5 +126,6 @@ def build_section_payload(section, settings, request=None):
         },
         "diagram_image": _image_url(section.diagram_image, request),
         "enable_new_part_sales": settings.enable_new_part_sales,
+        "backorder_hold_days": settings.backorder_hold_days,
         "callouts": callouts,
     }

@@ -1,19 +1,12 @@
-from decimal import Decimal
-
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 from notifications.models import Message
 
 from rest_framework import serializers
 
-from parts.models import Part, PartsOrder, PartsOrderItem, PartsSettings
-
-
-def supplier_price_map(order):
-    """part_number -> Part, for current supplier (wholesale) pricing."""
-    return Part.objects.in_bulk(
-        [item.part_number for item in order.items.all()], field_name='part_number'
-    )
+from parts.models import PartsOrder, PartsOrderItem
+from parts.order_costs import order_margin, supplier_line_cost, supplier_price_map
 
 
 class AdminPartsOrderListSerializer(serializers.ModelSerializer):
@@ -63,10 +56,7 @@ class AdminPartsOrderItemSerializer(serializers.ModelSerializer):
         prices = self.context.get('supplier_prices')
         if prices is None:
             prices = supplier_price_map(obj.parts_order)
-        part = prices.get(obj.part_number)
-        if part is None or part.wholesale_price_incl_gst is None:
-            return None
-        return part.wholesale_price_incl_gst * obj.quantity
+        return supplier_line_cost(obj, prices)
 
     def get_supplier_line_total(self, obj):
         return self._supplier_line_total(obj)
@@ -84,7 +74,6 @@ class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
     margin = serializers.SerializerMethodField()
     backorder_days_remaining = serializers.SerializerMethodField()
     backorder_window_expired = serializers.SerializerMethodField()
-    backorder_hold_days = serializers.SerializerMethodField()
 
     class Meta:
         model = PartsOrder
@@ -98,18 +87,11 @@ class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
             'items', 'stripe_payment_intent_id', 'payment_status', 'messages', 'margin',
         ]
 
-    def _hold_days(self):
-        hold_days = self.context.get('backorder_hold_days')
-        return PartsSettings.get().backorder_hold_days if hold_days is None else hold_days
-
-    def get_backorder_hold_days(self, obj):
-        return self._hold_days()
-
     def get_backorder_days_remaining(self, obj):
-        return obj.backorder_days_remaining(self._hold_days())
+        return obj.backorder_days_remaining()
 
     def get_backorder_window_expired(self, obj):
-        return obj.backorder_window_expired(self._hold_days())
+        return obj.backorder_window_expired()
 
     def get_margin(self, obj):
         """Order-level supplier cost vs. what the customer paid for the parts.
@@ -117,25 +99,7 @@ class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
         Shipping is excluded — it isn't a supplier cost. Lines whose part has no
         live feed price are skipped from the cost total and flagged instead.
         """
-        prices = self.context.get('supplier_prices')
-        if prices is None:
-            prices = supplier_price_map(obj)
-        supplier_total = Decimal('0.00')
-        customer_total = Decimal('0.00')
-        unpriced = False
-        for item in obj.items.all():
-            customer_total += item.line_total
-            part = prices.get(item.part_number)
-            if part is None or part.wholesale_price_incl_gst is None:
-                unpriced = True
-                continue
-            supplier_total += part.wholesale_price_incl_gst * item.quantity
-        return {
-            'supplier_parts_total': supplier_total,
-            'customer_parts_total': customer_total,
-            'gross_profit_total': customer_total - supplier_total,
-            'has_unpriced_items': unpriced,
-        }
+        return order_margin(obj, self.context.get('supplier_prices'))
 
     def get_stripe_payment_intent_id(self, obj):
         payment = getattr(obj, 'payment', None)
@@ -156,3 +120,8 @@ class AdminPartsOrderUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PartsOrder
         fields = ['status', 'admin_notes']
+
+    def update(self, instance, validated_data):
+        if validated_data.get('status') == 'dispatched' and instance.dispatched_at is None:
+            instance.dispatched_at = timezone.now()
+        return super().update(instance, validated_data)

@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from parts.ingestion import colour as colour_mod
+from parts.keys import build_fitment_key
 from parts.models import Part, PartsModel, PartSection, SectionPart
 
 logger = logging.getLogger(__name__)
@@ -32,10 +33,7 @@ def _unique_slug(name, model_code):
 
 @transaction.atomic
 def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filename="", book_hash=""):
-    """Upsert one parsed book. Replaces the model's sections/parts (delete +
-    recreate); ``Part`` rows persist (PROTECT) so pricing is never cascade-deleted.
-    Returns the ``PartsModel``.
-    """
+    """Upsert one parsed book while preserving stable section/fitment identities."""
     model_code = parsed["model_code"]
     if not model_code:
         raise ValueError("Book has no model code; refusing to import.")
@@ -57,46 +55,70 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
     model.is_active = True
     model.save()
 
-    # Replace sections + section parts for this model. ImageField files do not
-    # automatically disappear when their rows are deleted, so remove the old
-    # diagrams after a successful transaction as well.
-    old_diagram_names = [
-        section.diagram_image.name for section in model.sections.exclude(diagram_image='')
-        if section.diagram_image
-    ]
-    model.sections.all().delete()
-
+    retained_section_ids = []
+    obsolete_diagram_names = []
     for sec in parsed["sections"]:
-        section = PartSection.objects.create(
+        section, _ = PartSection.objects.update_or_create(
             parts_model=model,
             code=sec["code"],
-            group=sec["group"],
-            name=sec["name"],
-            sort_order=sec["sort_order"],
+            defaults={
+                "group": sec["group"],
+                "name": sec["name"],
+                "sort_order": sec["sort_order"],
+            },
         )
+        retained_section_ids.append(section.id)
         if sec.get("diagram_bytes"):
+            old_diagram_name = section.diagram_image.name if section.diagram_image else ""
             ext = _diagram_extension(sec["diagram_bytes"])
             section.diagram_image.save(
                 f"{model_code}_{sec['code']}.{ext}",
                 ContentFile(sec["diagram_bytes"]),
                 save=True,
             )
+            if old_diagram_name and old_diagram_name != section.diagram_image.name:
+                obsolete_diagram_names.append(old_diagram_name)
+
+        retained_fitment_keys = []
+        occurrences = {}
         for row in sec["parts"]:
             part = _upsert_book_part(row)
-            SectionPart.objects.create(
-                section=section,
-                part=part,
+            base_key = build_fitment_key(
+                model_code=model_code,
+                section_code=sec["code"],
                 ref_number=row["ref_number"],
-                description=row["description"],
-                quantity=row["quantity"],
+                part_number=part.part_number,
                 effective_date=row["effective_date"],
-                superseded_flag=row["superseded_flag"],
-                sort_order=row["sort_order"],
             )
+            occurrences[base_key] = occurrences.get(base_key, 0) + 1
+            occurrence = occurrences[base_key]
+            fitment_key = base_key if occurrence == 1 else f"{base_key}:{occurrence}"
+            retained_fitment_keys.append(fitment_key)
+            SectionPart.objects.update_or_create(
+                fitment_key=fitment_key,
+                defaults={
+                    "section": section,
+                    "part": part,
+                    "ref_number": row["ref_number"],
+                    "description": row["description"],
+                    "quantity": row["quantity"],
+                    "effective_date": row["effective_date"],
+                    "superseded_flag": row["superseded_flag"],
+                    "sort_order": row["sort_order"],
+                },
+            )
+        section.parts.exclude(fitment_key__in=retained_fitment_keys).delete()
+
+    stale_sections = model.sections.exclude(id__in=retained_section_ids)
+    obsolete_diagram_names.extend(
+        section.diagram_image.name for section in stale_sections.exclude(diagram_image='')
+        if section.diagram_image
+    )
+    stale_sections.delete()
 
     def delete_old_diagrams():
         storage = PartSection._meta.get_field('diagram_image').storage
-        for image_name in old_diagram_names:
+        for image_name in obsolete_diagram_names:
             storage.delete(image_name)
 
     transaction.on_commit(delete_old_diagrams)
@@ -130,37 +152,58 @@ def _upsert_book_part(row):
     return part
 
 
+@transaction.atomic
 def import_pricing(rows, *, mark_missing_unavailable=True):
     """Apply PA rows to Part price/availability. Returns the number of rows applied.
 
     Sets ``in_pa_feed=False`` on any Part not present in this feed (discontinued).
     """
     now = timezone.now()
-    seen = set()
-    applied = 0
-    for row in rows:
-        pn = row["part_number"]
-        seen.add(pn)
+    rows_by_part_number = {row["part_number"]: row for row in rows}
+    seen = set(rows_by_part_number)
+    existing = Part.objects.in_bulk(seen, field_name='part_number')
+    to_create = []
+    to_update = []
+
+    for pn, row in rows_by_part_number.items():
         base, suffix = colour_mod.split_base_and_suffix(pn)
         paint_code = colour_mod.parse_paint_code(row["description"])
-        part, created = Part.objects.get_or_create(part_number=pn)
+        part = existing.get(pn)
+        if part is None:
+            part = Part(part_number=pn)
+            to_create.append(part)
+        else:
+            to_update.append(part)
         part.description = row["description"] or part.description
         part.wholesale_price_incl_gst = row["price"]
         part.available_qty = row["available"]
         part.in_pa_feed = True
         part.price_updated_at = now
+        part.updated_at = now
         # Fill colour gaps for PA-only parts without clobbering book-derived data.
         if not part.base_part_number:
-            part.base_part_number = pn
+            part.base_part_number = base
+        if not part.colour_suffix and suffix:
+            part.colour_suffix = suffix
         if not part.paint_code and paint_code:
             part.paint_code = paint_code
         if not part.colour_name and paint_code:
             part.colour_name = colour_mod.resolve_colour_name(paint_code)
-        part.save()
-        applied += 1
+
+    Part.objects.bulk_create(to_create, batch_size=1000)
+    Part.objects.bulk_update(
+        to_update,
+        fields=[
+            'description', 'wholesale_price_incl_gst', 'available_qty', 'in_pa_feed',
+            'price_updated_at', 'updated_at', 'base_part_number', 'colour_suffix',
+            'paint_code', 'colour_name',
+        ],
+        batch_size=1000,
+    )
 
     if mark_missing_unavailable and seen:
         Part.objects.exclude(part_number__in=seen).filter(in_pa_feed=True).update(in_pa_feed=False)
 
+    applied = len(rows_by_part_number)
     logger.info("Applied pricing to %d parts", applied)
     return applied

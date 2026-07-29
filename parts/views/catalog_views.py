@@ -1,9 +1,7 @@
 """Public read API for the parts catalog (no auth)."""
 from django.db.models import Q
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from parts.models import Part, PartsModel, PartSection, PartsSettings, SectionPart
 from parts.serializers.catalog_serializers import (
@@ -11,13 +9,9 @@ from parts.serializers.catalog_serializers import (
     PartsModelListSerializer,
     build_section_payload,
 )
+from parts.views.base import PublicAPIView
 
 SEARCH_LIMIT = 50
-
-
-class PublicAPIView(APIView):
-    authentication_classes = []
-    permission_classes = [AllowAny]
 
 
 class PartsModelListView(PublicAPIView):
@@ -42,6 +36,18 @@ class SectionDetailView(PublicAPIView):
     def get(self, request, pk):
         section = get_object_or_404(
             PartSection.objects.select_related("parts_model"), pk=pk
+        )
+        settings = PartsSettings.get()
+        return Response(build_section_payload(section, settings, request=request))
+
+
+class ModelSectionDetailView(PublicAPIView):
+    def get(self, request, slug, code):
+        section = get_object_or_404(
+            PartSection.objects.select_related("parts_model"),
+            parts_model__slug=slug,
+            parts_model__is_active=True,
+            code__iexact=code,
         )
         settings = PartsSettings.get()
         return Response(build_section_payload(section, settings, request=request))

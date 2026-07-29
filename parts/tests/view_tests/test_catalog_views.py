@@ -65,6 +65,7 @@ class TestSectionDetail:
         PartsSettings.get().save()
         response = client.get(f"/api/parts/sections/{section.id}/")
         assert response.json()['enable_new_part_sales'] is True
+        assert response.json()['backorder_hold_days'] == settings_20pct.backorder_hold_days
 
         settings = PartsSettings.get()
         settings.enable_new_part_sales = False
@@ -90,14 +91,24 @@ class TestSectionDetail:
         # wholesale price is never exposed
         assert "wholesale_price_incl_gst" not in callout["variants"][0]
 
-    def test_backorder_flag(self, client, settings_20pct):
+    def test_stock_inputs_are_returned_without_duplicate_policy_flag(self, client, settings_20pct):
         section = PartSectionFactory()
         part = PartFactory(wholesale_price_incl_gst=Decimal("10"), available_qty=0, in_pa_feed=True)
         SectionPartFactory(section=section, ref_number="1", part=part, quantity=1)
         resp = client.get(f"/api/parts/sections/{section.id}/")
         variant = resp.json()["callouts"][0]["variants"][0]
         assert variant["orderable"] is True
-        assert variant["backorder"] is True
+        assert variant["available_qty"] == 0
+        assert variant["required_quantity"] == 1
+        assert "backorder" not in variant
+
+    def test_stable_model_and_section_code_route(self, client, settings_20pct):
+        section = PartSectionFactory(code='F05')
+        response = client.get(
+            f'/api/parts/models/{section.parts_model.slug}/sections/{section.code}/'
+        )
+        assert response.status_code == 200
+        assert response.json()['id'] == section.id
 
     def test_not_in_feed_is_unorderable(self, client, settings_20pct):
         section = PartSectionFactory()

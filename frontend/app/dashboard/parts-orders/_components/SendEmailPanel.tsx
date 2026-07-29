@@ -33,6 +33,7 @@ export default function SendEmailPanel({ order, busy, onCustomerUpdate }: {
 }) {
   const refundedItems = order.items.filter((i) => i.status === 'refunded');
   const backorderedItems = order.items.filter((i) => i.backordered);
+  const customerUpdatesDisabled = order.payment_status !== 'succeeded';
 
   // Ordered by the workflow an operator actually follows: order from the
   // supplier, confirm to the customer, then chase backorders/refunds.
@@ -51,8 +52,10 @@ export default function SendEmailPanel({ order, busy, onCustomerUpdate }: {
       label: 'Order arranged',
       description: 'Tells the customer every part is available and shipment has been arranged with the supplier.',
       cta: 'Email',
-      disabled: backorderedItems.length > 0,
-      disabledReason: 'One or more items are still on backorder — resolve or refund them first.',
+      disabled: customerUpdatesDisabled || backorderedItems.length > 0,
+      disabledReason: customerUpdatesDisabled
+        ? 'Only available after payment succeeds.'
+        : 'One or more items are still on backorder — resolve or refund them first.',
       onClick: () => onCustomerUpdate('arranged'),
     },
     {
@@ -60,8 +63,10 @@ export default function SendEmailPanel({ order, busy, onCustomerUpdate }: {
       label: 'Backorder update',
       description: 'Tells the customer one or more parts are on backorder and the order is being held.',
       cta: 'Email',
-      disabled: backorderedItems.length === 0,
-      disabledReason: 'No items are currently on backorder.',
+      disabled: customerUpdatesDisabled || backorderedItems.length === 0,
+      disabledReason: customerUpdatesDisabled
+        ? 'Only available after payment succeeds.'
+        : 'No items are currently on backorder.',
       onClick: () => onCustomerUpdate('backorder'),
     },
     {
@@ -69,8 +74,10 @@ export default function SendEmailPanel({ order, busy, onCustomerUpdate }: {
       label: 'Refund update',
       description: 'Refund for cancelled/backorder expired lines processed and remaining parts have been released. Send after refunding in Stripe.',
       cta: 'Email',
-      disabled: refundedItems.length === 0,
-      disabledReason: 'No items are marked refunded.',
+      disabled: customerUpdatesDisabled || refundedItems.length === 0,
+      disabledReason: customerUpdatesDisabled
+        ? 'Only available after payment succeeds.'
+        : 'No items are marked refunded.',
       onClick: () => onCustomerUpdate('refund'),
     },
   ];

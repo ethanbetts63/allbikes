@@ -17,7 +17,8 @@ pytestmark = pytest.mark.django_db
 def parts_settings():
     s = PartsSettings.get()
     s.markup_percentage = Decimal('20')
-    s.domestic_shipping_fee = Decimal('15')
+    s.shipping_fee = Decimal('15')
+    s.backorder_hold_days = 11
     s.save()
     return s
 
@@ -25,12 +26,12 @@ def parts_settings():
 def _order(available=5, qty=1, part='A-1', colour='Red'):
     p = PartFactory(part_number=part, wholesale_price_incl_gst=Decimal('100'),
                     available_qty=available, in_pa_feed=True, colour_name=colour)
-    SectionPartFactory(section=PartSectionFactory(name='Shroud Assy'), ref_number='1', part=p)
+    fitment = SectionPartFactory(section=PartSectionFactory(name='Shroud Assy'), ref_number='1', part=p)
     return create_parts_order(customer={
         'customer_name': 'Jane Smith', 'customer_email': 'jane@example.com', 'customer_phone': '0400000000',
         'address_line1': '1 Test St', 'suburb': 'Dianella', 'state': 'WA', 'postcode': '6059',
         'country': 'Australia', 'terms_accepted': True,
-    }, items=[{'part_number': part, 'quantity': qty}])
+    }, items=[{'part_number': part, 'fitment_key': fitment.fitment_key, 'quantity': qty}])
 
 
 class TestCustomerConfirmation:
@@ -53,7 +54,7 @@ class TestCustomerConfirmation:
         email_utils.send_parts_customer_confirmation(order)
         msg = Message.objects.get(message_type='parts_customer_confirmation')
         assert 'backorder' in msg.body_text.lower()
-        assert '14 days' in msg.body_text
+        assert '11 days' in msg.body_text
 
     def test_no_confirm_before_dispatch_language(self):
         order = _order()

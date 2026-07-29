@@ -1,6 +1,7 @@
 'use client';
 
 import type { PartsCartItem } from '@/types/parts';
+import { partsJson } from '@/lib/partsHttp';
 
 export interface PartsOrderItemDetail {
   part_number: string;
@@ -28,6 +29,7 @@ export interface PartsOrderDetail {
   state: string;
   postcode: string;
   has_backorder: boolean;
+  backorder_hold_days: number;
   subtotal: string;
   shipping: string;
   total: string;
@@ -49,7 +51,6 @@ export interface CustomerDetails {
   suburb: string;
   state: string;
   postcode: string;
-  country: string;
   terms_accepted: boolean;
 }
 
@@ -64,24 +65,18 @@ export async function createPartsOrder(
       ...customer,
       items: items.map((i) => ({
         part_number: i.part_number,
-        section_part_id: i.section_part_id,
+        fitment_key: i.fitment_key,
+        section_part_id: i.fitment_key ? undefined : i.section_part_id,
         quantity: i.quantity,
       })),
     }),
   });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    const err = new Error(body.detail || 'Could not create your order.') as Error & { unavailable?: string[] };
-    err.unavailable = body.unavailable;
-    throw err;
-  }
-  return res.json();
+  return partsJson<PartsOrderCreated>(res, 'Could not create your order.');
 }
 
 export async function getPartsOrder(reference: string, accessToken: string): Promise<PartsOrderDetail> {
   const res = await fetch(`/api/parts/orders/${reference}/confirmation/?token=${encodeURIComponent(accessToken)}`);
-  if (!res.ok) throw new Error('Order not found.');
-  return res.json();
+  return partsJson<PartsOrderDetail>(res, 'Order not found.');
 }
 
 export async function createPartsPaymentIntent(reference: string, accessToken: string): Promise<{ clientSecret: string }> {
@@ -90,9 +85,5 @@ export async function createPartsPaymentIntent(reference: string, accessToken: s
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ order_reference: reference, access_token: accessToken }),
   });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.detail || 'Could not start payment.');
-  }
-  return res.json();
+  return partsJson<{ clientSecret: string }>(res, 'Could not start payment.');
 }

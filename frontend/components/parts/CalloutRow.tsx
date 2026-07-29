@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { usePartsCart } from '@/context/PartsCartContext';
+import { partsCartItemKey, usePartsCart } from '@/context/PartsCartContext';
 import { stockState } from '@/lib/partsStock';
 import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
+import QuantityControl from '@/components/parts/QuantityControl';
 
 interface Props {
   callout: Callout;
@@ -84,14 +85,15 @@ function VariantLine({
   showLabel: boolean;
 }) {
   const { items, addItem, updateQuantity } = usePartsCart();
-  const cartQuantity = items.find((item) => item.part_number === variant.part_number)?.quantity ?? 0;
+  const cartItem = items.find((item) => partsCartItemKey(item) === variant.fitment_key);
+  const cartQuantity = cartItem?.quantity ?? 0;
   // Badge reflects the quantity that would be in the cart (at least 1).
   const stock = stockState(variant.available_qty, cartQuantity || 1);
 
   const add = () => {
     if (!variant.price || !section.enable_new_part_sales) return;
     addItem({
-      section_part_id: variant.section_part_id,
+      fitment_key: variant.fitment_key,
       part_number: variant.part_number,
       description: variant.description,
       colour_name: variant.colour_name,
@@ -135,27 +137,11 @@ function VariantLine({
           {variant.price ? `$${variant.price}` : '—'}
         </span>
         {cartQuantity > 0 ? (
-          <div className="flex h-8 items-center overflow-hidden rounded-md border border-black bg-white">
-            <button
-              type="button"
-              onClick={() => updateQuantity(variant.part_number, cartQuantity - 1)}
-              aria-label={`Remove one ${variant.part_number} from cart`}
-              className="flex h-full w-8 items-center justify-center text-lg font-medium text-black hover:bg-gray-100"
-            >
-              −
-            </button>
-            <span className="min-w-8 border-x border-black px-2 text-center text-sm font-semibold text-black">
-              {cartQuantity}
-            </span>
-            <button
-              type="button"
-              onClick={() => updateQuantity(variant.part_number, cartQuantity + 1)}
-              aria-label={`Add one more ${variant.part_number} to cart`}
-              className="flex h-full w-8 items-center justify-center text-lg font-medium text-black hover:bg-gray-100"
-            >
-              +
-            </button>
-          </div>
+          <QuantityControl
+            partNumber={variant.part_number}
+            quantity={cartQuantity}
+            onChange={(quantity) => updateQuantity(variant.fitment_key, quantity)}
+          />
         ) : (
           <button
             type="button"

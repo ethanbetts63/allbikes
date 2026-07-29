@@ -10,12 +10,16 @@ interface PartsCartContextValue {
   count: number;
   subtotal: number;
   addItem: (item: PartsCartItem) => void;
-  updateQuantity: (partNumber: string, quantity: number) => void;
-  removeItem: (partNumber: string) => void;
+  updateQuantity: (itemKey: string, quantity: number) => void;
+  removeItem: (itemKey: string) => void;
   clear: () => void;
 }
 
 const PartsCartContext = createContext<PartsCartContextValue | null>(null);
+
+export function partsCartItemKey(item: Pick<PartsCartItem, 'fitment_key' | 'part_number'>): string {
+  return item.fitment_key ?? item.part_number;
+}
 
 function loadItems(): PartsCartItem[] {
   if (typeof window === 'undefined') return [];
@@ -32,8 +36,11 @@ export function PartsCartProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setItems(loadItems());
-    setHydrated(true);
+    const timeoutId = window.setTimeout(() => {
+      setItems(loadItems());
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   useEffect(() => {
@@ -43,10 +50,11 @@ export function PartsCartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback((item: PartsCartItem) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.part_number === item.part_number);
+      const itemKey = partsCartItemKey(item);
+      const existing = prev.find((i) => partsCartItemKey(i) === itemKey);
       if (existing) {
         return prev.map((i) =>
-          i.part_number === item.part_number
+          partsCartItemKey(i) === itemKey
             ? { ...i, quantity: i.quantity + item.quantity }
             : i,
         );
@@ -55,16 +63,16 @@ export function PartsCartProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  const updateQuantity = useCallback((partNumber: string, quantity: number) => {
+  const updateQuantity = useCallback((itemKey: string, quantity: number) => {
     setItems((prev) =>
       prev
-        .map((i) => (i.part_number === partNumber ? { ...i, quantity } : i))
+        .map((i) => (partsCartItemKey(i) === itemKey ? { ...i, quantity } : i))
         .filter((i) => i.quantity > 0),
     );
   }, []);
 
-  const removeItem = useCallback((partNumber: string) => {
-    setItems((prev) => prev.filter((i) => i.part_number !== partNumber));
+  const removeItem = useCallback((itemKey: string) => {
+    setItems((prev) => prev.filter((i) => partsCartItemKey(i) !== itemKey));
   }, []);
 
   const clear = useCallback(() => setItems([]), []);

@@ -139,7 +139,7 @@ numbered sections, and clear contact details for FEPS (WA) PTY LTD.
 
 ## Decisions needed before drafting final legal copy
 
-1. Is the published backorder promise always 7 calendar days, or business days?
+1. Confirm that the Parts Settings backorder period is measured in calendar days.
 2. What is the precise change-of-mind return policy and who bears return postage?
 3. Will the supplier accept returns for fitted, opened, electrical or special
    order parts, and is there a restocking fee?

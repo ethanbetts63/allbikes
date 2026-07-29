@@ -42,6 +42,15 @@ def _customer(**over):
     return base
 
 
+def _item(part_number, quantity=1):
+    fitment = SectionPart.objects.filter(part__part_number=part_number).first()
+    return {
+        'part_number': part_number,
+        'fitment_key': fitment.fitment_key if fitment else 'missing-fitment',
+        'quantity': quantity,
+    }
+
+
 class TestCreatePartsOrderService:
     def test_sales_disabled_blocks_checkout(self, settings_fixture):
         p = PartFactory(part_number='DISABLED-1', wholesale_price_incl_gst=Decimal('10'), in_pa_feed=True)
@@ -57,7 +66,7 @@ class TestCreatePartsOrderService:
     def test_totals_with_markup_and_shipping(self, settings_fixture):
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('100'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 2}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1', 2)])
         assert order.subtotal == Decimal('240.00')   # 100*1.2 * 2
         assert order.shipping == Decimal('15.00')
         assert order.total == Decimal('255.00')
@@ -68,29 +77,30 @@ class TestCreatePartsOrderService:
         """A non-Australian country is ignored — we only ship domestically."""
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(country='New Zealand'), items=[{'part_number': 'A-1', 'quantity': 1}])
+        order = create_parts_order(customer=_customer(country='New Zealand'), items=[_item('A-1')])
         assert order.country == 'Australia'
-        assert order.is_international is False
         assert order.shipping == Decimal('15.00')
 
     def test_backorder_flag(self, settings_fixture):
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=0, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 3}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1', 3)])
         assert order.has_backorder is True
         assert order.items.first().backordered is True
 
     def test_unavailable_raises(self, settings_fixture):
         PartFactory(part_number='A-1', in_pa_feed=False, wholesale_price_incl_gst=None)
         with pytest.raises(CheckoutError) as exc:
-            create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+            create_parts_order(customer=_customer(), items=[_item('A-1')])
         assert 'A-1' in exc.value.unavailable
 
     def test_price_recomputed_from_catalog(self, settings_fixture):
         # even if client sent a price, server uses catalog wholesale * markup
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('50'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1, 'unit_price': '1.00'}])
+        line = _item('A-1')
+        line['unit_price'] = '1.00'
+        order = create_parts_order(customer=_customer(), items=[line])
         assert order.items.first().unit_price == Decimal('60.00')
 
 
@@ -119,7 +129,7 @@ class TestCheckoutViews:
     def test_retrieve_order(self, client, settings_fixture):
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1')])
         resp = client.get(f'/api/parts/orders/{order.order_reference}/')
         assert resp.status_code in (401, 403)
         resp = client.get(f'/api/parts/orders/{order.order_reference}/confirmation/?token={order.access_token}')
@@ -132,7 +142,7 @@ class TestCheckoutViews:
         mock_stripe.PaymentIntent.create.return_value = MagicMock(id='pi_test', client_secret='cs_test')
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1')])
         resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference, 'access_token': order.access_token}, format='json')
         assert resp.status_code == 200
         assert resp.json()['clientSecret'] == 'cs_test'
@@ -143,7 +153,7 @@ class TestCheckoutViews:
         mock_stripe.PaymentIntent.retrieve.return_value = MagicMock(client_secret='cs_existing')
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1')])
         Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_x', amount=order.total, status='pending')
         resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference, 'access_token': order.access_token}, format='json')
         assert resp.status_code == 200
@@ -157,7 +167,7 @@ class TestCheckoutViews:
         mock_stripe.PaymentIntent.create.return_value = MagicMock(id='pi_new', client_secret='cs_new')
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1')])
         Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_old', amount=order.total, status='failed')
         resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference, 'access_token': order.access_token}, format='json')
         assert resp.status_code == 200
@@ -170,7 +180,7 @@ class TestWebhookPartsBranch:
         from payments.utils.webhook_handlers import handle_payment_intent_succeeded
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=0, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 2}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1', 2)])
         Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_x', amount=order.total, status='pending')
 
         handle_payment_intent_succeeded({'id': 'pi_x'})
@@ -187,7 +197,7 @@ class TestWebhookPartsBranch:
         from payments.utils.webhook_handlers import handle_payment_intent_succeeded
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
-        order = create_parts_order(customer=_customer(), items=[{'part_number': 'A-1', 'quantity': 1}])
+        order = create_parts_order(customer=_customer(), items=[_item('A-1')])
         Payment.objects.create(parts_order=order, stripe_payment_intent_id='pi_y', amount=order.total, status='pending')
         handle_payment_intent_succeeded({'id': 'pi_y'})
         handle_payment_intent_succeeded({'id': 'pi_y'})  # replay

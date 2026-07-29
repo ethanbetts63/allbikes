@@ -53,19 +53,6 @@ class TestPart:
         assert not PartFactory(in_pa_feed=False, wholesale_price_incl_gst=Decimal('10')).is_orderable
         assert not PartFactory(in_pa_feed=True, wholesale_price_incl_gst=None).is_orderable
 
-    def test_customer_price_applies_markup(self):
-        p = PartFactory(wholesale_price_incl_gst=Decimal('100.00'))
-        assert p.customer_price(Decimal('20')) == Decimal('120.00')
-
-    def test_customer_price_rounds_half_up(self):
-        p = PartFactory(wholesale_price_incl_gst=Decimal('10.01'))
-        # 10.01 * 1.155 = 11.56155 -> 11.56
-        assert p.customer_price(Decimal('15.5')) == Decimal('11.56')
-
-    def test_customer_price_none_when_unpriced(self):
-        assert PartFactory(wholesale_price_incl_gst=None).customer_price(Decimal('20')) is None
-
-
 class TestSectionPart:
     def test_multiple_variants_share_ref_number(self):
         section = PartSectionFactory()
@@ -77,6 +64,14 @@ class TestSectionPart:
         sp = SectionPartFactory()
         with pytest.raises(Exception):
             sp.part.delete()
+
+    def test_fitment_key_is_stable_natural_identity(self):
+        section = PartSectionFactory(code='F05')
+        part = PartFactory(part_number='53205-ALA-000-RD')
+        fitment = SectionPartFactory(section=section, part=part, ref_number='6')
+        assert fitment.fitment_key == (
+            f'{section.parts_model.model_code}:F05:6:53205-ALA-000-RD:original'
+        )
 
 
 class TestPartsSettings:
@@ -98,11 +93,8 @@ class TestPartsSettings:
         s.markup_percentage = Decimal('25')
         assert s.apply_markup(Decimal('80.00')) == Decimal('100.00')
         assert s.apply_markup(None) is None
-
-    def test_current_shipping_fee(self):
-        s = PartsSettings.get()
-        s.shipping_fee = Decimal('15')
-        assert s.current_shipping_fee() == Decimal('15')
+        s.markup_percentage = Decimal('15.5')
+        assert s.apply_markup(Decimal('10.01')) == Decimal('11.56')
 
 
 def _bare_order(**over):
@@ -110,6 +102,7 @@ def _bare_order(**over):
     base = {
         'customer_name': 'Jane Smith', 'customer_email': 'jane@example.com',
         'address_line1': '1 St', 'suburb': 'Perth', 'state': 'WA', 'postcode': '6000',
+        'backorder_hold_days': PartsSettings.get().backorder_hold_days,
     }
     base.update(over)
     return PartsOrder.objects.create(**base)
@@ -169,8 +162,9 @@ class TestBackorderWindow:
         assert order.backorder_days_remaining(hold_days=14) == -6
         assert order.backorder_window_expired(hold_days=14) is True
 
-    def test_falls_back_to_settings_when_hold_days_not_supplied(self):
-        s = PartsSettings.get()
-        s.backorder_hold_days = 7
-        s.save()
-        assert _bare_order().backorder_days_remaining() == 7
+    def test_uses_order_policy_snapshot_when_hold_days_not_supplied(self):
+        order = _bare_order(backorder_hold_days=9)
+        settings = PartsSettings.get()
+        settings.backorder_hold_days = 30
+        settings.save()
+        assert order.backorder_days_remaining() == 9

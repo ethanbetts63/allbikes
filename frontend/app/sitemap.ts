@@ -82,7 +82,7 @@ async function getPartsSitemapRoutes(models: Awaited<ReturnType<typeof getPartsM
     return [
       { url: base, lastModified },
       ...model.sections.map((section) => ({
-        url: `${base}/${section.id}`,
+        url: `${base}/${section.code}`,
         lastModified,
       })),
     ];

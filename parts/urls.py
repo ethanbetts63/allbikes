@@ -4,6 +4,7 @@ from parts.views.catalog_views import (
     PartsModelDetailView,
     PartsModelListView,
     PartsSearchView,
+    ModelSectionDetailView,
     SectionDetailView,
 )
 from parts.views.checkout_views import (
@@ -26,6 +27,7 @@ app_name = "parts"
 urlpatterns = [
     path("models/", PartsModelListView.as_view(), name="model-list"),
     path("models/<slug:slug>/", PartsModelDetailView.as_view(), name="model-detail"),
+    path("models/<slug:slug>/sections/<str:code>/", ModelSectionDetailView.as_view(), name="model-section-detail"),
     path("sections/<int:pk>/", SectionDetailView.as_view(), name="section-detail"),
     path("search/", PartsSearchView.as_view(), name="search"),
     path("orders/", CreatePartsOrderView.as_view(), name="order-create"),

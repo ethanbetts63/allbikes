@@ -334,12 +334,7 @@ def _parts_items_text(parts_order):
 
 
 def _parts_ship_to(parts_order):
-    parts = [parts_order.address_line1]
-    if parts_order.address_line2:
-        parts.append(parts_order.address_line2)
-    parts.append(f"{parts_order.suburb} {parts_order.state} {parts_order.postcode}")
-    parts.append(parts_order.country)
-    return "\n".join(parts)
+    return "\n".join(parts_order.shipping_address_lines())
 
 
 def send_parts_customer_confirmation(parts_order):
@@ -348,9 +343,10 @@ def send_parts_customer_confirmation(parts_order):
 
     backorder_note = ""
     if parts_order.has_backorder:
+        hold_days = parts_order.backorder_hold_days
         backorder_note = (
-            "\nSome items are on backorder. Backordered parts are held for up to 14 days; "
-            "if we can't secure shipment within 14 days, that part is refunded.\n"
+            f"\nSome items are on backorder. Backordered parts are held for up to {hold_days} days; "
+            f"if we can't secure shipment within {hold_days} days, that part is refunded.\n"
         )
 
     text_body = (

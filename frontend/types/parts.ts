@@ -24,17 +24,16 @@ export interface PartsModelDetail extends PartsModelListItem {
 export type VariantAxis = 'colour' | 'date' | 'none';
 
 export interface PartVariant {
-  section_part_id: number;
+  fitment_key: string;
   part_number: string;
   description: string;
   colour_name: string | null;
   paint_code: string | null;
   effective_date: string | null;
   variant_label: string;
-  quantity: number;
+  required_quantity: number;
   price: string | null;
   available_qty: number | null;
-  backorder: boolean;
   orderable: boolean;
 }
 
@@ -53,6 +52,7 @@ export interface SectionDetail {
   model: { name: string; model_code: string; slug: string };
   diagram_image: string | null;
   enable_new_part_sales: boolean;
+  backorder_hold_days: number;
   callouts: Callout[];
 }
 
@@ -82,7 +82,9 @@ export interface PartsSearchResults {
 
 /** A line item in the parts cart (persisted in localStorage). */
 export interface PartsCartItem {
-  section_part_id: number;
+  /** Stable catalogue identity. Legacy carts may still contain section_part_id. */
+  fitment_key?: string;
+  section_part_id?: number;
   part_number: string;
   description: string;
   colour_name: string | null;

@@ -47,14 +47,13 @@ def create_parts_order(*, customer, items):
             raise CheckoutError("A maximum of 100 of any one part can be ordered at once.")
 
         part = Part.objects.filter(part_number=part_number).first()
+        fitment_key = (line.get('fitment_key') or '').strip()
         section_part_id = line.get('section_part_id')
+        fitment_filter = {'fitment_key': fitment_key} if fitment_key else {'pk': section_part_id}
         section_part = (
             SectionPart.objects.select_related('section', 'section__parts_model')
-            .filter(pk=section_part_id, part=part).first()
-            if part and section_part_id else (
-                SectionPart.objects.select_related('section', 'section__parts_model')
-                .filter(part=part).first() if part else None
-            )
+            .filter(part=part, **fitment_filter).first()
+            if part and (fitment_key or section_part_id) else None
         )
         if not part or not part.is_orderable or not section_part:
             unavailable.append(part_number)
@@ -83,7 +82,7 @@ def create_parts_order(*, customer, items):
     if unavailable:
         raise CheckoutError("Some items are no longer available.", unavailable)
 
-    shipping = settings.current_shipping_fee()
+    shipping = settings.shipping_fee
     total = subtotal + shipping
 
     order = PartsOrder.objects.create(
@@ -96,9 +95,9 @@ def create_parts_order(*, customer, items):
         state=customer.get('state', ''),
         postcode=customer['postcode'],
         country='Australia',
-        is_international=False,
         terms_accepted=bool(customer.get('terms_accepted')),
         has_backorder=has_backorder,
+        backorder_hold_days=settings.backorder_hold_days,
         subtotal=subtotal,
         shipping=shipping,
         total=total,

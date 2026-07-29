@@ -6,6 +6,7 @@ import type {
   ItemAction,
   Paginated,
 } from '@/types/partsAdmin';
+import { partsJson, partsOk } from '@/lib/partsHttp';
 
 interface ListParams {
   status?: string;
@@ -23,14 +24,12 @@ export async function adminGetPartsOrders(params: ListParams = {}): Promise<Pagi
   if (params.page) qs.set('page', String(params.page));
   if (params.ordering) qs.set('ordering', params.ordering);
   const res = await authedFetch(`/api/parts/admin/orders/?${qs.toString()}`);
-  if (!res.ok) throw new Error('Failed to load orders.');
-  return res.json();
+  return partsJson<Paginated<AdminPartsOrderListItem>>(res, 'Failed to load orders.');
 }
 
 export async function adminGetPartsOrder(reference: string): Promise<AdminPartsOrder> {
   const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/`);
-  if (!res.ok) throw new Error('Failed to load order.');
-  return res.json();
+  return partsJson<AdminPartsOrder>(res, 'Failed to load order.');
 }
 
 export async function adminUpdatePartsOrder(
@@ -41,8 +40,7 @@ export async function adminUpdatePartsOrder(
     method: 'PATCH',
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error('Failed to update order.');
-  return res.json();
+  return partsJson<AdminPartsOrder>(res, 'Failed to update order.');
 }
 
 export async function adminUpdatePartsOrderItem(itemId: number, action: ItemAction): Promise<AdminPartsOrder> {
@@ -50,8 +48,7 @@ export async function adminUpdatePartsOrderItem(itemId: number, action: ItemActi
     method: 'PATCH',
     body: JSON.stringify({ action }),
   });
-  if (!res.ok) throw new Error('Failed to update item.');
-  return res.json();
+  return partsJson<AdminPartsOrder>(res, 'Failed to update item.');
 }
 
 export interface SupplierEmailDraftItem {
@@ -78,26 +75,19 @@ export interface SupplierEmailDraft {
 
 export async function adminGetPartsSupplierEmailDraft(reference: string): Promise<SupplierEmailDraft> {
   const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/supplier-email/`);
-  if (!res.ok) throw new Error('Failed to load supplier email draft.');
-  return res.json();
+  return partsJson<SupplierEmailDraft>(res, 'Failed to load supplier email draft.');
 }
 
 export async function adminSendPartsSupplierEmail(reference: string, data: { to: string; subject: string; body: string }): Promise<void> {
   const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/supplier-email/`, {
     method: 'POST', body: JSON.stringify(data),
   });
-  if (!res.ok) {
-    const payload = await res.json().catch(() => ({}));
-    throw new Error(payload.detail || payload.to?.[0] || 'Supplier email could not be sent.');
-  }
+  await partsOk(res, 'Supplier email could not be sent.');
 }
 
 export async function adminSendPartsCustomerUpdate(reference: string, type: CustomerUpdateType): Promise<void> {
   const res = await authedFetch(`/api/parts/admin/orders/${encodeURIComponent(reference)}/customer-update/`, {
     method: 'POST', body: JSON.stringify({ type }),
   });
-  if (!res.ok) {
-    const payload = await res.json().catch(() => ({}));
-    throw new Error(payload.detail || 'Customer update could not be sent.');
-  }
+  await partsOk(res, 'Customer update could not be sent.');
 }

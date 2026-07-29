@@ -42,10 +42,12 @@ class PartsOrder(models.Model):
     state = models.CharField(max_length=50, blank=True)
     postcode = models.CharField(max_length=20)
     country = models.CharField(max_length=100, default='Australia')
-    is_international = models.BooleanField(default=False, help_text="Derived from country at order time; drives shipping fee.")
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending_payment')
     has_backorder = models.BooleanField(default=False, help_text="True if any line was understocked at order time.")
+    backorder_hold_days = models.PositiveIntegerField(
+        help_text="Backorder policy snapshotted from Parts Settings when the order is created.",
+    )
 
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     shipping = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -94,11 +96,21 @@ class PartsOrder(models.Model):
         Can be zero or negative, meaning the window has closed.
         """
         if hold_days is None:
-            from parts.models.parts_settings import PartsSettings
-            hold_days = PartsSettings.get().backorder_hold_days
+            hold_days = self.backorder_hold_days
         ordered_on = timezone.localtime(self.created_at).date()
         return hold_days - (timezone.localdate() - ordered_on).days
 
     def backorder_window_expired(self, hold_days=None):
         """True once the order is too old to hold a part on backorder."""
         return self.backorder_days_remaining(hold_days) <= 0
+
+    def shipping_address_lines(self, *, include_name=False, include_phone=False):
+        """Canonical postal-address lines for admin and notification output."""
+        lines = [self.customer_name] if include_name else []
+        lines.append(self.address_line1)
+        if self.address_line2:
+            lines.append(self.address_line2)
+        lines.extend((f'{self.suburb} {self.state} {self.postcode}'.strip(), self.country))
+        if include_phone and self.customer_phone:
+            lines.append(f'Phone: {self.customer_phone}')
+        return lines

@@ -1,5 +1,7 @@
 from django.db import models
 
+from parts.keys import build_fitment_key
+
 
 class SectionPart(models.Model):
     """One callout line in a section's parts table.
@@ -13,6 +15,11 @@ class SectionPart(models.Model):
         'parts.PartSection',
         on_delete=models.CASCADE,
         related_name='parts',
+    )
+    fitment_key = models.CharField(
+        max_length=200,
+        unique=True,
+        help_text="Stable model/section/callout/part identity used by carts across book re-imports.",
     )
     part = models.ForeignKey(
         'parts.Part',
@@ -28,6 +35,23 @@ class SectionPart(models.Model):
 
     class Meta:
         ordering = ['section', 'sort_order']
+
+    def save(self, *args, **kwargs):
+        if not self.fitment_key:
+            base = build_fitment_key(
+                model_code=self.section.parts_model.model_code,
+                section_code=self.section.code,
+                ref_number=self.ref_number,
+                part_number=self.part.part_number,
+                effective_date=self.effective_date,
+            )
+            occurrence = 1
+            key = base
+            while type(self).objects.filter(fitment_key=key).exclude(pk=self.pk).exists():
+                occurrence += 1
+                key = f"{base}:{occurrence}"
+            self.fitment_key = key
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.section.code} #{self.ref_number} — {self.part.part_number}"

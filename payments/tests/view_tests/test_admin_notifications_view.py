@@ -34,14 +34,14 @@ def settings_fixture():
 def _parts_order(status, part_number='A-1', available=5):
     part = PartFactory(part_number=part_number, wholesale_price_incl_gst=Decimal('100'),
                        available_qty=available, in_pa_feed=True)
-    SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=part)
+    fitment = SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=part)
     order = create_parts_order(
         customer={
             'customer_name': 'Jane Smith', 'customer_email': 'jane@example.com', 'customer_phone': '',
             'address_line1': '1 St', 'suburb': 'Perth', 'state': 'WA', 'postcode': '6000',
             'country': 'Australia', 'terms_accepted': True,
         },
-        items=[{'part_number': part_number, 'quantity': 1}],
+        items=[{'part_number': part_number, 'fitment_key': fitment.fitment_key, 'quantity': 1}],
     )
     order.status = status
     order.save(update_fields=['status', 'updated_at'])

@@ -1,5 +1,4 @@
 """Admin parts-order management (IsAdminUser)."""
-from decimal import Decimal
 
 from django.db.models import Case, IntegerField, Q, Value, When
 from rest_framework.pagination import PageNumberPagination
@@ -9,12 +8,12 @@ from rest_framework.serializers import EmailField, ValidationError
 from rest_framework.views import APIView
 
 from notifications.utils.email import send_parts_customer_update, send_parts_supplier_dispatch
-from parts.models import Part, PartsOrder, PartsOrderItem, PartsSettings
+from parts.models import PartsOrder, PartsOrderItem
+from parts.order_costs import order_margin, supplier_cost_rows, supplier_price_map
 from parts.serializers.admin_order_serializers import (
     AdminPartsOrderDetailSerializer,
     AdminPartsOrderListSerializer,
     AdminPartsOrderUpdateSerializer,
-    supplier_price_map,
 )
 
 ITEM_ACTIONS = {'place_backorder', 'remove_backorder', 'mark_refunded', 'mark_to_order'}
@@ -35,25 +34,29 @@ ORDERABLE_FIELDS = {'created_at', 'total', 'customer_name', 'status'}
 
 def _get_order_or_404(order_reference):
     try:
-        return PartsOrder.objects.prefetch_related('items').get(order_reference=order_reference)
+        return PartsOrder.objects.prefetch_related('items').select_related('payment').get(
+            order_reference=order_reference
+        )
     except PartsOrder.DoesNotExist:
         return None
 
 
+def _has_successful_payment(order):
+    payment = getattr(order, 'payment', None)
+    return payment is not None and payment.status == 'succeeded'
+
+
 def _supplier_email_draft(order):
     """Build the operator-editable supplier email from current PA feed prices."""
-    prices = Part.objects.in_bulk(
-        [item.part_number for item in order.items.all()], field_name='part_number'
-    )
     rows = []
-    total = Decimal('0.00')
-    for item in order.items.all():
-        part = prices.get(item.part_number)
-        unit_price = part.wholesale_price_incl_gst if part else None
-        line_total = unit_price * item.quantity if unit_price is not None else None
-        gross_profit = item.line_total - line_total if line_total is not None else None
-        if line_total is not None:
-            total += line_total
+    prices = supplier_price_map(order)
+    cost_rows = supplier_cost_rows(order, prices)
+    margin = order_margin(order, prices)
+    for cost_row in cost_rows:
+        item = cost_row['item']
+        unit_price = cost_row['unit_cost']
+        line_total = cost_row['line_cost']
+        gross_profit = cost_row['gross_profit']
         rows.append({
             'part_number': item.part_number,
             'description': item.description,
@@ -71,12 +74,7 @@ def _supplier_email_draft(order):
 
     part_count = sum(row['quantity'] for row in rows)
 
-    address_lines = [order.customer_name, order.address_line1]
-    if order.address_line2:
-        address_lines.append(order.address_line2)
-    address_lines += [f'{order.suburb} {order.state} {order.postcode}', order.country]
-    if order.customer_phone:
-        address_lines.append(f'Phone: {order.customer_phone}')
+    address_lines = order.shipping_address_lines(include_name=True, include_phone=True)
 
     item_lines = []
     for position, row in enumerate(rows, start=1):
@@ -102,7 +100,7 @@ def _supplier_email_draft(order):
 
     location = ' '.join(part for part in [order.suburb, order.state] if part)
     subject = f'SYM parts order {order.order_reference}' + (f' — {location}' if location else '')
-    hold_days = PartsSettings.get().backorder_hold_days
+    hold_days = order.backorder_hold_days
     hold_period = f"{hold_days} {'day' if hold_days == 1 else 'days'}"
     body = (
         'Hello,\n\n'
@@ -110,7 +108,7 @@ def _supplier_email_draft(order):
         + '\n'.join(address_lines)
         + '\n\nPARTS REQUIRED\n'
         + '\n\n'.join(item_lines)
-        + f'\n\nSupplier parts total (incl. GST): ${total:.2f}\n\n'
+        + f"\n\nSupplier parts total (incl. GST): ${margin['supplier_parts_total']:.2f}\n\n"
         'If you cannot fulfil the order in full with current stock, please do not ship any part of the order. '
         'Please let us know which parts are missing and an ETA for when they are expected back in stock.\n\n'
         f'Parts that cannot be obtained within {hold_period} will be removed from the customer’s order. '
@@ -122,10 +120,7 @@ def _supplier_email_draft(order):
         'subject': subject,
         'body': body,
         'items': rows,
-        'supplier_parts_total': total,
-        'customer_parts_total': sum(row['customer_line_total'] for row in rows),
-        'gross_profit_total': sum((row['gross_profit'] or Decimal('0.00')) for row in rows),
-        'has_unpriced_items': any(row['unit_price'] is None for row in rows),
+        **margin,
     }
 
 
@@ -259,7 +254,6 @@ def _admin_order_context(order):
     # Resolve supplier prices once per request so the item serializer doesn't
     # hit the DB per line.
     return {
-        'backorder_hold_days': PartsSettings.get().backorder_hold_days,
         'supplier_prices': supplier_price_map(order),
         'order_status': order.status,
     }
@@ -311,6 +305,8 @@ class AdminPartsCustomerUpdateView(APIView):
         order = _get_order_or_404(order_reference)
         if not order:
             return Response({'detail': 'Order not found.'}, status=404)
+        if not _has_successful_payment(order):
+            return Response({'detail': 'Customer updates are only available for paid orders.'}, status=400)
         update_type = request.data.get('type')
         if update_type not in {'backorder', 'refund', 'arranged'}:
             return Response({'detail': 'Invalid customer update type.'}, status=400)
@@ -326,7 +322,7 @@ class AdminPartsCustomerUpdateView(APIView):
             )
         if update_type == 'refund' and not order.items.filter(status='refunded').exists():
             return Response({'detail': 'No order items are marked refunded.'}, status=400)
-        sent = send_parts_customer_update(order, update_type, backorder_days=PartsSettings.get().backorder_hold_days)
+        sent = send_parts_customer_update(order, update_type, backorder_days=order.backorder_hold_days)
         if not sent:
             return Response({'detail': 'Customer update could not be sent. The failed attempt was recorded.'}, status=502)
         return Response({'detail': 'Customer update sent.'})

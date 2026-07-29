@@ -5,6 +5,21 @@ export const ORDER_STATUSES = [
   'pending_payment', 'paid', 'dispatched', 'completed', 'cancelled', 'refunded', 'partially_refunded',
 ];
 
+/** Shared list-row presentation and actionable ordering for order statuses. */
+export const ORDER_STATUS_STYLE: Record<string, { row: string; swatch: string; label: string }> = {
+  paid: { row: 'bg-sky-50 hover:bg-sky-100', swatch: 'bg-sky-300', label: 'Paid — to dispatch' },
+  dispatched: { row: 'bg-indigo-50 hover:bg-indigo-100', swatch: 'bg-indigo-300', label: 'Dispatched' },
+  completed: { row: 'bg-emerald-50 hover:bg-emerald-100', swatch: 'bg-emerald-300', label: 'Completed' },
+  pending_payment: { row: 'bg-amber-50 hover:bg-amber-100', swatch: 'bg-amber-300', label: 'Pending payment' },
+  partially_refunded: { row: 'bg-orange-50 hover:bg-orange-100', swatch: 'bg-orange-300', label: 'Partially refunded' },
+  refunded: { row: 'bg-rose-50 hover:bg-rose-100', swatch: 'bg-rose-300', label: 'Refunded' },
+  cancelled: { row: 'bg-slate-100 hover:bg-slate-200', swatch: 'bg-slate-400', label: 'Cancelled' },
+};
+
+export const ORDER_LEGEND_ORDER = [
+  'paid', 'dispatched', 'partially_refunded', 'pending_payment', 'completed', 'refunded', 'cancelled',
+];
+
 /** Outline badge colours per order status, used by the list and notifications pages. */
 export const PARTS_STATUS_BADGE: Record<string, string> = {
   pending_payment: 'border-amber-500 text-[var(--highlight)]',
@@ -46,6 +61,28 @@ export const ITEM_STATE_STYLE: Record<string, { row: string; swatch: string; lab
   completed: { row: 'bg-emerald-50 hover:bg-emerald-100', swatch: 'bg-emerald-300', label: 'Completed' },
   refunded: { row: 'bg-rose-50 hover:bg-rose-100', swatch: 'bg-rose-300', label: 'Refunded' },
 };
+
+/** Filter choices on the orders list. */
+export const ORDER_FILTER_OPTIONS = [
+  { value: 'all', label: 'All statuses' },
+  { value: 'paid,dispatched', label: 'To Do (paid + dispatched)' },
+  { value: 'pending_payment', label: 'Pending payment' },
+  { value: 'paid', label: 'Paid' },
+  { value: 'dispatched', label: 'Dispatched' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'partially_refunded', label: 'Partially refunded' },
+  { value: 'refunded', label: 'Refunded' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
+
+/** "partially_refunded" -> "Partially Refunded". */
+export const humanizeStatus = (v: string) =>
+  v.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+export type SortField = 'customer_name' | 'total' | 'status' | 'created_at';
+export interface Sort { field: SortField; dir: 'asc' | 'desc'; }
+
+export const PAGE_SIZE = 50;
 
 /** Legend order = most actionable first, matching the list page's convention. */
 export const ITEM_LEGEND_ORDER = ['overdue', 'backordered', 'to_order', 'completed', 'refunded'];

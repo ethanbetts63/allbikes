@@ -9,6 +9,7 @@ Scraping writes to archive/ + inbox/; importing consumes inbox/ and leaves
 archive/ intact.
 """
 import hashlib
+import json
 from pathlib import Path
 
 from django.conf import settings
@@ -40,4 +41,20 @@ def sha256_file(path):
 
 def archived_hashes(kind):
     """Set of sha256 hashes of every file already in the archive for ``kind``."""
-    return {sha256_file(p) for p in archive_dir(kind).glob("*") if p.is_file()}
+    return {
+        sha256_file(p) for p in archive_dir(kind).glob("*")
+        if p.is_file() and p.suffix != '.json'
+    }
+
+
+def queue_file(kind, filename, data, *, metadata=None):
+    """Write one immutable source file to its archive and import inbox."""
+    archive_path = archive_dir(kind) / filename
+    inbox_path = inbox_dir(kind) / filename
+    archive_path.write_bytes(data)
+    inbox_path.write_bytes(data)
+    if metadata is not None:
+        sidecar = json.dumps(metadata)
+        archive_path.with_name(f'{filename}.json').write_text(sidecar)
+        inbox_path.with_name(f'{filename}.json').write_text(sidecar)
+    return inbox_path

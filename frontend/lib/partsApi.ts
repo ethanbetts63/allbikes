@@ -29,9 +29,12 @@ export async function getPartsModel(slug: string): Promise<PartsModelDetail> {
   return fetchServerJson<PartsModelDetail>(`/api/parts/models/${slug}/`);
 }
 
-export async function getPartsSection(id: string | number): Promise<SectionDetail> {
-  // Pricing changes daily; keep section pricing reasonably fresh.
-  return fetchServerJson<SectionDetail>(`/api/parts/sections/${id}/`, 60);
+export async function getPartsSection(modelSlug: string, sectionCode: string): Promise<SectionDetail> {
+    // Pricing changes daily; keep section pricing reasonably fresh.
+  return fetchServerJson<SectionDetail>(
+    `/api/parts/models/${encodeURIComponent(modelSlug)}/sections/${encodeURIComponent(sectionCode)}/`,
+    60,
+  );
 }
 
 export async function searchParts(query: string): Promise<PartsSearchResults> {

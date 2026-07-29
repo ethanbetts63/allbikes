@@ -54,13 +54,18 @@ class TestImportBook:
         assert colour_part.base_part_number == "53205-ALA-000"
         assert colour_part.colour_name == "Red"
 
-    def test_reimport_is_idempotent_and_replaces_sections(self):
-        import_book(_parsed(), name="Classic 150", cc_class="100_165")
+    def test_reimport_is_idempotent_and_preserves_natural_identities(self):
+        model = import_book(_parsed(), name="Classic 150", cc_class="100_165")
+        section_id = model.sections.get(code='E01').id
+        fitments = dict(model.sections.get(code='E01').parts.values_list('fitment_key', 'id'))
         import_book(_parsed(), name="Classic 150", cc_class="100_165")
         assert PartsModel.objects.filter(model_code="AX15W2-6").count() == 1
         assert PartSection.objects.filter(parts_model__model_code="AX15W2-6").count() == 1
         # Parts persist (PROTECT), not duplicated.
         assert Part.objects.filter(part_number="53205-ALA-000-RD").count() == 1
+        model.refresh_from_db()
+        assert model.sections.get(code='E01').id == section_id
+        assert dict(model.sections.get(code='E01').parts.values_list('fitment_key', 'id')) == fitments
 
     def test_no_model_code_raises(self):
         parsed = _parsed(model_code="")
