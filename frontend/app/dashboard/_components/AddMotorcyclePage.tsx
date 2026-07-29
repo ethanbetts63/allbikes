@@ -28,7 +28,7 @@ const AddMotorcyclePage = () => {
                 try {
                     const bike = await getBikeById(id);
                     setInitialData(bike);
-                } catch (err) {
+                } catch {
                     setNotification({ message: "Failed to fetch motorcycle data.", type: 'error' });
                 } finally {
                     setIsLoading(false);

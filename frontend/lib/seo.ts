@@ -6,7 +6,7 @@ import type { SiteSettings } from '@/types/SiteSettings';
 import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 
 export const SITE_URL = 'https://www.scootershop.com.au';
-export const SITE_NAME = 'ScooterShop';
+const SITE_NAME = 'ScooterShop';
 
 interface MetadataOptions {
   title: string;

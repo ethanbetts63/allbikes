@@ -127,6 +127,10 @@ The full order endpoint is staff-only. It is not exposed just by knowing an
 Supplier email sending does not change the order status. The operator keeps the
 fulfilment state and any backorder/refund actions under manual control.
 
+For now, refunds are issued in the Stripe Dashboard first and then recorded as
+refunded or partially refunded in the parts admin. Changing the admin status
+does not move money. Direct Stripe refunds from the admin are planned later.
+
 ### Backorder policy
 
 The Price & Availability feed is advisory, not a live reservation. We request

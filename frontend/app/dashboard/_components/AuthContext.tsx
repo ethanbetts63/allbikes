@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode, useCall
 import * as api from '@/lib/api';
 import type { UserProfile } from '@/types/UserProfile';
 
-export interface AuthContextType {
+interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
   isLoading: boolean;

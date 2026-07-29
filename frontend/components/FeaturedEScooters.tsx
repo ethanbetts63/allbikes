@@ -7,7 +7,7 @@ import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 
 import type { Product } from '@/types/Product';
 
-export interface FeaturedEScootersProps {
+interface FeaturedEScootersProps {
     products: Product[];
 }
 

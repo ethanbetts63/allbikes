@@ -10,7 +10,7 @@
  * approximate ("~N") and nothing is ever promised.
  */
 
-export type StockKind = 'in_stock' | 'low' | 'backorder';
+type StockKind = 'in_stock' | 'low' | 'backorder';
 
 export interface StockState {
   kind: StockKind;
@@ -21,7 +21,7 @@ export interface StockState {
 }
 
 /** At or above this many in stock we just say "In stock" (no precise count). */
-export const LOW_STOCK_THRESHOLD = 5;
+const LOW_STOCK_THRESHOLD = 5;
 
 export function stockState(
   available: number | null | undefined,

@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import type { SentMessage } from '@/types/SentMessage';
 import StatusBadge from '@/components/ui/status-badge';
 import { STATUS_BADGE, messageTypeLabel } from '../_lib/messageLabels';

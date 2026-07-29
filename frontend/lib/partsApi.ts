@@ -2,7 +2,6 @@ import type {
   CcClass,
   PartsModelDetail,
   PartsModelListItem,
-  PartsSearchResults,
   SectionDetail,
 } from '@/types/parts';
 
@@ -35,10 +34,6 @@ export async function getPartsSection(modelSlug: string, sectionCode: string): P
     `/api/parts/models/${encodeURIComponent(modelSlug)}/sections/${encodeURIComponent(sectionCode)}/`,
     60,
   );
-}
-
-export async function searchParts(query: string): Promise<PartsSearchResults> {
-  return fetchServerJson<PartsSearchResults>(`/api/parts/search/?q=${encodeURIComponent(query)}`, 60);
 }
 
 export const CC_CLASS_LABELS: Record<CcClass, string> = {

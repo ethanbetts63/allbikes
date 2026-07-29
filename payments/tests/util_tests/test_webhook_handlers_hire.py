@@ -153,3 +153,14 @@ class TestHandlePaymentIntentFailedHire:
 
         booking.refresh_from_db()
         assert booking.status == 'pending_payment'
+
+    def test_late_failure_does_not_regress_succeeded_payment(self):
+        payment = HirePaymentFactory(
+            stripe_payment_intent_id='pi_hire_already_succeeded',
+            status='succeeded',
+        )
+
+        handle_payment_intent_failed(_intent('pi_hire_already_succeeded'))
+
+        payment.refresh_from_db()
+        assert payment.status == 'succeeded'

@@ -1,6 +1,6 @@
 
 
-export type BikeImage = {
+type BikeImage = {
   id: number;
   image: string;
   thumbnail: string | null;

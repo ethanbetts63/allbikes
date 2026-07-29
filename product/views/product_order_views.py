@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from payments.payment_intents import create_or_reuse_payment_intent
+from payments.payment_intents import PaymentIntentError, create_or_reuse_payment_intent
 from product.models import ProductOrder
 from product.serializers import (
     ProductOrderCreateSerializer,
@@ -58,16 +58,19 @@ class ProductOrderPaymentIntentView(PublicView):
                 return Response({'detail': 'Order is not awaiting payment.'}, status=400)
             if order.product.stock_quantity <= 0:
                 return Response({'detail': 'This product is out of stock.'}, status=409)
-            secret = create_or_reuse_payment_intent(
-                target_field='product_order',
-                target=order,
-                amount=order.total,
-                metadata={
-                    'target_type': 'product_order',
-                    'product_order_id': order.id,
-                    'order_reference': order.order_reference,
-                },
-            )
+            try:
+                secret = create_or_reuse_payment_intent(
+                    target_field='product_order',
+                    target=order,
+                    amount=order.total,
+                    metadata={
+                        'target_type': 'product_order',
+                        'product_order_id': order.id,
+                        'order_reference': order.order_reference,
+                    },
+                )
+            except PaymentIntentError as exc:
+                return Response({'detail': str(exc)}, status=409)
         return Response({'clientSecret': secret})
 
 

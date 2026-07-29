@@ -7,7 +7,7 @@ export interface NotificationOrder {
   created_at: string;
 }
 
-export interface NotificationProductOrder {
+interface NotificationProductOrder {
   id: number;
   order_reference: string;
   customer_name: string;
@@ -15,7 +15,7 @@ export interface NotificationProductOrder {
   created_at: string;
 }
 
-export interface NotificationBikeOrder {
+interface NotificationBikeOrder {
   id: number;
   order_reference: string;
   customer_name: string;

@@ -1,6 +1,4 @@
-import stripe
-from django.conf import settings as django_settings
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -15,10 +13,7 @@ from parts.serializers.order_serializers import (
     PartsOrderSerializer,
 )
 from parts.views.base import PublicAPIView
-from payments.models import Payment
-from payments.payment_intents import create_or_reuse_payment_intent
-
-stripe.api_key = django_settings.STRIPE_SECRET_KEY
+from payments.payment_intents import PaymentIntentError, create_or_reuse_payment_intent
 
 
 class CreatePartsOrderView(PublicAPIView):
@@ -72,18 +67,18 @@ class CreatePartsPaymentIntentView(PublicAPIView):
         if not access_token:
             return Response({'detail': 'access_token is required.'}, status=403)
 
-        try:
-            with transaction.atomic():
-                try:
-                    order = PartsOrder.objects.select_for_update().get(
-                        order_reference=order_reference, access_token=access_token
-                    )
-                except PartsOrder.DoesNotExist:
-                    return Response({'detail': 'Order not found.'}, status=404)
+        with transaction.atomic():
+            try:
+                order = PartsOrder.objects.select_for_update().get(
+                    order_reference=order_reference, access_token=access_token
+                )
+            except PartsOrder.DoesNotExist:
+                return Response({'detail': 'Order not found.'}, status=404)
 
-                if order.status != 'pending_payment':
-                    return Response({'detail': 'Order is not awaiting payment.'}, status=400)
+            if order.status != 'pending_payment':
+                return Response({'detail': 'Order is not awaiting payment.'}, status=400)
 
+            try:
                 secret = create_or_reuse_payment_intent(
                     target_field='parts_order',
                     target=order,
@@ -94,12 +89,6 @@ class CreatePartsPaymentIntentView(PublicAPIView):
                         'order_reference': order.order_reference,
                     },
                 )
-                return Response({'clientSecret': secret})
-        except IntegrityError:
-            existing = Payment.objects.filter(
-                parts_order__order_reference=order_reference
-            ).first()
-            if existing:
-                intent = stripe.PaymentIntent.retrieve(existing.stripe_payment_intent_id)
-                return Response({'clientSecret': intent.client_secret})
-            return Response({'detail': 'Could not start payment. Please try again.'}, status=409)
+            except PaymentIntentError as exc:
+                return Response({'detail': str(exc)}, status=409)
+            return Response({'clientSecret': secret})

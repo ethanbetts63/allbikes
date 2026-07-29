@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import type React from 'react';
 import type { ServiceSettings } from '@/types/ServiceSettings';
 
-export interface ServiceSettingsFormProps {
+interface ServiceSettingsFormProps {
   settings: ServiceSettings;
   loading: boolean;
   successMessage: string | null;

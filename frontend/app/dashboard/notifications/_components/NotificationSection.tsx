@@ -21,7 +21,7 @@ export default function NotificationSection({ title, count, children }: {
 }
 
 /** Shared shells so every group reads as the same kind of object. */
-export const PANEL = 'bg-[var(--bg-light-primary)] rounded-lg border border-border-light';
+const PANEL = 'bg-[var(--bg-light-primary)] rounded-lg border border-border-light';
 export const TABLE_PANEL = `${PANEL} overflow-hidden`;
 export const LIST_PANEL = `${PANEL} divide-y divide-stone-100`;
 export const ROW = 'hover:bg-[var(--bg-light-secondary)] cursor-pointer transition-colors';

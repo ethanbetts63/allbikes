@@ -4,7 +4,6 @@ from django.db import IntegrityError
 from payments.models import Payment
 from payments.tests.factories.payment_factory import PaymentFactory, HirePaymentFactory
 from payments.tests.factories.order_factory import ProductOrderFactory
-from hire.tests.factories.hire_booking_factory import HireBookingFactory
 
 
 @pytest.mark.django_db
@@ -20,14 +19,17 @@ class TestPaymentModel:
         payment = PaymentFactory()
         assert payment.status == 'pending'
 
-    def test_one_to_one_relationship_with_product_order(self):
+    def test_product_order_preserves_multiple_payment_attempts(self):
         """
-        GIVEN an Order with a Payment
-        WHEN accessed via order.payment
-        THEN the correct Payment is returned.
+        GIVEN an order with multiple attempts
+        THEN every attempt remains available in its payment history.
         """
         payment = PaymentFactory()
-        assert payment.product_order.payment == payment
+        retry = PaymentFactory(
+            product_order=payment.product_order,
+            stripe_payment_intent_id='pi_product_retry',
+        )
+        assert list(payment.product_order.payments.order_by('pk')) == [payment, retry]
 
     def test_str_contains_intent_id_and_status(self):
         """
@@ -52,14 +54,17 @@ class TestPaymentModel:
         with pytest.raises(IntegrityError):
             PaymentFactory(product_order=order_b, stripe_payment_intent_id='pi_duplicate')
 
-    def test_one_to_one_relationship_with_hire_booking(self):
+    def test_hire_booking_preserves_multiple_payment_attempts(self):
         """
-        GIVEN a HireBooking with a Payment
-        WHEN accessed via hire_booking.payment
-        THEN the correct Payment is returned.
+        GIVEN a hire booking with multiple attempts
+        THEN every attempt remains available in its payment history.
         """
         payment = HirePaymentFactory()
-        assert payment.hire_booking.payment == payment
+        retry = HirePaymentFactory(
+            hire_booking=payment.hire_booking,
+            stripe_payment_intent_id='pi_hire_retry',
+        )
+        assert list(payment.hire_booking.payments.order_by('pk')) == [payment, retry]
 
     def test_hire_payment_has_null_product_order(self):
         """
@@ -78,14 +83,3 @@ class TestPaymentModel:
         """
         payment = PaymentFactory()
         assert payment.hire_booking is None
-
-    def test_hire_booking_one_to_one_is_enforced(self):
-        """
-        GIVEN a HireBooking that already has a Payment
-        WHEN a second Payment is created for the same HireBooking
-        THEN a database error is raised.
-        """
-        booking = HireBookingFactory()
-        HirePaymentFactory(hire_booking=booking, stripe_payment_intent_id='pi_hire_a')
-        with pytest.raises(IntegrityError):
-            HirePaymentFactory(hire_booking=booking, stripe_payment_intent_id='pi_hire_b')

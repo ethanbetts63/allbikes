@@ -5,7 +5,7 @@ import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 
 import type { Bike } from '@/types/Bike';
 
-export interface BikeCardProps {
+interface BikeCardProps {
   bike: Bike;
 }
 

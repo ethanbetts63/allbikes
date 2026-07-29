@@ -93,12 +93,19 @@ class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
         return order_margin(obj)
 
     def get_stripe_payment_intent_id(self, obj):
-        payment = getattr(obj, 'payment', None)
+        payment = self._latest_payment(obj)
         return payment.stripe_payment_intent_id if payment else None
 
     def get_payment_status(self, obj):
-        payment = getattr(obj, 'payment', None)
+        payment = self._latest_payment(obj)
         return payment.status if payment else None
+
+    @staticmethod
+    def _latest_payment(obj):
+        attempts = getattr(obj, 'payment_attempts', None)
+        if attempts is not None:
+            return attempts[0] if attempts else None
+        return obj.payments.order_by('-created_at', '-pk').first()
 
     def get_messages(self, obj):
         content_type = ContentType.objects.get_for_model(PartsOrder)

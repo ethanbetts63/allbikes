@@ -4,7 +4,7 @@ import type { HireBlockedDate } from '@/types/HireBlockedDate';
 import type { PublicHireSettings } from '@/types/PublicHireSettings';
 
 
-export interface HireDateConstraints {
+interface HireDateConstraints {
   minStartDate: string;
   maxStartDate: string;
   blockedDates: HireBlockedDate[];

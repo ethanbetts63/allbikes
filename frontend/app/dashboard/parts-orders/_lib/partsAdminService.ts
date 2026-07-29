@@ -51,7 +51,7 @@ export async function adminUpdatePartsOrderItem(itemId: number, action: ItemActi
   return partsJson<AdminPartsOrder>(res, 'Failed to update item.');
 }
 
-export interface SupplierEmailDraftItem {
+interface SupplierEmailDraftItem {
   part_number: string;
   description: string;
   quantity: number;

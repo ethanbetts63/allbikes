@@ -11,7 +11,7 @@ from inventory.serializers import (
     BikeOrderSerializer,
     BikeOrderStatusSerializer,
 )
-from payments.payment_intents import create_or_reuse_payment_intent
+from payments.payment_intents import PaymentIntentError, create_or_reuse_payment_intent
 
 
 class PublicView(APIView):
@@ -58,17 +58,20 @@ class BikeOrderPaymentIntentView(PublicView):
                 return Response({'detail': 'Order is not awaiting payment.'}, status=400)
             if order.motorcycle.status != 'for_sale':
                 return Response({'detail': 'This motorcycle is no longer available.'}, status=409)
-            secret = create_or_reuse_payment_intent(
-                target_field='bike_order',
-                target=order,
-                amount=order.deposit_amount,
-                metadata={
-                    'target_type': 'bike_order',
-                    'bike_order_id': order.id,
-                    'order_reference': order.order_reference,
-                    **({'selected_colour': order.selected_colour} if order.selected_colour else {}),
-                },
-            )
+            try:
+                secret = create_or_reuse_payment_intent(
+                    target_field='bike_order',
+                    target=order,
+                    amount=order.deposit_amount,
+                    metadata={
+                        'target_type': 'bike_order',
+                        'bike_order_id': order.id,
+                        'order_reference': order.order_reference,
+                        **({'selected_colour': order.selected_colour} if order.selected_colour else {}),
+                    },
+                )
+            except PaymentIntentError as exc:
+                return Response({'detail': str(exc)}, status=409)
         return Response({'clientSecret': secret})
 
 

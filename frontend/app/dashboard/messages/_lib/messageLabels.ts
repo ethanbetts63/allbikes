@@ -5,9 +5,6 @@ export const STATUS_BADGE: Record<string, string> = {
   bounced:   'border-orange-500 text-orange-600',
 };
 
-export const statusBadgeClass = (status: string) =>
-  STATUS_BADGE[status] ?? 'text-[var(--text-dark-secondary)] border-gray-400';
-
 const TYPE_LABELS: Record<string, string> = {
   customer_confirmation: 'Customer Confirmation',
   admin_new_order:       'Admin New Order',

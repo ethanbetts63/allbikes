@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -55,6 +56,21 @@ TWILIO_MESSAGING_SERVICE_SID = os.environ.get("TWILIO_MESSAGING_SERVICE_SID")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.getenv('DEBUG') == 'True'
+
+if not DEBUG:
+    required_production_secrets = {
+        'SECRET_KEY': SECRET_KEY,
+        'STRIPE_SECRET_KEY': STRIPE_SECRET_KEY,
+        'STRIPE_WEBHOOK_SECRET': STRIPE_WEBHOOK_SECRET,
+    }
+    missing_production_secrets = [
+        name for name, value in required_production_secrets.items() if not value
+    ]
+    if missing_production_secrets:
+        raise ImproperlyConfigured(
+            'Missing required production secrets: '
+            + ', '.join(missing_production_secrets)
+        )
 
 ALLOWED_HOSTS = [
     'api.scootershop.com.au',

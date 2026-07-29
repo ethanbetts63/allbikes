@@ -1,6 +1,6 @@
 """Admin parts-order management (IsAdminUser)."""
 
-from django.db.models import Case, IntegerField, Q, Value, When
+from django.db.models import Case, IntegerField, Prefetch, Q, Value, When
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -16,6 +16,7 @@ from parts.serializers.admin_order_serializers import (
     AdminPartsOrderListSerializer,
     AdminPartsOrderUpdateSerializer,
 )
+from payments.models import Payment
 
 ITEM_ACTIONS = {'place_backorder', 'remove_backorder', 'mark_refunded', 'mark_to_order'}
 
@@ -33,18 +34,29 @@ STATUS_PRIORITY = {
 ORDERABLE_FIELDS = {'created_at', 'total', 'customer_name', 'status'}
 
 
+def _admin_order_queryset():
+    return PartsOrder.objects.prefetch_related(
+        'items',
+        Prefetch(
+            'payments',
+            queryset=Payment.objects.order_by('-created_at', '-pk'),
+            to_attr='payment_attempts',
+        ),
+    )
+
+
 def _get_order_or_404(order_reference):
     try:
-        return PartsOrder.objects.prefetch_related('items').select_related('payment').get(
-            order_reference=order_reference
-        )
+        return _admin_order_queryset().get(order_reference=order_reference)
     except PartsOrder.DoesNotExist:
         return None
 
 
 def _has_successful_payment(order):
-    payment = getattr(order, 'payment', None)
-    return payment is not None and payment.status == 'succeeded'
+    attempts = getattr(order, 'payment_attempts', None)
+    if attempts is not None:
+        return any(payment.status == 'succeeded' for payment in attempts)
+    return order.payments.filter(status='succeeded').exists()
 
 
 def _supplier_email_draft(order):
@@ -192,9 +204,7 @@ class AdminPartsOrderDetailView(APIView):
 
     def get(self, request, order_reference):
         try:
-            order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(
-                order_reference=order_reference
-            )
+            order = _admin_order_queryset().get(order_reference=order_reference)
         except PartsOrder.DoesNotExist:
             return Response({'detail': 'Order not found.'}, status=404)
         return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context(order)).data)
@@ -208,7 +218,7 @@ class AdminPartsOrderDetailView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
         serializer.save()
-        order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=order.pk)
+        order = _admin_order_queryset().get(pk=order.pk)
         return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context(order)).data)
 
 
@@ -252,7 +262,7 @@ class AdminPartsOrderItemView(APIView):
         order = item.parts_order
         order.recompute_rollup()
 
-        order = PartsOrder.objects.prefetch_related('items').select_related('payment').get(pk=order.pk)
+        order = _admin_order_queryset().get(pk=order.pk)
         return Response(AdminPartsOrderDetailSerializer(order, context=_admin_order_context(order)).data)
 
 

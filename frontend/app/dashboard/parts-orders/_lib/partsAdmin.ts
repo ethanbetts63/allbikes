@@ -34,7 +34,7 @@ export interface AdminPartsOrderItem {
   profit_margin_percentage: string | null;
 }
 
-export interface AdminPartsOrderMargin {
+interface AdminPartsOrderMargin {
   supplier_parts_total_incl_gst: number;
   customer_parts_total_incl_gst: number;
   gross_profit_ex_gst_total: number;

@@ -13,6 +13,7 @@ from notifications.utils.email import (
     send_product_admin_new_order,
     send_product_customer_confirmation,
 )
+from inventory.models import Motorcycle
 from payments.models import Payment
 from product.models import Product
 
@@ -56,9 +57,14 @@ def handle_payment_intent_succeeded(payment_intent):
                 )
         elif payment.bike_order_id:
             order = payment.bike_order
+            motorcycle = Motorcycle.objects.select_for_update().get(pk=order.motorcycle_id)
             order.status = 'paid'
             order.amount_paid = payment.amount
             order.save(update_fields=['status', 'amount_paid', 'updated_at'])
+            if motorcycle.status == 'for_sale':
+                motorcycle.status = 'reserved'
+                motorcycle.save(update_fields=['status'])
+            order.motorcycle = motorcycle
         elif payment.hire_booking_id:
             booking = payment.hire_booking
             booking.status = 'confirmed'
@@ -92,5 +98,8 @@ def handle_payment_intent_failed(payment_intent):
     except Payment.DoesNotExist:
         logger.error("Webhook: Payment not found for intent %s", intent_id)
         return
-    payment.status = 'failed'
-    payment.save(update_fields=['status', 'updated_at'])
+    # Stripe may deliver events out of order. A late failure must never regress
+    # an attempt which has already been confirmed as successful.
+    if payment.status == 'pending':
+        payment.status = 'failed'
+        payment.save(update_fields=['status', 'updated_at'])

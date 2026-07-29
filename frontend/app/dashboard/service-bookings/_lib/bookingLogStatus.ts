@@ -3,9 +3,6 @@ export const STATUS_BADGE: Record<string, string> = {
   Failed:  'border-red-500 text-destructive',
 };
 
-export const statusBadgeClass = (status: string) =>
-  STATUS_BADGE[status] ?? 'text-[var(--text-dark-secondary)] border-gray-400';
-
 export type BookingLogFilter = 'all' | 'failed';
 
 /**

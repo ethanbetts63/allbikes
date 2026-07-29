@@ -50,7 +50,7 @@ class TestHireCreatePaymentIntentView:
     def test_creates_payment_for_matching_reference_and_token(self, api_client):
         booking = HireBookingFactory(status='pending_payment')
         with patch(
-            'hire.views.public_hire_views.stripe.PaymentIntent.create',
+            'payments.payment_intents.stripe.PaymentIntent.create',
             return_value=_intent('cs_hire_xyz', 'pi_hire_xyz'),
         ) as create:
             response = api_client.post(
@@ -76,9 +76,9 @@ class TestHireCreatePaymentIntentView:
             status='pending',
         )
         with patch(
-            'hire.views.public_hire_views.stripe.PaymentIntent.retrieve',
+            'payments.payment_intents.stripe.PaymentIntent.retrieve',
             return_value=_intent('cs_existing_hire', 'pi_existing_hire'),
-        ), patch('hire.views.public_hire_views.stripe.PaymentIntent.create') as create:
+        ), patch('payments.payment_intents.stripe.PaymentIntent.create') as create:
             response = api_client.post(
                 self.url(booking),
                 {'access_token': booking.access_token},

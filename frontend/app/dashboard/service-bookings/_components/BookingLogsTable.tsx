@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation';
 
 import { formatDate } from '@/lib/formatting';
 import type { BookingRequestLog } from '@/types/BookingRequestLog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,

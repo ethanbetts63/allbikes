@@ -21,12 +21,3 @@ export function formatDateTime(dateStr: string | null | undefined): string {
     timeZone: SITE_TIMEZONE,
   });
 }
-
-export function formatCurrency(amount: string | number): string {
-  return new Intl.NumberFormat('en-AU', {
-    style: 'currency',
-    currency: 'AUD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(typeof amount === 'string' ? parseFloat(amount) : amount);
-}

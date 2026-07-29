@@ -1,8 +1,8 @@
-export interface PartsApiError extends Error {
+interface PartsApiError extends Error {
   unavailable?: string[];
 }
 
-export async function partsApiError(response: Response, fallback: string): Promise<PartsApiError> {
+async function partsApiError(response: Response, fallback: string): Promise<PartsApiError> {
   const payload = await response.json().catch(() => ({}));
   const error = new Error(
     payload.detail || payload.to?.[0] || fallback,

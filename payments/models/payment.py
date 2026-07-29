@@ -7,21 +7,22 @@ class Payment(models.Model):
         ('pending', 'Pending'),
         ('succeeded', 'Succeeded'),
         ('failed', 'Failed'),
+        ('cancelled', 'Cancelled'),
     ]
 
-    product_order = models.OneToOneField(
+    product_order = models.ForeignKey(
         'product.ProductOrder', null=True, blank=True,
-        on_delete=models.CASCADE, related_name='payment',
+        on_delete=models.CASCADE, related_name='payments',
     )
-    bike_order = models.OneToOneField(
+    bike_order = models.ForeignKey(
         'inventory.BikeOrder', null=True, blank=True,
-        on_delete=models.CASCADE, related_name='payment',
+        on_delete=models.CASCADE, related_name='payments',
     )
-    hire_booking = models.OneToOneField(
-        'hire.HireBooking', null=True, blank=True, on_delete=models.CASCADE, related_name='payment'
+    hire_booking = models.ForeignKey(
+        'hire.HireBooking', null=True, blank=True, on_delete=models.CASCADE, related_name='payments'
     )
-    parts_order = models.OneToOneField(
-        'parts.PartsOrder', null=True, blank=True, on_delete=models.CASCADE, related_name='payment'
+    parts_order = models.ForeignKey(
+        'parts.PartsOrder', null=True, blank=True, on_delete=models.CASCADE, related_name='payments'
     )
     stripe_payment_intent_id = models.CharField(max_length=255, unique=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)

@@ -11,7 +11,7 @@ import { AUSTRALIAN_STATES } from '@/lib/australianAddresses';
 import type React from 'react';
 import type { BookingFormData } from '@/types/BookingFormData';
 
-export interface PersonalDetailsFormProps {
+interface PersonalDetailsFormProps {
   formData: BookingFormData;
   setFormData: React.Dispatch<React.SetStateAction<BookingFormData>>;
   prevStep: () => void;

@@ -24,5 +24,3 @@ export const BOOKING_STATUSES: {
 export const STATUS_STYLES = Object.fromEntries(
   BOOKING_STATUSES.map(s => [s.value, s]),
 ) as Record<BookingStatus, (typeof BOOKING_STATUSES)[number]>;
-
-export const statusLabel = (s: BookingStatus) => STATUS_STYLES[s]?.label ?? s;

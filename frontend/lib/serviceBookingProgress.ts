@@ -5,7 +5,7 @@ import type { BookingFormData } from '@/types/BookingFormData';
 export const BOOKING_PROGRESS_STORAGE_KEY = 'bookingFormProgress';
 
 // Serialized shape of drop_off_time in storage and the createBooking payload.
-export const DROP_OFF_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
+const DROP_OFF_TIME_FORMAT = 'dd/MM/yyyy HH:mm';
 
 export const formatDropOffTime = (date: Date, time: string): string =>
     `${format(date, 'dd/MM/yyyy')} ${time}`;
@@ -16,7 +16,7 @@ export const parseDropOffTime = (dropOffTime: string): Date | null => {
     return isValid(parsed) ? parsed : null;
 };
 
-export const initialBookingFormData: BookingFormData = {
+const initialBookingFormData: BookingFormData = {
     // Personal
     first_name: '',
     last_name: '',
@@ -38,7 +38,7 @@ export const initialBookingFormData: BookingFormData = {
     terms_accepted: false,
 };
 
-export const loadBookingProgress = (): BookingFormData => {
+const loadBookingProgress = (): BookingFormData => {
     if (typeof window === 'undefined') return initialBookingFormData;
     try {
         const savedData = localStorage.getItem(BOOKING_PROGRESS_STORAGE_KEY);
@@ -49,7 +49,7 @@ export const loadBookingProgress = (): BookingFormData => {
     }
 };
 
-export const saveBookingProgress = (formData: BookingFormData) => {
+const saveBookingProgress = (formData: BookingFormData) => {
     try {
         localStorage.setItem(BOOKING_PROGRESS_STORAGE_KEY, JSON.stringify(formData));
     } catch (error) {

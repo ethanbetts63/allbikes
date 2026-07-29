@@ -130,7 +130,7 @@ def test_product_webhook_marks_paid_and_decrements_stock_once(mocker):
     assert product.stock_quantity == 1
 
 
-def test_bike_webhook_marks_deposit_paid_without_reserving_motorcycle(mocker):
+def test_bike_webhook_marks_deposit_paid_and_reserves_motorcycle(mocker):
     mocker.patch('payments.utils.webhook_handlers.send_bike_customer_confirmation')
     mocker.patch('payments.utils.webhook_handlers.send_bike_admin_new_order')
     order = BikeOrderFactory(deposit_amount='500.00')
@@ -144,4 +144,23 @@ def test_bike_webhook_marks_deposit_paid_without_reserving_motorcycle(mocker):
     order.motorcycle.refresh_from_db()
     assert order.status == 'paid'
     assert order.amount_paid == Decimal('500.00')
-    assert order.motorcycle.status == 'for_sale'
+    assert order.motorcycle.status == 'reserved'
+
+
+def test_bike_webhook_does_not_downgrade_sold_motorcycle(mocker):
+    mocker.patch('payments.utils.webhook_handlers.send_bike_customer_confirmation')
+    mocker.patch('payments.utils.webhook_handlers.send_bike_admin_new_order')
+    order = BikeOrderFactory(
+        motorcycle__status='sold',
+        deposit_amount='500.00',
+    )
+    Payment.objects.create(
+        bike_order=order,
+        stripe_payment_intent_id='pi_bike_already_sold',
+        amount='500.00',
+    )
+
+    handle_payment_intent_succeeded({'id': 'pi_bike_already_sold'})
+
+    order.motorcycle.refresh_from_db()
+    assert order.motorcycle.status == 'sold'

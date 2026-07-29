@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
-import { PlusCircle, X } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 
 import { getJobTypesAdmin, createJobType, updateJobType, deleteJobType } from '@/app/dashboard/job-types/_lib/jobTypeService';
 import type { JobType } from '@/app/dashboard/job-types/_lib/JobType';

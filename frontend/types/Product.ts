@@ -1,6 +1,6 @@
 
 
-export interface ProductImage {
+interface ProductImage {
   id: number;
   image: string;
   thumbnail: string | null;

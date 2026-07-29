@@ -1,23 +1,19 @@
 import math
-import stripe
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 
-from django.conf import settings as django_settings
 from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
 from inventory.models import Motorcycle
-from payments.payment_intents import create_or_reuse_payment_intent
+from payments.payment_intents import PaymentIntentError, create_or_reuse_payment_intent
 from ..models import HireBooking, HireBookingExtra, HireExtra, HireSettings
 from ..serializers.hire_settings_serializer import HireSettingsSerializer
 from ..serializers.hire_booking_serializer import HireBookingCreateSerializer
 from ..serializers.hire_extra_serializer import HireExtraSerializer
 from ..utils.availability import is_motorcycle_available, is_globally_blocked
-
-stripe.api_key = django_settings.STRIPE_SECRET_KEY
 
 class PublicHireSettingsView(APIView):
     authentication_classes = []
@@ -211,18 +207,21 @@ class HireCreatePaymentIntentView(APIView):
             if booking.status != 'pending_payment':
                 return Response({'detail': 'Booking is not awaiting payment.'}, status=400)
 
-            secret = create_or_reuse_payment_intent(
-                target_field='hire_booking',
-                target=booking,
-                amount=booking.total_charged,
-                metadata={
-                    'target_type': 'hire_booking',
-                    'hire_booking_id': booking.id,
-                    'hire_booking_reference': booking.booking_reference,
-                    'customer_name': booking.customer_name,
-                    'customer_email': booking.customer_email,
-                },
-            )
+            try:
+                secret = create_or_reuse_payment_intent(
+                    target_field='hire_booking',
+                    target=booking,
+                    amount=booking.total_charged,
+                    metadata={
+                        'target_type': 'hire_booking',
+                        'hire_booking_id': booking.id,
+                        'hire_booking_reference': booking.booking_reference,
+                        'customer_name': booking.customer_name,
+                        'customer_email': booking.customer_email,
+                    },
+                )
+            except PaymentIntentError as exc:
+                return Response({'detail': str(exc)}, status=409)
 
         return Response({'clientSecret': secret})
 

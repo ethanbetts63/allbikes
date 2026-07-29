@@ -5,7 +5,6 @@ import type { Bike } from '@/types/Bike';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
 import type { MotorcycleFormData } from '@/types/MotorcycleFormData';
 import type { ManagedImage } from '@/types/ManagedImage';
-import type { TermsAndConditions } from '@/types/TermsAndConditions';
 import type { GetBikesOptions } from '@/types/GetBikesOptions';
 import type { Product } from '@/types/Product';
 import type { AdminNotifications } from '@/types/AdminNotifications';
@@ -216,27 +215,7 @@ export async function manageMotorcycleImages(motorcycleId: number, images: Pick<
     return handleResponse(response);
 }
 
-// --- Legal Endpoints ---
-
-export async function getLatestTermsAndConditions(type?: 'hire' | 'service' | 'purchase' | 'parts'): Promise<TermsAndConditions> {
-    const url = type ? `${API_BASE_URL}/terms/latest/?type=${type}` : `${API_BASE_URL}/terms/latest/`;
-    const response = await fetch(url);
-    return handleResponse(response);
-}
-
 // --- Product Endpoints ---
-
-export async function getProducts(options: { is_featured?: boolean; ordering?: string; min_price?: number; max_price?: number; page?: number } = {}): Promise<PaginatedResponse<Product>> {
-    const params = new URLSearchParams();
-    if (options.is_featured) params.append('is_featured', 'true');
-    if (options.ordering) params.append('ordering', options.ordering);
-    if (options.min_price) params.append('min_price', String(options.min_price));
-    if (options.max_price) params.append('max_price', String(options.max_price));
-    if (options.page && options.page > 1) params.append('page', String(options.page));
-    const query = params.toString();
-    const response = await fetch(`/api/product/products/${query ? `?${query}` : ''}`);
-    return handleResponse(response);
-}
 
 export async function getProductById(id: number): Promise<Product> {
     const response = await fetch(`/api/product/products/${id}/`);
@@ -493,19 +472,10 @@ export async function adminDeleteBooking(id: number): Promise<void> {
 
 // --- Service Diary: Blocked Dates ---
 
-export async function adminGetBlockedDates(options: { start?: string; end?: string } = {}): Promise<BlockedDate[]> {
-    const params = new URLSearchParams();
-    if (options.start) params.append('start', options.start);
-    if (options.end) params.append('end', options.end);
-    const qs = params.toString();
-    const response = await authedFetch(`/api/service/admin/blocked-dates/${qs ? `?${qs}` : ''}`);
-    return handleResponse(response);
-}
-
 // Upsert a one-off day override. `available: false` force-closes the day;
 // `available: true` force-opens it, overriding the advance-notice/weekday rules
 // so an admin can make an exception. Posting the same date flips the row.
-export async function adminSetDateOverride(date: string, available: boolean, reason = ''): Promise<BlockedDate> {
+async function adminSetDateOverride(date: string, available: boolean, reason = ''): Promise<BlockedDate> {
     const response = await authedFetch(`/api/service/admin/blocked-dates/`, {
         method: 'POST',
         body: JSON.stringify({ date, available, reason }),
@@ -519,15 +489,6 @@ export async function adminBlockDate(date: string, reason = ''): Promise<Blocked
 
 export async function adminMakeDateAvailable(date: string, reason = ''): Promise<BlockedDate> {
     return adminSetDateOverride(date, true, reason);
-}
-
-// Clears any override for the date, returning it to the default rules.
-export async function adminUnblockDate(date: string): Promise<void> {
-    const response = await authedFetch(`/api/service/admin/blocked-dates/unblock/`, {
-        method: 'POST',
-        body: JSON.stringify({ date }),
-    });
-    if (!response.ok) throw new Error('Failed to reset date.');
 }
 
 // Unavailable days for the diary over an explicit range, respecting the
@@ -557,12 +518,6 @@ export async function getHireBikes(startDate?: string, endDate?: string): Promis
     if (endDate) params.append('end_date', endDate);
     const qs = params.toString();
     const response = await fetch(`/api/hire/bikes/${qs ? `?${qs}` : ''}`);
-    return handleResponse(response);
-}
-
-export async function checkHireAvailability(motorcycleId: number, startDate: string, endDate: string): Promise<{ available: boolean }> {
-    const params = new URLSearchParams({ motorcycle_id: String(motorcycleId), start_date: startDate, end_date: endDate });
-    const response = await fetch(`/api/hire/availability/?${params.toString()}`);
     return handleResponse(response);
 }
 

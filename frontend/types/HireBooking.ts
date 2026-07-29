@@ -5,7 +5,7 @@ export interface HireExtra {
   is_active: boolean;
 }
 
-export interface HireBookingExtra {
+interface HireBookingExtra {
   id: number;
   name: string;
   quantity: number;

@@ -21,7 +21,7 @@ export interface PartsModelDetail extends PartsModelListItem {
   sections: PartSectionSummary[];
 }
 
-export type VariantAxis = 'colour' | 'date' | 'none';
+type VariantAxis = 'colour' | 'date' | 'none';
 
 export interface PartVariant {
   fitment_key: string;
@@ -56,7 +56,7 @@ export interface SectionDetail {
   callouts: Callout[];
 }
 
-export interface SearchSectionRef {
+interface SearchSectionRef {
   section_id: number;
   section_code: string;
   section_name: string;

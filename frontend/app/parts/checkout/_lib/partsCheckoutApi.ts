@@ -3,7 +3,7 @@
 import type { PartsCartItem } from '@/types/parts';
 import { partsJson } from '@/lib/partsHttp';
 
-export interface PartsOrderItemDetail {
+interface PartsOrderItemDetail {
   part_number: string;
   description: string;
   colour_name: string | null;

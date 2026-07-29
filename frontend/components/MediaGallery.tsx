@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, PlayCircle } from 'lucide-react';
 import { getVehicleImageUrl } from '@/lib/vehicleImages';
 
 
-export interface GalleryImage {
+interface GalleryImage {
     id: number;
     image: string;
     thumbnail?: string | null;
@@ -14,7 +14,7 @@ export interface GalleryImage {
     order: number;
 }
 
-export interface MediaGalleryProps {
+interface MediaGalleryProps {
     videoId: string | null;
     images: GalleryImage[];
     initialSelectedMedia: string;

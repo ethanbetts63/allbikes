@@ -19,12 +19,12 @@ import type { Bike } from '@/types/Bike';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
 
 
-export interface BreadcrumbItem {
+interface BreadcrumbItem {
   name: string;
   href: string;
 }
 
-export interface BikeListPageProps {
+interface BikeListPageProps {
   bikeCondition: 'new,demo' | 'used' | 'parts';
   pageType?: 'new' | 'used-motorcycles' | 'used-scooters' | 'parts';
   bikes: Bike[];

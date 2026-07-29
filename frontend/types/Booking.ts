@@ -5,7 +5,7 @@ export type BookingStatus =
   | 'finished'
   | 'cancelled';
 
-export type BookingSource = 'website' | 'manual';
+type BookingSource = 'website' | 'manual';
 
 export interface Booking {
   id: number;

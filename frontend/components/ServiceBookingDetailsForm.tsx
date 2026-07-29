@@ -18,7 +18,7 @@ import { Spinner } from "@/components/ui/spinner";
 import type React from 'react';
 import type { BookingFormData } from '@/types/BookingFormData';
 
-export interface BookingDetailsFormProps {
+interface BookingDetailsFormProps {
   formData: BookingFormData;
   setFormData: React.Dispatch<React.SetStateAction<BookingFormData>>;
   nextStep: () => void;

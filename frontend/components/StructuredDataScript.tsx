@@ -1,5 +1,5 @@
 
-export interface StructuredDataScriptProps {
+interface StructuredDataScriptProps {
   structuredData?: object | object[];
 }
 

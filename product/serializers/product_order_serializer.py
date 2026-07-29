@@ -72,6 +72,6 @@ class ProductOrderStatusSerializer(serializers.ModelSerializer):
         fields = ['status']
 
     def validate_status(self, value):
-        if value in {'paid', 'refunded'} and not hasattr(self.instance, 'payment'):
+        if value in {'paid', 'refunded'} and not self.instance.payments.exists():
             raise serializers.ValidationError('This status requires an associated payment record.')
         return value

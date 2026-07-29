@@ -18,7 +18,7 @@ import type { MotorcycleFormData } from '@/types/MotorcycleFormData';
 import type { SubmitHandler } from 'react-hook-form';
 import type { Bike } from '@/types/Bike';
 
-export interface MotorcycleFormProps {
+interface MotorcycleFormProps {
   initialData?: Bike;
   onSubmit: SubmitHandler<MotorcycleFormData>;
   isLoading?: boolean;

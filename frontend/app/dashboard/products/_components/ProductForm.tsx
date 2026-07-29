@@ -18,7 +18,7 @@ import type { ManagedImage } from '@/types/ManagedImage';
 import type { ProductFormData } from '@/app/dashboard/products/_lib/ProductFormData';
 import type { Product } from '@/types/Product';
 
-export interface ProductFormProps {
+interface ProductFormProps {
     initialData?: Product;
     onSubmit: (data: ProductFormData) => Promise<void>;
     isLoading: boolean;

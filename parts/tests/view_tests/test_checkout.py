@@ -229,8 +229,7 @@ class TestCheckoutViews:
         assert Payment.objects.filter(parts_order=order).count() == 1
 
     @patch('payments.payment_intents.stripe')
-    def test_retry_after_failed_payment_no_duplicate(self, mock_stripe, client, settings_fixture):
-        # A failed Payment occupies the OneToOne slot; a retry must replace it, not 500.
+    def test_retry_after_failed_payment_preserves_attempt(self, mock_stripe, client, settings_fixture):
         mock_stripe.PaymentIntent.create.return_value = MagicMock(id='pi_new', client_secret='cs_new')
         p = PartFactory(part_number='A-1', wholesale_price_incl_gst=Decimal('10'), available_qty=5, in_pa_feed=True)
         SectionPartFactory(section=PartSectionFactory(), ref_number='1', part=p)
@@ -239,7 +238,9 @@ class TestCheckoutViews:
         resp = client.post('/api/parts/create-payment-intent/', {'order_reference': order.order_reference, 'access_token': order.access_token}, format='json')
         assert resp.status_code == 200
         assert resp.json()['clientSecret'] == 'cs_new'
-        assert Payment.objects.filter(parts_order=order).count() == 1  # replaced, not duplicated
+        attempts = Payment.objects.filter(parts_order=order).order_by('created_at')
+        assert attempts.count() == 2
+        assert list(attempts.values_list('stripe_payment_intent_id', flat=True)) == ['pi_old', 'pi_new']
 
 
 class TestWebhookPartsBranch:

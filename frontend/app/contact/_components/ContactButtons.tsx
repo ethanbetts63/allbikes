@@ -1,6 +1,6 @@
 import { Phone, Mail } from 'lucide-react';
 
-export interface ContactButtonsProps {
+interface ContactButtonsProps {
   phoneNumber?: string;
   mobileNumber?: string;
   emailAddress?: string;
