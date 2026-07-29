@@ -1,6 +1,7 @@
 import secrets
 
 from django.db import models
+from django.utils import timezone
 
 
 def _generate_access_token():
@@ -22,6 +23,7 @@ class PartsOrder(models.Model):
         ('pending_payment', 'Pending Payment'),
         ('paid', 'Paid'),
         ('dispatched', 'Dispatched'),
+        ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
         ('refunded', 'Refunded'),
         ('partially_refunded', 'Partially Refunded'),
@@ -83,3 +85,20 @@ class PartsOrder(models.Model):
             elif refunded and self.status in ('paid', 'dispatched'):
                 self.status = 'partially_refunded'
         self.save(update_fields=['has_backorder', 'status', 'updated_at'])
+
+    def backorder_days_remaining(self, hold_days=None):
+        """Days left in the backorder hold, counted from the order date.
+
+        The hold is a promise about the customer's *total* wait, so the clock
+        starts when they paid — not when an operator noticed a part was short.
+        Can be zero or negative, meaning the window has closed.
+        """
+        if hold_days is None:
+            from parts.models.parts_settings import PartsSettings
+            hold_days = PartsSettings.get().backorder_hold_days
+        ordered_on = timezone.localtime(self.created_at).date()
+        return hold_days - (timezone.localdate() - ordered_on).days
+
+    def backorder_window_expired(self, hold_days=None):
+        """True once the order is too old to hold a part on backorder."""
+        return self.backorder_days_remaining(hold_days) <= 0

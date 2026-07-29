@@ -22,15 +22,15 @@ class PartsOrderItem(models.Model):
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Customer price incl. GST (marked up).")
     line_total = models.DecimalField(max_digits=10, decimal_places=2)
 
-    # `backordered` = on the 14-day hold; `status` = fulfilment outcome.
+    # `backordered` = on hold awaiting stock; `status` = the line's own outcome.
+    # There is no stored `completed` — a line counts as completed when its order
+    # is completed and it was not refunded. That is derived in the serializer.
     STATUS_CHOICES = [
-        ('ordered', 'Ordered'),
-        ('fulfilled', 'Fulfilled'),
+        ('to_order', 'To Order'),
         ('refunded', 'Refunded'),
     ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ordered')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='to_order')
     backordered = models.BooleanField(default=False, help_text="Understocked at order time / placed on backorder by admin.")
-    backorder_since = models.DateField(null=True, blank=True, help_text="Start of the 14-day hold clock.")
 
     class Meta:
         ordering = ['id']

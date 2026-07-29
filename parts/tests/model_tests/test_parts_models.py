@@ -1,9 +1,18 @@
+from datetime import timedelta
 from decimal import Decimal
 
 import pytest
 from django.db import IntegrityError
+from django.utils import timezone
 
-from parts.models import Part, PartsModel, PartsSettings, SectionPart
+from parts.models import (
+    Part,
+    PartsModel,
+    PartsOrder,
+    PartsOrderItem,
+    PartsSettings,
+    SectionPart,
+)
 from parts.tests.factories import (
     PartFactory,
     PartSectionFactory,
@@ -90,9 +99,78 @@ class TestPartsSettings:
         assert s.apply_markup(Decimal('80.00')) == Decimal('100.00')
         assert s.apply_markup(None) is None
 
-    def test_shipping_fee_by_destination(self):
+    def test_current_shipping_fee(self):
         s = PartsSettings.get()
-        s.domestic_shipping_fee = Decimal('15')
-        s.international_shipping_fee = Decimal('60')
-        assert s.shipping_fee(is_international=False) == Decimal('15')
-        assert s.shipping_fee(is_international=True) == Decimal('60')
+        s.shipping_fee = Decimal('15')
+        assert s.current_shipping_fee() == Decimal('15')
+
+
+def _bare_order(**over):
+    """A saved PartsOrder with the minimum required fields."""
+    base = {
+        'customer_name': 'Jane Smith', 'customer_email': 'jane@example.com',
+        'address_line1': '1 St', 'suburb': 'Perth', 'state': 'WA', 'postcode': '6000',
+    }
+    base.update(over)
+    return PartsOrder.objects.create(**base)
+
+
+def _age_order(order, days):
+    """created_at is auto_now_add, so it can only be moved with a queryset update."""
+    PartsOrder.objects.filter(pk=order.pk).update(
+        created_at=timezone.now() - timedelta(days=days)
+    )
+    order.refresh_from_db()
+    return order
+
+
+class TestPartsOrderItemStatus:
+    def test_defaults_to_to_order(self):
+        order = _bare_order()
+        item = order.items.create(
+            part_number='A-1', quantity=1, unit_price=Decimal('10'), line_total=Decimal('10')
+        )
+        assert item.status == 'to_order'
+
+    def test_status_choices_are_to_order_and_refunded(self):
+        assert PartsOrderItem.STATUS_CHOICES == [
+            ('to_order', 'To Order'),
+            ('refunded', 'Refunded'),
+        ]
+
+    def test_backorder_since_field_is_gone(self):
+        names = {f.name for f in PartsOrderItem._meta.get_fields()}
+        assert 'backorder_since' not in names
+
+
+class TestPartsOrderCompletedStatus:
+    def test_completed_is_a_valid_order_status(self):
+        assert ('completed', 'Completed') in PartsOrder.STATUS_CHOICES
+
+
+class TestBackorderWindow:
+    def test_full_window_on_the_day_the_order_is_placed(self):
+        order = _bare_order()
+        assert order.backorder_days_remaining(hold_days=14) == 14
+        assert order.backorder_window_expired(hold_days=14) is False
+
+    def test_clock_counts_from_the_order_date(self):
+        order = _age_order(_bare_order(), days=5)
+        assert order.backorder_days_remaining(hold_days=14) == 9
+        assert order.backorder_window_expired(hold_days=14) is False
+
+    def test_window_expired_exactly_on_the_boundary(self):
+        order = _age_order(_bare_order(), days=14)
+        assert order.backorder_days_remaining(hold_days=14) == 0
+        assert order.backorder_window_expired(hold_days=14) is True
+
+    def test_window_expired_past_the_boundary(self):
+        order = _age_order(_bare_order(), days=20)
+        assert order.backorder_days_remaining(hold_days=14) == -6
+        assert order.backorder_window_expired(hold_days=14) is True
+
+    def test_falls_back_to_settings_when_hold_days_not_supplied(self):
+        s = PartsSettings.get()
+        s.backorder_hold_days = 7
+        s.save()
+        assert _bare_order().backorder_days_remaining() == 7
