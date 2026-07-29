@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -7,7 +8,6 @@ import Link from 'next/link';
 import { adminGetOrder, adminUpdateOrderStatus } from '@/api';
 import type { Order } from '@/types/Order';
 import { Spinner } from '@/components/ui/spinner';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import OrderCustomer from '../_components/OrderCustomer';
 import OrderDeliveryAddress from '../_components/OrderDeliveryAddress';
 import OrderDetails from '../_components/OrderDetails';
@@ -19,7 +19,6 @@ export default function AdminOrderDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -31,7 +30,7 @@ export default function AdminOrderDetailPage() {
         setSelectedStatus(data.status);
       })
       .catch(() => {
-        if (!cancelled) setNotification({ message: 'Failed to load order.', type: 'error' });
+        if (!cancelled) toast.error('Failed to load order.');
       })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
@@ -43,9 +42,9 @@ export default function AdminOrderDetailPage() {
     try {
       await adminUpdateOrderStatus(order.id, selectedStatus);
       setOrder({ ...order, status: selectedStatus });
-      setNotification({ message: 'Status updated.', type: 'success' });
+      toast.success('Status updated.');
     } catch {
-      setNotification({ message: 'Failed to update status.', type: 'error' });
+      toast.error('Failed to update status.');
     } finally {
       setIsSaving(false);
     }
@@ -65,12 +64,6 @@ export default function AdminOrderDetailPage() {
 
   return (
     <div className="p-4 md:p-6">
-      {notification && (
-        <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
-          <AlertDescription>{notification.message}</AlertDescription>
-        </Alert>
-      )}
-
       <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
         <OrderHeader
           order={order}

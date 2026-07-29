@@ -2,17 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 
 import CheckoutSteps from '@/components/parts/CheckoutSteps';
 import OrderSummary from '@/components/parts/OrderSummary';
+import StripePaymentForm from '@/components/payments/StripePaymentForm';
+import { stripePromise } from '@/lib/stripe';
 import {
   createPartsPaymentIntent, getPartsOrder, type PartsOrderDetail,
 } from '@/lib/partsCheckoutApi';
-import PartsPaymentForm from './PartsPaymentForm';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function PartsCheckoutPaymentScreen() {
   const router = useRouter();
@@ -76,7 +74,15 @@ export default function PartsCheckoutPaymentScreen() {
               <span className="font-mono font-semibold text-black">{order.order_reference}</span>
             </p>
             <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
-              <PartsPaymentForm reference={order.order_reference} accessToken={accessToken} />
+              <StripePaymentForm
+                returnUrl={`${window.location.origin}/parts/checkout/confirmation?ref=${order.order_reference}`}
+                onSucceeded={() => router.push(
+                  `/parts/checkout/confirmation?ref=${order.order_reference}&token=${encodeURIComponent(accessToken)}`,
+                )}
+                submitLabel="Pay now"
+                buttonClassName="w-full rounded-md bg-black px-6 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-gray-800 disabled:bg-gray-300"
+                errorClassName="rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-black"
+              />
             </Elements>
           </div>
           <OrderSummary

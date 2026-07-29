@@ -1,11 +1,11 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { PlusSquare } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { adminGetProducts, deleteProduct } from '@/api';
 import type { Product } from '@/types/Product';
 import ProductsTable from './_components/ProductsTable';
@@ -14,7 +14,6 @@ export default function AdminProductDashboardPage() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Bumped after a delete to re-run the load. Fetching inside the effect (rather
   // than through a callback the effect invokes) keeps every setState inside a
@@ -26,7 +25,7 @@ export default function AdminProductDashboardPage() {
     adminGetProducts()
       .then((response) => { if (!cancelled) setProducts(response.results); })
       .catch(() => {
-        if (!cancelled) setNotification({ message: 'Failed to load products.', type: 'error' });
+        if (!cancelled) toast.error('Failed to load products.');
       })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
@@ -41,10 +40,10 @@ export default function AdminProductDashboardPage() {
     if (!window.confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
     try {
       await deleteProduct(product.id);
-      setNotification({ message: `"${product.name}" deleted successfully.`, type: 'success' });
+      toast.success(`"${product.name}" deleted successfully.`);
       setReloadToken((t) => t + 1);
     } catch {
-      setNotification({ message: 'Failed to delete product.', type: 'error' });
+      toast.error('Failed to delete product.');
     }
   }, []);
 
@@ -57,12 +56,6 @@ export default function AdminProductDashboardPage() {
           Add Product
         </Button>
       </div>
-
-      {notification && (
-        <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
-          <AlertDescription>{notification.message}</AlertDescription>
-        </Alert>
-      )}
 
       <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
         {isLoading ? (

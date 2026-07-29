@@ -8,8 +8,9 @@ import {
   adminGetHireBooking, adminUpdateHireBookingStatus, adminDeleteHireBooking, adminDownloadHireContract,
 } from '@/api';
 import type { HireBooking } from '@/types/HireBooking';
+import { toast } from 'sonner';
+
 import { Spinner } from '@/components/ui/spinner';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import HireBookingCustomer from '../_components/HireBookingCustomer';
 import HireBookingDetails from '../_components/HireBookingDetails';
 import HireBookingHeader from '../_components/HireBookingHeader';
@@ -23,7 +24,6 @@ export default function AdminHireDetailPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -35,7 +35,7 @@ export default function AdminHireDetailPage() {
         setSelectedStatus(data.status);
       })
       .catch(() => {
-        if (!cancelled) setNotification({ message: 'Failed to load booking.', type: 'error' });
+        if (!cancelled) toast.error('Failed to load booking.');
       })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
@@ -48,7 +48,7 @@ export default function AdminHireDetailPage() {
       await adminDeleteHireBooking(booking.id);
       router.push('/dashboard/hire');
     } catch {
-      setNotification({ message: 'Failed to delete booking.', type: 'error' });
+      toast.error('Failed to delete booking.');
       setIsDeleting(false);
     }
   };
@@ -67,7 +67,7 @@ export default function AdminHireDetailPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch {
-      setNotification({ message: 'Failed to download contract.', type: 'error' });
+      toast.error('Failed to download contract.');
     } finally {
       setIsDownloading(false);
     }
@@ -79,9 +79,9 @@ export default function AdminHireDetailPage() {
     try {
       const updated = await adminUpdateHireBookingStatus(booking.id, selectedStatus);
       setBooking(updated);
-      setNotification({ message: 'Booking updated.', type: 'success' });
+      toast.success('Booking updated.');
     } catch {
-      setNotification({ message: 'Failed to update booking.', type: 'error' });
+      toast.error('Failed to update booking.');
     } finally {
       setIsSaving(false);
     }
@@ -101,12 +101,6 @@ export default function AdminHireDetailPage() {
 
   return (
     <div className="p-4 md:p-6">
-      {notification && (
-        <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
-          <AlertDescription>{notification.message}</AlertDescription>
-        </Alert>
-      )}
-
       <div className="w-full bg-[var(--bg-light-primary)] text-[var(--text-dark-primary)] p-4 rounded-lg">
         <HireBookingHeader
           booking={booking}

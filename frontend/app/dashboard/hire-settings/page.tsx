@@ -1,10 +1,10 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 
 import { adminGetHireSettings, adminUpdateHireSettings } from '@/api';
 import type { HireSettings } from '@/types/HireBooking';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
 import HireSettingsForm from './_components/HireSettingsForm';
 
@@ -12,14 +12,13 @@ export default function AdminHireSettingsPage() {
   const [settings, setSettings] = useState<HireSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     adminGetHireSettings()
       .then((data) => { if (!cancelled) setSettings(data); })
       .catch(() => {
-        if (!cancelled) setNotification({ message: 'Failed to load hire settings.', type: 'error' });
+        if (!cancelled) toast.error('Failed to load hire settings.');
       })
       .finally(() => { if (!cancelled) setIsLoading(false); });
     return () => { cancelled = true; };
@@ -28,13 +27,12 @@ export default function AdminHireSettingsPage() {
   const handleSave = async () => {
     if (!settings) return;
     setIsSaving(true);
-    setNotification(null);
     try {
       const updated = await adminUpdateHireSettings(settings);
       setSettings(updated);
-      setNotification({ message: 'Settings saved.', type: 'success' });
+      toast.success('Settings saved.');
     } catch {
-      setNotification({ message: 'Failed to save settings.', type: 'error' });
+      toast.error('Failed to save settings.');
     } finally {
       setIsSaving(false);
     }
@@ -55,12 +53,6 @@ export default function AdminHireSettingsPage() {
   return (
     <div className="p-4 md:p-6">
       <h1 className="text-2xl font-bold mb-4 text-[var(--text-dark-primary)]">Hire Settings</h1>
-
-      {notification && (
-        <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
-          <AlertDescription>{notification.message}</AlertDescription>
-        </Alert>
-      )}
 
       <HireSettingsForm
         settings={settings}

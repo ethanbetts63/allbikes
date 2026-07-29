@@ -2,17 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 
 import { Spinner } from '@/components/ui/spinner';
+import StripePaymentForm from '@/components/payments/StripePaymentForm';
+import { stripePromise } from '@/lib/stripe';
 import { createPaymentIntent, getOrderByReference } from '@/api';
 import type { Order } from '@/types/Order';
 import type { CheckoutItemSummary } from '@/types/CheckoutItemSummary';
-import CheckoutPaymentForm from './CheckoutPaymentForm';
 import { buildSummaryFromOrder } from '../_lib/checkoutPayment';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CheckoutPaymentScreen() {
   const params = useParams<{ slug: string }>();
@@ -111,7 +109,10 @@ export default function CheckoutPaymentScreen() {
         </p>
 
         <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
-          <CheckoutPaymentForm orderReference={orderReference} slug={slug} />
+          <StripePaymentForm
+            returnUrl={`${window.location.origin}/checkout/processing?ref=${orderReference}&slug=${slug}`}
+            onSucceeded={() => router.push(`/checkout/processing?ref=${orderReference}`)}
+          />
         </Elements>
       </div>
     </div>

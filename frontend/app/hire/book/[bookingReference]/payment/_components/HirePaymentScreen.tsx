@@ -2,17 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 
 import type { HireBookingSummary } from '@/types/HireBookingSummary';
 import { createHirePaymentIntent, getHireBookingByReference } from '@/api';
 import { Spinner } from '@/components/ui/spinner';
-import HirePaymentForm from './HirePaymentForm';
+import StripePaymentForm from '@/components/payments/StripePaymentForm';
+import { stripePromise } from '@/lib/stripe';
 import HirePaymentSummary from './HirePaymentSummary';
 import { buildSummaryFromBooking } from '../_lib/hirePayment';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function HirePaymentScreen() {
   const router = useRouter();
@@ -89,7 +87,10 @@ export default function HirePaymentScreen() {
         </p>
 
         <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'stripe' } }}>
-          <HirePaymentForm bookingReference={bookingReference} />
+          <StripePaymentForm
+            returnUrl={`${window.location.origin}/hire/processing?ref=${bookingReference}`}
+            onSucceeded={() => router.push(`/hire/processing?ref=${bookingReference}`)}
+          />
         </Elements>
       </div>
     </div>

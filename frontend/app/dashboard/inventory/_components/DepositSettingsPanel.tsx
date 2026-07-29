@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 
 import { getDepositSettings, adminUpdateDepositSettings } from '@/api';
@@ -11,7 +12,6 @@ export default function DepositSettingsPanel() {
   const [amount, setAmount] = useState('');
   const [savedAmount, setSavedAmount] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -34,7 +34,6 @@ export default function DepositSettingsPanel() {
       return;
     }
     setIsSaving(true);
-    setMessage(null);
     try {
       const updated = await adminUpdateDepositSettings(parsed.toFixed(2));
       setSavedAmount(updated.deposit_amount);
@@ -72,11 +71,6 @@ export default function DepositSettingsPanel() {
           </Button>
         </div>
       </div>
-      {message && (
-        <p className={`text-xs mt-2 ${message.type === 'error' ? 'text-destructive' : 'text-green-600'}`}>
-          {message.text}
-        </p>
-      )}
     </div>
   );
 }

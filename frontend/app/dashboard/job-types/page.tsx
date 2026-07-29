@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { PlusCircle, X } from 'lucide-react';
 
@@ -8,7 +9,6 @@ import type { JobType } from '@/types/JobType';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import JobTypeDialog from './_components/JobTypeDialog';
 import JobTypesTable from './_components/JobTypesTable';
 
@@ -18,7 +18,6 @@ export default function JobTypesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingJobType, setEditingJobType] = useState<JobType | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Bumped after any write to re-run the load.
   const [reloadToken, setReloadToken] = useState(0);
@@ -29,7 +28,7 @@ export default function JobTypesPage() {
       .then((data) => { if (!cancelled) setJobTypes(data); })
       .catch((error) => {
         if (cancelled) return;
-        setNotification({ message: 'Failed to fetch job types.', type: 'error' });
+        toast.error('Failed to fetch job types.');
         console.error(error);
       })
       .finally(() => { if (!cancelled) setIsLoading(false); });
@@ -37,29 +36,24 @@ export default function JobTypesPage() {
   }, [reloadToken]);
 
   const openDialog = (jobType: JobType | null = null) => {
-    setNotification(null);
     setEditingJobType(jobType);
     setIsDialogOpen(true);
   };
 
   const handleSubmit = async (values: { name: string; description: string }) => {
-    setNotification(null);
     setIsSubmitting(true);
     try {
       if (editingJobType) {
         await updateJobType(editingJobType.id, values);
-        setNotification({ message: 'Job type updated successfully!', type: 'success' });
+        toast.success('Job type updated successfully!');
       } else {
         await createJobType(values as Omit<JobType, 'id'>);
-        setNotification({ message: 'Job type created successfully!', type: 'success' });
+        toast.success('Job type created successfully!');
       }
       setReloadToken((t) => t + 1);
       setIsDialogOpen(false);
     } catch (error) {
-      setNotification({
-        message: `Failed to ${editingJobType ? 'update' : 'create'} job type.`,
-        type: 'error',
-      });
+      toast.error(`Failed to ${editingJobType ? 'update' : 'create'} job type.`);
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -67,14 +61,13 @@ export default function JobTypesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    setNotification(null);
     if (!window.confirm('Are you sure you want to delete this job type?')) return;
     try {
       await deleteJobType(id);
-      setNotification({ message: 'Job type deleted successfully!', type: 'success' });
+      toast.success('Job type deleted successfully!');
       setReloadToken((t) => t + 1);
     } catch (error) {
-      setNotification({ message: 'Failed to delete job type.', type: 'error' });
+      toast.error('Failed to delete job type.');
       console.error(error);
     }
   };
@@ -98,14 +91,6 @@ export default function JobTypesPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {notification && (
-            <Alert variant={notification.type === 'error' ? 'destructive' : 'default'} className="mb-4">
-              <AlertDescription>{notification.message}</AlertDescription>
-              <Button variant="ghost" size="icon" onClick={() => setNotification(null)}>
-                <X className="h-4 w-4" />
-              </Button>
-            </Alert>
-          )}
           <JobTypesTable jobTypes={jobTypes} onEdit={openDialog} onDelete={handleDelete} />
         </CardContent>
 
