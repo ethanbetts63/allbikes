@@ -156,6 +156,13 @@ The script performs the following actions:
 *   `python manage.py generate --archive`: Archives the current state of the database to date-stamped JSON files.
 *   `python manage.py update --archive`: Loads the database from the most recent archive (a destructive operation).
 
+**`parts`**
+*   `python manage.py scrape --parts`: Downloads changed SYM model books into the archive and parts inbox.
+*   `python manage.py scrape --prices`: Downloads changed Price & Availability data into the archive and pricing inbox.
+*   `python manage.py update --parts`: Consumes the model-book inbox and updates the catalogue.
+*   `python manage.py update --prices`: Consumes the pricing inbox and updates price/availability.
+*   Add `--archive` to a parts/prices update to recover from the latest archived sources without deleting them. Standalone `update --archive` retains its existing full-database restore behaviour.
+
 **`notifications`**
 *   `python manage.py send_test_email`: Sends a test email via Mailgun to configured admin emails. Use `--template customer_confirmation` or `--template admin_new_order` to preview real notification templates with dummy order data. Use `--to` to override the recipient.
 *   `python manage.py send_admin_reminders`: Sends a reminder email to configured admin emails for every order in `paid` status that has not yet been dispatched. Intended to be run on a schedule (e.g. weekly cron).

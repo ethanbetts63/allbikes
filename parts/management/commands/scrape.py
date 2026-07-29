@@ -16,16 +16,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             if options['parts']:
-                return scrape_parts.run(
+                scrape_parts.run(
                     stdout=self.stdout,
                     stderr=self.stderr,
                     url=options.get('url'),
                     force=options['force'],
                 )
-            return scrape_prices.run(
-                stdout=self.stdout,
-                url=options.get('url'),
-                force=options['force'],
-            )
+            else:
+                scrape_prices.run(
+                    stdout=self.stdout,
+                    url=options.get('url'),
+                    force=options['force'],
+                )
         except RuntimeError as exc:
             raise CommandError(str(exc)) from exc

@@ -1,10 +1,15 @@
 import json
 import re
+import time
 
+from django.db import OperationalError, close_old_connections
 from parts.ingestion import storage
 from parts.ingestion.importer import import_book
 from parts.ingestion.xls_parser import parse_book, read_model_code
 from parts.models import PartsModel
+
+DEADLOCK_CODES = {1205, 1213}
+MAX_IMPORT_ATTEMPTS = 3
 
 
 def _metadata(path):
@@ -51,16 +56,29 @@ def _import_one(path, *, stdout, remove_after=False):
     else:
         parsed = parse_book(str(path))
         display_name = meta.get('name') or parsed.get('model_name_hint') or parsed['model_code']
-        model = import_book(
-            parsed,
-            name=display_name,
-            cc_class=meta.get('cc_class') or _fallback_cc_class(
+        import_kwargs = {
+            'name': display_name,
+            'cc_class': meta.get('cc_class') or _fallback_cc_class(
                 display_name, parsed['model_code'], path.name
             ),
-            source_url=meta.get('url', ''),
-            source_filename=path.name,
-            book_hash=book_hash,
-        )
+            'source_url': meta.get('url', ''),
+            'source_filename': path.name,
+            'book_hash': book_hash,
+        }
+        for attempt in range(1, MAX_IMPORT_ATTEMPTS + 1):
+            try:
+                model = import_book(parsed, **import_kwargs)
+                break
+            except OperationalError as exc:
+                code = exc.args[0] if exc.args else None
+                if code not in DEADLOCK_CODES or attempt == MAX_IMPORT_ATTEMPTS:
+                    raise
+                close_old_connections()
+                stdout.write(
+                    f'Database lock while importing {path.name}; retrying '
+                    f'({attempt}/{MAX_IMPORT_ATTEMPTS - 1}).'
+                )
+                time.sleep(0.25 * attempt)
         stdout.write(f'Imported {model} — {model.sections.count()} sections.')
 
     if remove_after:

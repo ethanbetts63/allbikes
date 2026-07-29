@@ -161,6 +161,11 @@ Catalog database
 
 - Source files are archived with a content hash, so an updated file does not
   overwrite a prior archive copy.
+- Scheduled commands are `scrape --parts` then `update --parts` for model books,
+  and `scrape --prices` then `update --prices` for Price & Availability.
+- `update --parts --archive` rebuilds from the newest archived book for every
+  model. `update --prices --archive` applies the newest archived pricing CSV.
+  Archive recovery reads files in place and never consumes them.
 - The pricing importer validates the expected CSV header and minimum row count
   before it can change catalog availability.
 - The Price & Availability `RRP+GST` value is the pricing base. Customer price is
@@ -194,8 +199,9 @@ Catalog database
 | Checkout API | `parts/views/checkout_views.py` |
 | Admin supplier email | `parts/views/admin_order_views.py` |
 | Parts models | `parts/models/` |
-| Import pipeline | `parts/ingestion/` |
-| Scheduled imports | `parts/management/commands/` |
+| Import/parser pipeline | `parts/ingestion/` |
+| Command workflows | `parts/management/utils/` |
+| Command entry points | `parts/management/commands/scrape.py`, `data_management/management/commands/update.py` |
 | Stripe webhook branch | `payments/utils/webhook_handlers.py` |
 
 ---
