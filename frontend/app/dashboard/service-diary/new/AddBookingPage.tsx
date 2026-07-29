@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { adminCreateBooking } from '@/api';
 import type { BookingInput } from '@/types/Booking';
 import BookingForm from '@/forms/BookingForm';
-import { DIARY_PATH, diaryWeekHref } from '../AdminServiceDiaryPage';
+import { DIARY_PATH, diaryWeekHref } from '../_lib/diary';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
