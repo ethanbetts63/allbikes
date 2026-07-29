@@ -9,6 +9,7 @@ import type { AdminNotifications } from '@/types/AdminNotifications';
 import { Spinner } from '@/components/ui/spinner';
 import { CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { PARTS_STATUS_BADGE } from '../parts-orders/PartsOrdersListPage';
 
 const HIRE_STATUS_BADGE: Record<string, string> = {
   confirmed: 'border-green-600 text-green-700',
@@ -33,7 +34,8 @@ const AdminNotificationsPage = () => {
     notifications.paid_orders.length === 0 &&
     notifications.reserved_bikes.length === 0 &&
     notifications.attention_products.length === 0 &&
-    notifications.active_hire_bookings.length === 0;
+    notifications.active_hire_bookings.length === 0 &&
+    notifications.parts_orders_to_action.length === 0;
 
   return (
     <div className="p-4 md:p-6">
@@ -58,6 +60,58 @@ const AdminNotificationsPage = () => {
 
       {!isLoading && notifications && !allClear && (
         <div className="space-y-8">
+
+          {/* Parts orders to action */}
+          {notifications.parts_orders_to_action.length > 0 && (
+            <section>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--text-dark-secondary)] mb-3">
+                Parts orders to action — {notifications.parts_orders_to_action.length}
+              </h2>
+              <div className="bg-[var(--bg-light-primary)] rounded-lg border border-border-light overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border-light text-xs text-[var(--text-dark-secondary)] uppercase tracking-wider">
+                      <th className="text-left px-4 py-3 font-semibold">Reference</th>
+                      <th className="text-left px-4 py-3 font-semibold">Customer</th>
+                      <th className="text-left px-4 py-3 font-semibold">Items</th>
+                      <th className="text-left px-4 py-3 font-semibold">Status</th>
+                      <th className="text-left px-4 py-3 font-semibold">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {notifications.parts_orders_to_action.map(order => (
+                      <tr
+                        key={order.id}
+                        onClick={() => router.push(`/dashboard/parts-orders/${order.order_reference}`)}
+                        className="hover:bg-[var(--bg-light-secondary)] cursor-pointer transition-colors"
+                      >
+                        <td className="px-4 py-3 font-mono font-semibold text-[var(--text-dark-primary)]">
+                          {order.order_reference}
+                        </td>
+                        <td className="px-4 py-3 text-[var(--text-dark-secondary)]">{order.customer_name}</td>
+                        <td className="px-4 py-3 text-[var(--text-dark-secondary)]">{order.item_count}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <Badge variant="outline" className={`text-xs ${PARTS_STATUS_BADGE[order.status] ?? 'border-gray-400'}`}>
+                              {order.status.replace(/_/g, ' ')}
+                            </Badge>
+                            {order.has_backorder && (
+                              <Badge variant="outline" className="text-xs border-orange-500 text-orange-600">
+                                Backorder
+                              </Badge>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-[var(--text-dark-secondary)]">
+                          {new Date(order.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
 
           {/* Orders to action */}
           {notifications.paid_orders.length > 0 && (

@@ -76,6 +76,15 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     }`;
   };
 
+  // Everything the Notifications page lists, so the tab badge matches the
+  // number of rows an operator will actually find there.
+  const totalNotifications =
+    (notifications?.parts_orders_to_action.length ?? 0) +
+    (notifications?.paid_orders.length ?? 0) +
+    (notifications?.reserved_bikes.length ?? 0) +
+    (notifications?.active_hire_bookings.length ?? 0) +
+    (notifications?.attention_products.length ?? 0);
+
   if (isAuthLoading) {
     return (
       <div className="flex h-screen justify-center items-center">
@@ -106,7 +115,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
             <Link href="/dashboard/notifications" className={navItemClass('/dashboard/notifications')}>
               <Bell className="h-4 w-4 shrink-0" />
-              Notifications
+              <span className="flex-1">Notifications</span>
+              <NavBadge count={totalNotifications} />
             </Link>
 
             <SectionLabel>Inventory</SectionLabel>
@@ -120,26 +130,11 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               Add Motorcycle
             </Link>
 
-            <SectionLabel>Shop</SectionLabel>
-            <Link href="/dashboard/orders" className={navItemClass('/dashboard/orders')}>
-              <ClipboardList className="h-4 w-4 shrink-0" />
-              <span className="flex-1">Orders</span>
-              <NavBadge count={notifications?.paid_orders.length ?? 0} />
-            </Link>
-            <Link href="/dashboard/products" className={navItemClass('/dashboard/products')}>
-              <ShoppingBag className="h-4 w-4 shrink-0" />
-              <span className="flex-1">Products</span>
-              <NavBadge count={notifications?.attention_products.length ?? 0} />
-            </Link>
-            <Link href="/dashboard/products/new" className={subNavItemClass('/dashboard/products/new')}>
-              <PlusCircle className="h-3.5 w-3.5 shrink-0" />
-              Add Product
-            </Link>
-
             <SectionLabel>SYM Parts</SectionLabel>
             <Link href="/dashboard/parts-orders" className={navItemClass('/dashboard/parts-orders')}>
               <Wrench className="h-4 w-4 shrink-0" />
-              Parts Orders
+              <span className="flex-1">Parts Orders</span>
+              <NavBadge count={notifications?.parts_orders_to_action.length ?? 0} />
             </Link>
             <Link href="/dashboard/parts-settings" className={navItemClass('/dashboard/parts-settings')}>
               <Settings className="h-4 w-4 shrink-0" />
@@ -166,6 +161,22 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <Link href="/dashboard/job-types" className={navItemClass('/dashboard/job-types')}>
               <Tag className="h-4 w-4 shrink-0" />
               Job Types
+            </Link>
+
+            <SectionLabel>Shop</SectionLabel>
+            <Link href="/dashboard/orders" className={navItemClass('/dashboard/orders')}>
+              <ClipboardList className="h-4 w-4 shrink-0" />
+              <span className="flex-1">Orders</span>
+              <NavBadge count={notifications?.paid_orders.length ?? 0} />
+            </Link>
+            <Link href="/dashboard/products" className={navItemClass('/dashboard/products')}>
+              <ShoppingBag className="h-4 w-4 shrink-0" />
+              <span className="flex-1">Products</span>
+              <NavBadge count={notifications?.attention_products.length ?? 0} />
+            </Link>
+            <Link href="/dashboard/products/new" className={subNavItemClass('/dashboard/products/new')}>
+              <PlusCircle className="h-3.5 w-3.5 shrink-0" />
+              Add Product
             </Link>
 
             <SectionLabel>Hire</SectionLabel>

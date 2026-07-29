@@ -4,8 +4,13 @@ from rest_framework.permissions import IsAdminUser
 
 from ..models import Order
 from inventory.models import Motorcycle
+from parts.models import PartsOrder
 from product.models import Product
 from hire.models import HireBooking
+
+# A parts order needs staff attention until it reaches one of these terminal
+# states. Anything else is still ours to move along.
+PARTS_ORDER_SETTLED = ['completed', 'cancelled', 'refunded']
 
 
 class AdminNotificationsView(APIView):
@@ -39,6 +44,13 @@ class AdminNotificationsView(APIView):
             .filter(status__in=['confirmed', 'active'])
             .select_related('motorcycle')
             .order_by('hire_start')
+        )
+
+        parts_orders_to_action = (
+            PartsOrder.objects
+            .exclude(status__in=PARTS_ORDER_SETTLED)
+            .prefetch_related('items')
+            .order_by('created_at')
         )
 
         return Response({
@@ -84,5 +96,17 @@ class AdminNotificationsView(APIView):
                     'status': b.status,
                 }
                 for b in active_hire_bookings
+            ],
+            'parts_orders_to_action': [
+                {
+                    'id': o.id,
+                    'order_reference': o.order_reference,
+                    'customer_name': o.customer_name,
+                    'status': o.status,
+                    'has_backorder': o.has_backorder,
+                    'item_count': len(o.items.all()),
+                    'created_at': o.created_at,
+                }
+                for o in parts_orders_to_action
             ],
         })

@@ -33,9 +33,21 @@ export interface NotificationHireBooking {
   status: string;
 }
 
+export interface NotificationPartsOrder {
+  id: number;
+  order_reference: string;
+  customer_name: string;
+  status: string;
+  has_backorder: boolean;
+  item_count: number;
+  created_at: string;
+}
+
 export interface AdminNotifications {
   paid_orders: NotificationOrder[];
   reserved_bikes: NotificationBike[];
   attention_products: NotificationProduct[];
   active_hire_bookings: NotificationHireBooking[];
+  /** Parts orders that have not reached completed / cancelled / refunded. */
+  parts_orders_to_action: NotificationPartsOrder[];
 }

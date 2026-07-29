@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { formatDate } from '@/utils/formatting';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { toast } from 'sonner';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -16,7 +15,7 @@ import {
   adminSendPartsCustomerUpdate,
 } from '@/services/partsAdminService';
 import type { AdminPartsOrder, AdminPartsOrderItem, ItemAction } from '@/types/partsAdmin';
-import { PARTS_STATUS_BADGE, BTN_INACTIVE } from '../PartsOrdersListPage';
+import { BTN_INACTIVE } from '../PartsOrdersListPage';
 
 const ORDER_STATUSES = ['pending_payment', 'paid', 'dispatched', 'completed', 'cancelled', 'refunded', 'partially_refunded'];
 
@@ -31,6 +30,18 @@ const ITEM_STATE_STYLE: Record<string, { row: string; swatch: string; label: str
   completed: { row: 'bg-emerald-50 hover:bg-emerald-100', swatch: 'bg-emerald-300', label: 'Completed' },
   refunded: { row: 'bg-rose-50 hover:bg-rose-100', swatch: 'bg-rose-300', label: 'Refunded' },
 };
+// Accent + tint for the order status banner. Unpaid and cancelled read as
+// warnings because they change what the operator is allowed to do next.
+const ORDER_STATUS_BANNER: Record<string, string> = {
+  pending_payment: 'border-l-amber-500 bg-amber-50 text-amber-900',
+  paid: 'border-l-green-600 bg-green-50 text-green-900',
+  dispatched: 'border-l-blue-500 bg-blue-50 text-blue-900',
+  completed: 'border-l-emerald-600 bg-emerald-50 text-emerald-900',
+  cancelled: 'border-l-red-500 bg-red-50 text-red-900',
+  refunded: 'border-l-orange-500 bg-orange-50 text-orange-900',
+  partially_refunded: 'border-l-orange-400 bg-orange-50 text-orange-900',
+};
+
 // Legend order = most actionable first, matching the list page's convention.
 const ITEM_LEGEND_ORDER = ['overdue', 'backordered', 'to_order', 'completed', 'refunded'];
 
@@ -62,13 +73,12 @@ export default function PartsOrderDetailPage() {
   const [status, setStatus] = useState('');
   const [notes, setNotes] = useState('');
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState<{ text: string; error?: boolean } | null>(null);
 
   useEffect(() => {
     if (!reference) return;
     adminGetPartsOrder(reference)
       .then((o) => { setOrder(o); setStatus(o.status); setNotes(o.admin_notes); })
-      .catch(() => setMsg({ text: 'Failed to load order.', error: true }))
+      .catch(() => toast.error('Failed to load order.'))
       .finally(() => setLoading(false));
   }, [reference]);
 
@@ -76,18 +86,18 @@ export default function PartsOrderDetailPage() {
 
   const saveOrder = async () => {
     if (!order) return;
-    setBusy(true); setMsg(null);
+    setBusy(true);
     try {
       refresh(await adminUpdatePartsOrder(order.order_reference, { status, admin_notes: notes }));
-      setMsg({ text: 'Saved.' });
-    } catch { setMsg({ text: 'Save failed.', error: true }); }
+      toast.success('Saved.');
+    } catch { toast.error('Save failed.'); }
     finally { setBusy(false); }
   };
 
   const itemAction = async (itemId: number, action: ItemAction) => {
-    setBusy(true); setMsg(null);
+    setBusy(true);
     try { refresh(await adminUpdatePartsOrderItem(itemId, action)); }
-    catch { setMsg({ text: 'Action failed.', error: true }); }
+    catch (error) { toast.error(error instanceof Error ? error.message : 'Action failed.'); }
     finally { setBusy(false); }
   };
   const customerUpdate = async (type: 'backorder' | 'refund' | 'arranged') => {
@@ -97,9 +107,9 @@ export default function PartsOrderDetailPage() {
       arranged: 'This will send an email to the customer. This type should only be sent once you have arranged the order with the supplier.',
     };
     if (!order || !confirm(confirmationCopy[type])) return;
-    setBusy(true); setMsg(null);
-    try { await adminSendPartsCustomerUpdate(order.order_reference, type); refresh(await adminGetPartsOrder(order.order_reference)); setMsg({ text: 'Customer update sent.' }); }
-    catch (error) { setMsg({ text: error instanceof Error ? error.message : 'Customer update failed.', error: true }); }
+    setBusy(true);
+    try { await adminSendPartsCustomerUpdate(order.order_reference, type); refresh(await adminGetPartsOrder(order.order_reference)); toast.success('Customer update sent.'); }
+    catch (error) { toast.error(error instanceof Error ? error.message : 'Customer update failed.'); }
     finally { setBusy(false); }
   };
 
@@ -154,36 +164,10 @@ export default function PartsOrderDetailPage() {
 
   return (
     <div className="p-4 md:p-6">
-      {msg && (
-        <Alert variant={msg.error ? 'destructive' : 'default'} className="mb-4">
-          <AlertDescription>{msg.text}</AlertDescription>
-        </Alert>
-      )}
-
       <div className="rounded-lg bg-[var(--bg-light-primary)] p-4 text-[var(--text-dark-primary)]">
         {/* Header */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4">
-          <div>
-            <h1 className="font-mono text-2xl font-bold">{order.order_reference}</h1>
-            <div className="mt-1 flex items-center gap-2">
-              <Badge variant="outline" className={PARTS_STATUS_BADGE[order.status] ?? 'border-gray-400'}>
-                {order.status.replace(/_/g, ' ')}
-              </Badge>
-              {order.has_backorder && order.status !== 'completed' && (
-                <Badge variant="outline" className="border-orange-500 text-orange-600">Backorder</Badge>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
-              {ORDER_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
-            </select>
-            <Button onClick={saveOrder} disabled={busy}>Save</Button>
-          </div>
+        <div className="mb-6 border-b border-gray-100 pb-4">
+          <h1 className="font-mono text-2xl font-bold">{order.order_reference}</h1>
         </div>
 
         {/* Refund-in-Stripe prompt */}
@@ -201,6 +185,28 @@ export default function PartsOrderDetailPage() {
             </ul>
           </div>
         )}
+
+        {/* Order status — the one place the operator reads where this order
+            stands, now that the header pills are gone. The colour accent does
+            the attention-grabbing, so the type stays quiet. */}
+        <div className={`mb-6 rounded-md border-l-4 px-4 py-3 ${ORDER_STATUS_BANNER[order.status] ?? 'border-l-gray-400 bg-gray-50 text-gray-800'}`}>
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-xs font-medium uppercase tracking-widest opacity-70">Order status</span>
+            <span className="text-xl font-semibold capitalize">
+              {order.status.replace(/_/g, ' ')}
+            </span>
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="h-9 rounded-md border border-input bg-white px-3 text-sm text-[var(--text-dark-primary)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              {ORDER_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
+            </select>
+            <Button onClick={saveOrder} disabled={busy} variant="outline" className={BTN_INACTIVE}>Save</Button>
+          </div>
+        </div>
 
         {/* Customer + address */}
         <div className="mb-6 grid gap-6 sm:grid-cols-2">
