@@ -20,6 +20,14 @@ class TestSplitBaseAndSuffix:
     def test_no_hyphen(self):
         assert colour.split_base_and_suffix("11100") == ("11100", "")
 
+    def test_supplier_annotation_is_not_treated_as_a_colour_suffix(self):
+        part_number = "23010-H9B-000 SUB H93"
+        assert colour.split_base_and_suffix(part_number) == (part_number, "")
+
+    def test_overlong_suffix_is_not_stored_in_colour_suffix(self):
+        part_number = "53205-ABA-000-WD (WH801)C"
+        assert colour.split_base_and_suffix(part_number) == (part_number, "")
+
 
 class TestDeriveColourGroup:
     def test_groups_shared_base(self):

@@ -38,3 +38,14 @@ def test_handles_blank_and_missing_fields(tmp_path):
     assert rows[0]["part_number"] == "ABC-1"
     assert rows[0]["available"] is None
     assert rows[0]["price"] is None
+
+
+def test_normalizes_part_number_case(tmp_path):
+    csv_text = (
+        "PART NUMBER,DESCRIPTION,AVAILABLE,RRP+GST,ADD GST\n"
+        "1640a-Xja-000,ECU SET,1,$600.00,ADD GST\n"
+    )
+
+    rows = list(iter_pa_rows(_write(tmp_path, csv_text)))
+
+    assert rows[0]['part_number'] == '1640A-XJA-000'

@@ -5,7 +5,7 @@ import type { PartsModelListItem } from '@/types/parts';
 
 /** Model tile with product photo — shared by the parts landing grid and search results. */
 export default function ModelCard({ model }: { model: PartsModelListItem }) {
-  const image = MODEL_IMAGES[model.slug];
+  const image = MODEL_IMAGES[model.model_code.toUpperCase()];
   return (
     <Link
       href={`/parts/new/sym/${model.slug}`}

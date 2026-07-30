@@ -36,6 +36,7 @@ _CC_CLASS_HEADINGS = [
 
 _PA_LINK_RE = re.compile(r"price\s*&?\s*availability", re.I)
 _PA_DATE_RE = re.compile(r"PA-(\d{1,2}-[A-Za-z]{3}-\d{2})")
+_SUPPLEMENTARY_XLS_RE = re.compile(r"models?\s+(?:which|that)\s+use\s+the\s+same\s+parts", re.I)
 
 
 def fetch_page(url=SOURCE_URL, timeout=30):
@@ -98,7 +99,7 @@ def parse_books(html):
         if not href.lower().endswith(".xls"):
             continue
         name = el.get_text(" ", strip=True)
-        if not name:
+        if not name or _SUPPLEMENTARY_XLS_RE.search(name):
             continue
         books.append({"name": name, "cc_class": current_cc, "url": href})
     return books

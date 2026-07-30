@@ -47,6 +47,24 @@ def archived_hashes(kind):
     }
 
 
+def archived_files_by_hash(kind):
+    """Return archived source files grouped by their content hash."""
+    files = {}
+    for path in archive_dir(kind).glob("*"):
+        if path.is_file() and path.suffix != ".json":
+            files.setdefault(sha256_file(path), []).append(path)
+    return files
+
+
+def write_metadata_sidecar(path, metadata):
+    """Write source metadata beside an inbox/archive source file."""
+    path = Path(path)
+    path.with_name(f"{path.name}.json").write_text(
+        json.dumps(metadata),
+        encoding="utf-8",
+    )
+
+
 def queue_file(kind, filename, data, *, metadata=None):
     """Write one immutable source file to its archive and import inbox."""
     archive_path = archive_dir(kind) / filename
@@ -54,7 +72,6 @@ def queue_file(kind, filename, data, *, metadata=None):
     archive_path.write_bytes(data)
     inbox_path.write_bytes(data)
     if metadata is not None:
-        sidecar = json.dumps(metadata)
-        archive_path.with_name(f'{filename}.json').write_text(sidecar)
-        inbox_path.with_name(f'{filename}.json').write_text(sidecar)
+        write_metadata_sidecar(archive_path, metadata)
+        write_metadata_sidecar(inbox_path, metadata)
     return inbox_path

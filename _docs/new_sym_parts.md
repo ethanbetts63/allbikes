@@ -161,6 +161,10 @@ Catalog database
 
 - Source files are archived with a content hash, so an updated file does not
   overwrite a prior archive copy.
+- Each archived model book has a metadata sidecar containing its authoritative
+  Select Portal display name, engine class and source URL. A later scrape also
+  backfills this metadata onto matching legacy archives without re-downloading
+  or duplicating their catalogue data.
 - Scheduled commands are `scrape --parts` then `update --parts` for model books,
   and `scrape --prices` then `update --prices` for Price & Availability.
 - `update --parts --archive` rebuilds from the newest archived book for every
@@ -176,6 +180,8 @@ Catalog database
   excluded from parts profit and margin.
 - Models use their SYM model code as a stable key; sections use model + section
   code; fitments use model + section + callout + part number + effective date.
+- Model-card photos are also selected by stable SYM model code, so correcting a
+  display name or public slug cannot make an existing photo disappear.
 - Re-importing a book updates those stable records in place, removes source rows
   that disappeared, and preserves public section URLs and browser carts.
 - Historical order line snapshots remain independent of later catalogue imports.

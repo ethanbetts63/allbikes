@@ -12,6 +12,7 @@ SAMPLE_HTML = """
   <a href="https://x/sym-service-manuals/">Service Manuals</a>
   <h2>ATV's</h2>
   <a href="https://x/wp-content/uploads/2020/01/Quadlander-300-UA30A-A.xls">Quadlander 300</a>
+  <a href="https://x/wp-content/uploads/2020/01/List-same-parts.xls">List of SYM models which use the same parts</a>
   <a href="https://www.selectportal.com.au/wp-content/uploads/2026/07/PA-16-Jul-26.csv">SYM Parts Price &amp; Availability</a>
 </main>
 """
@@ -20,7 +21,7 @@ SAMPLE_HTML = """
 class TestParseBooks:
     def test_finds_only_xls_links(self):
         books = source_page.parse_books(SAMPLE_HTML)
-        assert len(books) == 4  # excludes the service-manuals link and the CSV
+        assert len(books) == 4  # excludes manuals, supplementary XLS and the CSV
 
     def test_assigns_cc_class_from_heading(self):
         books = {b["name"]: b for b in source_page.parse_books(SAMPLE_HTML)}

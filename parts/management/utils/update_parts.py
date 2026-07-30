@@ -4,7 +4,7 @@ import time
 
 from django.db import OperationalError, close_old_connections
 from parts.ingestion import storage
-from parts.ingestion.importer import import_book
+from parts.ingestion.importer import import_book, unique_model_slug
 from parts.ingestion.xls_parser import parse_book, read_model_code
 from parts.models import PartsModel
 
@@ -16,7 +16,24 @@ def _metadata(path):
     sidecar = path.with_name(f'{path.name}.json')
     if not sidecar.exists():
         return {}
-    return json.loads(sidecar.read_text())
+    return json.loads(sidecar.read_text(encoding='utf-8'))
+
+
+def _repair_existing_metadata(model, meta, path):
+    """Apply authoritative listing metadata to a hash-matched old import."""
+    if not meta:
+        return False
+    metadata_was_missing = not model.source_xls_url
+    model.name = meta.get('name') or model.name
+    model.cc_class = meta.get('cc_class') or model.cc_class
+    model.source_xls_url = meta.get('url') or model.source_xls_url
+    model.source_filename = model.source_filename or path.name
+    if metadata_was_missing and meta.get('name'):
+        model.slug = unique_model_slug(model.name, model.model_code)
+    model.save(update_fields=[
+        'name', 'cc_class', 'source_xls_url', 'source_filename', 'slug', 'updated_at',
+    ])
+    return True
 
 
 def _fallback_cc_class(*values):
@@ -51,8 +68,14 @@ def _latest_archived_books(*, stderr):
 def _import_one(path, *, stdout, remove_after=False):
     meta = _metadata(path)
     book_hash = storage.sha256_file(path)
-    if PartsModel.objects.filter(book_hash=book_hash).exists():
-        stdout.write(f'Skipped {path.name}: already imported (hash match).')
+    existing_model = PartsModel.objects.filter(book_hash=book_hash).first()
+    if existing_model:
+        if _repair_existing_metadata(existing_model, meta, path):
+            stdout.write(
+                f'Updated metadata for {existing_model.model_code} from {path.name}.'
+            )
+        else:
+            stdout.write(f'Skipped {path.name}: already imported (hash match).')
     else:
         parsed = parse_book(str(path))
         display_name = meta.get('name') or parsed.get('model_name_hint') or parsed['model_code']

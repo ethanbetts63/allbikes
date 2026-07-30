@@ -8,6 +8,7 @@ import re
 
 import xlrd
 
+from parts.keys import normalize_part_number
 from . import colour as colour_mod
 from .escher_images import extract_diagrams
 
@@ -120,7 +121,9 @@ def parse_section_parts(sheet, datemode, colour_index):
     rows = []
     for r in range(header_row + 1, sheet.nrows):
         ref = _clean(sheet.cell_value(r, 0))
-        part_number = _clean(sheet.cell_value(r, 1)) if sheet.ncols > 1 else ""
+        part_number = normalize_part_number(
+            _clean(sheet.cell_value(r, 1)) if sheet.ncols > 1 else ""
+        )
         if not part_number:
             continue
         description = _clean(sheet.cell_value(r, 3)) if sheet.ncols > 3 else ""

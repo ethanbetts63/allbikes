@@ -1,6 +1,11 @@
 """Stable, human-readable identifiers for catalogue fitments."""
 
 
+def normalize_part_number(value):
+    """Return the canonical case-insensitive identity used by SYM sources."""
+    return str(value or '').strip().upper()
+
+
 def build_fitment_key(*, model_code, section_code, ref_number, part_number, effective_date=None, occurrence=1):
     """Return the natural identity of one row in a SYM parts book.
 
@@ -13,7 +18,7 @@ def build_fitment_key(*, model_code, section_code, ref_number, part_number, effe
         str(model_code).strip(),
         str(section_code).strip(),
         str(ref_number).strip(),
-        str(part_number).strip(),
+        normalize_part_number(part_number),
         date_key,
     ))
     return key if occurrence == 1 else f"{key}:{occurrence}"

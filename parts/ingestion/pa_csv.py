@@ -6,6 +6,8 @@ import csv
 import logging
 from decimal import Decimal, InvalidOperation
 
+from parts.keys import normalize_part_number
+
 logger = logging.getLogger(__name__)
 
 REQUIRED_COLUMNS = ('PART NUMBER', 'DESCRIPTION', 'AVAILABLE', 'RRP+GST')
@@ -49,7 +51,7 @@ def iter_pa_rows(path):
         for row in reader:
             if not row:
                 continue
-            part_number = row[0].strip()
+            part_number = normalize_part_number(row[0])
             if not part_number or part_number.upper() == "PART NUMBER":
                 continue
             description = row[1].strip() if len(row) > 1 else ""

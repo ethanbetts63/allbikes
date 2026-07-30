@@ -14,7 +14,7 @@ def run(*, stdout, stderr, url=None, force=False):
     if not books:
         raise RuntimeError('No book links found on the page.')
 
-    archived = storage.archived_hashes('books')
+    archived = storage.archived_files_by_hash('books')
     queued = 0
     for book in books:
         try:
@@ -24,6 +24,16 @@ def run(*, stdout, stderr, url=None, force=False):
             stderr.write(f"Failed: {book['name']} ({exc})")
             continue
         digest = storage.sha256_bytes(data)
+        metadata = {
+            'name': book['name'],
+            'cc_class': book['cc_class'],
+            'url': book['url'],
+        }
+        if digest in archived:
+            # Older archives predate metadata sidecars. Refresh them from the
+            # authoritative listing even when the workbook itself is unchanged.
+            for archive_path in archived[digest]:
+                storage.write_metadata_sidecar(archive_path, metadata)
         if not force and digest in archived:
             continue
         source_filename = urlparse(book['url']).path.rsplit('/', 1)[-1] or f"{book['name']}.xls"
@@ -33,13 +43,9 @@ def run(*, stdout, stderr, url=None, force=False):
             'books',
             filename,
             data,
-            metadata={
-                'name': book['name'],
-                'cc_class': book['cc_class'],
-                'url': book['url'],
-            },
+            metadata=metadata,
         )
-        archived.add(digest)
+        archived.setdefault(digest, []).append(storage.archive_dir('books') / filename)
         queued += 1
         stdout.write(f"Queued {filename} ({book['name']}).")
 

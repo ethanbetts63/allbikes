@@ -6,7 +6,8 @@ import pytest
 from django.core.management import call_command
 
 from parts.ingestion import storage
-from parts.management.utils import update_parts, update_prices
+from parts.management.utils import scrape_parts, update_parts, update_prices
+from parts.models import PartsModel
 
 
 def test_scrape_parts_routes_to_parts_utility():
@@ -61,6 +62,60 @@ def test_parts_archive_selects_newest_version_of_each_model(tmp_path, monkeypatc
     assert count == 2
     assert imported == ['model-a-new.xls', 'model-b.xls']
     assert old_a.exists() and new_a.exists() and only_b.exists()
+
+
+def test_parts_scrape_adds_metadata_to_matching_legacy_archive(tmp_path, monkeypatch):
+    monkeypatch.setattr(storage, 'BASE_DIR', tmp_path)
+    legacy = storage.archive_dir('books') / 'legacy.xls'
+    legacy.write_bytes(b'unchanged workbook')
+    book = {
+        'name': 'Classic 150',
+        'cc_class': '100_165',
+        'url': 'https://example.test/classic.xls',
+    }
+    monkeypatch.setattr(scrape_parts.source_page, 'fetch_page', lambda url: '<html/>')
+    monkeypatch.setattr(scrape_parts.source_page, 'parse_books', lambda html: [book])
+    monkeypatch.setattr(
+        scrape_parts.source_page,
+        'download_bytes',
+        lambda url, timeout: b'unchanged workbook',
+    )
+
+    queued = scrape_parts.run(stdout=StringIO(), stderr=StringIO())
+
+    assert queued == 0
+    assert update_parts._metadata(legacy) == {
+        'name': 'Classic 150',
+        'cc_class': '100_165',
+        'url': 'https://example.test/classic.xls',
+    }
+    assert list(storage.inbox_dir('books').glob('*.xls')) == []
+
+
+@pytest.mark.django_db
+def test_hash_matched_legacy_import_repairs_name_class_source_and_slug(tmp_path):
+    book = tmp_path / 'legacy.xls'
+    book.write_bytes(b'workbook')
+    storage.write_metadata_sidecar(book, {
+        'name': 'Classic 150',
+        'cc_class': '100_165',
+        'url': 'https://example.test/classic.xls',
+    })
+    model = PartsModel.objects.create(
+        name='AX15W2-6',
+        model_code='AX15W2-6',
+        cc_class='50',
+        slug='ax15w2-6-ax15w2-6',
+        book_hash=storage.sha256_file(book),
+    )
+
+    update_parts._import_one(book, stdout=StringIO())
+
+    model.refresh_from_db()
+    assert model.name == 'Classic 150'
+    assert model.cc_class == '100_165'
+    assert model.source_xls_url == 'https://example.test/classic.xls'
+    assert model.slug == 'classic-150-ax15w2-6'
 
 
 def test_prices_archive_applies_only_newest_csv(tmp_path, monkeypatch):

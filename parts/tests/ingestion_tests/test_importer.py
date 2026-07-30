@@ -101,3 +101,21 @@ class TestImportPricing:
             {"part_number": "53205-ALA-000-RD", "description": "x", "available": 1, "price": Decimal("1.00")},
         ])
         assert Part.objects.get(part_number="1961A-F6A-000").in_pa_feed is False
+
+    def test_part_numbers_match_case_insensitively_without_duplicates(self):
+        Part.objects.create(
+            part_number='1640A-XJA-000',
+            base_part_number='1640A-XJA-000',
+        )
+
+        applied = import_pricing([{
+            'part_number': '1640a-XJA-000',
+            'description': 'ECU SET',
+            'available': 1,
+            'price': Decimal('600.00'),
+        }])
+
+        assert applied == 1
+        assert Part.objects.filter(part_number='1640A-XJA-000').count() == 1
+        part = Part.objects.get(part_number='1640A-XJA-000')
+        assert part.wholesale_price_incl_gst == Decimal('600.00')

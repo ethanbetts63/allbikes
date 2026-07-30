@@ -14,6 +14,7 @@ import re
 _CODE = r"[A-Z]{1,3}-?\d{3,4}[A-Z]{0,2}"
 _PAINT_CODE_PAREN_RE = re.compile(r"\((" + _CODE + r")\)")
 _PAINT_CODE_TRAIL_RE = re.compile(r"\b(" + _CODE + r")\s*$")
+_COLOUR_SUFFIX_RE = re.compile(r"^[A-Z0-9]{1,10}$")
 
 # Fallback: paint-code prefix -> colour name, used when the colour index has no
 # entry. Prefixes are the leading letters of the paint code (before the digits).
@@ -60,6 +61,8 @@ def split_base_and_suffix(part_number):
     if "-" not in part_number:
         return part_number, ""
     base, suffix = part_number.rsplit("-", 1)
+    if not _COLOUR_SUFFIX_RE.fullmatch(suffix):
+        return part_number, ""
     return base, suffix
 
 

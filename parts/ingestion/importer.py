@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from parts.ingestion import colour as colour_mod
-from parts.keys import build_fitment_key
+from parts.keys import build_fitment_key, normalize_part_number
 from parts.models import Part, PartsModel, PartSection, SectionPart
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def _diagram_extension(data):
     return "jpg"
 
 
-def _unique_slug(name, model_code):
+def unique_model_slug(name, model_code):
     base = slugify(f"{name}-{model_code}") or slugify(model_code) or "model"
     slug = base
     n = 1
@@ -47,7 +47,7 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
     if cc_class:
         model.cc_class = cc_class
     if not model.slug:
-        model.slug = _unique_slug(display_name, model_code)
+        model.slug = unique_model_slug(display_name, model_code)
     model.source_xls_url = source_url or model.source_xls_url
     model.source_filename = source_filename or model.source_filename
     model.book_hash = book_hash or model.book_hash
@@ -129,11 +129,12 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
 def _upsert_book_part(row):
     """Ensure a Part exists for a book row. The book is authoritative for colour
     structure; pricing/description come from the PA feed."""
+    part_number = normalize_part_number(row["part_number"])
     part, created = Part.objects.get_or_create(
-        part_number=row["part_number"],
+        part_number=part_number,
         defaults={
             "description": row["description"],
-            "base_part_number": row["base_part_number"],
+            "base_part_number": normalize_part_number(row["base_part_number"]),
             "colour_suffix": row["colour_suffix"],
             "paint_code": row["paint_code"],
             "colour_name": row["colour_name"],
@@ -142,7 +143,7 @@ def _upsert_book_part(row):
     if not created:
         # Refresh colour structure from the book (authoritative) without touching
         # PA-sourced pricing.
-        part.base_part_number = row["base_part_number"] or part.base_part_number
+        part.base_part_number = normalize_part_number(row["base_part_number"]) or part.base_part_number
         part.colour_suffix = row["colour_suffix"] or part.colour_suffix
         part.paint_code = row["paint_code"] or part.paint_code
         part.colour_name = row["colour_name"] or part.colour_name
@@ -159,9 +160,16 @@ def import_pricing(rows, *, mark_missing_unavailable=True):
     Sets ``in_pa_feed=False`` on any Part not present in this feed (discontinued).
     """
     now = timezone.now()
-    rows_by_part_number = {row["part_number"]: row for row in rows}
+    rows_by_part_number = {
+        normalize_part_number(row["part_number"]): row for row in rows
+    }
     seen = set(rows_by_part_number)
-    existing = Part.objects.in_bulk(seen, field_name='part_number')
+    existing = {
+        normalize_part_number(part_number): part
+        for part_number, part in Part.objects.in_bulk(
+            seen, field_name='part_number'
+        ).items()
+    }
     to_create = []
     to_update = []
 
