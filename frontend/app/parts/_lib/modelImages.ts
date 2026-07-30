@@ -1,5 +1,7 @@
 import type { StaticImageData } from 'next/image';
 import crox50 from '@/assets/models/crox50.jpg';
+import citycom300i from '@/assets/models/citycom300i.jpg';
+import jet4rNaked from '@/assets/models/jet4rnaked.jpg';
 import ute125 from '@/assets/models/ute-125.jpg';
 import echs125 from '@/assets/models/echs-125.jpg';
 import classic125sport from '@/assets/models/classic-125-sport.jpg';
@@ -32,15 +34,15 @@ import vs from '@/assets/models/vs-125.webp';
 
 /**
  * Stable SYM model code -> product photo. Sourced from scoota.com.au, sym-global.com and
- * supplied SYM press images. Jet4R Naked and CityCom300i currently lack a
- * dedicated image and show the SYM placeholder. Some photos are reused across
- * a model family or across a 50/150 (Shark) or 125/150 (VS) sibling pair.
+ * supplied SYM press images. Some photos are reused across a model family or
+ * across a 50/150 (Shark) or 125/150 (VS) sibling pair.
  */
 export const MODEL_IMAGES: Record<string, StaticImageData> = {
   // 50cc
   'AE05W6-RU': crox50,
   'AE05WB-EU': crox50,
   'BK05W2-8': jetsportx,
+  'JD05W1-8': jet4rNaked,
   'FT05V-8': jolie,
   'HU05W2-8': mio,
   'FS05W1-EU': mio,
@@ -78,6 +80,7 @@ export const MODEL_IMAGES: Record<string, StaticImageData> = {
   'XA20W1-EU': fiddle,
   'LM25W-8': firenze250,
   'LM30W-8': firenze300i,
+  'LH30W-8': citycom300i,
   'LC18W1-6': hd2,
   'LH18W7-6': hd200evo,
   'LH18W7-8': hd200evo,
