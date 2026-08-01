@@ -38,6 +38,18 @@ class TestHireBikeListView:
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
 
+    def test_excludes_hidden_bikes(self, api_client):
+        """
+        GIVEN one visible hire bike and one hidden hire bike
+        WHEN GET /api/hire/bikes/
+        THEN only the visible bike is returned.
+        """
+        visible = MotorcycleFactory(is_hire=True, status='for_sale')
+        MotorcycleFactory(is_hire=True, status='hide')
+        response = api_client.get(self.URL)
+        assert response.status_code == status.HTTP_200_OK
+        assert [bike['id'] for bike in response.data] == [visible.id]
+
     def test_returns_all_hire_bikes_when_no_dates_given(self, api_client):
         """
         GIVEN 3 hire bikes with no date params

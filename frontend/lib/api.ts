@@ -123,6 +123,7 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
         search,
         make,
         status,
+        include_hidden,
         ordering,
         min_price,
         max_price,
@@ -139,6 +140,7 @@ export async function getBikes(options: GetBikesOptions = {}): Promise<Paginated
     if (condition) params.append('condition', condition);
     if (vehicle_type) params.append('vehicle_type', vehicle_type);
     if (status) params.append('status', status);
+    if (include_hidden) params.append('include_hidden', 'true');
     if (page_size) params.append('page_size', String(page_size));
     if (is_hire) params.append('is_hire', 'true');
     if (search) params.append('search', search);

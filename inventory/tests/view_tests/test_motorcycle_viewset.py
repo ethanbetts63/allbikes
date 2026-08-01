@@ -153,7 +153,77 @@ class TestMotorcycleViewSetList:
         results = response.data['results']
         assert results[0]['id'] == m2.id
         assert results[1]['id'] == m1.id
-        
+
+    def test_hidden_motorcycles_are_excluded_from_the_list(self, api_client):
+        """
+        GIVEN a for-sale motorcycle and a hidden one
+        WHEN listing motorcycles
+        THEN only the for-sale motorcycle should be returned.
+        """
+        visible = MotorcycleFactory(status='for_sale')
+        MotorcycleFactory(status='hide')
+        url = reverse("inventory:motorcycle-list")
+        response = api_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == 1
+        assert response.data['results'][0]['id'] == visible.id
+
+    def test_hidden_motorcycles_are_excluded_when_filtering_by_status(self, api_client):
+        """
+        GIVEN a hidden motorcycle
+        WHEN listing with an explicit status=hide filter
+        THEN nothing should be returned without include_hidden.
+        """
+        MotorcycleFactory(status='hide')
+        url = reverse("inventory:motorcycle-list")
+        response = api_client.get(url, {'status': 'hide'})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == 0
+
+    def test_include_hidden_returns_hidden_motorcycles(self, api_client):
+        """
+        GIVEN a hidden motorcycle
+        WHEN listing with include_hidden=true
+        THEN the hidden motorcycle should be returned.
+        """
+        hidden = MotorcycleFactory(status='hide')
+        url = reverse("inventory:motorcycle-list")
+        response = api_client.get(url, {'include_hidden': 'true'})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == 1
+        assert response.data['results'][0]['id'] == hidden.id
+
+    def test_hidden_motorcycle_is_still_retrievable_directly(self, api_client):
+        """
+        GIVEN a hidden motorcycle
+        WHEN retrieving it by ID
+        THEN the response should be 200 OK.
+        """
+        hidden = MotorcycleFactory(status='hide')
+        url = reverse("inventory:motorcycle-detail", kwargs={'pk': hidden.pk})
+        response = api_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['id'] == hidden.id
+
+    def test_hidden_motorcycle_make_is_excluded_from_makes(self, api_client):
+        """
+        GIVEN a visible and a hidden motorcycle of different makes
+        WHEN requesting the makes list
+        THEN only the visible motorcycle's make should be returned.
+        """
+        MotorcycleFactory(make='Honda', status='for_sale')
+        MotorcycleFactory(make='Yamaha', status='hide')
+        url = reverse("inventory:motorcycle-makes")
+        response = api_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == ['Honda']
+
+
 @pytest.mark.django_db
 class TestMotorcycleViewSetWriteAccess:
     """Tests for the write actions (create, update, destroy) of the MotorcycleViewSet."""

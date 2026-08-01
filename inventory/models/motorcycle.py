@@ -10,6 +10,7 @@ class Motorcycle(models.Model):
         ("sold", "Sold"),
         ("reserved", "Reserved"),
         ("unavailable", "Unavailable"),
+        ("hide", "Hide"),
     ]
 
     CONDITION_CHOICES = [

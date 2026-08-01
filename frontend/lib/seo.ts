@@ -130,6 +130,7 @@ export function buildBikeSchema(bike: Bike): object {
     sold: 'https://schema.org/OutOfStock',
     reserved: 'https://schema.org/LimitedAvailability',
     unavailable: 'https://schema.org/Discontinued',
+    hide: 'https://schema.org/OutOfStock',
   };
 
   const schema: Record<string, unknown> = {

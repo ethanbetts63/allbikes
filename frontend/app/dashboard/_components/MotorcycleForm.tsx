@@ -184,6 +184,7 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                                         <SelectItem value="sold">Sold</SelectItem>
                                         <SelectItem value="reserved">Reserved</SelectItem>
                                         <SelectItem value="unavailable">Unavailable</SelectItem>
+                                        <SelectItem value="hide">Hide</SelectItem>
                                     </SelectContent>
                                 </Select>
                             )} />

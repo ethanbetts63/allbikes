@@ -9,16 +9,11 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from parts.ingestion import colour as colour_mod
+from parts.ingestion.diagram_images import diagram_webp_bytes
 from parts.keys import build_fitment_key, normalize_part_number
 from parts.models import Part, PartsModel, PartSection, SectionPart
 
 logger = logging.getLogger(__name__)
-
-
-def _diagram_extension(data):
-    if data[:8] == b"\x89PNG\r\n\x1a\n":
-        return "png"
-    return "jpg"
 
 
 # The source page occasionally labels a book with nothing but its own model
@@ -111,10 +106,10 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
             if source_hash != section.diagram_source_hash:
                 old_diagram_name = section.diagram_image.name if section.diagram_image else ""
                 old_curated_name = section.curated_diagram_image.name if section.curated_diagram_image else ""
-                ext = _diagram_extension(sec["diagram_bytes"])
+                display_bytes = diagram_webp_bytes(sec["diagram_bytes"])
                 section.diagram_image.save(
-                    f"{model_code}_{sec['code']}.{ext}",
-                    ContentFile(sec["diagram_bytes"]),
+                    f"{model_code}_{sec['code']}.webp",
+                    ContentFile(display_bytes),
                     save=False,
                 )
                 section.diagram_source_hash = source_hash

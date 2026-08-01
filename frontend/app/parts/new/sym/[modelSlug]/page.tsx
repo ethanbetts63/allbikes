@@ -127,7 +127,7 @@ function SectionGroup({ title, slug, sections }: { title: string; slug: string; 
           <div key={section.id} className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-[var(--highlight)]">
             <Link href={symPartsSectionPath(slug, section.code)} className="flex flex-col">
               <div className="relative flex h-32 items-center justify-center bg-white">
-                {section.diagram_thumb ? <Image src={section.diagram_thumb} alt={`${section.name} diagram`} fill sizes="(max-width: 640px) 50vw, 25vw" unoptimized className="object-contain p-2" /> : <span className="text-xs text-gray-400">No diagram</span>}
+                {section.diagram_thumb ? <Image src={section.diagram_thumb} alt={`${section.name} diagram`} fill sizes="(max-width: 640px) 50vw, 25vw" loading="lazy" unoptimized className="object-contain p-2" /> : <span className="text-xs text-gray-400">No diagram</span>}
               </div>
               <div className="border-t border-gray-100 px-3 py-2"><span className="block font-mono text-xs text-gray-500">{section.code}</span><span className="block text-sm font-medium text-black">{section.name}</span></div>
             </Link>

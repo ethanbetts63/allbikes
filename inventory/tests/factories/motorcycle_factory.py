@@ -17,7 +17,9 @@ class MotorcycleFactory(DjangoModelFactory):
     price = factory.LazyFunction(lambda: fake.pydecimal(left_digits=5, right_digits=2, positive=True))
     condition = factory.Iterator([choice[0] for choice in Motorcycle.CONDITION_CHOICES])
     vehicle_type = factory.Iterator([choice[0] for choice in Motorcycle.VEHICLE_TYPE_CHOICES])
-    status = factory.Iterator([choice[0] for choice in Motorcycle.STATUS_CHOICES])
+    # 'hide' is opt-in only: it is excluded from public listings, so cycling
+    # through it here would silently drop bikes from unrelated tests.
+    status = factory.Iterator([choice[0] for choice in Motorcycle.STATUS_CHOICES if choice[0] != 'hide'])
     odometer = factory.LazyFunction(lambda: fake.pyint(min_value=0, max_value=100000))
     engine_size = factory.LazyFunction(lambda: fake.pyint(min_value=50, max_value=2000))
     range = factory.LazyFunction(lambda: fake.pyint(min_value=100, max_value=500))

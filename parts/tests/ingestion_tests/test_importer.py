@@ -1,5 +1,6 @@
 from datetime import date
 from decimal import Decimal
+import hashlib
 from io import BytesIO
 from unittest.mock import patch
 
@@ -97,6 +98,19 @@ class TestImportBook:
         section.refresh_from_db()
         assert section.curated_diagram_image
         assert section.curated_source_hash == section.diagram_source_hash
+
+    def test_source_diagram_is_stored_as_webp_without_changing_its_source_hash(self):
+        parsed = _parsed()
+        source_bytes = _png_bytes("red")
+        parsed["sections"][0]["diagram_bytes"] = source_bytes
+
+        model = import_book(parsed, name="Classic 150", cc_class="100_165")
+        section = model.sections.get(code="E01")
+
+        assert section.diagram_image.name.endswith(".webp")
+        with section.diagram_image.open("rb") as image:
+            assert image.read(4) == b"RIFF"
+        assert section.diagram_source_hash == hashlib.sha256(source_bytes).hexdigest()
 
     def test_changed_source_diagram_clears_a_reviewed_crop(self):
         parsed = _parsed()

@@ -23,13 +23,21 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
     serializer_class = MotorcycleSerializer
     pagination_class = StandardResultsSetPagination
 
+    def _include_hidden(self):
+        return (self.request.query_params.get('include_hidden') or '').lower() == 'true'
+
     def get_queryset(self):
         """
         Optionally restricts the returned motorcycles by condition,
         and applies ordering and filtering, by using query parameters in the URL.
         """
         queryset = Motorcycle.objects.prefetch_related('images')
-        
+
+        # Hidden bikes stay reachable by direct URL (retrieve) but are kept out
+        # of every listing. The dashboard opts back in with include_hidden=true.
+        if self.action in ('list', 'makes') and not self._include_hidden():
+            queryset = queryset.exclude(status='hide')
+
         # Filtering by condition (supports comma-separated values e.g. "new,demo")
         condition = self.request.query_params.get('condition')
         if condition:

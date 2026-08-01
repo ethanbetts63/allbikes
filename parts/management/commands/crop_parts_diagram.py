@@ -1,9 +1,8 @@
-from io import BytesIO
-
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from PIL import Image
 
+from parts.ingestion.diagram_images import diagram_webp_from_image
 from parts.models import PartSection
 
 
@@ -39,12 +38,10 @@ class Command(BaseCommand):
             raise CommandError(f"Crop box must fit within {image.width}x{image.height}.")
 
         crop = image.crop((left, top, right, bottom))
-        output = BytesIO()
-        crop.save(output, format="PNG", optimize=True)
         old_name = section.curated_diagram_image.name if section.curated_diagram_image else ""
         section.curated_diagram_image.save(
-            f"{section.parts_model.model_code}_{section.code}.png",
-            ContentFile(output.getvalue()),
+            f"{section.parts_model.model_code}_{section.code}.webp",
+            ContentFile(diagram_webp_from_image(crop, source_format="PNG")),
             save=False,
         )
         section.curated_source_hash = section.diagram_source_hash

@@ -15,7 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 const PAGE_SIZE = 20;
 const conditionValues = ["new", "used", "demo", "parts"] as const;
 const vehicleTypeValues = ["motorcycle", "scooter"] as const;
-const statusValues = ["for_sale", "available_soon", "reserved", "sold", "unavailable"] as const;
+const statusValues = ["for_sale", "available_soon", "reserved", "sold", "unavailable", "hide"] as const;
 const sortFields = ["date_posted", "make", "price"] as const;
 type SortField = (typeof sortFields)[number];
 
@@ -29,6 +29,7 @@ const statusClass: Record<Bike["status"], string> = {
   reserved: "border-amber-200 bg-amber-50 text-amber-800",
   sold: "border-slate-200 bg-slate-100 text-slate-600",
   unavailable: "border-rose-200 bg-rose-50 text-rose-800",
+  hide: "border-slate-300 bg-slate-200 text-slate-700",
 };
 
 function queryValue(params: URLSearchParams, key: string, allowed?: readonly string[]) {
@@ -84,6 +85,7 @@ export default function InventoryTable() {
       condition: condition as Bike["condition"] || undefined,
       vehicle_type: vehicleType as Bike["vehicle_type"] || undefined,
       status: status as Bike["status"] || undefined,
+      include_hidden: true,
       is_hire: hire || undefined,
       search: search || undefined,
       ordering: `${sort}_${direction}`,
