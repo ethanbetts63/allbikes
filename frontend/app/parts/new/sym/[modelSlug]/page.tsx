@@ -4,7 +4,7 @@ import type { PartSectionSummary, PartsModelDetail } from '@/types/parts';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPartsModel } from '@/lib/partsApi';
-import EquivalentSections from '@/app/parts/new/sym/_components/EquivalentSections';
+import EquivalentSections from '@/app/parts/_components/EquivalentSections';
 
 interface PageProps {
   params: Promise<{ modelSlug: string }>;

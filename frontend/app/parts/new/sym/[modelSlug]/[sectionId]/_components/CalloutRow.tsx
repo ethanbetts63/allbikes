@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import OverlapDisclosure from '@/app/parts/_components/OverlapDisclosure';
 import { partsCartItemKey, usePartsCart } from '@/app/parts/_components/PartsCartContext';
 import { stockState } from '@/app/parts/_lib/partsStock';
 import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
@@ -188,28 +189,25 @@ function SharedModels({ variant }: { variant: PartVariant }) {
   if (shared.length === 0) return null;
 
   return (
-    <details className="group mt-1">
-      <summary className="cursor-pointer list-none text-xs text-gray-500 underline decoration-dotted underline-offset-2 hover:text-black">
-        Also in {shared.length} other {shared.length === 1 ? 'model' : 'models'}
-        <span className="ml-1 inline-block transition group-open:rotate-90">›</span>
-      </summary>
-      <div className="mt-1.5 rounded-md bg-gray-50 px-2.5 py-2">
-        <p className="text-xs text-gray-500">
-          The same part number is printed in these other SYM parts books:
-        </p>
-        <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
-          {shared.map((model) => (
-            <li key={model.slug}>
-              <Link
-                href={`/parts/new/sym/${model.slug}`}
-                className="text-xs text-gray-700 underline hover:text-black"
-              >
-                {model.name} <span className="font-mono text-gray-500">{model.model_code}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </details>
+    <OverlapDisclosure
+      className="mt-1"
+      summary={`Also in ${shared.length} other ${shared.length === 1 ? 'model' : 'models'}`}
+    >
+      <p className="text-xs text-gray-500">
+        The same part number is printed in these other SYM parts books:
+      </p>
+      <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+        {shared.map((model) => (
+          <li key={model.slug}>
+            <Link
+              href={`/parts/new/sym/${model.slug}`}
+              className="text-xs text-gray-700 underline hover:text-black"
+            >
+              {model.name} <span className="font-mono text-gray-500">{model.model_code}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </OverlapDisclosure>
   );
 }

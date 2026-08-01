@@ -175,5 +175,4 @@ Production startup fails immediately if `SECRET_KEY`, `STRIPE_SECRET_KEY`, or
 | `MAILGUN_WEBHOOK_SIGNING_KEY` | Mailgun webhook verification |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | SMS provider access |
 | `MECHANICDESK_BOOKING_TOKEN` | MechanicDesk booking integration |
-| `FTP_HOST`, `FTP_USER`, `FTP_PASS` | Inventory feed access |
 | `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` | Database access |

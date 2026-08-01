@@ -6,8 +6,6 @@ from django.db import IntegrityError
 from django.utils import timezone
 
 from parts.models import (
-    Part,
-    PartsModel,
     PartsOrder,
     PartsOrderItem,
     PartsSettings,

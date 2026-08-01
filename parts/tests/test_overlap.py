@@ -1,6 +1,6 @@
 import pytest
 
-from parts.section_equivalence import MINIMUM_PARTS, equivalent_sections_for
+from parts.overlap import MINIMUM_PARTS, equivalent_sections_for
 from parts.tests.factories import (
     PartFactory,
     PartSectionFactory,
@@ -23,7 +23,7 @@ def parts():
     return [PartFactory(part_number=f"1000{n}-AAA-000") for n in range(6)]
 
 
-def test_a_section_with_the_same_parts_elsewhere_is_identical(parts):
+def test_a_section_with_the_same_parts_elsewhere_is_reported(parts):
     mine = PartsModelFactory(model_code="AV12W-8", slug="orbit-125")
     other = PartsModelFactory(name="Classic 125", model_code="AW12W-6", slug="classic-125")
     section = build(mine, "E06", parts[:4])
@@ -31,22 +31,21 @@ def test_a_section_with_the_same_parts_elsewhere_is_identical(parts):
 
     [match] = equivalent_sections_for([section])[section.id]
 
-    assert match["relation"] == "identical"
     assert match["model_code"] == "AW12W-6"
     assert match["section_code"] == "E06"
-    assert match["part_count"] == 4
+    assert match["model_name"] == "Classic 125"
 
 
-def test_a_section_wholly_inside_a_bigger_one_is_contained(parts):
+def test_a_section_wholly_inside_a_bigger_one_is_not_reported(parts):
+    # The two diagrams are not interchangeable - the larger one carries parts
+    # this bike does not use - so offering it would invite an order from the
+    # wrong book.
     mine = PartsModelFactory(model_code="AV12W-8", slug="orbit-125")
     other = PartsModelFactory(model_code="AV05W-8", slug="orbit-50")
     section = build(mine, "F01", parts[:3])
     build(other, "F01", parts[:5])
 
-    [match] = equivalent_sections_for([section])[section.id]
-
-    assert match["relation"] == "contained"
-    assert match["part_count"] == 5
+    assert equivalent_sections_for([section]) == {}
 
 
 def test_a_partial_overlap_is_not_reported(parts):
@@ -87,17 +86,17 @@ def test_trivially_small_sections_are_skipped(parts):
     assert equivalent_sections_for([section]) == {}
 
 
-def test_identical_matches_are_listed_before_merely_contained_ones(parts):
+def test_matches_are_ordered_by_model_name(parts):
     mine = PartsModelFactory(model_code="AV12W-8", slug="orbit-125")
-    twin = PartsModelFactory(name="Zeta", model_code="AW12W-6", slug="zeta")
-    bigger = PartsModelFactory(name="Alpha", model_code="AV05W-8", slug="alpha")
+    zeta = PartsModelFactory(name="Zeta", model_code="AW12W-6", slug="zeta")
+    alpha = PartsModelFactory(name="Alpha", model_code="AV05W-8", slug="alpha")
     section = build(mine, "F01", parts[:3])
-    build(bigger, "F01", parts[:5])
-    build(twin, "F01", parts[:3])
+    build(zeta, "F01", parts[:3])
+    build(alpha, "F01", parts[:3])
 
     matches = equivalent_sections_for([section])[section.id]
 
-    assert [m["relation"] for m in matches] == ["identical", "contained"]
+    assert [m["model_name"] for m in matches] == ["Alpha", "Zeta"]
 
 
 def test_a_whole_model_resolves_in_one_pass(parts):

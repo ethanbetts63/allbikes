@@ -26,13 +26,10 @@ export interface VinLookupResult {
   note: string;
 }
 
-/** A diagram elsewhere carrying the same parts. `identical` means the exact
- *  same part numbers; `contained` means all of these plus more. */
+/** A diagram elsewhere listing exactly the same part numbers. */
 export interface EquivalentSection {
-  relation: 'identical' | 'contained';
   section_code: string;
   section_name: string;
-  part_count: number;
   model_name: string;
   model_code: string;
   model_slug: string;

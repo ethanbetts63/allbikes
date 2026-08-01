@@ -7,11 +7,14 @@ RRP is never exposed.
 """
 from collections import OrderedDict
 
-from django.db.models import Count
 from rest_framework import serializers
 
-from parts.models import PartsModel, PartSection, SectionPart
-from parts.section_equivalence import equivalent_sections_for
+from parts.models import PartsModel, PartSection
+from parts.overlap import (
+    equivalent_sections_for,
+    models_sharing_parts_with,
+    models_using_each_part_in,
+)
 
 
 def _image_url(image, request):
@@ -66,46 +69,7 @@ class PartsModelDetailSerializer(serializers.ModelSerializer):
         return PartSectionSummarySerializer(sections, many=True, context=context).data
 
     def get_shared_models(self, obj):
-        """Return the five active books sharing the most distinct part numbers.
-
-        Percentages are deliberately relative to the viewed book, so a customer
-        can read them as "what portion of this bike's parts also appears in the
-        other book?" A shared part number is useful discovery information, not
-        a guarantee that every part in either book fits the other vehicle.
-        """
-        source_part_ids = SectionPart.objects.filter(section__parts_model=obj).values("part_id")
-        source_part_count = source_part_ids.distinct().count()
-        if source_part_count == 0:
-            return []
-
-        overlaps = (
-            SectionPart.objects.filter(
-                part_id__in=source_part_ids,
-                section__parts_model__is_active=True,
-            )
-            .exclude(section__parts_model_id=obj.id)
-            .values(
-                "section__parts_model__name",
-                "section__parts_model__model_code",
-                "section__parts_model__slug",
-            )
-            .annotate(shared_part_count=Count("part_id", distinct=True))
-            .order_by(
-                "-shared_part_count",
-                "section__parts_model__name",
-                "section__parts_model__model_code",
-            )[:5]
-        )
-        return [
-            {
-                "name": overlap["section__parts_model__name"],
-                "model_code": overlap["section__parts_model__model_code"],
-                "slug": overlap["section__parts_model__slug"],
-                "shared_part_count": overlap["shared_part_count"],
-                "shared_part_percentage": round(100 * overlap["shared_part_count"] / source_part_count, 1),
-            }
-            for overlap in overlaps
-        ]
+        return models_sharing_parts_with(obj)
 
 
 def _variant_label(section_part, axis):
@@ -129,44 +93,6 @@ def _detect_axis(members):
     if any(m.effective_date for m in members):
         return "date"
     return "none"
-
-
-def _shared_models_for(section):
-    """Map each part number in this section to the other books that use it.
-
-    Parts are shared across books by design - about 40% of the catalogue
-    appears in more than one - so this is a plain statement of where else the
-    same part number is printed. One query for the whole section rather than
-    one per part.
-    """
-    numbers = [sp.part.part_number for sp in section.parts.all()]
-    if not numbers:
-        return {}
-    rows = (
-        SectionPart.objects.filter(
-            part__part_number__in=numbers,
-            section__parts_model__is_active=True,
-        )
-        .exclude(section__parts_model_id=section.parts_model_id)
-        .values_list(
-            "part__part_number",
-            "section__parts_model__name",
-            "section__parts_model__model_code",
-            "section__parts_model__slug",
-        )
-        .distinct()
-    )
-    shared = {}
-    for part_number, name, model_code, slug in rows:
-        shared.setdefault(part_number, {})[slug] = {
-            "name": name,
-            "model_code": model_code,
-            "slug": slug,
-        }
-    return {
-        number: sorted(models.values(), key=lambda m: (m["name"], m["model_code"]))
-        for number, models in shared.items()
-    }
 
 
 def _build_variant(section_part, axis, settings, shared_models=None):
@@ -194,7 +120,7 @@ def build_section_payload(section, settings, request=None):
     groups = OrderedDict()
     for sp in section.parts.select_related("part").all():
         groups.setdefault(sp.ref_number, []).append(sp)
-    shared_models = _shared_models_for(section)
+    shared_models = models_using_each_part_in(section)
     equivalent = equivalent_sections_for([section]).get(section.id, [])
 
     callouts = []

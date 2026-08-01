@@ -5,7 +5,7 @@ import pytest
 from rest_framework.test import APIClient
 
 from parts.checkout import CheckoutError, create_parts_order
-from parts.models import Part, PartsOrder, PartsSettings, SectionPart
+from parts.models import PartsSettings, SectionPart
 from parts.serializers.order_serializers import PartsCheckoutSerializer
 from parts.tests.factories import PartFactory, PartSectionFactory, SectionPartFactory
 from payments.models import Payment
