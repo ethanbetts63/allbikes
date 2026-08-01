@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { partsCartItemKey, usePartsCart } from '@/app/parts/_components/PartsCartContext';
 import { stockState } from '@/app/parts/_lib/partsStock';
 import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
@@ -118,6 +119,7 @@ function VariantLine({
             </span>
           )}
         </div>
+        <SharedModels variant={variant} />
         <div className="text-xs">
           {!section.enable_new_part_sales ? (
             <span className="text-gray-400">Sales temporarily unavailable</span>
@@ -154,5 +156,42 @@ function VariantLine({
         )}
       </div>
     </div>
+  );
+}
+
+/** Where else this exact part number is printed.
+ *
+ *  About 40% of the catalogue appears in more than one book, so this is often
+ *  the answer to "does it matter which book I picked?" — if the part is shared
+ *  with the other candidates, the choice makes no difference for this order.
+ *  It is a statement about the part number only, not a fitment claim. */
+function SharedModels({ variant }: { variant: PartVariant }) {
+  const shared = variant.shared_models;
+  if (shared.length === 0) return null;
+
+  return (
+    <details className="group mt-1">
+      <summary className="cursor-pointer list-none text-xs text-gray-500 underline decoration-dotted underline-offset-2 hover:text-black">
+        Also in {shared.length} other {shared.length === 1 ? 'model' : 'models'}
+        <span className="ml-1 inline-block transition group-open:rotate-90">›</span>
+      </summary>
+      <div className="mt-1.5 rounded-md bg-gray-50 px-2.5 py-2">
+        <p className="text-xs text-gray-500">
+          The same part number is printed in these other SYM parts books:
+        </p>
+        <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+          {shared.map((model) => (
+            <li key={model.slug}>
+              <Link
+                href={`/parts/new/sym/${model.slug}`}
+                className="text-xs text-gray-700 underline hover:text-black"
+              >
+                {model.name} <span className="font-mono text-gray-500">{model.model_code}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
   );
 }

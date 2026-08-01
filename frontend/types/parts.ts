@@ -42,6 +42,12 @@ export interface PartsModelDetail extends PartsModelListItem {
 
 type VariantAxis = 'colour' | 'date' | 'none';
 
+export interface SharedModel {
+  name: string;
+  model_code: string;
+  slug: string;
+}
+
 export interface PartVariant {
   fitment_key: string;
   part_number: string;
@@ -54,6 +60,8 @@ export interface PartVariant {
   price: string | null;
   available_qty: number | null;
   orderable: boolean;
+  /** Other active books printing this same part number. Empty for most parts. */
+  shared_models: SharedModel[];
 }
 
 export interface Callout {

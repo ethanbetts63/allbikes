@@ -1,6 +1,5 @@
 import { getPartsModels } from '@/lib/partsApi';
-import ModelCard from '@/app/parts/_components/ModelCard';
-import VinLookup from './_components/VinLookup';
+import ModelCarousel from '@/app/parts/_components/ModelCarousel';
 import type { CcClass, PartsModelListItem } from '@/types/parts';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -46,18 +45,13 @@ function PartsLandingPage({ models }: { models: PartsModelListItem[] }) {
         exploded diagram. Availability and pricing are shown per part.
       </p>
 
-      <VinLookup />
-
       {grouped.length === 0 && <p className="mt-8 text-gray-500">No models available yet. Please check back soon.</p>}
 
-      {grouped.map((group) => (
-        <section key={group.cc} className="mt-8">
-          <h2 className="mb-3 text-lg font-semibold text-black">{group.label}</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {group.models.map((model) => <ModelCard key={model.slug} model={model} />)}
-          </div>
-        </section>
-      ))}
+      <div className="mt-8 space-y-8">
+        {grouped.map((group) => (
+          <ModelCarousel key={group.cc} title={group.label} models={group.models} />
+        ))}
+      </div>
     </div>
   );
 }

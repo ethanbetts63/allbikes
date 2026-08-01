@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 from rest_framework import serializers
 
-from parts.models import PartsModel, PartSection
+from parts.models import PartsModel, PartSection, SectionPart
 
 
 def _image_url(image, request):
@@ -79,7 +79,45 @@ def _detect_axis(members):
     return "none"
 
 
-def _build_variant(section_part, axis, settings):
+def _shared_models_for(section):
+    """Map each part number in this section to the other books that use it.
+
+    Parts are shared across books by design - about 40% of the catalogue
+    appears in more than one - so this is a plain statement of where else the
+    same part number is printed. One query for the whole section rather than
+    one per part.
+    """
+    numbers = [sp.part.part_number for sp in section.parts.all()]
+    if not numbers:
+        return {}
+    rows = (
+        SectionPart.objects.filter(
+            part__part_number__in=numbers,
+            section__parts_model__is_active=True,
+        )
+        .exclude(section__parts_model_id=section.parts_model_id)
+        .values_list(
+            "part__part_number",
+            "section__parts_model__name",
+            "section__parts_model__model_code",
+            "section__parts_model__slug",
+        )
+        .distinct()
+    )
+    shared = {}
+    for part_number, name, model_code, slug in rows:
+        shared.setdefault(part_number, {})[slug] = {
+            "name": name,
+            "model_code": model_code,
+            "slug": slug,
+        }
+    return {
+        number: sorted(models.values(), key=lambda m: (m["name"], m["model_code"]))
+        for number, models in shared.items()
+    }
+
+
+def _build_variant(section_part, axis, settings, shared_models=None):
     part = section_part.part
     price = settings.apply_markup(part.wholesale_price_incl_gst)
     orderable = part.is_orderable
@@ -95,6 +133,7 @@ def _build_variant(section_part, axis, settings):
         "price": str(price) if price is not None else None,
         "available_qty": part.available_qty,
         "orderable": orderable,
+        "shared_models": (shared_models or {}).get(part.part_number, []),
     }
 
 
@@ -103,6 +142,7 @@ def build_section_payload(section, settings, request=None):
     groups = OrderedDict()
     for sp in section.parts.select_related("part").all():
         groups.setdefault(sp.ref_number, []).append(sp)
+    shared_models = _shared_models_for(section)
 
     callouts = []
     for ref_number, members in groups.items():
@@ -119,7 +159,7 @@ def build_section_payload(section, settings, request=None):
             "ref_number": ref_number,
             "callout_label": members[0].description or members[0].part.description,
             "variant_axis": axis,
-            "variants": [_build_variant(m, axis, settings) for m in members],
+            "variants": [_build_variant(m, axis, settings, shared_models) for m in members],
         })
 
     return {

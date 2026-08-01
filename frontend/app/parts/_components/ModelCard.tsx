@@ -4,7 +4,9 @@ import { MODEL_IMAGES } from '@/app/parts/_lib/modelImages';
 import type { PartsModelListItem } from '@/types/parts';
 
 /** Model tile with product photo — shared by the parts landing grid and search results. */
-export default function ModelCard({ model }: { model: PartsModelListItem }) {
+type ModelCardModel = Pick<PartsModelListItem, 'name' | 'model_code' | 'slug'>;
+
+export default function ModelCard({ model }: { model: ModelCardModel }) {
   const image = MODEL_IMAGES[model.model_code.toUpperCase()];
   return (
     <Link

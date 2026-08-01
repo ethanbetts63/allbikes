@@ -155,3 +155,37 @@ class TestSearch:
     def test_short_query_returns_empty(self, client):
         resp = client.get("/api/parts/search/?q=a")
         assert resp.json()["parts"] == [] and resp.json()["models"] == []
+
+
+# --- shared part numbers across books -------------------------------------
+
+def test_section_payload_lists_other_books_using_the_same_part(client, settings_20pct):
+    """About 40% of the catalogue is shared, so each variant reports where else
+    the same part number is printed."""
+    from parts.tests.factories import (
+        PartFactory, PartSectionFactory, PartsModelFactory, SectionPartFactory,
+    )
+
+    shared = PartFactory(part_number="90145-M9Q-000")
+    only_here = PartFactory(part_number="64310-HHA-000-KA")
+
+    mine = PartsModelFactory(name="HD200 evo", model_code="LH18W7-8", slug="hd200-evo")
+    other = PartsModelFactory(name="HD200", model_code="LH18W-8", slug="hd200")
+    retired = PartsModelFactory(name="Old", model_code="ZZ99W-8", slug="old", is_active=False)
+
+    section = PartSectionFactory(parts_model=mine, code="F08")
+    SectionPartFactory(section=section, part=shared, ref_number="1")
+    SectionPartFactory(section=section, part=only_here, ref_number="2")
+    SectionPartFactory(section=PartSectionFactory(parts_model=other, code="F08"), part=shared)
+    SectionPartFactory(section=PartSectionFactory(parts_model=retired, code="F08"), part=shared)
+
+    response = client.get(f"/api/parts/models/{mine.slug}/sections/F08/")
+
+    assert response.status_code == 200
+    by_ref = {c["ref_number"]: c["variants"][0] for c in response.json()["callouts"]}
+    assert [m["model_code"] for m in by_ref["1"]["shared_models"]] == ["LH18W-8"]
+    # The book being viewed is never listed against its own parts, and an
+    # inactive book is not something a customer can browse to.
+    assert "LH18W7-8" not in str(by_ref["1"]["shared_models"])
+    assert "ZZ99W-8" not in str(by_ref["1"]["shared_models"])
+    assert by_ref["2"]["shared_models"] == []
