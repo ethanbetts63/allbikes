@@ -58,6 +58,41 @@ class TestModelDetail:
         model = PartsModelFactory(is_active=False)
         assert client.get(f"/api/parts/models/{model.slug}/").status_code == 404
 
+    def test_lists_the_top_five_models_by_shared_part_overlap(self, client):
+        mine = PartsModelFactory(name="Current", model_code="CURRENT-1", slug="current")
+        source = PartSectionFactory(parts_model=mine)
+        parts = [PartFactory() for _ in range(6)]
+        for part in parts:
+            SectionPartFactory(section=source, part=part)
+
+        def other_book(index, shared_count, *, active=True):
+            other = PartsModelFactory(
+                name=f"Other {index}",
+                model_code=f"OTHER-{index}",
+                slug=f"other-{index}",
+                is_active=active,
+            )
+            section = PartSectionFactory(parts_model=other)
+            for part in parts[:shared_count]:
+                SectionPartFactory(section=section, part=part)
+            return other
+
+        other_book(1, 6)
+        other_book(2, 5)
+        other_book(3, 4)
+        other_book(4, 3)
+        other_book(5, 2)
+        other_book(6, 1)
+        other_book(7, 6, active=False)
+
+        response = client.get(f"/api/parts/models/{mine.slug}/")
+
+        assert response.status_code == 200
+        overlaps = response.json()["shared_models"]
+        assert [row["model_code"] for row in overlaps] == ["OTHER-1", "OTHER-2", "OTHER-3", "OTHER-4", "OTHER-5"]
+        assert [row["shared_part_count"] for row in overlaps] == [6, 5, 4, 3, 2]
+        assert [row["shared_part_percentage"] for row in overlaps] == [100.0, 83.3, 66.7, 50.0, 33.3]
+
 
 class TestSectionDetail:
     def test_sales_setting_is_included_in_section_payload(self, client, settings_20pct):

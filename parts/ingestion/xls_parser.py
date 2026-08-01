@@ -17,6 +17,11 @@ logger = logging.getLogger(__name__)
 SECTION_RE = re.compile(r"^[EF]\d\d$")
 _COLOUR_INDEX_RE = re.compile(r"color index$", re.I)
 _HEADER_TOKENS = ("PARTS NUMBER", "PARTS  NO", "PART NUMBER")
+# Some newer books repeat the English table heading with a Chinese translation
+# on the next row. The English heading locates the table; this row is metadata,
+# not an orderable part.
+_SECONDARY_HEADER_PART_NUMBERS = {"零件料號"}
+_SECTION_HEADING_RE = re.compile(r"[A-Za-z][A-Za-z0-9 .,'/&()+-]*")
 
 
 def _clean(value):
@@ -72,6 +77,34 @@ def parse_model_name_hint(book):
     return ""
 
 
+def parse_section_name(sheet, section_code):
+    """Return an English section heading from the workbook title row.
+
+    The section image may be a spreadsheet screenshot, but its title is also
+    represented as cell text. Some books place it in column A after the section
+    code and a Chinese translation; older books place it in column B.
+    """
+    cells = [_clean(sheet.cell_value(0, column)) for column in range(min(sheet.ncols, 8))]
+    code_prefix = re.compile(rf"^\s*{re.escape(section_code)}(?![A-Za-z0-9])\s*", re.I)
+
+    for cell in cells:
+        remainder = code_prefix.sub("", cell, count=1)
+        if remainder == cell:
+            continue
+        matches = _SECTION_HEADING_RE.findall(remainder)
+        if matches:
+            return " ".join(matches).strip()
+
+    # Legacy books often keep the heading alone in column B.
+    for cell in cells[:4]:
+        matches = _SECTION_HEADING_RE.findall(cell)
+        if matches:
+            title = " ".join(matches).strip()
+            if title.upper() != section_code.upper():
+                return title
+    return section_code
+
+
 def parse_colour_index(book):
     """Build a {paint_code: colour_name} map from the '... color index' sheets.
 
@@ -124,7 +157,7 @@ def parse_section_parts(sheet, datemode, colour_index):
         part_number = normalize_part_number(
             _clean(sheet.cell_value(r, 1)) if sheet.ncols > 1 else ""
         )
-        if not part_number:
+        if not part_number or part_number in _SECONDARY_HEADER_PART_NUMBERS:
             continue
         description = _clean(sheet.cell_value(r, 3)) if sheet.ncols > 3 else ""
         qty_raw = _clean(sheet.cell_value(r, 5)) if sheet.ncols > 5 else ""
@@ -207,9 +240,7 @@ def parse_book(path):
         if not SECTION_RE.match(name):
             continue
         sheet = book.sheet_by_name(name)
-        section_name = _clean(sheet.cell_value(0, 1)) if sheet.ncols > 1 else name
-        if not section_name:
-            section_name = name
+        section_name = parse_section_name(sheet, name)
         sections.append({
             "code": name,
             "group": "engine" if name[0] == "E" else "frame",

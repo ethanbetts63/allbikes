@@ -1,5 +1,6 @@
 import { getPartsModels } from '@/lib/partsApi';
 import ModelCarousel from '@/app/parts/_components/ModelCarousel';
+import PayLaterSection from '@/components/marketing/PayLaterSection';
 import type { CcClass, PartsModelListItem } from '@/types/parts';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -33,25 +34,30 @@ function PartsLandingPage({ models }: { models: PartsModelListItem[] }) {
   })).filter((group) => group.models.length > 0);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <nav className="mb-4 text-sm text-gray-600" aria-label="Breadcrumb">
-        <Link href="/" className="hover:underline">Home</Link>
-        <span className="mx-2">/</span>
-        <span className="text-black">New SYM Parts</span>
-      </nav>
-      <h1 className="text-2xl font-bold text-black">New Genuine SYM Parts</h1>
-      <p className="mt-2 max-w-2xl text-gray-600">
-        Choose your model, open the relevant section, and add the parts you need straight from the
-        exploded diagram. Availability and pricing are shown per part.
-      </p>
+    <>
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <nav className="mb-4 text-sm text-gray-600" aria-label="Breadcrumb">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-2">/</span>
+          <span className="text-black">New SYM Parts</span>
+        </nav>
+        <h1 className="text-2xl font-bold text-black">New Genuine SYM Parts</h1>
+        <p className="mt-2 max-w-2xl text-gray-600">
+          Choose your model, open the relevant section, and add the parts you need straight from the
+          exploded diagram. Availability and pricing are shown per part.
+        </p>
 
-      {grouped.length === 0 && <p className="mt-8 text-gray-500">No models available yet. Please check back soon.</p>}
+        {grouped.length === 0 && <p className="mt-8 text-gray-500">No models available yet. Please check back soon.</p>}
 
-      <div className="mt-8 space-y-8">
-        {grouped.map((group) => (
-          <ModelCarousel key={group.cc} title={group.label} models={group.models} />
-        ))}
+        <div className="mt-8 space-y-8">
+          {grouped.map((group) => (
+            <ModelCarousel key={group.cc} title={group.label} models={group.models} />
+          ))}
+        </div>
       </div>
-    </div>
+
+      {/* Full-bleed, outside the max-width container, as on the home page. */}
+      <PayLaterSection />
+    </>
   );
 }

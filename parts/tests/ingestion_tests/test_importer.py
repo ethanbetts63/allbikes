@@ -1,9 +1,12 @@
 from datetime import date
 from decimal import Decimal
+from io import BytesIO
 
 import pytest
+from django.core.files.base import ContentFile
+from PIL import Image
 
-from parts.ingestion.importer import import_book, import_pricing
+from parts.ingestion.importer import resolve_display_name, import_book, import_pricing
 from parts.models import Part, PartsModel, PartSection, SectionPart
 
 pytestmark = pytest.mark.django_db
@@ -42,6 +45,13 @@ def _parsed(model_code="AX15W2-6"):
     }
 
 
+def _png_bytes(colour):
+    image = Image.new("RGB", (4, 4), colour)
+    output = BytesIO()
+    image.save(output, format="PNG")
+    return output.getvalue()
+
+
 class TestImportBook:
     def test_creates_model_sections_parts(self):
         model = import_book(_parsed(), name="Classic 150", cc_class="100_165")
@@ -71,6 +81,37 @@ class TestImportBook:
         parsed = _parsed(model_code="")
         with pytest.raises(ValueError):
             import_book(parsed, name="x", cc_class="50")
+
+    def test_unchanged_source_diagram_keeps_a_reviewed_crop(self):
+        parsed = _parsed()
+        parsed["sections"][0]["diagram_bytes"] = _png_bytes("red")
+        model = import_book(parsed, name="Classic 150", cc_class="100_165")
+        section = model.sections.get(code="E01")
+        section.curated_diagram_image.save("reviewed.png", ContentFile(_png_bytes("blue")), save=False)
+        section.curated_source_hash = section.diagram_source_hash
+        section.save()
+
+        import_book(parsed, name="Classic 150", cc_class="100_165")
+
+        section.refresh_from_db()
+        assert section.curated_diagram_image
+        assert section.curated_source_hash == section.diagram_source_hash
+
+    def test_changed_source_diagram_clears_a_reviewed_crop(self):
+        parsed = _parsed()
+        parsed["sections"][0]["diagram_bytes"] = _png_bytes("red")
+        model = import_book(parsed, name="Classic 150", cc_class="100_165")
+        section = model.sections.get(code="E01")
+        section.curated_diagram_image.save("reviewed.png", ContentFile(_png_bytes("blue")), save=False)
+        section.curated_source_hash = section.diagram_source_hash
+        section.save()
+        parsed["sections"][0]["diagram_bytes"] = _png_bytes("green")
+
+        import_book(parsed, name="Classic 150", cc_class="100_165")
+
+        section.refresh_from_db()
+        assert not section.curated_diagram_image
+        assert section.curated_source_hash == ""
 
 
 class TestImportPricing:
@@ -119,3 +160,30 @@ class TestImportPricing:
         assert Part.objects.filter(part_number='1640A-XJA-000').count() == 1
         part = Part.objects.get(part_number='1640A-XJA-000')
         assert part.wholesale_price_incl_gst == Decimal('600.00')
+
+
+# --- display names ---------------------------------------------------------
+
+class TestResolveDisplayName:
+    """The source page sometimes labels a book with only its own model code."""
+
+    def test_a_real_page_label_is_kept(self):
+        assert resolve_display_name("Classic 150", "AX15W2-6") == "Classic 150"
+        assert resolve_display_name("HD2", "LC18W1-6") == "HD2"
+        assert resolve_display_name("2022 Maxsym400i", "LZ40W1-EU") == "2022 Maxsym400i"
+
+    def test_a_label_that_is_only_the_code_falls_back_to_the_book(self):
+        # "(AV05W-8)" tells a customer nothing the code column doesn't already.
+        assert resolve_display_name("(AV05W-8)", "AV05W-8", "ORBIT 50") == "ORBIT 50"
+        assert resolve_display_name("", "BS05W-8", "SHARK 50") == "SHARK 50"
+
+    def test_a_short_trailing_qualifier_does_not_count_as_a_name(self):
+        assert resolve_display_name("(LX40A2-6 L4C)", "ZZ99W-1", "Some Book") == "Some Book"
+
+    def test_an_override_wins_over_everything(self):
+        # Both Maxsym books are labelled with nothing but their codes.
+        assert resolve_display_name("(LX40A2-6 L4C)", "LX40A2-6", "MAXSYM 400") == "Maxsym 400i ABS"
+        assert resolve_display_name("(LX40A4-EU)", "LX40A4-EU", "") == "Maxsym 400i ABS"
+
+    def test_with_nothing_available_the_code_is_used(self):
+        assert resolve_display_name("", "ZZ99W-1", "") == "ZZ99W-1"

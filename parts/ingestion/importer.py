@@ -1,5 +1,7 @@
 """Upsert parsed book/pricing data into the catalog models."""
+import hashlib
 import logging
+import re
 
 from django.core.files.base import ContentFile
 from django.db import transaction
@@ -17,6 +19,42 @@ def _diagram_extension(data):
     if data[:8] == b"\x89PNG\r\n\x1a\n":
         return "png"
     return "jpg"
+
+
+# The source page occasionally labels a book with nothing but its own model
+# code, e.g. "(LX40A2-6 L4C)". That is not a name a customer can recognise, so
+# these supply one. Keyed by model code because that is the stable identity.
+NAME_OVERRIDES = {
+    "LX40A2-6": "Maxsym 400i ABS",
+    "LX40A4-EU": "Maxsym 400i ABS",
+}
+
+
+def _is_placeholder_name(label, model_code):
+    """True when a source-page label carries no name beyond the model code.
+
+    "(LX40A4-EU)" and "(LX40A2-6 L4C)" are labels of this kind: strip the code,
+    the brackets and any short trailing qualifier and nothing is left.
+    """
+    if not label:
+        return True
+    remainder = re.sub(re.escape(model_code), " ", label, flags=re.I)
+    remainder = re.sub(r"[^A-Za-z]+", " ", remainder)
+    # A genuine name has a word of real length; "L4C" style qualifiers do not.
+    return not any(len(word) > 3 for word in remainder.split())
+
+
+def resolve_display_name(label, model_code, name_hint=""):
+    """Pick the best available display name for a book.
+
+    Preference order: an explicit override, the source-page label, the name the
+    book states about itself, and finally the bare code.
+    """
+    if model_code in NAME_OVERRIDES:
+        return NAME_OVERRIDES[model_code]
+    if not _is_placeholder_name(label, model_code):
+        return label
+    return (name_hint or "").strip() or label or model_code
 
 
 def unique_model_slug(name, model_code):
@@ -38,7 +76,7 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
     if not model_code:
         raise ValueError("Book has no model code; refusing to import.")
 
-    display_name = name or parsed.get("model_name_hint") or model_code
+    display_name = resolve_display_name(name, model_code, parsed.get("model_name_hint"))
     model, _ = PartsModel.objects.get_or_create(
         model_code=model_code,
         defaults={"name": display_name, "cc_class": cc_class or "100_165"},
@@ -69,15 +107,24 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
         )
         retained_section_ids.append(section.id)
         if sec.get("diagram_bytes"):
-            old_diagram_name = section.diagram_image.name if section.diagram_image else ""
-            ext = _diagram_extension(sec["diagram_bytes"])
-            section.diagram_image.save(
-                f"{model_code}_{sec['code']}.{ext}",
-                ContentFile(sec["diagram_bytes"]),
-                save=True,
-            )
-            if old_diagram_name and old_diagram_name != section.diagram_image.name:
-                obsolete_diagram_names.append(old_diagram_name)
+            source_hash = hashlib.sha256(sec["diagram_bytes"]).hexdigest()
+            if source_hash != section.diagram_source_hash:
+                old_diagram_name = section.diagram_image.name if section.diagram_image else ""
+                old_curated_name = section.curated_diagram_image.name if section.curated_diagram_image else ""
+                ext = _diagram_extension(sec["diagram_bytes"])
+                section.diagram_image.save(
+                    f"{model_code}_{sec['code']}.{ext}",
+                    ContentFile(sec["diagram_bytes"]),
+                    save=False,
+                )
+                section.diagram_source_hash = source_hash
+                section.curated_diagram_image = None
+                section.curated_source_hash = ""
+                section.save()
+                if old_diagram_name and old_diagram_name != section.diagram_image.name:
+                    obsolete_diagram_names.append(old_diagram_name)
+                if old_curated_name:
+                    obsolete_diagram_names.append(old_curated_name)
 
         retained_fitment_keys = []
         occurrences = {}

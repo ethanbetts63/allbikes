@@ -17,12 +17,28 @@ class PartSection(models.Model):
     code = models.CharField(max_length=10, help_text="Section code, e.g. 'E01', 'F14'.")
     group = models.CharField(max_length=10, choices=GROUP_CHOICES)
     name = models.CharField(max_length=200, help_text="Section name, e.g. 'Shroud Assy'.")
+    # Untouched image extracted from the supplier workbook. The hash lets an
+    # import retain a reviewed crop while the source image is unchanged.
     diagram_image = models.ImageField(upload_to='parts/diagrams/', null=True, blank=True)
+    diagram_source_hash = models.CharField(max_length=64, blank=True)
+    curated_diagram_image = models.ImageField(upload_to='parts/curated-diagrams/', null=True, blank=True)
+    curated_source_hash = models.CharField(max_length=64, blank=True)
     sort_order = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ['parts_model', 'sort_order', 'code']
         unique_together = [('parts_model', 'code')]
+
+    @property
+    def display_diagram_image(self):
+        """Use a reviewed crop only when it belongs to the current source image."""
+        if (
+            self.curated_diagram_image
+            and self.diagram_source_hash
+            and self.curated_source_hash == self.diagram_source_hash
+        ):
+            return self.curated_diagram_image
+        return self.diagram_image
 
     def __str__(self):
         return f"{self.parts_model.model_code} {self.code} — {self.name}"

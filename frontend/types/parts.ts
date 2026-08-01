@@ -38,6 +38,7 @@ export interface PartSectionSummary {
 
 export interface PartsModelDetail extends PartsModelListItem {
   sections: PartSectionSummary[];
+  shared_models: SharedModelOverlap[];
 }
 
 type VariantAxis = 'colour' | 'date' | 'none';
@@ -46,6 +47,12 @@ export interface SharedModel {
   name: string;
   model_code: string;
   slug: string;
+}
+
+export interface SharedModelOverlap extends SharedModel {
+  shared_part_count: number;
+  /** Percentage of the current model's distinct parts found in this book. */
+  shared_part_percentage: number;
 }
 
 export interface PartVariant {
