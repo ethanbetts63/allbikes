@@ -11,7 +11,7 @@ export default function ModelCard({ model }: { model: ModelCardModel }) {
   return (
     <Link
       href={`/parts/new/sym/${model.slug}`}
-      className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-black"
+      className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-[var(--highlight)]"
     >
       <div className="relative flex h-36 items-center justify-center bg-white">
         {image ? (

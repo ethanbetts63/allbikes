@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import CalloutRow from '@/app/parts/new/sym/[modelSlug]/[sectionId]/_components/CalloutRow';
 import EquivalentSections from '@/app/parts/_components/EquivalentSections';
+import HowPartsLookupWorks from '@/app/parts/_components/HowPartsLookupWorks';
 import type { SectionDetail } from '@/types/parts';
 
 /** Exploded diagram beside its callout list, for one model section. */
@@ -67,6 +68,7 @@ export default function SectionDiagramView({ section }: { section: SectionDetail
           </ul>
         </div>
       </div>
+      <HowPartsLookupWorks />
     </div>
   );
 }

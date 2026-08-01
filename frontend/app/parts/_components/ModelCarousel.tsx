@@ -1,13 +1,14 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import ModelCard from '@/app/parts/_components/ModelCard';
 import type { PartsModelListItem } from '@/types/parts';
 
 type Props = {
-  title: string;
+  title: ReactNode;
   models: PartsModelListItem[];
 };
 
