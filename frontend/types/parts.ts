@@ -8,6 +8,25 @@ export interface PartsModelListItem {
   last_ingested_at: string | null;
 }
 
+export interface VinLookupModel {
+  name: string;
+  model_code: string;
+  cc_class: CcClass;
+  slug: string;
+  confirmed_years: string;
+}
+
+export interface VinLookupResult {
+  vin: string;
+  year: number | null;
+  model_family: string;
+  models: VinLookupModel[];
+  /** Customer-facing reason there is nothing to show; empty when models were found. */
+  problem: string;
+  /** Why the decode landed where it did, for support staff reading a screenshot. */
+  note: string;
+}
+
 export interface PartSectionSummary {
   id: number;
   code: string;

@@ -1,5 +1,6 @@
 import { getPartsModels } from '@/lib/partsApi';
 import ModelCard from '@/app/parts/_components/ModelCard';
+import VinLookup from './_components/VinLookup';
 import type { CcClass, PartsModelListItem } from '@/types/parts';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -44,6 +45,8 @@ function PartsLandingPage({ models }: { models: PartsModelListItem[] }) {
         Choose your model, open the relevant section, and add the parts you need straight from the
         exploded diagram. Availability and pricing are shown per part.
       </p>
+
+      <VinLookup />
 
       {grouped.length === 0 && <p className="mt-8 text-gray-500">No models available yet. Please check back soon.</p>}
 

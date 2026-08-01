@@ -25,6 +25,14 @@ class PartsModelListSerializer(serializers.ModelSerializer):
         fields = ["name", "model_code", "cc_class", "slug", "last_ingested_at"]
 
 
+class VinLookupModelSerializer(serializers.ModelSerializer):
+    """A candidate book, with the years that argue for or against it."""
+
+    class Meta:
+        model = PartsModel
+        fields = ["name", "model_code", "cc_class", "slug", "confirmed_years"]
+
+
 class PartSectionSummarySerializer(serializers.ModelSerializer):
     diagram_thumb = serializers.SerializerMethodField()
 

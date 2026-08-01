@@ -40,9 +40,9 @@ mediafiles/CACHE/
 inventory/logs/
 data_management/data/archive/
 
-# Parts pipeline working dirs (scraped source files, not source-controlled)
-data_management/data/sym_parts_files/inbox/
-data_management/data/sym_parts_files/archive/
+# Local SYM parts books and model-year research outputs
+data_management/data/sym_parts_files/
+data_management/data/sym_model_years/
 
 # Claude Code
 .claude/

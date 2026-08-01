@@ -7,8 +7,10 @@ from parts.models import Part, PartsModel, PartSection, PartsSettings, SectionPa
 from parts.serializers.catalog_serializers import (
     PartsModelDetailSerializer,
     PartsModelListSerializer,
+    VinLookupModelSerializer,
     build_section_payload,
 )
+from parts.vin_lookup import lookup as lookup_vin
 from parts.views.base import PublicAPIView
 
 SEARCH_LIMIT = 50
@@ -51,6 +53,28 @@ class ModelSectionDetailView(PublicAPIView):
         )
         settings = PartsSettings.get()
         return Response(build_section_payload(section, settings, request=request))
+
+
+class VinLookupView(PublicAPIView):
+    """Resolve a VIN to the parts book(s) it could belong to.
+
+    Several books can share a VIN family and differ only by a revision the VIN
+    does not record, so this always returns a list and lets the customer choose
+    rather than guessing on their behalf.
+    """
+
+    def get(self, request):
+        result = lookup_vin(request.query_params.get("vin"))
+        return Response(
+            {
+                "vin": result.vin,
+                "year": result.year,
+                "model_family": result.model_family,
+                "models": VinLookupModelSerializer(result.models, many=True).data,
+                "problem": result.problem,
+                "note": result.note,
+            }
+        )
 
 
 class PartsSearchView(PublicAPIView):
