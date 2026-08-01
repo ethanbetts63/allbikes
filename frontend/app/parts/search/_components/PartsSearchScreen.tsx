@@ -42,7 +42,7 @@ function VinResults({ result }: { result: VinLookupResult }) {
           ? 'Check the model code on your bike before ordering.'
           : 'The VIN cannot distinguish the listed revisions. Check the model code on your bike before ordering.'}
       </p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {result.models.map((model) => <ModelCard key={model.slug} model={model} />)}
       </div>
     </section>
@@ -114,7 +114,7 @@ export default function PartsSearchScreen() {
           {results.models.length > 0 && (
             <section className="mb-8">
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-600">Models</h2>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                 {results.models.map((model) => <ModelCard key={model.slug} model={model} />)}
               </div>
             </section>

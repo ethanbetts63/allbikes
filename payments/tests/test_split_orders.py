@@ -142,21 +142,40 @@ def test_product_webhook_marks_paid_and_decrements_stock_once(mocker):
     assert product.stock_quantity == 1
 
 
-def test_bike_webhook_marks_deposit_paid_and_reserves_motorcycle(mocker):
+@pytest.mark.parametrize('condition', ['used', 'demo'])
+def test_bike_webhook_marks_deposit_paid_and_reserves_motorcycle(mocker, condition):
     mocker.patch('payments.utils.webhook_handlers.send_bike_customer_confirmation')
     mocker.patch('payments.utils.webhook_handlers.send_bike_admin_new_order')
-    order = BikeOrderFactory(deposit_amount='500.00')
+    order = BikeOrderFactory(motorcycle__condition=condition, deposit_amount='500.00')
     Payment.objects.create(
-        bike_order=order, stripe_payment_intent_id='pi_bike_webhook', amount='500.00'
+        bike_order=order, stripe_payment_intent_id=f'pi_bike_webhook_{condition}', amount='500.00'
     )
 
-    handle_payment_intent_succeeded({'id': 'pi_bike_webhook'})
+    handle_payment_intent_succeeded({'id': f'pi_bike_webhook_{condition}'})
 
     order.refresh_from_db()
     order.motorcycle.refresh_from_db()
     assert order.status == 'paid'
     assert order.amount_paid == Decimal('500.00')
     assert order.motorcycle.status == 'reserved'
+
+
+def test_bike_webhook_does_not_reserve_a_new_motorcycle(mocker):
+    """A deposit on a new bike is accepted, but the bike stays for sale."""
+    mocker.patch('payments.utils.webhook_handlers.send_bike_customer_confirmation')
+    mocker.patch('payments.utils.webhook_handlers.send_bike_admin_new_order')
+    order = BikeOrderFactory(motorcycle__condition='new', deposit_amount='500.00')
+    Payment.objects.create(
+        bike_order=order, stripe_payment_intent_id='pi_bike_webhook_new', amount='500.00'
+    )
+
+    handle_payment_intent_succeeded({'id': 'pi_bike_webhook_new'})
+
+    order.refresh_from_db()
+    order.motorcycle.refresh_from_db()
+    assert order.status == 'paid'
+    assert order.amount_paid == Decimal('500.00')
+    assert order.motorcycle.status == 'for_sale'
 
 
 def test_bike_webhook_does_not_downgrade_sold_motorcycle(mocker):

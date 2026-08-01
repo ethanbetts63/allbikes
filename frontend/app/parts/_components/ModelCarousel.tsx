@@ -4,12 +4,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import ModelCard from '@/app/parts/_components/ModelCard';
-import type { PartsModelListItem } from '@/types/parts';
-
 type Props = {
   title: ReactNode;
-  models: PartsModelListItem[];
+  /**
+   * The slides, rendered by the calling server component. Passing them as
+   * children rather than mapping a models array here keeps ModelCard — and the
+   * static model image map it imports — out of the client bundle.
+   */
+  children: ReactNode;
 };
 
 function ScrollButton({ direction, onClick }: { direction: 'left' | 'right'; onClick: () => void }) {
@@ -31,8 +33,15 @@ function ScrollButton({ direction, onClick }: { direction: 'left' | 'right'; onC
   );
 }
 
-/** A browse-only model row; search results continue to use the regular grid. */
-export default function ModelCarousel({ title, models }: Props) {
+/**
+ * A browse-only model row; search results continue to use the regular grid.
+ *
+ * Scrolling and snapping are pure CSS — the row is fully usable with JS
+ * disabled, and on touch it never needs the arrows. The client code here only
+ * drives the desktop arrows, which have no CSS equivalent that works outside
+ * Chromium today.
+ */
+export default function ModelCarousel({ title, children }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -64,7 +73,7 @@ export default function ModelCarousel({ title, models }: Props) {
   }
 
   return (
-    <section>
+    <section className="defer-section-sm">
       <h2 className="mb-3 text-lg font-semibold text-black">{title}</h2>
 
       <div className="relative">
@@ -74,14 +83,7 @@ export default function ModelCarousel({ title, models }: Props) {
           ref={scrollRef}
           className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]"
         >
-          {models.map((model) => (
-            <div
-              key={model.slug}
-              className="w-[calc(50%_-_0.375rem)] shrink-0 snap-start sm:w-[calc(33.333%_-_0.5rem)] lg:w-[calc(25%_-_0.5625rem)]"
-            >
-              <ModelCard model={model} />
-            </div>
-          ))}
+          {children}
         </div>
 
         {canScrollRight && <ScrollButton direction="right" onClick={() => scroll(1)} />}

@@ -21,6 +21,14 @@ const nextConfig: NextConfig = {
       },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 31,
+
+    // Trimmed from the defaults, which emit 10+ srcset candidates per responsive
+    // image. Nothing on the site is laid out wider than ~1400px, so 2048 covers
+    // a 2x retina hero and 3840 was only ever downloaded by 4K displays.
+    // Dropping the redundant intermediate steps costs a little granularity and
+    // saves a large amount of markup on image-dense pages.
+    deviceSizes: [640, 828, 1080, 1440, 2048],
+    imageSizes: [32, 64, 128, 256, 384],
   },
 
   async headers() {

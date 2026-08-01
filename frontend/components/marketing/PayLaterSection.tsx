@@ -50,10 +50,10 @@ const PayLaterSection = ({ className = 'bg-foreground' }: { className?: string }
           </div>
 
           {/* Right — provider list */}
-          <div className="bg-[var(--bg-light-primary)] rounded-2xl p-8 flex flex-col divide-y divide-[var(--border-light)]">
+          <div className="-mx-4 flex w-[calc(100%+2rem)] flex-col divide-y divide-[var(--border-light)] rounded-none bg-[var(--bg-light-primary)] p-6 lg:mx-0 lg:w-auto lg:rounded-2xl lg:p-8">
             {providers.map(({ name, logo, logoClass, tagline, detail }) => (
-              <div key={name} className="flex items-center gap-6 py-6 first:pt-0 last:pb-0">
-                <div className="flex items-center justify-center shrink-0 w-32">
+              <div key={name} className="flex flex-col items-center gap-3 py-6 text-center first:pt-0 last:pb-0 lg:flex-row lg:items-center lg:gap-6 lg:text-left">
+                <div className="flex w-auto shrink-0 items-center justify-center lg:w-32">
                   <img src={assetUrl(logo)} alt={name} className={`${logoClass} w-auto`} loading="lazy" />
                 </div>
                 <div>

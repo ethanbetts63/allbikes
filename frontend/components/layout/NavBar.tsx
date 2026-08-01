@@ -3,9 +3,10 @@ import NextImage from "next/image";
 import logoImage from "../../assets/logo.webp";
 import { cn } from "@/lib/utils";
 import { siteSettings } from "@/lib/siteSettings";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 import MobileNavMenu from "@/components/layout/MobileNavMenu";
 import DesktopScootersMenu from "@/components/layout/DesktopScootersMenu";
+import HomePageBanner from "@/components/layout/HomePageBanner";
 
 const NAV_LINK = "text-[var(--text-light-primary)] text-xs font-bold uppercase tracking-widest hover:text-[var(--highlight)] transition-colors duration-200";
 
@@ -13,14 +14,7 @@ const NavBar = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-white/10 relative">
       {siteSettings.enable_banner && siteSettings.banner_text && (
-        <div className="bg-highlight text-[var(--text-dark-primary)] py-2 px-4">
-          <div className="container mx-auto flex items-center justify-center gap-2">
-            <MapPin className="h-3.5 w-3.5 shrink-0" strokeWidth={2.5} />
-            <p className="text-xs sm:text-sm font-semibold text-center leading-snug">
-              {siteSettings.banner_text}
-            </p>
-          </div>
-        </div>
+        <HomePageBanner text={siteSettings.banner_text} />
       )}
 
       <div className="container flex h-20 items-stretch px-6">

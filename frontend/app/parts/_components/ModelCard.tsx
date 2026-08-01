@@ -7,6 +7,14 @@ import type { PartsModelListItem } from '@/types/parts';
 /** Model tile with product photo — shared by the parts landing grid and search results. */
 type ModelCardModel = Pick<PartsModelListItem, 'name' | 'model_code' | 'slug'>;
 
+/**
+ * Both callers — the landing carousel and the search grid — lay tiles out 1-up
+ * on mobile, 3-up on tablet and 4-up from lg. The grid is capped by max-w-6xl,
+ * so past ~1150px the tile stops growing at ~288px; the fixed final value keeps
+ * the browser from over-fetching, which `25vw` does on wide screens.
+ */
+const TILE_SIZES = '(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 288px';
+
 export default function ModelCard({ model }: { model: ModelCardModel }) {
   const image = MODEL_IMAGES[model.model_code.toUpperCase()];
   return (
@@ -17,12 +25,15 @@ export default function ModelCard({ model }: { model: ModelCardModel }) {
       <div className="relative flex h-36 items-center justify-center bg-white">
         {image ? (
           <Image
-            src={image}
+            // Pass the URL, not the StaticImageData object: `fill` makes the
+            // intrinsic dimensions redundant, and the object would drag its
+            // base64 blurDataURL across the server/client boundary into the RSC
+            // payload for every tile.
+            src={image.src}
             alt={model.name}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes={TILE_SIZES}
             loading="lazy"
-            placeholder="blur"
             className="object-contain p-3"
           />
         ) : (

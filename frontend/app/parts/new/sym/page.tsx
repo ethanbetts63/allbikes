@@ -1,5 +1,6 @@
 import { getPartsModels } from '@/lib/partsApi';
 import ModelCarousel from '@/app/parts/_components/ModelCarousel';
+import ModelCarouselItem from '@/app/parts/_components/ModelCarouselItem';
 import HowPartsLookupWorks from '@/app/parts/_components/HowPartsLookupWorks';
 import Hero from '@/components/marketing/Hero';
 import PayLaterSection from '@/components/marketing/PayLaterSection';
@@ -69,8 +70,11 @@ function PartsLandingPage({ models }: { models: PartsModelListItem[] }) {
                   </>
                 )
               }
-              models={group.models}
-            />
+            >
+              {group.models.map((model) => (
+                <ModelCarouselItem key={model.slug} model={model} />
+              ))}
+            </ModelCarousel>
           ))}
         </div>
 
