@@ -22,16 +22,6 @@ class PartsModel(models.Model):
     last_ingested_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True, help_text="False if the book disappears from the source page.")
 
-    # Years a source has directly evidenced for this exact book code, listed
-    # individually because the evidence is scattered observations rather than a
-    # documented production run. Blank means "not established", which is not
-    # the same as "this book had no production years" - most books are blank.
-    confirmed_years = models.CharField(
-        max_length=200,
-        blank=True,
-        help_text="Comma-separated years directly evidenced for this book code, e.g. '2007, 2008, 2009'.",
-    )
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

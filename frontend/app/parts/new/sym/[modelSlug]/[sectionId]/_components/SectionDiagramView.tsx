@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import CalloutRow from '@/app/parts/new/sym/[modelSlug]/[sectionId]/_components/CalloutRow';
+import EquivalentSections from '@/app/parts/new/sym/_components/EquivalentSections';
 import type { SectionDetail } from '@/types/parts';
 
 /** Exploded diagram beside its callout list, for one model section. */
@@ -35,6 +36,7 @@ export default function SectionDiagramView({ section }: { section: SectionDetail
             <div className="border-b border-gray-200 px-4 py-3">
               <h1 className="text-xl font-bold text-black">{sectionLabel}</h1>
               <p className="text-sm text-gray-500">{section.model.name}</p>
+              <EquivalentSections sections={section.equivalent_sections} className="mt-2" />
             </div>
 
             {section.diagram_image ? (

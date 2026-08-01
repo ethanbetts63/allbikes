@@ -18,14 +18,14 @@ def client():
 def books():
     """The book set that exercises every decode path."""
     return {
-        code: PartsModelFactory(name=name, model_code=code, cc_class=cc, confirmed_years=years)
-        for code, name, cc, years in [
-            ("FA05U1-8", "Retro 50", "50", ""),
-            ("XL20W1-IT", "Symphony ST2", "200_400", "2021, 2022, 2023"),
-            ("LH18W-8", "HD200", "200_400", ""),
-            ("LH18W5-8", "HD200", "200_400", ""),
-            ("LH18W7-6", "HD200 evo", "200_400", "2007, 2008, 2009, 2010"),
-            ("LH18W7-8", "HD200 evo", "200_400", ""),
+        code: PartsModelFactory(name=name, model_code=code, cc_class=cc)
+        for code, name, cc in [
+            ("FA05U1-8", "Retro 50", "50"),
+            ("XL20W1-IT", "Symphony ST2", "200_400"),
+            ("LH18W-8", "HD200", "200_400"),
+            ("LH18W5-8", "HD200", "200_400"),
+            ("LH18W7-6", "HD200 evo", "200_400"),
+            ("LH18W7-8", "HD200 evo", "200_400"),
         ]
     }
 
@@ -95,7 +95,6 @@ def test_the_endpoint_returns_candidates_with_their_years(client, books):
     assert body["year"] == 2013
     assert len(body["models"]) == 4
     evo = next(m for m in body["models"] if m["model_code"] == "LH18W7-6")
-    assert evo["confirmed_years"] == "2007, 2008, 2009, 2010"
     assert evo["slug"]
 
 

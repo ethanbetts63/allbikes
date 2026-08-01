@@ -13,7 +13,6 @@ export interface VinLookupModel {
   model_code: string;
   cc_class: CcClass;
   slug: string;
-  confirmed_years: string;
 }
 
 export interface VinLookupResult {
@@ -27,6 +26,18 @@ export interface VinLookupResult {
   note: string;
 }
 
+/** A diagram elsewhere carrying the same parts. `identical` means the exact
+ *  same part numbers; `contained` means all of these plus more. */
+export interface EquivalentSection {
+  relation: 'identical' | 'contained';
+  section_code: string;
+  section_name: string;
+  part_count: number;
+  model_name: string;
+  model_code: string;
+  model_slug: string;
+}
+
 export interface PartSectionSummary {
   id: number;
   code: string;
@@ -34,6 +45,7 @@ export interface PartSectionSummary {
   name: string;
   sort_order: number;
   diagram_thumb: string | null;
+  equivalent_sections?: EquivalentSection[];
 }
 
 export interface PartsModelDetail extends PartsModelListItem {
@@ -85,6 +97,7 @@ export interface SectionDetail {
   name: string;
   model: { name: string; model_code: string; slug: string };
   diagram_image: string | null;
+  equivalent_sections?: EquivalentSection[];
   enable_new_part_sales: boolean;
   backorder_hold_days: number;
   callouts: Callout[];

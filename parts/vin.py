@@ -1,8 +1,6 @@
 """Decode an Australian SYM VIN to the local parts book(s) it can belong to.
 
-This is production code: the public VIN lookup endpoint depends on it, and the
-research ingestion modules import the year decoding from here rather than the
-other way round.
+This is production code: the public VIN lookup endpoint depends on it.
 
 SYM stamps two different schemes into the vehicle-descriptor section, and
 which one you are looking at decides how the book is found.
@@ -40,7 +38,6 @@ import re
 from dataclasses import asdict, dataclass
 
 
-
 # ISO 3779 position 10 cycles every 30 years: A-Y (omitting I, O, Q, U, Z)
 # then 1-9.  A code is therefore genuinely ambiguous — "A" is both 1980 and
 # 2010 — so every candidate is kept and the caller's context resolves it.
@@ -62,6 +59,7 @@ _VIN_YEAR_CODES = _build_year_codes()
 
 # A placeholder stands in for "any year" and must never decode to one.
 VIN_YEAR_PLACEHOLDERS = set("#$%*?_0")
+
 
 def vin_model_year(vin, *, issue_year=None):
     """Decode the model year from position 10 of a typical VIN.
@@ -149,30 +147,6 @@ def _direct_candidates(descriptor, books):
     return sorted(set(matches))
 
 
-def _rank_by_year(candidates, year, book_years):
-    """Order candidates by whether their documented years include the VIN's.
-
-    This deliberately never drops a candidate.  Every year in this project is
-    evidence of *presence* — a source recording that a book existed in a given
-    year.  Nothing anywhere records that a book was *not* used in a year, so a
-    year missing from a book's list means only that nobody we have read
-    mentioned it.  Measured against the family evidence, documented ranges run
-    up to thirteen years short at one end, so eliminating a book for failing to
-    list the year would be reasoning from an absence that carries no
-    information.
-    """
-    if not year or len(candidates) < 2 or not book_years:
-        return candidates, ""
-    matching = [code for code in candidates if year in (book_years.get(code) or ())]
-    if not matching or len(matching) == len(candidates):
-        return candidates, ""
-    rest = [code for code in candidates if code not in matching]
-    return matching + rest, (
-        f"; {', '.join(matching)} documented in {year}, listed first — "
-        "the others are not ruled out"
-    )
-
-
 def _indirect_candidates(family, capacity_class, books):
     """Books reachable through the shorthand descriptor.
 
@@ -191,7 +165,7 @@ def _indirect_candidates(family, capacity_class, books):
     return sorted(set(matches))
 
 
-def decode(vin, books=(), listed_year=None, book_years=None):
+def decode(vin, books=(), listed_year=None):
     """Decode a VIN (or its first 10+ characters) to candidate parts books."""
     cleaned = re.sub(r"[^A-Z0-9]", "", (vin or "").upper())
     books = [b.upper() for b in books]
@@ -219,8 +193,6 @@ def decode(vin, books=(), listed_year=None, book_years=None):
         note = "descriptor spells the model code directly"
         scheme = "direct"
 
-    candidates, ranked = _rank_by_year(candidates, year, book_years)
-    note += ranked
     if not candidates:
         note += "; no local book matches this family"
     elif len(candidates) > 1:

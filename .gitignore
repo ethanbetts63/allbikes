@@ -34,7 +34,13 @@ static/
 
 # Misc
 *.backup
-mediafiles/
+# Keep generated media local by default, but version reviewed SYM diagram crops.
+# Raw source diagrams are reproducible from the source books and remain ignored.
+mediafiles/*
+!mediafiles/parts/
+mediafiles/parts/*
+!mediafiles/parts/curated-diagrams/
+!mediafiles/parts/curated-diagrams/**
 mediafiles/CACHE/
 
 inventory/logs/

@@ -61,15 +61,8 @@ def lookup(value):
 
     active = list(PartsModel.objects.filter(is_active=True))
     by_code = {model.model_code.upper(): model for model in active}
-    book_years = {
-        model.model_code.upper(): {
-            int(year) for year in re.findall(r"\d{4}", model.confirmed_years or "")
-        }
-        for model in active
-        if model.confirmed_years
-    }
 
-    result = decode(vin, list(by_code), book_years=book_years or None)
+    result = decode(vin, list(by_code))
     models = [by_code[code] for code in result.book_candidates if code in by_code]
     problem = ""
     if not models:

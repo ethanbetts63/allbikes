@@ -64,11 +64,19 @@ function ColourCallout({ callout, section }: Props) {
             <option key={v.part_number} value={i}>
               {v.variant_label}
               {v.paint_code ? ` (${v.paint_code})` : ''}
-              {v.orderable ? '' : ' — not available'}
+              {stockState(v.available_qty, 1).kind === 'in_stock'
+                ? ''
+                : ` (${stockState(v.available_qty, 1).badge})`}
             </option>
           ))}
         </select>
-        <VariantLine variant={variant} section={section} callout={callout} showLabel={false} />
+        <VariantLine
+          variant={variant}
+          section={section}
+          callout={callout}
+          showLabel={false}
+          showSelectionDetails
+        />
       </div>
     </li>
   );
@@ -79,11 +87,13 @@ function VariantLine({
   section,
   callout,
   showLabel,
+  showSelectionDetails = false,
 }: {
   variant: PartVariant;
   section: SectionDetail;
   callout: Callout;
   showLabel: boolean;
+  showSelectionDetails?: boolean;
 }) {
   const { items, addItem, updateQuantity } = usePartsCart();
   const cartItem = items.find((item) => partsCartItemKey(item) === variant.fitment_key);
@@ -119,6 +129,14 @@ function VariantLine({
             </span>
           )}
         </div>
+        {showSelectionDetails && (
+          <div className="mt-0.5 text-xs text-gray-600">
+            <span>{variant.description}</span>
+            {variant.colour_name && (
+              <span className="font-medium text-gray-800"> · Selected colour: {variant.colour_name}</span>
+            )}
+          </div>
+        )}
         <SharedModels variant={variant} />
         <div className="text-xs">
           {!section.enable_new_part_sales ? (

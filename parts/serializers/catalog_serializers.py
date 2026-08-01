@@ -11,6 +11,7 @@ from django.db.models import Count
 from rest_framework import serializers
 
 from parts.models import PartsModel, PartSection, SectionPart
+from parts.section_equivalence import equivalent_sections_for
 
 
 def _image_url(image, request):
@@ -31,18 +32,24 @@ class VinLookupModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PartsModel
-        fields = ["name", "model_code", "cc_class", "slug", "confirmed_years"]
+        fields = ["name", "model_code", "cc_class", "slug"]
 
 
 class PartSectionSummarySerializer(serializers.ModelSerializer):
     diagram_thumb = serializers.SerializerMethodField()
+    equivalent_sections = serializers.SerializerMethodField()
 
     class Meta:
         model = PartSection
-        fields = ["id", "code", "group", "name", "sort_order", "diagram_thumb"]
+        fields = ["id", "code", "group", "name", "sort_order", "diagram_thumb", "equivalent_sections"]
 
     def get_diagram_thumb(self, obj):
         return _image_url(obj.display_diagram_image, self.context.get("request"))
+
+    def get_equivalent_sections(self, obj):
+        # Computed once for the whole model and handed down through context,
+        # so listing 37 sections costs the same as listing one.
+        return self.context.get("equivalent_sections", {}).get(obj.id, [])
 
 
 class PartsModelDetailSerializer(serializers.ModelSerializer):
@@ -54,8 +61,9 @@ class PartsModelDetailSerializer(serializers.ModelSerializer):
         fields = ["name", "model_code", "cc_class", "slug", "last_ingested_at", "sections", "shared_models"]
 
     def get_sections(self, obj):
-        sections = obj.sections.all()
-        return PartSectionSummarySerializer(sections, many=True, context=self.context).data
+        sections = list(obj.sections.all())
+        context = {**self.context, "equivalent_sections": equivalent_sections_for(sections)}
+        return PartSectionSummarySerializer(sections, many=True, context=context).data
 
     def get_shared_models(self, obj):
         """Return the five active books sharing the most distinct part numbers.
@@ -187,6 +195,7 @@ def build_section_payload(section, settings, request=None):
     for sp in section.parts.select_related("part").all():
         groups.setdefault(sp.ref_number, []).append(sp)
     shared_models = _shared_models_for(section)
+    equivalent = equivalent_sections_for([section]).get(section.id, [])
 
     callouts = []
     for ref_number, members in groups.items():
@@ -217,6 +226,7 @@ def build_section_payload(section, settings, request=None):
             "slug": section.parts_model.slug,
         },
         "diagram_image": _image_url(section.display_diagram_image, request),
+        "equivalent_sections": equivalent,
         "enable_new_part_sales": settings.enable_new_part_sales,
         "backorder_hold_days": settings.backorder_hold_days,
         "callouts": callouts,
