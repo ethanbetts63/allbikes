@@ -61,7 +61,9 @@ def handle_payment_intent_succeeded(payment_intent):
             order.status = 'paid'
             order.amount_paid = payment.amount
             order.save(update_fields=['status', 'amount_paid', 'updated_at'])
-            if motorcycle.status == 'for_sale':
+            # New bikes are ordered in rather than held, so a deposit never takes
+            # them off the market. Only used and demo stock gets reserved.
+            if motorcycle.status == 'for_sale' and motorcycle.condition in ('used', 'demo'):
                 motorcycle.status = 'reserved'
                 motorcycle.save(update_fields=['status'])
             order.motorcycle = motorcycle
