@@ -5,7 +5,8 @@ import { getAllArticleMeta } from '@/lib/articles';
 import type { Bike } from '@/types/Bike';
 import type { Product } from '@/types/Product';
 import type { PaginatedResponse } from '@/types/PaginatedResponse';
-import { getPartsModel, getPartsModels } from '@/lib/partsApi';
+import { getPartsModels } from '@/lib/partsApi';
+import type { PartsModelListItem } from '@/types/parts';
 
 const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/`, lastModified: '2026-05-22' },
@@ -30,13 +31,18 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [bikes, products, partsModels] = await Promise.all([
-    fetchAllPages<Bike>(getServerBikes),
+    // Hidden bikes are kept out of listings and carousels but stay indexable at
+    // their own URL, so the sitemap has to ask for them explicitly.
+    fetchAllPages<Bike>(getServerBikes, { include_hidden: 'true' }),
     fetchAllPages<Product>(getServerProducts),
     getPartsModels(),
   ]);
 
   const bikeRoutes = bikes
-    .filter((bike) => bike.status === 'for_sale')
+    // Every bike keeps its page except 'unavailable' ones — sold and reserved
+    // listings still hold search value, and hidden ones are only hidden from
+    // browsing, not from search.
+    .filter((bike) => bike.status !== 'unavailable')
     .map((bike): MetadataRoute.Sitemap[number] => ({
       url: `${SITE_URL}/inventory/motorcycles/${bike.slug}`,
       lastModified: bike.date_posted,
@@ -57,42 +63,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: '2026-05-23',
   };
 
-  const partsRoutes = await getPartsSitemapRoutes(partsModels);
+  const partsRoutes = getPartsSitemapRoutes(partsModels);
 
   return [...STATIC_ROUTES, blogIndex, ...articleRoutes, ...bikeRoutes, ...productRoutes, ...partsRoutes];
 }
 
-async function getPartsSitemapRoutes(models: Awaited<ReturnType<typeof getPartsModels>>): Promise<MetadataRoute.Sitemap> {
-  const modelDetails = await Promise.all(
-    models.map(async (model) => {
-      try {
-        return await getPartsModel(model.slug);
-      } catch {
-        // A model can disappear between the list and detail reads; omit it rather
-        // than publishing a non-200 sitemap URL.
-        return null;
-      }
-    })
-  );
-
-  return modelDetails.flatMap((model) => {
-    if (!model) return [];
-    const lastModified = model.last_ingested_at || undefined;
-    const base = `${SITE_URL}/parts/new/sym/${model.slug}`;
-    return [
-      { url: base, lastModified },
-      ...model.sections.map((section) => ({
-        url: `${base}/${section.code}`,
-        lastModified,
-      })),
-    ];
-  });
+/**
+ * Model pages only. The ~1,900 section (diagram) pages are deliberately left
+ * out: they stay fully indexable and are linked from every model page, so
+ * Google reaches them by crawling — but keeping them out of the sitemap stops
+ * them from drowning the landing and model pages, which we want discovered and
+ * indexed first.
+ */
+function getPartsSitemapRoutes(models: PartsModelListItem[]): MetadataRoute.Sitemap {
+  return models.map((model) => ({
+    url: `${SITE_URL}/parts/new/sym/${model.slug}`,
+    lastModified: model.last_ingested_at || undefined,
+  }));
 }
 
 async function fetchAllPages<T>(
-  fetchPage: (params: URLSearchParams) => Promise<PaginatedResponse<T>>
+  fetchPage: (params: URLSearchParams) => Promise<PaginatedResponse<T>>,
+  extraParams: Record<string, string> = {}
 ): Promise<T[]> {
-  const firstPage = await fetchPage(new URLSearchParams({ page: '1', page_size: '100' }));
+  const params = (page: number) =>
+    new URLSearchParams({ ...extraParams, page: String(page), page_size: '100' });
+
+  const firstPage = await fetchPage(params(1));
   const pageCount = Math.ceil(firstPage.count / 100);
 
   if (pageCount <= 1) {
@@ -100,9 +97,7 @@ async function fetchAllPages<T>(
   }
 
   const remainingPages = await Promise.all(
-    Array.from({ length: pageCount - 1 }, (_, index) =>
-      fetchPage(new URLSearchParams({ page: String(index + 2), page_size: '100' }))
-    )
+    Array.from({ length: pageCount - 1 }, (_, index) => fetchPage(params(index + 2)))
   );
 
   return [
