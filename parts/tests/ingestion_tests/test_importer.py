@@ -1,6 +1,7 @@
 from datetime import date
 from decimal import Decimal
 from io import BytesIO
+from unittest.mock import patch
 
 import pytest
 from django.core.files.base import ContentFile
@@ -112,6 +113,23 @@ class TestImportBook:
         section.refresh_from_db()
         assert not section.curated_diagram_image
         assert section.curated_source_hash == ""
+
+    def test_removing_a_section_deletes_its_curated_diagram(self, django_capture_on_commit_callbacks):
+        parsed = _parsed()
+        parsed["sections"][0]["diagram_bytes"] = _png_bytes("red")
+        model = import_book(parsed, name="Classic 150", cc_class="100_165")
+        section = model.sections.get(code="E01")
+        section.curated_diagram_image.save("reviewed.png", ContentFile(_png_bytes("blue")), save=True)
+        curated_name = section.curated_diagram_image.name
+        parsed["sections"] = []
+
+        storage = PartSection._meta.get_field("diagram_image").storage
+        with patch.object(storage, "delete") as delete:
+            with django_capture_on_commit_callbacks(execute=True):
+                import_book(parsed, name="Classic 150", cc_class="100_165")
+
+        assert not model.sections.exists()
+        assert any(call.args == (curated_name,) for call in delete.call_args_list)
 
 
 class TestImportPricing:

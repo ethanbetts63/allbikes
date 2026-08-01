@@ -7,6 +7,7 @@ import { usePartsCart } from '@/app/parts/_components/PartsCartContext';
 import CheckoutSteps from '@/app/parts/checkout/_components/CheckoutSteps';
 import { getCustomerAccessToken } from '@/lib/customerAccess';
 import { getPartsOrder, type PartsOrderDetail } from '@/app/parts/checkout/_lib/partsCheckoutApi';
+import { SYM_PARTS_PATH } from '@/app/parts/_lib/routes';
 import {
   ConfirmationFailed, ConfirmationSuccess, ConfirmationTimeout, ConfirmationWaiting,
 } from './ConfirmationStates';
@@ -35,12 +36,12 @@ export default function PartsConfirmationScreen() {
 
   useEffect(() => {
     if (!reference) {
-      router.replace('/parts/new/sym');
+      router.replace(SYM_PARTS_PATH);
       return;
     }
     const accessToken = getCustomerAccessToken('parts', reference);
     if (!accessToken) {
-      router.replace('/parts/new/sym');
+      router.replace(SYM_PARTS_PATH);
       return;
     }
     let cancelled = false;

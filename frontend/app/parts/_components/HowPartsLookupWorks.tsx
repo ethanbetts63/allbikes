@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 
 /** Guidance shown after browsing SYM models or individual exploded diagrams. */

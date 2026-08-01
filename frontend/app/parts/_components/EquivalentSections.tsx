@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import OverlapDisclosure from '@/app/parts/_components/OverlapDisclosure';
+import { symPartsSectionPath } from '@/app/parts/_lib/routes';
 import type { EquivalentSection } from '@/types/parts';
 
 /** Diagrams in other books listing exactly the same parts.
@@ -29,7 +30,7 @@ export default function EquivalentSections({
         {sections.map((s) => (
           <li key={`${s.model_slug}-${s.section_code}`} className="text-xs leading-relaxed">
             <Link
-              href={`/parts/new/sym/${s.model_slug}/${s.section_code}`}
+              href={symPartsSectionPath(s.model_slug, s.section_code)}
               className="text-gray-700 underline hover:text-black"
             >
               {s.model_name} <span className="font-mono text-gray-500">{s.model_code}</span>

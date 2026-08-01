@@ -39,8 +39,8 @@ export default function OrderItemsTable({ order, busy, onItemAction }: {
               <TableHead className="text-[var(--text-dark-primary)]">RRP + GST</TableHead>
               <TableHead className="text-[var(--text-dark-primary)]">Customer paid</TableHead>
               <TableHead className="text-[var(--text-dark-primary)]">Actual cost</TableHead>
-              <TableHead className="text-[var(--text-dark-primary)]">Profit ex GST</TableHead>
-              <TableHead className="text-[var(--text-dark-primary)]">Margin</TableHead>
+              <TableHead className="text-[var(--text-dark-primary)]">Profit (ex GST)</TableHead>
+              <TableHead className="text-[var(--text-dark-primary)]">Margin (ex GST)</TableHead>
               <TableHead className="text-[var(--text-dark-primary)]">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -95,16 +95,10 @@ function ItemRow({ item, busy, daysRemaining, windowExpired, holdDays, onAction 
         {item.rrp_line_total_incl_gst == null ? '—' : `$${item.rrp_line_total_incl_gst}`}
       </TableCell>
       <TableCell className="text-sm whitespace-nowrap">
-        <div>${item.line_total}</div>
-        {item.markup_percentage != null && (
-          <div className="text-xs text-[var(--text-dark-secondary)]">+{item.markup_percentage}% markup</div>
-        )}
+        ${item.line_total}
       </TableCell>
       <TableCell className="text-sm whitespace-nowrap text-[var(--text-dark-secondary)]">
-        <div>{item.supplier_line_total_incl_gst == null ? '—' : `$${item.supplier_line_total_incl_gst}`}</div>
-        {item.supplier_discount_percentage != null && (
-          <div className="text-xs">−{item.supplier_discount_percentage}% discount</div>
-        )}
+        {item.supplier_line_total_incl_gst == null ? '—' : `$${item.supplier_line_total_incl_gst}`}
       </TableCell>
       <TableCell className="text-sm whitespace-nowrap font-medium text-emerald-700">
         {item.gross_profit_ex_gst == null ? '—' : `$${item.gross_profit_ex_gst}`}

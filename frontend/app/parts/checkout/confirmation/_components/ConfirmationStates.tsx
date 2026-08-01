@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 
 import OrderSummary from '@/app/parts/checkout/_components/OrderSummary';
+import { SYM_PARTS_PATH } from '@/app/parts/_lib/routes';
 import type { PartsOrderDetail } from '@/app/parts/checkout/_lib/partsCheckoutApi';
 
 /** Still polling for the webhook. */
@@ -108,7 +109,7 @@ export function ConfirmationSuccess({ order }: { order: PartsOrderDetail }) {
 
       <div className="flex items-center gap-4">
         <Link
-          href="/parts/new/sym"
+          href={SYM_PARTS_PATH}
           className="inline-block rounded-md border border-gray-300 px-5 py-2.5 text-sm font-medium text-black hover:border-black"
         >
           Back to parts

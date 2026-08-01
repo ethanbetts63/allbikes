@@ -17,7 +17,7 @@ export default function OrderTotals({ order }: { order: AdminPartsOrder }) {
       </div>
 
       <div className="rounded-md border border-border-light p-3 text-sm">
-        <h3 className="mb-1 font-bold">Internal margin</h3>
+        <h3 className="mb-1 font-bold">Internal margin (ex GST)</h3>
         <p className="mb-2 text-xs text-[var(--text-dark-secondary)]">
           Checkout price snapshots. Parts only — shipping excluded.
         </p>

@@ -17,6 +17,7 @@ export default function OrderStatusBanner({ order, status, busy, onStatusChange,
   onSave: () => void;
 }) {
   const tint = ORDER_STATUS_BANNER[order.status] ?? 'border-l-gray-400 bg-gray-50 text-gray-800';
+  const hasUnsavedStatus = status !== order.status;
   return (
     <div className={`mb-6 rounded-md border-l-4 px-4 py-3 ${tint}`}>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -31,7 +32,14 @@ export default function OrderStatusBanner({ order, status, busy, onStatusChange,
         >
           {ORDER_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
         </select>
-        <Button onClick={onSave} disabled={busy} variant="outline" className={BTN_INACTIVE}>Save</Button>
+        <Button
+          onClick={onSave}
+          disabled={busy || !hasUnsavedStatus}
+          variant="outline"
+          className={BTN_INACTIVE}
+        >
+          {busy ? 'Saving...' : hasUnsavedStatus ? 'Save' : 'Saved'}
+        </Button>
       </div>
     </div>
   );

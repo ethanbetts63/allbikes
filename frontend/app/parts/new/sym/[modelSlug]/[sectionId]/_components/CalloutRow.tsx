@@ -7,6 +7,7 @@ import { partsCartItemKey, usePartsCart } from '@/app/parts/_components/PartsCar
 import { stockState } from '@/app/parts/_lib/partsStock';
 import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
 import QuantityControl from '@/app/parts/_components/QuantityControl';
+import { symPartsModelPath } from '@/app/parts/_lib/routes';
 
 interface Props {
   callout: Callout;
@@ -61,15 +62,16 @@ function ColourCallout({ callout, section }: Props) {
           onChange={(e) => setIndex(Number(e.target.value))}
           className="mb-2 w-full max-w-xs rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-black"
         >
-          {callout.variants.map((v, i) => (
-            <option key={v.part_number} value={i}>
-              {v.variant_label}
-              {v.paint_code ? ` (${v.paint_code})` : ''}
-              {stockState(v.available_qty, 1).kind === 'in_stock'
-                ? ''
-                : ` (${stockState(v.available_qty, 1).badge})`}
-            </option>
-          ))}
+          {callout.variants.map((v, i) => {
+            const stock = stockState(v.available_qty, 1);
+            return (
+              <option key={v.part_number} value={i}>
+                {v.variant_label}
+                {v.paint_code ? ` (${v.paint_code})` : ''}
+                {stock.kind === 'in_stock' ? '' : ` (${stock.badge})`}
+              </option>
+            );
+          })}
         </select>
         <VariantLine
           variant={variant}
@@ -200,7 +202,7 @@ function SharedModels({ variant }: { variant: PartVariant }) {
         {shared.map((model) => (
           <li key={model.slug}>
             <Link
-              href={`/parts/new/sym/${model.slug}`}
+              href={symPartsModelPath(model.slug)}
               className="text-xs text-gray-700 underline hover:text-black"
             >
               {model.name} <span className="font-mono text-gray-500">{model.model_code}</span>

@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { getPartsModel } from '@/lib/partsApi';
 import EquivalentSections from '@/app/parts/_components/EquivalentSections';
 import HowPartsLookupWorks from '@/app/parts/_components/HowPartsLookupWorks';
+import { SYM_PARTS_PATH, symPartsModelPath, symPartsSectionPath } from '@/app/parts/_lib/routes';
 
 interface PageProps {
   params: Promise<{ modelSlug: string }>;
@@ -45,7 +46,7 @@ function PartsModelPage({ model }: { model: PartsModelDetail }) {
       <nav className="mb-4 text-sm text-gray-600">
         <Link href="/" className="hover:underline">Home</Link>
         <span className="mx-2">/</span>
-        <Link href="/parts/new/sym" className="hover:underline">New SYM Parts</Link>
+        <Link href={SYM_PARTS_PATH} className="hover:underline">New SYM Parts</Link>
         <span className="mx-2">/</span>
         <span className="text-black">{model.name}</span>
       </nav>
@@ -83,7 +84,7 @@ function SharedModelsPanel({
           {models.map((shared) => (
             <div key={shared.slug}>
               <div className="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
-                <Link href={`/parts/new/sym/${shared.slug}`} className="min-w-0 truncate font-medium text-black hover:underline">
+                <Link href={symPartsModelPath(shared.slug)} className="min-w-0 truncate font-medium text-black hover:underline">
                   {shared.name} <span className="font-mono text-xs text-gray-500">{shared.model_code}</span>
                 </Link>
                 <span className="shrink-0 text-xs text-gray-600">
@@ -124,7 +125,7 @@ function SectionGroup({ title, slug, sections }: { title: string; slug: string; 
           // The tile stays a single link; the disclosure sits outside it so
           // expanding it never navigates away.
           <div key={section.id} className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-[var(--highlight)]">
-            <Link href={`/parts/new/sym/${slug}/${section.code}`} className="flex flex-col">
+            <Link href={symPartsSectionPath(slug, section.code)} className="flex flex-col">
               <div className="relative flex h-32 items-center justify-center bg-white">
                 {section.diagram_thumb ? <Image src={section.diagram_thumb} alt={`${section.name} diagram`} fill sizes="(max-width: 640px) 50vw, 25vw" unoptimized className="object-contain p-2" /> : <span className="text-xs text-gray-400">No diagram</span>}
               </div>

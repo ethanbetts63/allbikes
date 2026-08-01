@@ -1,10 +1,9 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import CalloutRow from '@/app/parts/new/sym/[modelSlug]/[sectionId]/_components/CalloutRow';
+import CalloutList from '@/app/parts/new/sym/[modelSlug]/[sectionId]/_components/CalloutList';
 import EquivalentSections from '@/app/parts/_components/EquivalentSections';
 import HowPartsLookupWorks from '@/app/parts/_components/HowPartsLookupWorks';
+import { SYM_PARTS_PATH, symPartsModelPath } from '@/app/parts/_lib/routes';
 import type { SectionDetail } from '@/types/parts';
 
 /** Exploded diagram beside its callout list, for one model section. */
@@ -20,11 +19,11 @@ export default function SectionDiagramView({ section }: { section: SectionDetail
           Home
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/parts/new/sym" className="hover:underline">
+        <Link href={SYM_PARTS_PATH} className="hover:underline">
           New SYM Parts
         </Link>
         <span className="mx-2">/</span>
-        <Link href={`/parts/new/sym/${section.model.slug}`} className="hover:underline">
+        <Link href={symPartsModelPath(section.model.slug)} className="hover:underline">
           {section.model.name}
         </Link>
         <span className="mx-2">/</span>
@@ -61,11 +60,7 @@ export default function SectionDiagramView({ section }: { section: SectionDetail
         </div>
 
         <div>
-          <ul className="rounded-lg border border-gray-200 bg-white px-4">
-            {section.callouts.map((callout) => (
-              <CalloutRow key={callout.ref_number} callout={callout} section={section} />
-            ))}
-          </ul>
+          <CalloutList section={section} />
         </div>
       </div>
       <HowPartsLookupWorks />

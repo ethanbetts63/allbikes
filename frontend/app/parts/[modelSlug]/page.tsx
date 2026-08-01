@@ -1,4 +1,5 @@
 import { permanentRedirect } from 'next/navigation';
+import { symPartsModelPath } from '@/app/parts/_lib/routes';
 
 interface PageProps {
   params: Promise<{ modelSlug: string }>;
@@ -7,5 +8,5 @@ interface PageProps {
 /** Legacy model URL: preserve existing links and transfer signals to the canonical path. */
 export default async function Page({ params }: PageProps) {
   const { modelSlug } = await params;
-  permanentRedirect(`/parts/new/sym/${modelSlug}`);
+  permanentRedirect(symPartsModelPath(modelSlug));
 }

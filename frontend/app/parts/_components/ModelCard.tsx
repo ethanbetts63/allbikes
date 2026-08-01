@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { MODEL_IMAGES } from '@/app/parts/_lib/modelImages';
+import { symPartsModelPath } from '@/app/parts/_lib/routes';
 import type { PartsModelListItem } from '@/types/parts';
 
 /** Model tile with product photo — shared by the parts landing grid and search results. */
@@ -10,7 +11,7 @@ export default function ModelCard({ model }: { model: ModelCardModel }) {
   const image = MODEL_IMAGES[model.model_code.toUpperCase()];
   return (
     <Link
-      href={`/parts/new/sym/${model.slug}`}
+      href={symPartsModelPath(model.slug)}
       className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-[var(--highlight)]"
     >
       <div className="relative flex h-36 items-center justify-center bg-white">

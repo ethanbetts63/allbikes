@@ -161,6 +161,11 @@ def import_book(parsed, *, name=None, cc_class=None, source_url="", source_filen
         section.diagram_image.name for section in stale_sections.exclude(diagram_image='')
         if section.diagram_image
     )
+    obsolete_diagram_names.extend(
+        section.curated_diagram_image.name
+        for section in stale_sections.exclude(curated_diagram_image='')
+        if section.curated_diagram_image
+    )
     stale_sections.delete()
 
     def delete_old_diagrams():

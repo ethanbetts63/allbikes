@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import type { SearchPartResult } from '@/types/parts';
+import { symPartsSectionPath } from '@/app/parts/_lib/routes';
 
 /**
  * One matched part. Links to the first diagram it appears on; a part with no
@@ -40,7 +41,7 @@ export default function PartResultRow({ part }: { part: SearchPartResult }) {
   return (
     <li>
       <Link
-        href={`/parts/new/sym/${target.model_slug}/${target.section_code}`}
+        href={symPartsSectionPath(target.model_slug, target.section_code)}
         className="block hover:bg-gray-50"
       >
         {inner}
