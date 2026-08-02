@@ -18,9 +18,9 @@ const CC_CLASS_LABELS: Record<CcClass, string> = {
 const CC_CLASS_ORDER: CcClass[] = ['50', '100_165', '200_400', 'atv'];
 
 export const metadata: Metadata = {
-  title: 'New Genuine SYM Parts | ScooterShop',
+  title: 'New SYM Parts Australia | ScooterShop',
   description:
-    'Order genuine new SYM scooter and motorcycle spare parts online. Browse by model and section, find the exact part from exploded diagrams, and check live availability.',
+    'Order genuine new SYM scooter and motorcycle spare parts online, shipped Australia-wide. Browse by model and section, find the exact part from exploded diagrams, download official service manuals, and compare parts and specs across SYM models.',
 };
 
 export const revalidate = 300;
@@ -40,8 +40,8 @@ function PartsLandingPage({ models }: { models: PartsModelListItem[] }) {
   return (
     <>
       <Hero
-        title="New Genuine SYM Parts"
-        description="Find genuine SYM parts by model, diagram, part number, or 17-character VIN."
+        title="New SYM Parts Australia"
+        description="Find genuine SYM parts by model, diagram, part number, or 17-character VIN. We also provide official service manuals and let you compare parts and specifications across SYM models, with every order shipped Australia-wide."
         image={SymImage}
       />
 

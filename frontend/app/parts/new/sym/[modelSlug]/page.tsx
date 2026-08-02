@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: `Genuine new SYM ${model.name} spare parts. Browse the exploded-diagram sections and order the exact part with live availability.`,
     };
   } catch {
-    return { title: 'New Genuine SYM Parts' };
+    return { title: 'New SYM Parts Australia' };
   }
 }
 
@@ -102,6 +102,9 @@ function SpecTable({ rows }: { rows: { label: string; value: string }[] }) {
         Full specifications
         <span className="ml-1 inline-block transition group-open:rotate-90">›</span>
       </summary>
+      <p className="border-t border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600">
+        Specifications are drawn directly from the above linked service manual. Model variation specifications may vary.
+      </p>
       <table className="w-full border-t border-gray-200 text-sm">
         <tbody>
           {rows.map((row, i) => (

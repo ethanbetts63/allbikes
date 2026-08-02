@@ -13,8 +13,10 @@ import retro50 from '@/assets/models/retro-fa05u1-8.webp';
 import shark50 from '@/assets/models/shark-50-bs05w-8.webp';
 import shark150 from '@/assets/models/shark-150-hs15w-8.webp';
 import symba from '@/assets/models/symba-mb10a7-8.webp';
+import classic50 from '@/assets/models/classic-50-aw05w-8.webp';
 import classic125 from '@/assets/models/classic-125-aw12w-6.webp';
 import classic125Sport from '@/assets/models/classic-125-sport-xg12w1-it.webp';
+import classic150 from '@/assets/models/classic-150-ax15w2-6.webp';
 import classic200i from '@/assets/models/classic-200i-xa20w1-eu.webp';
 import orbit125 from '@/assets/models/orbit-125-av12w-8.webp';
 import orbit125iii from '@/assets/models/orbit-125-iii-xe12w1-it.webp';
@@ -66,10 +68,12 @@ export const MODEL_IMAGES: Record<string, StaticImageData> = {
   'BL05W5-8': redDevil,
   'FA05U1-8': retro50,
   'BS05W-8': shark50,
+  'AW05W-8': classic50,
 
   // 100-165cc
   'AW12W-6': classic125,
   'XG12W1-IT': classic125Sport,
+  'AX15W2-6': classic150,
   'TB16W3-EU': drgbt160,
   'FDA12D1CN-EU': echs125,
   'HF15W-8': euromx150,
