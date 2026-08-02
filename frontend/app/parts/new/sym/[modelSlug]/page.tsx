@@ -41,6 +41,7 @@ export default async function Page({ params }: PageProps) {
 function PartsModelPage({ model }: { model: PartsModelDetail }) {
   const engine = model.sections.filter((section) => section.group === 'engine');
   const frame = model.sections.filter((section) => section.group === 'frame');
+  const priorityEngineDiagrams = Math.min(2, engine.filter((section) => section.diagram_thumb).length);
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <nav className="mb-4 text-sm text-gray-600">
@@ -52,8 +53,8 @@ function PartsModelPage({ model }: { model: PartsModelDetail }) {
       </nav>
       <h1 className="text-2xl font-bold text-black">{model.name} <span className="text-gray-500">({model.model_code})</span></h1>
       <p className="mt-2 text-gray-600">Choose a section to see its exploded diagram and parts.</p>
-      <SectionGroup title="Engine" slug={model.slug} sections={engine} />
-      <SectionGroup title="Frame / Body" slug={model.slug} sections={frame} />
+      <SectionGroup title="Engine" slug={model.slug} sections={engine} priorityDiagramCount={priorityEngineDiagrams} />
+      <SectionGroup title="Frame / Body" slug={model.slug} sections={frame} priorityDiagramCount={2 - priorityEngineDiagrams} />
       <SharedModelsPanel modelName={model.name} modelCode={model.model_code} models={model.shared_models} />
       <HowPartsLookupWorks />
     </div>
@@ -117,19 +118,32 @@ function SharedModelsPanel({
   );
 }
 
-function SectionGroup({ title, slug, sections }: { title: string; slug: string; sections: PartSectionSummary[] }) {
+function SectionGroup({
+  title,
+  slug,
+  sections,
+  priorityDiagramCount = 0,
+}: {
+  title: string;
+  slug: string;
+  sections: PartSectionSummary[];
+  priorityDiagramCount?: number;
+}) {
   if (sections.length === 0) return null;
+  let eagerImagesRemaining = priorityDiagramCount;
   return (
     <section className="mt-8">
       <h2 className="mb-3 text-lg font-semibold text-black">{title}</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {sections.map((section) => (
+        {sections.map((section) => {
+          const isHighPriority = Boolean(section.diagram_thumb) && eagerImagesRemaining-- > 0;
+          return (
           // The tile stays a single link; the disclosure sits outside it so
           // expanding it never navigates away.
           <div key={section.id} className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-[var(--highlight)]">
             <Link href={symPartsSectionPath(slug, section.code)} className="flex flex-col">
               <div className="relative flex h-32 items-center justify-center bg-white">
-                {section.diagram_thumb ? <Image src={section.diagram_thumb} alt={`${section.name} diagram`} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 288px" loading="lazy" unoptimized className="object-contain p-2" /> : <span className="text-xs text-gray-400">No diagram</span>}
+                {section.diagram_thumb ? <Image src={section.diagram_thumb} alt={`${section.name} diagram`} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 288px" loading={isHighPriority ? "eager" : "lazy"} fetchPriority={isHighPriority ? "high" : undefined} className="object-contain p-2" /> : <span className="text-xs text-gray-400">No diagram</span>}
               </div>
               <div className="border-t border-gray-100 px-3 py-2"><span className="block font-mono text-xs text-gray-500">{section.code}</span><span className="block text-sm font-medium text-black">{section.name}</span></div>
             </Link>
@@ -139,7 +153,8 @@ function SectionGroup({ title, slug, sections }: { title: string; slug: string; 
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

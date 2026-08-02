@@ -13,7 +13,15 @@ ScooterShop has more than 30 years of motorcycle and scooter industry experience
 - [Used scooters](https://www.scootershop.com.au/inventory/scooters/used): Current pre-owned scooters and mopeds.
 - [Used motorcycles](https://www.scootershop.com.au/inventory/motorcycles/used): Current pre-owned motorcycle inventory.
 - [E-Scooters](https://www.scootershop.com.au/escooters): Electric kick scooters sold online when stock is available.
+- [New Genuine SYM Parts](https://www.scootershop.com.au/parts/new/sym): Online lookup and ordering for genuine new SYM scooter and motorcycle parts.
 - [Contact](https://www.scootershop.com.au/contact): Address, telephone, email, opening hours and directions.
+
+## Genuine SYM Parts Lookup
+
+- [SYM parts lookup](https://www.scootershop.com.au/parts/new/sym): Select a SYM model code, then browse engine and frame exploded diagrams to identify genuine new parts by callout number and part number.
+- The catalogue groups models by engine capacity, supports searching by model, part number, description or VIN, and shows applicable colour or running-change variants where the parts book provides them.
+- Diagram pages show current availability and pricing, plus other SYM models that use the same part. This helps customers and mechanics confirm a match when the exact model code is uncertain.
+- [SYM Parts Terms & Conditions](https://www.scootershop.com.au/terms?type=parts): Ordering, fitment, delivery, backorder, returns and Australian Consumer Law information for new SYM parts.
 
 ## Articles
 

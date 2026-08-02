@@ -21,6 +21,14 @@ def _image_url(image, request):
     if not image:
         return None
     url = image.url
+    # Next's image optimiser caches by source URL. Version the URL from the
+    # file modification time so replacing a curated crop also replaces its
+    # optimized thumbnail instead of serving an older cached rendition.
+    try:
+        version = int(image.storage.get_modified_time(image.name).timestamp())
+        url = f"{url}?v={version}"
+    except (FileNotFoundError, NotImplementedError, OSError):
+        pass
     return request.build_absolute_uri(url) if request else url
 
 

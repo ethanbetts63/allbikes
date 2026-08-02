@@ -47,8 +47,8 @@ export default function SectionDiagramView({ section }: { section: SectionDetail
                   width={800}
                   height={600}
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  loading="lazy"
-                  unoptimized
+                  loading="eager"
+                  fetchPriority="high"
                   className="mx-auto h-auto w-full"
                 />
               </div>
