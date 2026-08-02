@@ -18,7 +18,7 @@ export default function OverlapDisclosure({
 }) {
   return (
     <details className={`group ${className}`}>
-      <summary className="cursor-pointer list-none text-xs text-gray-500 underline decoration-dotted underline-offset-2 hover:text-black">
+      <summary className="cursor-pointer list-none text-xs text-[var(--highlight)] underline decoration-dotted underline-offset-2 hover:text-black">
         {summary}
         <span className="ml-1 inline-block transition group-open:rotate-90">›</span>
       </summary>

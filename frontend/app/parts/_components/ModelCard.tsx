@@ -30,7 +30,7 @@ export default function ModelCard({ model }: { model: ModelCardModel }) {
             // base64 blurDataURL across the server/client boundary into the RSC
             // payload for every tile.
             src={image.src}
-            alt={model.name}
+            alt={`${model.name} (${model.model_code}) genuine SYM parts`}
             fill
             sizes={TILE_SIZES}
             loading="lazy"

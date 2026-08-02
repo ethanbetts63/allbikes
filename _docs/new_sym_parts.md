@@ -126,6 +126,20 @@ The full order endpoint is staff-only. It is not exposed just by knowing an
   └─ Confirm send → Message audit record is created
 ```
 
+### How it works (operator guidance, shown on `/dashboard/parts-orders`)
+
+1. Each day, the system imports the latest SYM price and availability data from Select Portal.
+2. Customers choose their model, section and exploded diagram, then add the required parts to their cart.
+3. At checkout, the customer price is Select Portal's RRP+GST plus our markup and the shipping fee. Our discounted supplier cost and the applied percentages are saved on each order line.
+4. Admin receives an email and SMS for each paid order. Open it here, review it, choose **Email supplier**, check the draft and send it to Select Scooters.
+5. Select Scooters should fulfil only complete orders. If anything is unavailable, they should email us with the missing parts and expected restock date.
+6. If one or more items go on backorder, mark those items and use **Email backorder update** to send the customer a full line-by-line update.
+7. The backorder window runs from the **order date**; once it has passed you can no longer place a line on backorder and should refund it instead. Only use **Email refund update** after the relevant Stripe refund has been processed.
+8. When you have arranged the order with the supplier, use **Email order arranged** to tell the customer their complete order has been arranged for shipment.
+9. **Planned next:** admin will receive email and SMS reminders when an order exceeds that window. Then remove unavailable items and process the appropriate partial or full Stripe refund.
+
+These backorder/refund/order-arranged customer emails are sent from `AdminPartsCustomerUpdateView` (`parts/views/admin_order_views.py`) and are independent of the supplier-email flow above.
+
 Supplier email sending does not change the order status. The operator keeps the
 fulfilment state and any backorder/refund actions under manual control.
 
@@ -167,9 +181,17 @@ Catalog database
   or duplicating their catalogue data.
 - Scheduled commands are `scrape --parts` then `update --parts` for model books,
   and `scrape --prices` then `update --prices` for Price & Availability.
+  `python manage.py sync` runs all four in that order as a single cron entry
+  (`scrape --parts`, `scrape --prices`, `update --parts`, `update --prices`),
+  skipping an `update` step if its paired `scrape` step failed.
 - `update --parts --archive` rebuilds from the newest archived book for every
   model. `update --prices --archive` applies the newest archived pricing CSV.
   Archive recovery reads files in place and never consumes them.
+- `update --curated` links manually reviewed diagram images out of
+  `mediafiles/parts/curated-diagrams` (named `MODEL_CODE_E01`/`F01` etc.) onto
+  their matching section, converting PNG/JPEG to WebP. It only attaches a
+  curated image to a section that already has an imported source diagram, and
+  is run manually, not as part of the scheduled scrape/update cycle.
 - The pricing importer validates the expected CSV header and minimum row count
   before it can change catalog availability.
 - The Price & Availability `RRP+GST` value is the pricing base. Customer price is
@@ -196,7 +218,7 @@ Catalog database
 |---|---|
 | SYM landing | `frontend/app/parts/new/sym/page.tsx` |
 | Model page | `frontend/app/parts/new/sym/[modelSlug]/page.tsx` |
-| Diagram and parts list | `frontend/app/parts/[modelSlug]/[sectionId]/PartsSectionPage.tsx` |
+| Diagram and parts list | `frontend/app/parts/new/sym/[modelSlug]/[sectionId]/page.tsx` |
 | Customer checkout | `frontend/app/parts/checkout/` |
 | Admin parts orders | `frontend/app/dashboard/parts-orders/` |
 | Parts settings | `frontend/app/dashboard/parts-settings/` |

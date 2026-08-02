@@ -7,6 +7,9 @@ import { getPartsModel } from '@/lib/partsApi';
 import EquivalentSections from '@/app/parts/_components/EquivalentSections';
 import HowPartsLookupWorks from '@/app/parts/_components/HowPartsLookupWorks';
 import { SYM_PARTS_PATH, symPartsModelPath, symPartsSectionPath } from '@/app/parts/_lib/routes';
+import { MODEL_IMAGES } from '@/app/parts/_lib/modelImages';
+import { MODEL_MANUALS } from '@/app/parts/_lib/modelManuals';
+import { getModelSpec, buildSpecRows, buildSpecSummary } from '@/app/parts/_lib/modelSpecs';
 
 interface PageProps {
   params: Promise<{ modelSlug: string }>;
@@ -42,6 +45,9 @@ function PartsModelPage({ model }: { model: PartsModelDetail }) {
   const engine = model.sections.filter((section) => section.group === 'engine');
   const frame = model.sections.filter((section) => section.group === 'frame');
   const priorityEngineDiagrams = Math.min(2, engine.filter((section) => section.diagram_thumb).length);
+  const spec = getModelSpec(model.model_code);
+  const specRows = spec ? buildSpecRows(spec) : [];
+  const specSummary = spec ? buildSpecSummary(model.name, model.model_code, spec) : '';
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <nav className="mb-4 text-sm text-gray-600">
@@ -51,13 +57,64 @@ function PartsModelPage({ model }: { model: PartsModelDetail }) {
         <span className="mx-2">/</span>
         <span className="text-black">{model.name}</span>
       </nav>
-      <h1 className="text-2xl font-bold text-black">{model.name} <span className="text-gray-500">({model.model_code})</span></h1>
+      <div className="flex items-center gap-4">
+        {MODEL_IMAGES[model.model_code.toUpperCase()] && (
+          <div className="relative h-20 w-20 shrink-0 sm:h-24 sm:w-24">
+            <Image
+              src={MODEL_IMAGES[model.model_code.toUpperCase()].src}
+              alt={`${model.name} (${model.model_code}) genuine SYM parts`}
+              fill
+              sizes="96px"
+              className="object-contain"
+            />
+          </div>
+        )}
+        <h1 className="text-2xl font-bold text-black">{model.name} <span className="text-[var(--highlight)]">({model.model_code})</span></h1>
+      </div>
       <p className="mt-2 text-gray-600">Choose a section to see its exploded diagram and parts.</p>
+      {MODEL_MANUALS[model.model_code.toUpperCase()] && (
+        <p className="mt-1 text-sm text-gray-600">
+          Click to download:{' '}
+          <a
+            href={MODEL_MANUALS[model.model_code.toUpperCase()]}
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+            className="text-[var(--highlight)] underline hover:text-black"
+          >
+            official {model.name} service manual (PDF)
+          </a>
+        </p>
+      )}
+      {specSummary && <p className="mt-3 max-w-3xl text-sm text-gray-700">{specSummary}</p>}
+      {specRows.length > 0 && <SpecTable rows={specRows} />}
       <SectionGroup title="Engine" slug={model.slug} sections={engine} priorityDiagramCount={priorityEngineDiagrams} />
       <SectionGroup title="Frame / Body" slug={model.slug} sections={frame} priorityDiagramCount={2 - priorityEngineDiagrams} />
       <SharedModelsPanel modelName={model.name} modelCode={model.model_code} models={model.shared_models} />
       <HowPartsLookupWorks />
     </div>
+  );
+}
+
+function SpecTable({ rows }: { rows: { label: string; value: string }[] }) {
+  return (
+    <details className="group mt-4 max-w-3xl overflow-hidden rounded-lg border border-gray-200">
+      <summary className="cursor-pointer list-none px-3 py-2 text-sm font-medium text-[var(--highlight)] underline decoration-dotted underline-offset-2 hover:text-black">
+        Full specifications
+        <span className="ml-1 inline-block transition group-open:rotate-90">›</span>
+      </summary>
+      <table className="w-full border-t border-gray-200 text-sm">
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={row.label} className={i % 2 === 1 ? 'bg-gray-50' : undefined}>
+              <th scope="row" className="w-2/5 border-r border-gray-200 px-3 py-1.5 text-left font-medium text-gray-600">
+                {row.label}
+              </th>
+              <td className="px-3 py-1.5 text-black">{row.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </details>
   );
 }
 

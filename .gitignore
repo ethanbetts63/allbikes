@@ -49,6 +49,7 @@ data_management/data/archive/
 # Local SYM parts books and model-year research outputs
 data_management/data/sym_parts_files/
 data_management/data/sym_model_years/
+data_management/data/manuals/
 
 # Claude Code
 .claude/
