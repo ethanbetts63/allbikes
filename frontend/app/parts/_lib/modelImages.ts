@@ -39,12 +39,19 @@ import joymaxz from '@/assets/models/joymax-z-lw30w2-eu.webp';
 import quadlander300 from '@/assets/models/quadlander-300-ua30a-a.webp';
 import quadlander600 from '@/assets/models/quadlander-600-ua60a-8.webp';
 import quadlander600le from '@/assets/models/quadlander-600le-ua60a2-6.webp';
+import legrande125 from '@/assets/models/legrande-125-la12w-8.webp';
+import uteScoot125 from '@/assets/models/ute-scoot-125-ae12w4-eu.webp';
+import symphony from '@/assets/models/symphony-ay15w4-8.webp';
+import hd200 from '@/assets/models/hd200-lh18w-8+lh18w5-8.webp';
+import orbitII125 from '@/assets/models/orbit-ii-125-ae12w1-6.webp';
 
 /**
- * Stable SYM model code -> product photo, sourced from the official Select
- * Portal service-manual listing (one press photo per model). Codes with no
- * matching photo on that page are omitted; ModelCard falls back to a text
- * placeholder for those.
+ * Stable SYM model code -> product photo. Most photos are sourced from the
+ * official Select Portal service-manual listing (one press photo per
+ * model); a handful of models with no photo on that page (Symphony,
+ * Ute Scoot 125, LeGrande 125, HD200 non-evo, Quadlander 600LE) use the
+ * legacy photo from assets/old_photos instead. Codes with no photo from
+ * either source are omitted; ModelCard falls back to a text placeholder.
  */
 export const MODEL_IMAGES: Record<string, StaticImageData> = {
   // 50cc
@@ -75,6 +82,10 @@ export const MODEL_IMAGES: Record<string, StaticImageData> = {
   'HA12A6-8': vs125,
   'HA12WA-8': vs125,
   'HV15WC-8': vs150,
+  'AY15W4-8': symphony,
+  'AE12W4-EU': uteScoot125,
+  'LA12W-8': legrande125,
+  'AE12W1-6': orbitII125,
 
   // 200-400cc
   'LZ40W1-EU': maxsym400i2022,
@@ -87,6 +98,8 @@ export const MODEL_IMAGES: Record<string, StaticImageData> = {
   'LC18W1-6': hd2,
   'LH18W7-6': hd200ievo,
   'LH18W7-8': hd200ievo,
+  'LH18W-8': hd200,
+  'LH18W5-8': hd200,
   'LS30W1-EU': hd300i,
   'LW30W2-EU': joymaxz,
   'LA18W1-8': legrande200,
