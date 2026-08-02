@@ -6,12 +6,20 @@ from unittest.mock import patch
 
 import pytest
 from django.core.files.base import ContentFile
+from django.test import override_settings
 from PIL import Image
 
 from parts.ingestion.importer import resolve_display_name, import_book, import_pricing
 from parts.models import Part, PartsModel, PartSection, SectionPart
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture(autouse=True)
+def isolated_media_root(tmp_path):
+    """Keep test diagrams out of the real curated-diagrams folder."""
+    with override_settings(MEDIA_ROOT=tmp_path):
+        yield
 
 
 def _parsed(model_code="AX15W2-6"):
