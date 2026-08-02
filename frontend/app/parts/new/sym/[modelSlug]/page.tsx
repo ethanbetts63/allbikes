@@ -10,6 +10,8 @@ import { SYM_PARTS_PATH, symPartsModelPath, symPartsSectionPath } from '@/app/pa
 import { MODEL_IMAGES } from '@/app/parts/_lib/modelImages';
 import { MODEL_MANUALS } from '@/app/parts/_lib/modelManuals';
 import { getModelSpec, buildSpecRows, buildSpecSummary } from '@/app/parts/_lib/modelSpecs';
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
+import { buildPartsModelSchema } from '@/lib/seo';
 
 interface PageProps {
   params: Promise<{ modelSlug: string }>;
@@ -50,6 +52,7 @@ function PartsModelPage({ model }: { model: PartsModelDetail }) {
   const specSummary = spec ? buildSpecSummary(model.name, model.model_code, spec) : '';
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
+      <StructuredDataScript structuredData={buildPartsModelSchema(model)} />
       <nav className="mb-4 text-sm text-gray-600">
         <Link href="/" className="hover:underline">Home</Link>
         <span className="mx-2">/</span>

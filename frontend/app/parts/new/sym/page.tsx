@@ -8,6 +8,8 @@ import SymImage from '@/assets/sym_22.webp';
 import type { CcClass, PartsModelListItem } from '@/types/parts';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
+import { buildPartsLandingSchema } from '@/lib/seo';
 
 const CC_CLASS_LABELS: Record<CcClass, string> = {
   '50': '50cc',
@@ -39,6 +41,7 @@ function PartsLandingPage({ models }: { models: PartsModelListItem[] }) {
 
   return (
     <>
+      <StructuredDataScript structuredData={buildPartsLandingSchema(models)} />
       <Hero
         title="New SYM Parts Australia"
         description="Find genuine SYM parts by model, diagram, part number, or 17-character VIN. We also provide official service manuals and let you compare parts and specifications across SYM models, with every order shipped Australia-wide."

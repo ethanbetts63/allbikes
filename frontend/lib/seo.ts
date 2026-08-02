@@ -3,7 +3,7 @@ import type { Bike } from '@/types/Bike';
 import type { FaqItem } from '@/types/FaqItem';
 import type { Product } from '@/types/Product';
 import type { SiteSettings } from '@/types/SiteSettings';
-import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
+import type { Callout, PartsModelDetail, PartsModelListItem, PartVariant, SectionDetail } from '@/types/parts';
 import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
 import { SYM_PARTS_PATH, symPartsModelPath, symPartsSectionPath } from '@/app/parts/_lib/routes';
 
@@ -279,6 +279,55 @@ export function buildProductListSchema(products: Product[], listName: string, li
       name: product.name,
     })),
   };
+}
+
+/** BreadcrumbList + an ItemList of every model, for the SYM parts landing page. */
+export function buildPartsLandingSchema(models: PartsModelListItem[]): object[] {
+  const breadcrumb = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'New SYM Parts', path: SYM_PARTS_PATH },
+  ]);
+
+  const itemList: object = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'New SYM Parts by Model',
+    url: `${SITE_URL}${SYM_PARTS_PATH}`,
+    itemListElement: models.map((model, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `${SITE_URL}${symPartsModelPath(model.slug)}`,
+      name: `${model.name} (${model.model_code})`,
+    })),
+  };
+
+  return [breadcrumb, itemList];
+}
+
+/** BreadcrumbList + an ItemList of the model's diagram sections, for a SYM model page. */
+export function buildPartsModelSchema(model: PartsModelDetail): object[] {
+  const modelPath = symPartsModelPath(model.slug);
+
+  const breadcrumb = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'New SYM Parts', path: SYM_PARTS_PATH },
+    { name: model.name, path: modelPath },
+  ]);
+
+  const itemList: object = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `${model.name} (${model.model_code}) Diagram Sections`,
+    url: `${SITE_URL}${modelPath}`,
+    itemListElement: model.sections.map((section, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `${SITE_URL}${symPartsSectionPath(model.slug, section.code)}`,
+      name: section.name,
+    })),
+  };
+
+  return [breadcrumb, itemList];
 }
 
 /**
