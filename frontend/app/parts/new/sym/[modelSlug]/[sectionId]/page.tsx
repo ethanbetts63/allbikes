@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPartsSection } from '@/lib/partsApi';
+import { buildPartSectionSchema } from '@/lib/seo';
+import StructuredDataScript from '@/components/seo/StructuredDataScript';
 import SectionDiagramView from './_components/SectionDiagramView';
 
 interface PageProps {
@@ -28,5 +30,10 @@ export default async function Page({ params }: PageProps) {
   } catch {
     notFound();
   }
-  return <SectionDiagramView section={section} />;
+  return (
+    <>
+      <StructuredDataScript structuredData={buildPartSectionSchema(section)} />
+      <SectionDiagramView section={section} />
+    </>
+  );
 }

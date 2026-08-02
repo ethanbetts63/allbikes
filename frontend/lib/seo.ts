@@ -3,7 +3,9 @@ import type { Bike } from '@/types/Bike';
 import type { FaqItem } from '@/types/FaqItem';
 import type { Product } from '@/types/Product';
 import type { SiteSettings } from '@/types/SiteSettings';
+import type { Callout, PartVariant, SectionDetail } from '@/types/parts';
 import { getPrimaryVehicleImage } from '@/lib/vehicleImages';
+import { SYM_PARTS_PATH, symPartsModelPath, symPartsSectionPath } from '@/app/parts/_lib/routes';
 
 export const SITE_URL = 'https://www.scootershop.com.au';
 const SITE_NAME = 'ScooterShop';
@@ -277,6 +279,120 @@ export function buildProductListSchema(products: Product[], listName: string, li
       name: product.name,
     })),
   };
+}
+
+/**
+ * Product/Offer structured data for one exploded-diagram section page, plus its
+ * BreadcrumbList. One node per sellable callout: a ProductGroup with hasVariant
+ * for colour callouts (schema.org's supported variant pattern), a standalone
+ * Product per variant otherwise — running-change (date) variants aren't grouped
+ * since Google's ProductGroup pattern has no recognised "effective date" axis,
+ * so each is just its own Product.
+ *
+ * Variants with no price are excluded: the storefront won't let a customer add
+ * them (see CalloutRow's `add()` guard), and Offer.price is a required property
+ * for merchant-listing structured data — emitting one anyway would be invalid.
+ */
+export function buildPartSectionSchema(section: SectionDetail): object[] {
+  const sectionUrl = `${SITE_URL}${symPartsSectionPath(section.model.slug, section.code)}`;
+
+  const breadcrumb = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'New SYM Parts', path: SYM_PARTS_PATH },
+    { name: section.model.name, path: symPartsModelPath(section.model.slug) },
+    { name: section.name, path: symPartsSectionPath(section.model.slug, section.code) },
+  ]);
+
+  const productSchemas = section.callouts.flatMap((callout) =>
+    buildCalloutSchemas(callout, section, sectionUrl)
+  );
+
+  return [breadcrumb, ...productSchemas];
+}
+
+function buildCalloutSchemas(callout: Callout, section: SectionDetail, sectionUrl: string): object[] {
+  const sellableVariants = callout.variants.filter((variant) => variant.price);
+  if (sellableVariants.length === 0) return [];
+
+  if (callout.variant_axis === 'colour' && sellableVariants.length > 1) {
+    const groupId = `${section.model.model_code}-${section.code}-${callout.ref_number}`;
+    return [{
+      '@context': 'https://schema.org',
+      '@type': 'ProductGroup',
+      name: `${section.model.name} ${callout.callout_label}`,
+      productGroupID: groupId,
+      url: sectionUrl,
+      variesBy: ['https://schema.org/color'],
+      brand: { '@type': 'Brand', name: 'SYM' },
+      hasVariant: sellableVariants.map((variant) =>
+        buildPartVariantSchema(variant, callout, section, sectionUrl, groupId)
+      ),
+    }];
+  }
+
+  return sellableVariants.map((variant) => buildPartVariantSchema(variant, callout, section, sectionUrl));
+}
+
+function buildPartVariantSchema(
+  variant: PartVariant,
+  callout: Callout,
+  section: SectionDetail,
+  sectionUrl: string,
+  productGroupId?: string,
+): object {
+  const name = variant.colour_name
+    ? `${section.model.name} ${callout.callout_label} (${variant.colour_name}) — genuine SYM part ${variant.part_number}`
+    : `${section.model.name} ${callout.callout_label} — genuine SYM part ${variant.part_number}`;
+
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name,
+    sku: variant.part_number,
+    mpn: variant.part_number,
+    description:
+      variant.description ||
+      `Genuine SYM ${callout.callout_label} for the ${section.model.name} (${section.model.model_code}), diagram section ${section.code}.`,
+    brand: { '@type': 'Brand', name: 'SYM' },
+    url: sectionUrl,
+    offers: {
+      '@type': 'Offer',
+      url: sectionUrl,
+      priceCurrency: 'AUD',
+      price: variant.price,
+      availability: mapPartAvailability(variant, section.enable_new_part_sales),
+      itemCondition: 'https://schema.org/NewCondition',
+      seller: {
+        '@type': 'Organization',
+        name: 'ScooterShop',
+        '@id': `${SITE_URL}/#business`,
+      },
+      // Matches the Australia-only delivery constraint stated at checkout and
+      // on the diagram page itself — see PartsCustomerForm and SectionDiagramView.
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'AU',
+        },
+      },
+    },
+  };
+
+  if (variant.colour_name) schema.color = variant.colour_name;
+  if (productGroupId) schema.inProductGroupWithID = productGroupId;
+
+  return schema;
+}
+
+/**
+ * Ignores cart quantity (schema is per-page, not per-order) — mirrors the
+ * baseline case of `stockState()` in partsStock.ts, quantity 1.
+ */
+function mapPartAvailability(variant: PartVariant, salesEnabled: boolean): string {
+  if (!salesEnabled || !variant.orderable) return 'https://schema.org/OutOfStock';
+  if (variant.available_qty == null || variant.available_qty <= 0) return 'https://schema.org/BackOrder';
+  return 'https://schema.org/InStock';
 }
 
 export function buildLocalBusinessSchema(settings: SiteSettings): object {
