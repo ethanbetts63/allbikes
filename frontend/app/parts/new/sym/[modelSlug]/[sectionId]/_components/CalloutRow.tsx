@@ -147,7 +147,15 @@ function VariantLine({
           ) : !variant.orderable ? (
             <span className="text-gray-400">Not available</span>
           ) : stock.kind === 'backorder' ? (
-            <span className="font-medium text-amber-700">{stock.note}</span>
+            <details className="group inline-block">
+              <summary className="inline-flex cursor-pointer list-none items-center gap-1 font-medium text-amber-700">
+                Backorder
+                <span className="inline-block transition group-open:rotate-90">›</span>
+              </summary>
+              <p className="mt-1 max-w-xs font-normal text-gray-600">
+                We will hold your full order for {section.backorder_hold_days} day{section.backorder_hold_days === 1 ? '' : 's'}. If we can&apos;t obtain the missing parts within that time, we&apos;ll refund the unavailable items and release the remainder of your order.
+              </p>
+            </details>
           ) : stock.kind === 'low' ? (
             <span className="font-medium text-amber-700">{stock.badge}</span>
           ) : (

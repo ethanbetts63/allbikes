@@ -322,7 +322,7 @@ export function buildPartsModelSchema(model: PartsModelDetail): object[] {
     itemListElement: model.sections.map((section, index) => ({
       '@type': 'ListItem',
       position: index + 1,
-      url: `${SITE_URL}${symPartsSectionPath(model.slug, section.code)}`,
+      url: `${SITE_URL}${symPartsSectionPath(model.slug, section.code, section.name)}`,
       name: section.name,
     })),
   };
@@ -343,13 +343,14 @@ export function buildPartsModelSchema(model: PartsModelDetail): object[] {
  * for merchant-listing structured data — emitting one anyway would be invalid.
  */
 export function buildPartSectionSchema(section: SectionDetail): object[] {
-  const sectionUrl = `${SITE_URL}${symPartsSectionPath(section.model.slug, section.code)}`;
+  const sectionPath = symPartsSectionPath(section.model.slug, section.code, section.name);
+  const sectionUrl = `${SITE_URL}${sectionPath}`;
 
   const breadcrumb = buildBreadcrumbSchema([
     { name: 'Home', path: '/' },
     { name: 'New SYM Parts', path: SYM_PARTS_PATH },
     { name: section.model.name, path: symPartsModelPath(section.model.slug) },
-    { name: section.name, path: symPartsSectionPath(section.model.slug, section.code) },
+    { name: section.name, path: sectionPath },
   ]);
 
   const productSchemas = section.callouts.flatMap((callout) =>

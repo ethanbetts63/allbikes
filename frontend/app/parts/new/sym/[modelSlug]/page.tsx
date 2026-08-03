@@ -204,7 +204,7 @@ function SectionGroup({
           // The tile stays a single link; the disclosure sits outside it so
           // expanding it never navigates away.
           <div key={section.id} className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:border-[var(--highlight)]">
-            <Link href={symPartsSectionPath(slug, section.code)} className="flex flex-col">
+            <Link href={symPartsSectionPath(slug, section.code, section.name)} className="flex flex-col">
               <div className="relative flex h-32 items-center justify-center bg-white">
                 {section.diagram_thumb ? <Image src={section.diagram_thumb} alt={`${section.name} diagram`} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 288px" loading={isHighPriority ? "eager" : "lazy"} fetchPriority={isHighPriority ? "high" : undefined} className="object-contain p-2" /> : <span className="text-xs text-gray-400">No diagram</span>}
               </div>

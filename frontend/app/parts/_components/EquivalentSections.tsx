@@ -30,7 +30,7 @@ export default function EquivalentSections({
         {sections.map((s) => (
           <li key={`${s.model_slug}-${s.section_code}`} className="text-xs leading-relaxed">
             <Link
-              href={symPartsSectionPath(s.model_slug, s.section_code)}
+              href={symPartsSectionPath(s.model_slug, s.section_code, s.section_name)}
               className="text-gray-700 underline hover:text-black"
             >
               {s.model_name} <span className="font-mono text-gray-500">{s.model_code}</span>

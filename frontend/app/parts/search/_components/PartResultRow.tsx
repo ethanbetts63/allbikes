@@ -41,7 +41,7 @@ export default function PartResultRow({ part }: { part: SearchPartResult }) {
   return (
     <li>
       <Link
-        href={symPartsSectionPath(target.model_slug, target.section_code)}
+        href={symPartsSectionPath(target.model_slug, target.section_code, target.section_name)}
         className="block hover:bg-gray-50"
       >
         {inner}
