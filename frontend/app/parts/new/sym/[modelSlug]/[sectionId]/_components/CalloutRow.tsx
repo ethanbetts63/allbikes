@@ -149,7 +149,7 @@ function VariantLine({
           ) : stock.kind === 'backorder' ? (
             <details className="group inline-block">
               <summary className="inline-flex cursor-pointer list-none items-center gap-1 font-medium text-amber-700">
-                Backorder
+                Backorder{stock.detail ? ` — ${stock.detail}` : ''}
                 <span className="inline-block transition group-open:rotate-90">›</span>
               </summary>
               <p className="mt-1 max-w-xs font-normal text-gray-600">

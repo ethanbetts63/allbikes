@@ -18,6 +18,10 @@ export interface StockState {
   badge: string;
   /** Longer explanatory line, present only when the line is backordered. */
   note: string | null;
+  /** Quantity-specific detail without the policy boilerplate, e.g. "~5 in
+   *  stock, ordering 8". Present only when the backorder was quantity-driven
+   *  (not when stock is zero/unknown, where there's no count to show). */
+  detail: string | null;
 }
 
 /** At or above this many in stock we just say "In stock" (no precise count). */
@@ -31,7 +35,7 @@ export function stockState(
 
   // Unknown or zero stock → backorder regardless of quantity.
   if (available == null || available <= 0) {
-    return { kind: 'backorder', badge: 'Backorder', note: 'Backorder — your order will ship complete under our backorder policy.' };
+    return { kind: 'backorder', badge: 'Backorder', note: 'Backorder — your order will ship complete under our backorder policy.', detail: null };
   }
 
   // Ordering more than we hold → whole line backordered (ship-complete policy).
@@ -40,12 +44,13 @@ export function stockState(
       kind: 'backorder',
       badge: 'Backorder',
       note: `~${available} in stock, ordering ${q} — your order will ship complete under our backorder policy.`,
+      detail: `~${available} in stock, ordering ${q}`,
     };
   }
 
   if (available < LOW_STOCK_THRESHOLD) {
-    return { kind: 'low', badge: `Only ~${available} left`, note: null };
+    return { kind: 'low', badge: `Only ~${available} left`, note: null, detail: null };
   }
 
-  return { kind: 'in_stock', badge: 'In stock', note: null };
+  return { kind: 'in_stock', badge: 'In stock', note: null, detail: null };
 }
