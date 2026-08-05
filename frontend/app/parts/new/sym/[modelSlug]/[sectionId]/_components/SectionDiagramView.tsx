@@ -62,6 +62,7 @@ export default function SectionDiagramView({ section }: { section: SectionDetail
                   alt={`${section.name} exploded diagram`}
                   width={800}
                   height={600}
+                  unoptimized
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   loading="eager"
                   fetchPriority="high"
