@@ -30,7 +30,7 @@ export default function HowPartsLookupWorks() {
             >
               contacting us
             </Link>{' '}
-            if you are unsure.
+            with the bike vin, engine number, model and a picture if you are unsure.
           </p>
         </li>
         <li className="rounded-lg border border-gray-200 bg-gray-50 p-5">

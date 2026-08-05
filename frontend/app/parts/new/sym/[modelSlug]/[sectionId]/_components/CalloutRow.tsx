@@ -145,7 +145,19 @@ function VariantLine({
           {!section.enable_new_part_sales ? (
             <span className="text-gray-400">Sales temporarily unavailable</span>
           ) : !variant.orderable ? (
-            <span className="text-gray-400">Not available</span>
+            <details className="group inline-block">
+              <summary className="inline-flex cursor-pointer list-none items-center gap-1 text-gray-500 underline decoration-dotted underline-offset-2 hover:text-black">
+                Not available — expand help info
+                <span className="inline-block transition group-open:rotate-90">›</span>
+              </summary>
+              <p className="mt-1 max-w-xs text-gray-600">
+                We may be able to find this part through one of our secondary suppliers. Email us at{' '}
+                <a href="mailto:admin@scootershop.com.au" className="underline hover:text-black">
+                  admin@scootershop.com.au
+                </a>{' '}
+                with the part number, bike model, and any other useful information.
+              </p>
+            </details>
           ) : stock.kind === 'backorder' ? (
             <details className="group inline-block">
               <summary className="inline-flex cursor-pointer list-none items-center gap-1 font-medium text-amber-700">

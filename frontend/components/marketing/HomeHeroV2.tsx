@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import NextImage from 'next/image';
-import { ArrowRight, Mail, Phone } from 'lucide-react';
+import { ArrowRight, Globe, Mail, Phone } from 'lucide-react';
 import defaultUsedImage from '@/assets/IMG_20250730_102056.webp';
 import symWarrantyImage from '@/assets/sym_warranty_image.png';
 import type {
@@ -20,10 +20,11 @@ interface SlotState {
 }
 
 const defaultNewPanel: HomeHeroPanelConfig = {
-  eyebrow: 'Browse Inventory',
+  eyebrow: 'Online stock only',
   titleLines: ['New', 'Scooters'],
   href: '/inventory/scooters/new',
   linkText: 'Shop Now',
+  onlineStockOnly: true,
   alt: 'New scooters for sale at ScooterShop Perth',
   fallbackImage: symWarrantyImage.src,
   prependImage: symWarrantyImage.src,
@@ -192,7 +193,8 @@ function InventoryPanel({
       {!isSmall && <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />}
       <div className={`absolute inset-0 ${overlayClass} group-hover:bg-transparent transition-colors duration-300`} />
       <div className={`absolute bottom-0 left-0 ${isSmall ? 'p-7' : 'p-7 md:p-9'}`}>
-        <p className={`text-[var(--highlight)] ${isSmall ? 'text-[9px] mb-2' : 'text-[10px] mb-3'} font-bold uppercase tracking-[0.25em]`}>
+        <p className={`flex items-center gap-1.5 text-[var(--highlight)] ${isSmall ? 'text-[9px] mb-2' : 'text-[10px] mb-3'} font-bold uppercase tracking-[0.25em]`}>
+          {config.onlineStockOnly && <Globe className={isSmall ? 'h-3 w-3' : 'h-3.5 w-3.5'} aria-hidden="true" />}
           {config.eyebrow}
         </p>
         <PanelTitle config={config} sizeClass={titleSize} />

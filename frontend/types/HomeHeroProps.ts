@@ -6,6 +6,7 @@ export interface HomeHeroPanelConfig {
   mobileTitleLines?: string[];
   href: string;
   linkText: string;
+  onlineStockOnly?: boolean;
   alt: string;
   fallbackImage: string;
   prependImage?: string;

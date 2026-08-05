@@ -54,7 +54,7 @@ export default function PartsSearchScreen() {
   const query = (searchParams.get('q') ?? '').trim();
   const vin = (searchParams.get('vin') ?? '').trim();
 
-  const [results, setResults] = useState<PartsSearchResults>(EMPTY(query));
+  const [results, setResults] = useState<PartsSearchResults | null>(null);
   const [vinResult, setVinResult] = useState<VinLookupResult | null>(null);
 
   useEffect(() => {
@@ -84,8 +84,9 @@ export default function PartsSearchScreen() {
   }, [vin]);
 
   const isVinLookup = Boolean(vin);
-  const loadingSearch = query.length >= MIN_QUERY_LENGTH && results.query !== query;
-  const hasResults = results.parts.length > 0 || results.models.length > 0;
+  const displayedResults = results ?? EMPTY(query);
+  const loadingSearch = query.length >= MIN_QUERY_LENGTH && (!results || results.query !== query);
+  const hasResults = displayedResults.parts.length > 0 || displayedResults.models.length > 0;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
@@ -111,20 +112,20 @@ export default function PartsSearchScreen() {
             </p>
           )}
 
-          {results.models.length > 0 && (
+          {displayedResults.models.length > 0 && (
             <section className="mb-8">
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-600">Models</h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {results.models.map((model) => <ModelCard key={model.slug} model={model} />)}
+                {displayedResults.models.map((model) => <ModelCard key={model.slug} model={model} />)}
               </div>
             </section>
           )}
 
-          {results.parts.length > 0 && (
+          {displayedResults.parts.length > 0 && (
             <section>
               <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-600">Parts</h2>
               <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
-                {results.parts.map((part) => <PartResultRow key={part.part_number} part={part} />)}
+                {displayedResults.parts.map((part) => <PartResultRow key={part.part_number} part={part} />)}
               </ul>
             </section>
           )}
