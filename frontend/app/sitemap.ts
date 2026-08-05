@@ -22,6 +22,7 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/125cc-scooters-perth`, lastModified: '2026-07-27' },
   { url: `${SITE_URL}/vespa-perth`, lastModified: '2026-07-23' },
   { url: `${SITE_URL}/sym`, lastModified: '2026-07-27' },
+  { url: `${SITE_URL}/motorcycles-perth`, lastModified: '2026-08-05' },
   { url: `${SITE_URL}/parts/new/sym` },
   { url: `${SITE_URL}/scooter-service`, lastModified: '2026-07-13' },
   { url: `${SITE_URL}/motorcycle-service`, lastModified: '2026-07-13' },
