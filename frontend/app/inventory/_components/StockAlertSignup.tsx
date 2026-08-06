@@ -25,7 +25,7 @@ export default function StockAlertSignup() {
       <div className="flex gap-3">
         <Bell className="mt-0.5 h-5 w-5 shrink-0 text-[var(--highlight)]" />
         <div className="min-w-0">
-          <h2 className="font-bold text-[var(--text-dark-primary)]">Get new bike stock alerts</h2>
+          <h2 className="font-bold text-[var(--text-dark-primary)]">Get bike stock alerts</h2>
           <p className="mt-1 text-sm text-[var(--text-dark-secondary)]">
             Get an email when new, demo, or used motorcycles and scooters are added to our stock. We won&apos;t email you for any other reason.
           </p>
