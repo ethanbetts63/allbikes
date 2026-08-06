@@ -25,11 +25,6 @@ def _verify_signature(signing_key, token, timestamp, signature):
     return hmac.compare_digest(digest, signature)
 
 
-def _provider_message_id(event_data):
-    headers = event_data.get('message', {}).get('headers', {})
-    return headers.get('message-id') or headers.get('Message-Id') or ''
-
-
 class MailgunWebhookView(APIView):
     permission_classes = [AllowAny]
 
@@ -60,16 +55,14 @@ class MailgunWebhookView(APIView):
         event_data = request.data.get('event-data', {})
         event_type = event_data.get('event')
         recipient = event_data.get('recipient', '')
-        provider_message_id = _provider_message_id(event_data)
-        messages = Message.objects.filter(provider_message_id=provider_message_id) if provider_message_id else Message.objects.none()
 
         if event_type == 'delivered':
-            messages.filter(status='sent').update(status='delivered')
+            Message.objects.filter(to__iexact=recipient, status='sent').update(status='delivered')
 
         elif event_type == 'failed':
             severity = event_data.get('severity')
             if severity == 'permanent':
-                messages.filter(status__in=['sent', 'delivered']).update(status='bounced')
+                Message.objects.filter(to__iexact=recipient, status__in=['sent', 'delivered']).update(status='bounced')
                 from inventory.models import StockAlertSubscriber
 
                 subscriber = StockAlertSubscriber.objects.filter(email__iexact=recipient).first()

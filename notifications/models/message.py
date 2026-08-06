@@ -43,7 +43,6 @@ class Message(models.Model):
         blank=True,
         related_name='messages',
     )
-    provider_message_id = models.CharField(max_length=255, blank=True, db_index=True)
 
     to = models.CharField(max_length=255)
     subject = models.CharField(max_length=500, blank=True)

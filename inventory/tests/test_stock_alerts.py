@@ -46,14 +46,13 @@ def test_stock_alert_send_uses_only_the_listing_flag_and_clears_it(monkeypatch):
     excluded_bike = MotorcycleFactory(include_in_stock_alerts=False)
     StockAlertSubscriber.objects.create(email='first@example.com')
     StockAlertSubscriber.objects.create(email='second@example.com')
-    monkeypatch.setattr('inventory.stock_alerts._send_mailgun', lambda *args, **kwargs: '<stock-alert@mailgun.test>')
+    monkeypatch.setattr('inventory.stock_alerts._send_mailgun', lambda *args, **kwargs: None)
 
     result = send_next_stock_alert()
 
     assert result == {'sent_count': 2, 'failed_count': 0}
     assert Message.objects.filter(message_type='stock_alert_update', status='sent').count() == 2
     assert Message.objects.filter(message_type='stock_alert_update', content_type__isnull=False).count() == 0
-    assert Message.objects.filter(message_type='stock_alert_update', provider_message_id='<stock-alert@mailgun.test>').count() == 2
     assert set(Message.objects.filter(message_type='stock_alert_update').values_list('stock_alert_subscriber_id', flat=True)) == set(StockAlertSubscriber.objects.values_list('id', flat=True))
     assert set(eligible_bikes()) == set()
     scooter.refresh_from_db()

@@ -1,5 +1,4 @@
 import logging
-from contextvars import ContextVar
 
 import requests
 from django.conf import settings
@@ -10,7 +9,6 @@ from notifications.models import Message
 from notifications.utils import sms_messages
 
 logger = logging.getLogger(__name__)
-_last_mailgun_message_id = ContextVar('last_mailgun_message_id', default='')
 
 
 def _send_admin_sms(body):
@@ -34,9 +32,8 @@ def _send_admin_sms(body):
             logger.error("Failed to send admin SMS to %s: %s", number, e)
 
 
-def _send_mailgun(to, subject, html_body, text_body, *, remember_for_record=True):
-    _last_mailgun_message_id.set('')
-    response = requests.post(
+def _send_mailgun(to, subject, html_body, text_body):
+    requests.post(
         f"https://api.mailgun.net/v3/{settings.MAILGUN_DOMAIN}/messages",
         auth=("api", settings.MAILGUN_API_KEY),
         data={
@@ -47,16 +44,7 @@ def _send_mailgun(to, subject, html_body, text_body, *, remember_for_record=True
             "html": html_body,
         },
         timeout=10,
-    )
-    response.raise_for_status()
-    try:
-        provider_message_id = response.json().get('id', '')
-    except (AttributeError, ValueError):
-        provider_message_id = ''
-    provider_message_id = provider_message_id if isinstance(provider_message_id, str) else ''
-    if remember_for_record:
-        _last_mailgun_message_id.set(provider_message_id)
-    return provider_message_id
+    ).raise_for_status()
 
 
 def _admin_recipients():
@@ -70,7 +58,7 @@ def _admin_recipients():
     return [admin_email.strip()] if admin_email and admin_email.strip() else []
 
 
-def _record(obj, message_type, to, subject, body_text, body_html, status, error_message='', provider_message_id=None):
+def _record(obj, message_type, to, subject, body_text, body_html, status, error_message=''):
     try:
         logger.info(
             "Recording message type=%s to=%s status=%s object=%s:%s",
@@ -90,14 +78,11 @@ def _record(obj, message_type, to, subject, body_text, body_html, status, error_
             body_html=body_html,
             status=status,
             error_message=error_message,
-            provider_message_id=(provider_message_id if provider_message_id is not None else _last_mailgun_message_id.get()) if status == 'sent' else '',
             sent_at=timezone.now() if status == 'sent' else None,
         )
         logger.info("Recorded message id=%s", message.pk)
     except Exception as e:
         logger.error("Failed to record sent message (%s): %s", message_type, e)
-    finally:
-        _last_mailgun_message_id.set('')
 
 
 def send_product_customer_confirmation(order):

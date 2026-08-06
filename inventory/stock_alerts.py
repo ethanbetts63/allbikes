@@ -116,12 +116,9 @@ def send_next_stock_alert():
             html_body, unsubscribe_url = _email_html(items, subscriber)
             text_body = _text_body(items, unsubscribe_url)
             try:
-                provider_message_id = _send_mailgun(
-                    subscriber.email, STOCK_ALERT_SUBJECT, html_body, text_body, remember_for_record=False,
-                )
+                _send_mailgun(subscriber.email, STOCK_ALERT_SUBJECT, html_body, text_body)
                 Message.objects.create(
                     stock_alert_subscriber=subscriber,
-                    provider_message_id=provider_message_id,
                     message_type='stock_alert_update',
                     channel='email',
                     to=subscriber.email,

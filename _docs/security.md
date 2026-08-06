@@ -92,7 +92,9 @@ Admin operations use `IsAdminUser`, including inventory and product writes,
 service settings, hire/order administration, and notification administration.
 
 Anonymous and authenticated requests are throttled globally. Login has a
-separate `5/minute` throttle. Throttling is defence in depth, not the primary
+separate `5/minute` throttle. The public motorcycle and scooter stock-alert
+signup endpoint has its own `5/hour` per-IP throttle to limit automated
+subscription abuse. Throttling is defence in depth, not the primary
 access-control mechanism.
 
 ## Customer Checkout Access
