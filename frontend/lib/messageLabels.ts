@@ -1,4 +1,4 @@
-export const STATUS_BADGE: Record<string, string> = {
+export const MESSAGE_STATUS_BADGE: Record<string, string> = {
   sent:      'border-green-600 text-highlight1',
   failed:    'border-red-500 text-destructive',
   delivered: 'border-blue-500 text-blue-600',

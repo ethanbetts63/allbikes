@@ -23,5 +23,6 @@ class MessageFactory(DjangoModelFactory):
     message_type = 'customer_confirmation'
     channel = 'email'
     status = 'sent'
+    provider_message_id = '<message-id@mailgun.test>'
     sent_at = factory.LazyFunction(timezone.now)
     error_message = ''

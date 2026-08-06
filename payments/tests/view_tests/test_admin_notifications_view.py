@@ -7,6 +7,7 @@ from rest_framework.test import APIClient
 from parts.checkout import create_parts_order
 from parts.models import PartsSettings
 from parts.tests.factories import PartFactory, PartSectionFactory, SectionPartFactory
+from notifications.models import Message
 
 pytestmark = pytest.mark.django_db
 
@@ -85,3 +86,15 @@ class TestPartsOrdersToAction:
         second = _parts_order('paid', part_number='C-3')
         refs = [o['order_reference'] for o in admin_client.get(URL).json()['parts_orders_to_action']]
         assert refs == [first.order_reference, second.order_reference]
+
+    def test_failed_emails_are_exposed_for_admin_action(self, admin_client):
+        failed = Message.objects.create(
+            to='customer@example.com', subject='Could not send', message_type='test_email',
+            channel='email', status='failed', error_message='Mailgun timeout',
+        )
+        data = admin_client.get(URL).json()
+        assert data['failed_emails'] == [{
+            'id': failed.id, 'to': 'customer@example.com', 'subject': 'Could not send',
+            'message_type': 'test_email', 'status': 'failed', 'error_message': 'Mailgun timeout',
+            'created_at': data['failed_emails'][0]['created_at'],
+        }]

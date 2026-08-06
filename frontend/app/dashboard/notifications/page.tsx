@@ -12,6 +12,7 @@ import OrdersToAction from './_components/OrdersToAction';
 import PartsOrdersToAction from './_components/PartsOrdersToAction';
 import ProductStock from './_components/ProductStock';
 import ReservedMotorcycles from './_components/ReservedMotorcycles';
+import FailedEmails from './_components/FailedEmails';
 
 /** Total outstanding items, which also decides whether to show "All clear". */
 const outstandingCount = (n: AdminNotifications) =>
@@ -20,7 +21,8 @@ const outstandingCount = (n: AdminNotifications) =>
   n.bike_orders_to_action.length +
   n.reserved_bikes.length +
   n.active_hire_bookings.length +
-  n.attention_products.length;
+  n.attention_products.length +
+  n.failed_emails.length;
 
 export default function AdminNotificationsPage() {
   const { user } = useAuth();
@@ -70,6 +72,7 @@ export default function AdminNotificationsPage() {
           <ReservedMotorcycles bikes={notifications.reserved_bikes} />
           <HireBookings bookings={notifications.active_hire_bookings} />
           <ProductStock products={notifications.attention_products} />
+          <FailedEmails messages={notifications.failed_emails} />
         </div>
       )}
     </div>

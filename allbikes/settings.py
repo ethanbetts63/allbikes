@@ -38,6 +38,8 @@ def _phone_list(value):
 ADMIN_NUMBER = os.environ.get("ADMIN_NUMBER")
 ADMIN_NUMBERS = _phone_list(os.environ.get("ADMIN_NUMBERS")) or _phone_list(ADMIN_NUMBER)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@scootershop.com.au")
+SITE_URL = os.environ.get("SITE_URL", "https://www.scootershop.com.au").rstrip('/')
+API_URL = os.environ.get("API_URL", "https://api.scootershop.com.au").rstrip('/')
 
 # Select Portal supplies an RRP+GST figure. This is the percentage discount
 # ScooterShop receives from that figure when purchasing genuine new SYM parts.
@@ -238,6 +240,7 @@ REST_FRAMEWORK = {
         'anon': '250/day',
         'user': '10000/day',
         'login': '5/minute',
+        'stock_alert_signup': '5/hour',
     }
 }
 

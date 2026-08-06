@@ -60,6 +60,16 @@ export interface NotificationPartsOrder {
   created_at: string;
 }
 
+export interface NotificationFailedEmail {
+  id: number;
+  to: string;
+  subject: string;
+  message_type: string;
+  status: 'failed' | 'bounced';
+  error_message: string;
+  created_at: string;
+}
+
 export interface AdminNotifications {
   product_orders_to_action: NotificationProductOrder[];
   bike_orders_to_action: NotificationBikeOrder[];
@@ -68,4 +78,5 @@ export interface AdminNotifications {
   active_hire_bookings: NotificationHireBooking[];
   /** Paid parts orders that still need fulfilment or refund action. */
   parts_orders_to_action: NotificationPartsOrder[];
+  failed_emails: NotificationFailedEmail[];
 }

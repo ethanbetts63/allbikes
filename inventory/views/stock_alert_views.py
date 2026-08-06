@@ -3,8 +3,9 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from data_management.throttling import StockAlertSignupThrottle
 from inventory.models import Motorcycle, StockAlertSubscriber
-from inventory.stock_alerts import preview_data, send_next_stock_alert
+from inventory.stock_alerts import eligible_bikes, preview_data, queue_items, send_next_stock_alert
 
 
 class SubscriptionSerializer(serializers.Serializer):
@@ -37,6 +38,7 @@ def _included_bike_data(bike):
 class StockAlertSubscribeView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
+    throttle_classes = [StockAlertSignupThrottle]
 
     def post(self, request):
         serializer = SubscriptionSerializer(data=request.data)
@@ -76,12 +78,13 @@ class AdminStockAlertView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
+        bikes = list(eligible_bikes())
         return Response({
             'subscribers': [_subscriber_data(subscriber) for subscriber in StockAlertSubscriber.objects.all()],
-            'preview': preview_data(),
+            'preview': preview_data(queue_items(bikes)),
             'included_bikes': [
                 _included_bike_data(bike)
-                for bike in Motorcycle.objects.filter(include_in_stock_alerts=True).order_by('-date_posted', '-id')
+                for bike in bikes
             ],
         })
 

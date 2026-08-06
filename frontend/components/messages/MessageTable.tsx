@@ -7,7 +7,7 @@ import type { SentMessage } from '@/types/SentMessage';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { messageTypeLabel } from '@/app/dashboard/messages/_lib/messageLabels';
+import { messageTypeLabel } from '@/lib/messageLabels';
 
 const DELIVERY_STATUS_STYLE: Record<string, { row: string; swatch: string; label: string }> = {
   sent: { row: 'bg-sky-50 hover:bg-sky-100', swatch: 'bg-sky-300', label: 'Sent' },

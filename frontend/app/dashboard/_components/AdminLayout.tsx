@@ -85,7 +85,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     (notifications?.bike_orders_to_action.length ?? 0) +
     (notifications?.reserved_bikes.length ?? 0) +
     (notifications?.active_hire_bookings.length ?? 0) +
-    (notifications?.attention_products.length ?? 0);
+    (notifications?.attention_products.length ?? 0) +
+    (notifications?.failed_emails.length ?? 0);
 
   if (isAuthLoading) {
     return (
@@ -212,7 +213,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <SectionLabel>Comms</SectionLabel>
             <Link href="/dashboard/messages" className={navItemClass('/dashboard/messages')}>
               <Mail className="h-4 w-4 shrink-0" />
-              Messages
+              <span className="flex-1">Messages</span>
+              <NavBadge count={notifications?.failed_emails.length ?? 0} />
             </Link>
 
           </nav>

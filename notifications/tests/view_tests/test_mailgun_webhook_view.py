@@ -24,11 +24,11 @@ def _sign(token, timestamp, key=SIGNING_KEY):
     return digest
 
 
-def _payload(event_type, recipient='customer@example.com', severity=None, token='abc123', timestamp=None):
+def _payload(event_type, recipient='customer@example.com', severity=None, message_id='<message-id@mailgun.test>', token='abc123', timestamp=None):
     """Build a minimal Mailgun webhook payload with a valid signature."""
     ts = str(timestamp or int(time.time()))
     sig = _sign(token, ts)
-    event_data = {'event': event_type, 'recipient': recipient}
+    event_data = {'event': event_type, 'recipient': recipient, 'message': {'headers': {'message-id': message_id}}}
     if severity:
         event_data['severity'] = severity
     return {
@@ -126,6 +126,18 @@ class TestMailgunWebhookView:
         api_client.post(URL, _payload('delivered', recipient='customer@example.com'), format='json')
         msg.refresh_from_db()
         assert msg.status == 'failed'
+
+    def test_delivery_event_only_updates_the_exact_provider_message(self, api_client, settings):
+        settings.MAILGUN_WEBHOOK_SIGNING_KEY = SIGNING_KEY
+        delivered = MessageFactory(to='customer@example.com', status='sent', provider_message_id='<first@mailgun.test>')
+        untouched = MessageFactory(to='customer@example.com', status='sent', provider_message_id='<second@mailgun.test>')
+
+        api_client.post(URL, _payload('delivered', message_id='<first@mailgun.test>'), format='json')
+
+        delivered.refresh_from_db()
+        untouched.refresh_from_db()
+        assert delivered.status == 'delivered'
+        assert untouched.status == 'sent'
 
     # --- failed event (permanent) ---
 

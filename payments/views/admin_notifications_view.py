@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from hire.models import HireBooking
 from inventory.models import BikeOrder, Motorcycle
+from notifications.models import Message
 from parts.models import PartsOrder
 from product.models import Product, ProductOrder
 
@@ -24,6 +25,7 @@ class AdminNotificationsView(APIView):
         ).order_by('stock_quantity', 'name')
         active_hires = HireBooking.objects.filter(status__in=['confirmed', 'active']).select_related('motorcycle').order_by('hire_start')
         parts_orders = PartsOrder.objects.filter(status__in=PARTS_ORDER_ACTION_STATUSES).prefetch_related('items').order_by('created_at')
+        failed_emails = Message.objects.filter(status__in=['failed', 'bounced']).order_by('-created_at')
 
         return Response({
             'product_orders_to_action': [
@@ -56,5 +58,11 @@ class AdminNotificationsView(APIView):
                  'status': o.status, 'has_backorder': o.has_backorder, 'item_count': len(o.items.all()),
                  'created_at': o.created_at}
                 for o in parts_orders
+            ],
+            'failed_emails': [
+                {'id': message.id, 'to': message.to, 'subject': message.subject,
+                 'message_type': message.message_type, 'status': message.status,
+                 'error_message': message.error_message, 'created_at': message.created_at}
+                for message in failed_emails
             ],
         })
