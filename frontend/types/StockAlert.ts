@@ -42,6 +42,7 @@ export interface StockAlertIncludedBike {
   condition: string;
   vehicle_type: string;
   status: string;
+  price_label: string;
   listing_url: string;
 }
 

@@ -23,14 +23,15 @@ const label = (value: string) => value.replace(/_/g, " ").replace(/\b\w/g, char 
 const money = (value: string | null | undefined) => value ? new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 }).format(Number(value)) : "—";
 const number = (value: number | null | undefined, suffix = "") => value === null || value === undefined ? "—" : `${new Intl.NumberFormat("en-AU").format(value)}${suffix}`;
 
-const statusClass: Record<Bike["status"], string> = {
-  for_sale: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  available_soon: "border-sky-200 bg-sky-50 text-sky-800",
-  reserved: "border-amber-200 bg-amber-50 text-amber-800",
-  sold: "border-slate-200 bg-slate-100 text-slate-600",
-  unavailable: "border-rose-200 bg-rose-50 text-rose-800",
-  hide: "border-slate-300 bg-slate-200 text-slate-700",
+const statusStyle: Record<Bike["status"], { row: string; swatch: string; label: string }> = {
+  for_sale: { row: "bg-emerald-50 hover:bg-emerald-100", swatch: "bg-emerald-300", label: "For sale" },
+  available_soon: { row: "bg-sky-50 hover:bg-sky-100", swatch: "bg-sky-300", label: "Available soon" },
+  reserved: { row: "bg-amber-50 hover:bg-amber-100", swatch: "bg-amber-300", label: "Reserved" },
+  sold: { row: "bg-slate-100 hover:bg-slate-200", swatch: "bg-slate-400", label: "Sold" },
+  unavailable: { row: "bg-rose-50 hover:bg-rose-100", swatch: "bg-rose-300", label: "Unavailable" },
+  hide: { row: "bg-slate-200 hover:bg-slate-300", swatch: "bg-slate-500", label: "Hidden" },
 };
+const statusLegendOrder: Bike["status"][] = ["for_sale", "available_soon", "reserved", "sold", "unavailable", "hide"];
 
 function queryValue(params: URLSearchParams, key: string, allowed?: readonly string[]) {
   const value = params.get(key) ?? "";
@@ -138,18 +139,18 @@ export default function InventoryTable() {
           <Select value={status || "all"} onValueChange={value => updateFilter("status", value === "all" ? "" : value)}><SelectTrigger className="w-full bg-white"><SelectValue placeholder="All sale statuses" /></SelectTrigger><SelectContent><SelectItem value="all">All sale statuses</SelectItem>{statusValues.map(value => <SelectItem key={value} value={value}>{label(value)}</SelectItem>)}</SelectContent></Select>
           <form className="sm:col-span-2 lg:col-span-3" onSubmit={event => { event.preventDefault(); setQuery({ search: searchDraft.trim() || null, page: null }); }}><div className="flex gap-2"><Input name="search" type="search" value={searchDraft} onChange={event => setSearchDraft(event.target.value)} placeholder="Search make, model, stock number, rego or VIN" aria-label="Search inventory" className="bg-white" /><Button type="submit" variant="outline" className="shrink-0 border-slate-300 bg-white text-slate-900 hover:bg-slate-100"><Search className="mr-1.5 h-4 w-4" /> Search</Button></div>{search && <p className="mt-2 text-xs text-slate-500">Showing results for <span className="font-medium text-slate-700">“{search}”</span>.</p>}</form>
         </div>
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-500"><span className="font-medium text-slate-600">Row colour:</span>{statusLegendOrder.map((statusKey) => <span key={statusKey} className="inline-flex items-center gap-1.5"><span className={`inline-block h-3 w-3 rounded-sm ${statusStyle[statusKey].swatch}`} />{statusStyle[statusKey].label}</span>)}</div>
       </div>
 
       {notification && <Alert variant={notification.type === "error" ? "destructive" : "default"} className="m-4"><AlertDescription>{notification.message}</AlertDescription></Alert>}
       <div className="overflow-x-auto">
-        <Table className="min-w-[1100px]">
-          <TableHeader className="bg-slate-50"><TableRow className="border-slate-200 hover:bg-slate-50"><SortHeader field="make" sort={sort} direction={direction} onSort={toggleSort}>Vehicle</SortHeader><TableHead className="font-semibold text-slate-600">Category</TableHead><TableHead className="font-semibold text-slate-600">Availability</TableHead><SortHeader field="price" align="right" sort={sort} direction={direction} onSort={toggleSort}>Price</SortHeader><TableHead className="font-semibold text-slate-600">Specifications</TableHead><SortHeader field="date_posted" sort={sort} direction={direction} onSort={toggleSort}>Listed</SortHeader><TableHead className="text-right font-semibold text-slate-600">Actions</TableHead></TableRow></TableHeader>
+        <Table className="min-w-[1000px]">
+          <TableHeader className="bg-slate-50"><TableRow className="border-slate-200 hover:bg-slate-50"><SortHeader field="make" sort={sort} direction={direction} onSort={toggleSort}>Vehicle</SortHeader><TableHead className="font-semibold text-slate-600">Category</TableHead><SortHeader field="price" align="right" sort={sort} direction={direction} onSort={toggleSort}>Price</SortHeader><TableHead className="font-semibold text-slate-600">Specifications</TableHead><SortHeader field="date_posted" sort={sort} direction={direction} onSort={toggleSort}>Listed</SortHeader><TableHead className="text-right font-semibold text-slate-600">Actions</TableHead></TableRow></TableHeader>
           <TableBody>
             {loading ? <TableRow><TableCell colSpan={7} className="h-48 text-center text-slate-500">Loading inventory…</TableCell></TableRow> : data.length === 0 ? <TableRow><TableCell colSpan={7} className="h-48 text-center"><Search className="mx-auto mb-3 h-5 w-5 text-slate-400" /><p className="font-medium text-slate-700">No inventory matches these filters.</p><Button variant="link" size="sm" onClick={clearFilters}>Clear filters</Button></TableCell></TableRow> : data.map(bike => (
-              <TableRow key={bike.id} className="border-slate-100 hover:bg-slate-50/70">
+              <TableRow key={bike.id} className={`border-slate-100 ${statusStyle[bike.status].row}`}>
                 <TableCell><div className="font-semibold text-slate-950">{bike.year ? `${bike.year} ` : ""}{bike.make} {bike.model}</div><div className="mt-1 text-xs text-slate-500">Stock {bike.stock_number || "—"}{bike.rego ? ` · Rego ${bike.rego}` : ""}</div></TableCell>
                 <TableCell><div className="flex flex-wrap gap-1.5"><Badge variant="outline" className="border-slate-200 bg-white text-slate-700">{label(bike.vehicle_type)}</Badge><Badge variant="outline" className="border-slate-200 bg-white text-slate-700">{label(bike.condition)}</Badge></div></TableCell>
-                <TableCell><Badge variant="outline" className={statusClass[bike.status]}>{label(bike.status)}</Badge><div className="mt-1.5 flex gap-1.5">{bike.is_hire && <span className="text-xs font-medium text-violet-700">Hire{bike.daily_rate ? ` · ${money(bike.daily_rate)}/day` : ""}</span>}</div></TableCell>
                 <TableCell className="text-right"><div className="font-semibold text-slate-950">{money(bike.discount_price || bike.price)}</div>{bike.discount_price && bike.price && <div className="text-xs text-slate-400 line-through">{money(bike.price)}</div>}</TableCell>
                 <TableCell><div className="text-sm text-slate-700">{number(bike.engine_size, " cc")} · {bike.transmission ? label(bike.transmission) : "—"}</div><div className="mt-1 text-xs text-slate-500">{number(bike.odometer, " km")}</div></TableCell>
                 <TableCell className="text-sm text-slate-600">{bike.date_posted ? new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric" }).format(new Date(bike.date_posted)) : "—"}</TableCell>

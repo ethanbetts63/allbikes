@@ -48,12 +48,14 @@ def _campaign_data(campaign):
 
 
 def _included_bike_data(bike):
+    price = bike.discount_price or bike.price
     return {
         'id': bike.id,
         'title': str(bike),
         'condition': bike.condition,
         'vehicle_type': bike.vehicle_type,
         'status': bike.status,
+        'price_label': f'${price:,.0f}' if price is not None else 'Price on request',
         'listing_url': f'https://www.scootershop.com.au/inventory/motorcycles/{bike.slug}',
     }
 

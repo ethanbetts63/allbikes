@@ -64,3 +64,4 @@ def test_admin_preview_is_json_serializable():
     assert response.data['preview']['items'][0]['deposit_url'] == f'https://www.scootershop.com.au/checkout/{opted_in.slug}?type=deposit'
     assert 'Place a deposit' in response.data['preview']['html']
     assert [bike['id'] for bike in response.data['included_bikes']] == [opted_in.id]
+    assert response.data['included_bikes'][0]['price_label'].startswith('$')
