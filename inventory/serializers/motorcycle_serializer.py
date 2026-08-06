@@ -19,6 +19,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'vehicle_type',
             'status',
             'popular',
+            'include_in_stock_alerts',
             'odometer',
             'engine_size',
             'description',

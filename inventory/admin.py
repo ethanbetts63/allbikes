@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import BikeOrder, Motorcycle, MotorcycleImage
+from .models import (
+    BikeOrder, Motorcycle, MotorcycleImage, StockAlertCampaign,
+    StockAlertCampaignRecipient, StockAlertSubscriber,
+)
 
 class MotorcycleImageInline(admin.TabularInline):
     model = MotorcycleImage
@@ -13,6 +16,28 @@ class MotorcycleAdmin(admin.ModelAdmin):
     search_fields = ('make', 'model', 'stock_number')
 
 admin.site.register(MotorcycleImage)
+
+
+@admin.register(StockAlertSubscriber)
+class StockAlertSubscriberAdmin(admin.ModelAdmin):
+    list_display = ('email', 'status', 'subscribed_at', 'unsubscribed_at')
+    list_filter = ('status',)
+    search_fields = ('email',)
+    readonly_fields = ('unsubscribe_token', 'subscribed_at', 'updated_at')
+
+
+class StockAlertCampaignRecipientInline(admin.TabularInline):
+    model = StockAlertCampaignRecipient
+    extra = 0
+    readonly_fields = ('email', 'status', 'message', 'error_message', 'sent_at')
+
+
+@admin.register(StockAlertCampaign)
+class StockAlertCampaignAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'status', 'recipient_count', 'sent_count', 'failed_count', 'created_at')
+    list_filter = ('status',)
+    readonly_fields = ('created_at', 'sent_at')
+    inlines = [StockAlertCampaignRecipientInline]
 
 
 @admin.register(BikeOrder)

@@ -14,6 +14,7 @@ import { FaqSection } from '@/components/marketing/FaqSection';
 import StructuredDataScript from '@/components/seo/StructuredDataScript';
 import { buildFaqSchema } from '@/lib/seo';
 import { buildListHref } from '@/lib/listQuery';
+import StockAlertSignup from '@/app/inventory/_components/StockAlertSignup';
 
 import type { Bike } from '@/types/Bike';
 import type { FilterSortOptions } from '@/types/FilterSortOptions';
@@ -200,6 +201,7 @@ const BikeListPage = ({ bikeCondition, pageType, bikes, totalPages, currentPage,
               <p className="text-xs text-[var(--text-dark-secondary)]">Any make or model accepted. Must be licensed and running.</p>
             </div>
           )}
+          {!isParts && <div className="mb-6"><StockAlertSignup /></div>}
           <BikeFilterForm basePath={basePath} filters={filters} makes={makes} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -39,6 +39,7 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
         defaultValues: {
             vehicle_type: 'motorcycle',
             available_colours: [],
+            include_in_stock_alerts: true,
             ...initialData,
             managedImages: initialData?.images
                 .sort((a, b) => a.order - b.order)
@@ -244,6 +245,12 @@ const MotorcycleForm = ({ initialData, onSubmit, isLoading }: MotorcycleFormProp
                                 <Switch id="is_lams_approved" checked={!!field.value} onCheckedChange={field.onChange} />
                             )} />
                             <Label htmlFor="is_lams_approved">LAMS Approved?</Label>
+                        </div>
+                        <div className="flex items-center space-x-2 pt-6">
+                            <Controller name="include_in_stock_alerts" control={control} render={({ field }) => (
+                                <Switch id="include_in_stock_alerts" checked={!!field.value} onCheckedChange={field.onChange} />
+                            )} />
+                            <Label htmlFor="include_in_stock_alerts">Include in mailing list?</Label>
                         </div>
                     </div>
 

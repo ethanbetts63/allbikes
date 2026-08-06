@@ -14,6 +14,7 @@ import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import type { Booking, BookingInput, BlockedDate } from '@/types/Booking';
 import type { ServiceSettings } from '@/types/ServiceSettings';
 import type { HireBooking, HireSettings } from '@/types/HireBooking';
+import type { StockAlertAdminData, StockAlertCampaign } from '@/types/StockAlert';
 
 /**
  * A centralized module for all API interactions.
@@ -185,6 +186,15 @@ export async function updateMotorcycle(id: number, data: Omit<MotorcycleFormData
     return handleResponse(response);
 }
 
+export async function setMotorcycleStockAlertInclusion(id: number, includeInStockAlerts: boolean): Promise<Bike> {
+    const response = await authedFetch(`/api/inventory/bikes/${id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ include_in_stock_alerts: includeInStockAlerts }),
+    });
+    return handleResponse(response);
+}
+
 export async function deleteMotorcycle(id: number): Promise<void> {
     const response = await authedFetch(`/api/inventory/bikes/${id}/`, {
         method: 'DELETE',
@@ -216,6 +226,26 @@ export async function manageMotorcycleImages(motorcycleId: number, images: Pick<
         body: JSON.stringify(payload),
     });
     return handleResponse(response);
+}
+
+export async function subscribeToStockAlerts(email: string): Promise<void> {
+    const response = await fetch('/api/inventory/stock-alerts/subscribe/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+    });
+    await handleResponse(response);
+}
+
+export async function adminGetStockAlerts(): Promise<StockAlertAdminData> {
+    return handleResponse(await authedFetch('/api/inventory/admin/stock-alerts/'));
+}
+
+export async function adminSendStockAlert(): Promise<{ campaign: StockAlertCampaign }> {
+    return handleResponse(await authedFetch('/api/inventory/admin/stock-alerts/send/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+    }));
 }
 
 // --- Product Endpoints ---

@@ -30,6 +30,7 @@ import { assetUrl } from '@/lib/assetUrl';
 import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/lib/vehicleImages';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import NewScooterColourPurchase from '@/app/inventory/motorcycles/[slug]/_components/NewScooterColourPurchase';
+import StockAlertSignup from '@/app/inventory/_components/StockAlertSignup';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { preload } from 'react-dom';
@@ -326,7 +327,7 @@ const BikeDetailPage = ({
                         )}
 
                         {/* SYM warranty link */}
-                        {bike.make?.toLowerCase() === 'sym' && (
+                        {bike.condition === 'new' && bike.make?.toLowerCase() === 'sym' && (
                             <p className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-dark-primary)] mb-6">
                                 <ShieldCheck className="h-4 w-4 shrink-0 text-[var(--highlight1)]" />
                                 <span>Backed by the SYM <a href="https://scoota.com.au/warranty/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-70">warranty</a>.</span>
@@ -376,6 +377,12 @@ const BikeDetailPage = ({
                                 <Link href="/contact" className="text-sm text-[var(--highlight)] hover:underline mt-1 inline-block">
                                     Contact us about similar {vehicleLabelPlural}
                                 </Link>
+                            </div>
+                        )}
+
+                        {['new', 'demo', 'used'].includes(bike.condition) && (
+                            <div className="mb-6">
+                                <StockAlertSignup />
                             </div>
                         )}
 

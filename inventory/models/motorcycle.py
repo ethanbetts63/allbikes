@@ -82,6 +82,10 @@ class Motorcycle(models.Model):
         default=False,
         help_text="Popular bikes are highlighted in the listing page.",
     )
+    include_in_stock_alerts = models.BooleanField(
+        default=True,
+        help_text="Include this listing in the next scooter stock-alert email when eligible.",
+    )
     odometer = models.IntegerField(default=0)
     engine_size = models.IntegerField(
         null=True,

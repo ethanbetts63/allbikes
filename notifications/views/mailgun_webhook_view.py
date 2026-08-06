@@ -58,14 +58,29 @@ class MailgunWebhookView(APIView):
 
         if event_type == 'delivered':
             Message.objects.filter(to=recipient, status='sent').update(status='delivered')
+            from inventory.models import StockAlertCampaignRecipient
+            StockAlertCampaignRecipient.objects.filter(email__iexact=recipient, status='sent').update(status='delivered')
 
         elif event_type == 'failed':
             severity = event_data.get('severity')
             if severity == 'permanent':
                 Message.objects.filter(to=recipient, status__in=['sent', 'delivered']).update(status='bounced')
+                from inventory.models import StockAlertCampaignRecipient, StockAlertSubscriber
+
+                subscriber = StockAlertSubscriber.objects.filter(email__iexact=recipient).first()
+                if subscriber and subscriber.status == 'active':
+                    subscriber.unsubscribe(status='bounced')
+                StockAlertCampaignRecipient.objects.filter(email__iexact=recipient).update(status='bounced')
                 logger.warning("Permanent delivery failure for %s: %s", recipient, event_data.get('delivery-status', {}).get('message', ''))
 
         elif event_type in ('unsubscribed', 'complained'):
             logger.warning("Mailgun %s event for %s", event_type, recipient)
+            from inventory.models import StockAlertCampaignRecipient, StockAlertSubscriber
+
+            status = 'complained' if event_type == 'complained' else 'unsubscribed'
+            subscriber = StockAlertSubscriber.objects.filter(email__iexact=recipient).first()
+            if subscriber and subscriber.status == 'active':
+                subscriber.unsubscribe(status=status)
+            StockAlertCampaignRecipient.objects.filter(email__iexact=recipient).update(status=status)
 
         return Response(status=200)

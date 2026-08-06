@@ -1,0 +1,55 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}New motorcycles and scooters in stock | ScooterShop{% endblock %}
+{% block preheader %}New motorcycle and scooter stock is now available at ScooterShop.{% endblock %}
+
+{% block content %}
+<h1 style="font-size: 26px; line-height: 32px; margin: 0 0 8px; color: #0f1827;">Fresh stock has arrived</h1>
+<p style="margin: 0 0 26px; color: #57534e;">Here are the newest motorcycles and scooters added to ScooterShop. They are available now, while stock lasts.</p>
+
+{% for item in items %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #dedbd7; margin: 0 0 24px; background: #ffffff;">
+  {% if item.image_url %}
+  <tr>
+    <td>
+      <a href="{{ item.listing_url }}" target="_blank" style="text-decoration: none;">
+        <img src="{{ item.image_url }}" alt="{{ item.title }}" width="480" style="display:block;width:100%;max-width:480px;height:auto;border:0;">
+      </a>
+    </td>
+  </tr>
+  {% endif %}
+  <tr>
+    <td style="padding: 20px 20px 10px; font-family: Arial, Helvetica, sans-serif;">
+      <p style="margin:0 0 7px;font-size:11px;font-weight:bold;letter-spacing:1.3px;text-transform:uppercase;color:#c2410c;">New arrival</p>
+      <h2 style="font-size:22px;line-height:28px;margin:0;color:#0f1827;">{{ item.title }}</h2>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 0 20px 18px; font-family: Arial, Helvetica, sans-serif;">
+      <p style="font-weight:bold;font-size:22px;line-height:28px;margin:0;color:#0f1827;">{{ item.price_label }}</p>
+      {% if item.details %}<p style="font-size:14px;line-height:20px;margin:8px 0 0;color:#57534e;">{{ item.details }}</p>{% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 0 20px 20px;">
+      <table border="0" cellpadding="0" cellspacing="0" role="presentation">
+        <tr>
+          <td style="border-radius:4px;background:#0f1827;">
+            <a href="{{ item.listing_url }}" target="_blank" style="display:inline-block;padding:12px 15px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;line-height:16px;color:#ffffff;text-decoration:none;">View bike</a>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td style="border-radius:4px;background:#d97706;">
+            <a href="{{ item.deposit_url }}" target="_blank" style="display:inline-block;padding:12px 15px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;line-height:16px;color:#ffffff;text-decoration:none;">Place a deposit</a>
+          </td>
+        </tr>
+      </table>
+      <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;margin:12px 0 0;color:#78716c;">A deposit reserves your bike while we arrange the remaining payment.</p>
+    </td>
+  </tr>
+</table>
+{% endfor %}
+
+<p style="font-size:13px;color:#57534e;margin:24px 0 0;">You are receiving this because you asked to be notified when motorcycles or scooters are added to our stock.</p>
+{% endblock %}
+
+{% block unsubscribe %}<br><a href="{{ unsubscribe_url }}" style="color:#78716c; text-decoration:underline;">Unsubscribe from stock alerts</a>{% endblock %}

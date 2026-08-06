@@ -9,12 +9,22 @@ from .views.bike_order_views import (
     BikeOrderDetailView,
     BikeOrderPaymentIntentView,
 )
+from .views.stock_alert_views import (
+    AdminStockAlertSendView,
+    AdminStockAlertView,
+    StockAlertSubscribeView,
+    StockAlertUnsubscribeView,
+)
 
 app_name = 'inventory'
 router = DefaultRouter()
 router.register(r'bikes', MotorcycleViewSet, basename='motorcycle')
 
 urlpatterns = [
+    path('stock-alerts/subscribe/', StockAlertSubscribeView.as_view(), name='stock-alert-subscribe'),
+    path('stock-alerts/unsubscribe/<uuid:token>/', StockAlertUnsubscribeView.as_view(), name='stock-alert-unsubscribe'),
+    path('admin/stock-alerts/', AdminStockAlertView.as_view(), name='admin-stock-alerts'),
+    path('admin/stock-alerts/send/', AdminStockAlertSendView.as_view(), name='admin-stock-alert-send'),
     path('bike-orders/', BikeOrderCreateView.as_view(), name='bike-order-create'),
     path('bike-orders/<str:order_reference>/', BikeOrderDetailView.as_view(), name='bike-order-detail'),
     path('bike-orders/<str:order_reference>/payment-intent/', BikeOrderPaymentIntentView.as_view(), name='bike-order-payment-intent'),

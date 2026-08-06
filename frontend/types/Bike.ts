@@ -20,6 +20,7 @@ export type Bike = {
   vehicle_type: 'motorcycle' | 'scooter';
   status: 'for_sale' | 'available_soon' | 'sold' | 'reserved' | 'unavailable' | 'hide';
   popular?: boolean;
+  include_in_stock_alerts: boolean;
   odometer: number;
   engine_size: number;
   range: number;
