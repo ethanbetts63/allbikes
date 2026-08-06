@@ -110,7 +110,7 @@ class AdminPartsOrderDetailSerializer(serializers.ModelSerializer):
     def get_messages(self, obj):
         content_type = ContentType.objects.get_for_model(PartsOrder)
         return list(Message.objects.filter(content_type=content_type, object_id=obj.id).values(
-            'id', 'message_type', 'to', 'subject', 'status', 'sent_at', 'created_at',
+            'id', 'message_type', 'channel', 'to', 'subject', 'status', 'sent_at', 'created_at',
         ))
 
 

@@ -12,7 +12,7 @@ const TYPE_LABELS: Record<string, string> = {
   hire_confirmation:     'Hire Confirmation',
   admin_new_hire:        'Admin New Hire',
   admin_service_booking: 'Admin Service Booking',
-  stock_alert_update:    'Scooter Stock Alert',
+  stock_alert_update:    'Stock Alert Update',
 };
 
 /** Falls back to the raw type so new message types still render something. */

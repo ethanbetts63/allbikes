@@ -58,14 +58,14 @@ class TestPartsOrdersToAction:
         refs = [o['order_reference'] for o in data['parts_orders_to_action']]
         assert refs == [paid.order_reference]
 
-    @pytest.mark.parametrize('status', ['completed', 'cancelled', 'refunded'])
-    def test_settled_orders_are_excluded(self, admin_client, status):
+    @pytest.mark.parametrize('status', ['pending_payment', 'completed', 'cancelled', 'refunded'])
+    def test_unpaid_or_settled_orders_are_excluded(self, admin_client, status):
         _parts_order(status)
         data = admin_client.get(URL).json()
         assert data['parts_orders_to_action'] == []
 
-    @pytest.mark.parametrize('status', ['pending_payment', 'paid', 'dispatched', 'partially_refunded'])
-    def test_every_other_status_needs_action(self, admin_client, status):
+    @pytest.mark.parametrize('status', ['paid', 'dispatched', 'partially_refunded'])
+    def test_paid_orders_needing_action_are_listed(self, admin_client, status):
         _parts_order(status)
         data = admin_client.get(URL).json()
         assert len(data['parts_orders_to_action']) == 1

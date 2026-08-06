@@ -7,7 +7,9 @@ from inventory.models import BikeOrder, Motorcycle
 from parts.models import PartsOrder
 from product.models import Product, ProductOrder
 
-PARTS_ORDER_SETTLED = ['completed', 'cancelled', 'refunded']
+# Only orders whose payment has cleared require workshop or dispatch action.
+# Pending-payment checkouts are intentionally excluded from admin notifications.
+PARTS_ORDER_ACTION_STATUSES = ['paid', 'dispatched', 'partially_refunded']
 
 
 class AdminNotificationsView(APIView):
@@ -21,7 +23,7 @@ class AdminNotificationsView(APIView):
             is_active=True, stock_quantity__lte=Product.LOW_STOCK_THRESHOLD
         ).order_by('stock_quantity', 'name')
         active_hires = HireBooking.objects.filter(status__in=['confirmed', 'active']).select_related('motorcycle').order_by('hire_start')
-        parts_orders = PartsOrder.objects.exclude(status__in=PARTS_ORDER_SETTLED).prefetch_related('items').order_by('created_at')
+        parts_orders = PartsOrder.objects.filter(status__in=PARTS_ORDER_ACTION_STATUSES).prefetch_related('items').order_by('created_at')
 
         return Response({
             'product_orders_to_action': [

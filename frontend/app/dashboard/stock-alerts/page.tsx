@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bell, ExternalLink, Pencil, Send, Trash2 } from 'lucide-react';
+import { Bell, ChevronLeft, ChevronRight, ExternalLink, Pencil, Send, Trash2 } from 'lucide-react';
 import { adminGetStockAlerts, adminSendStockAlert, setMotorcycleStockAlertInclusion } from '@/lib/api';
 import type { StockAlertAdminData } from '@/types/StockAlert';
+import StockAlertMessageHistory from './_components/StockAlertMessageHistory';
 
 const LISTING_STATUS_STYLE: Record<string, { row: string; swatch: string; label: string }> = {
   for_sale: { row: 'bg-emerald-50 hover:bg-emerald-100', swatch: 'bg-emerald-300', label: 'For sale' },
@@ -15,6 +16,7 @@ const LISTING_STATUS_STYLE: Record<string, { row: string; swatch: string; label:
   hide: { row: 'bg-slate-200 hover:bg-slate-300', swatch: 'bg-slate-500', label: 'Hidden' },
 };
 const LISTING_STATUS_LEGEND = ['for_sale', 'available_soon', 'reserved', 'sold', 'unavailable', 'hide'];
+const LISTINGS_PAGE_SIZE = 20;
 
 const formatDate = (value: string | null) => value ? new Intl.DateTimeFormat('en-AU', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
 
@@ -23,6 +25,7 @@ export default function StockAlertsAdminPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [removingId, setRemovingId] = useState<number | null>(null);
+  const [listingPage, setListingPage] = useState(1);
   const [error, setError] = useState('');
   const router = useRouter();
   const load = () => adminGetStockAlerts().then(setData).catch(() => setError('Could not load the mailing list.')).finally(() => setLoading(false));
@@ -66,6 +69,11 @@ export default function StockAlertsAdminPage() {
 
   const activeSubscribers = data.subscribers.filter((subscriber) => subscriber.status === 'active').length;
   const canSend = data.preview.items.length > 0 && data.preview.recipient_count > 0 && !sending;
+  const listingPageCount = Math.max(1, Math.ceil(data.included_bikes.length / LISTINGS_PAGE_SIZE));
+  const currentListingPage = Math.min(listingPage, listingPageCount);
+  const visibleListings = data.included_bikes.slice((currentListingPage - 1) * LISTINGS_PAGE_SIZE, currentListingPage * LISTINGS_PAGE_SIZE);
+  const listingStart = data.included_bikes.length ? (currentListingPage - 1) * LISTINGS_PAGE_SIZE + 1 : 0;
+  const listingEnd = Math.min(currentListingPage * LISTINGS_PAGE_SIZE, data.included_bikes.length);
 
   return (
     <div className="p-4 md:p-6">
@@ -103,7 +111,8 @@ export default function StockAlertsAdminPage() {
           <h2 className="text-lg font-bold">Listings included in mailing list</h2>
           <p className="mt-1 text-sm text-[var(--text-dark-secondary)]">These listings are enabled for stock alerts. Only new, demo, and used motorcycles and scooters that are for sale and have not already been emailed are included in the preview above.</p>
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-500"><span className="font-medium text-slate-600">Row colour:</span>{LISTING_STATUS_LEGEND.map((statusKey) => <span key={statusKey} className="inline-flex items-center gap-1.5"><span className={`inline-block h-3 w-3 rounded-sm ${LISTING_STATUS_STYLE[statusKey].swatch}`} />{LISTING_STATUS_STYLE[statusKey].label}</span>)}</div>
-          <div className="mt-3 overflow-x-auto"><table className="w-full min-w-[680px] text-left text-sm"><thead className="border-b text-xs uppercase text-gray-500"><tr><th className="pb-2">Listing</th><th className="pb-2">Condition</th><th className="pb-2">Type</th><th className="pb-2 text-right">Price</th><th className="pb-2 text-right">Actions</th></tr></thead><tbody>{data.included_bikes.length ? data.included_bikes.map((bike) => <tr key={bike.id} className={`border-b border-gray-100 ${LISTING_STATUS_STYLE[bike.status]?.row ?? 'hover:bg-slate-50'}`}><td className="py-2 font-medium text-black"><span className="sr-only">Status: {LISTING_STATUS_STYLE[bike.status]?.label ?? bike.status}. </span>{bike.title}</td><td className="py-2 capitalize">{bike.condition}</td><td className="py-2 capitalize">{bike.vehicle_type}</td><td className="py-2 text-right font-semibold text-black">{bike.price_label}</td><td className="py-2"><div className="flex justify-end gap-1"><button type="button" title={`View ${bike.title}`} aria-label={`View ${bike.title}`} onClick={() => window.open(bike.listing_url, '_blank', 'noopener,noreferrer')} className="rounded p-2 hover:bg-gray-100"><ExternalLink className="h-4 w-4" /></button><button type="button" title={`Edit ${bike.title}`} aria-label={`Edit ${bike.title}`} onClick={() => router.push(`/dashboard/edit-motorcycle/${bike.id}`)} className="rounded p-2 hover:bg-gray-100"><Pencil className="h-4 w-4" /></button><button type="button" title={`Remove ${bike.title} from mailing list`} aria-label={`Remove ${bike.title} from mailing list`} disabled={removingId === bike.id} onClick={() => removeFromMailingList(bike.id, bike.title)} className="rounded p-2 text-rose-600 hover:bg-rose-50 disabled:opacity-50"><Trash2 className="h-4 w-4" /></button></div></td></tr>) : <tr><td colSpan={5} className="py-6 text-center text-gray-500">No listings are enabled for the mailing list.</td></tr>}</tbody></table></div>
+          <div className="mt-3 overflow-x-auto"><table className="w-full min-w-[680px] text-left text-sm"><thead className="border-b text-xs uppercase text-gray-500"><tr><th className="pb-2">Listing</th><th className="pb-2">Condition</th><th className="pb-2">Type</th><th className="pb-2 text-right">Price</th><th className="pb-2 text-right">Actions</th></tr></thead><tbody>{data.included_bikes.length ? visibleListings.map((bike) => <tr key={bike.id} className={`border-b border-gray-100 ${LISTING_STATUS_STYLE[bike.status]?.row ?? 'hover:bg-slate-50'}`}><td className="py-2 font-medium text-black"><span className="sr-only">Status: {LISTING_STATUS_STYLE[bike.status]?.label ?? bike.status}. </span>{bike.title}</td><td className="py-2 capitalize">{bike.condition}</td><td className="py-2 capitalize">{bike.vehicle_type}</td><td className="py-2 text-right font-semibold text-black">{bike.price_label}</td><td className="py-2"><div className="flex justify-end gap-1"><button type="button" title={`View ${bike.title}`} aria-label={`View ${bike.title}`} onClick={() => window.open(bike.listing_url, '_blank', 'noopener,noreferrer')} className="rounded p-2 hover:bg-gray-100"><ExternalLink className="h-4 w-4" /></button><button type="button" title={`Edit ${bike.title}`} aria-label={`Edit ${bike.title}`} onClick={() => router.push(`/dashboard/edit-motorcycle/${bike.id}`)} className="rounded p-2 hover:bg-gray-100"><Pencil className="h-4 w-4" /></button><button type="button" title={`Remove ${bike.title} from mailing list`} aria-label={`Remove ${bike.title} from mailing list`} disabled={removingId === bike.id} onClick={() => removeFromMailingList(bike.id, bike.title)} className="rounded p-2 text-rose-600 hover:bg-rose-50 disabled:opacity-50"><Trash2 className="h-4 w-4" /></button></div></td></tr>) : <tr><td colSpan={5} className="py-6 text-center text-gray-500">No listings are enabled for the mailing list.</td></tr>}</tbody></table></div>
+          <footer className="mt-3 flex flex-col gap-3 border-t border-gray-200 pt-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm text-slate-500">Showing {listingStart}-{listingEnd} of {data.included_bikes.length.toLocaleString('en-AU')}</p><div className="flex items-center gap-2"><button type="button" disabled={currentListingPage <= 1} onClick={() => setListingPage(currentListingPage - 1)} className="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-50 disabled:text-slate-400"><ChevronLeft className="mr-1 h-4 w-4" />Previous</button><span className="min-w-20 text-center text-sm text-slate-600">Page {currentListingPage} of {listingPageCount}</span><button type="button" disabled={currentListingPage >= listingPageCount} onClick={() => setListingPage(currentListingPage + 1)} className="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-50 disabled:text-slate-400">Next<ChevronRight className="ml-1 h-4 w-4" /></button></div></footer>
         </section>
 
         <section className="rounded-lg border border-gray-200 bg-white p-4 md:p-5">
@@ -111,7 +120,8 @@ export default function StockAlertsAdminPage() {
           <div className="mt-3 overflow-x-auto"><table className="w-full min-w-[560px] text-left text-sm"><thead className="border-b text-xs uppercase text-gray-500"><tr><th className="pb-2">Email</th><th className="pb-2">Status</th><th className="pb-2">Signed up</th><th className="pb-2">Unsubscribed</th></tr></thead><tbody>{data.subscribers.length ? data.subscribers.map((subscriber) => <tr key={subscriber.id} className="border-b border-gray-100"><td className="py-2 font-medium text-black">{subscriber.email}</td><td className="py-2 capitalize">{subscriber.status}</td><td className="py-2">{formatDate(subscriber.subscribed_at)}</td><td className="py-2">{formatDate(subscriber.unsubscribed_at)}</td></tr>) : <tr><td colSpan={4} className="py-6 text-center text-gray-500">No subscribers yet.</td></tr>}</tbody></table></div>
         </section>
 
-        <section className="rounded-lg border border-gray-200 bg-white p-4 md:p-5">
+        <StockAlertMessageHistory />
+        <section className="hidden rounded-lg border border-gray-200 bg-white p-4 md:p-5">
           <h2 className="text-lg font-bold">Sent update history</h2>
           <div className="mt-3 overflow-x-auto"><table className="w-full min-w-[680px] text-left text-sm"><thead className="border-b text-xs uppercase text-gray-500"><tr><th className="pb-2">Sent</th><th className="pb-2">Subject</th><th className="pb-2">Scooters</th><th className="pb-2">Recipients</th><th className="pb-2">Result</th></tr></thead><tbody>{data.campaigns.length ? data.campaigns.map((campaign) => <tr key={campaign.id} className="border-b border-gray-100"><td className="py-2">{formatDate(campaign.sent_at ?? campaign.created_at)}</td><td className="py-2 font-medium text-black">{campaign.subject}</td><td className="py-2">{campaign.items.length}</td><td className="py-2">{campaign.recipient_count}</td><td className="py-2 capitalize">{campaign.status} · {campaign.sent_count} sent{campaign.failed_count ? ` · ${campaign.failed_count} failed` : ''}</td></tr>) : <tr><td colSpan={5} className="py-6 text-center text-gray-500">No stock updates have been sent yet.</td></tr>}</tbody></table></div>
         </section>

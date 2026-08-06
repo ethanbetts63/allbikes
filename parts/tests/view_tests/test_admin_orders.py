@@ -95,6 +95,25 @@ class TestAdminDetailAndUpdate:
         assert len(data['items']) == 1
         assert data['stripe_payment_intent_id'] == 'pi_abc'
 
+    def test_detail_messages_match_the_shared_message_table_shape(self, admin_client):
+        from django.utils import timezone
+        from notifications.models import Message
+
+        order = _order()
+        Message.objects.create(
+            content_object=order,
+            message_type='parts_customer_confirmation',
+            channel='email',
+            to='jane@example.com',
+            subject='Your parts order',
+            status='delivered',
+            sent_at=timezone.now(),
+        )
+
+        data = admin_client.get(f'/api/parts/admin/orders/{order.order_reference}/').json()
+        assert data['messages'][0]['channel'] == 'email'
+        assert data['messages'][0]['status'] == 'delivered'
+
     def test_detail_uses_snapshotted_cost_and_shows_profit_ex_gst(self, admin_client):
         order = _order()
         item = order.items.get()

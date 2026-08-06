@@ -7,7 +7,7 @@ import { PARTS_STATUS_BADGE } from '../../_lib/partsOrderStatus';
 import NotificationSection from './NotificationSection';
 import { HEAD_ROW, ROW, TABLE_PANEL, TD_MUTED, TH } from '../_lib/notificationStyles';
 
-/** Parts orders that have not reached completed / cancelled / refunded. */
+/** Paid parts orders that still require fulfilment or refund action. */
 export default function PartsOrdersToAction({ orders }: { orders: NotificationPartsOrder[] }) {
   const router = useRouter();
   return (

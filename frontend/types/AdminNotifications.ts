@@ -66,6 +66,6 @@ export interface AdminNotifications {
   reserved_bikes: NotificationBike[];
   attention_products: NotificationProduct[];
   active_hire_bookings: NotificationHireBooking[];
-  /** Parts orders that have not reached completed / cancelled / refunded. */
+  /** Paid parts orders that still need fulfilment or refund action. */
   parts_orders_to_action: NotificationPartsOrder[];
 }
