@@ -16,18 +16,6 @@ export interface StockAlertItem {
   details: string;
 }
 
-export interface StockAlertCampaign {
-  id: number;
-  subject: string;
-  status: 'sending' | 'sent' | 'partial' | 'failed';
-  recipient_count: number;
-  sent_count: number;
-  failed_count: number;
-  created_at: string;
-  sent_at: string | null;
-  items: StockAlertItem[];
-}
-
 export interface StockAlertPreview {
   subject: string;
   recipient_count: number;
@@ -48,7 +36,6 @@ export interface StockAlertIncludedBike {
 
 export interface StockAlertAdminData {
   subscribers: StockAlertSubscriber[];
-  campaigns: StockAlertCampaign[];
   preview: StockAlertPreview;
   included_bikes: StockAlertIncludedBike[];
 }

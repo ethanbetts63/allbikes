@@ -84,7 +84,7 @@ class Motorcycle(models.Model):
     )
     include_in_stock_alerts = models.BooleanField(
         default=True,
-        help_text="Include this listing in the next scooter stock-alert email when eligible.",
+        help_text="Include this listing in the next stock-alert email.",
     )
     odometer = models.IntegerField(default=0)
     engine_size = models.IntegerField(

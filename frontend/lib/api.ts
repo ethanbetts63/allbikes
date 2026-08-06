@@ -14,7 +14,7 @@ import type { BookingRequestLog } from '@/types/BookingRequestLog';
 import type { Booking, BookingInput, BlockedDate } from '@/types/Booking';
 import type { ServiceSettings } from '@/types/ServiceSettings';
 import type { HireBooking, HireSettings } from '@/types/HireBooking';
-import type { StockAlertAdminData, StockAlertCampaign } from '@/types/StockAlert';
+import type { StockAlertAdminData } from '@/types/StockAlert';
 
 /**
  * A centralized module for all API interactions.
@@ -241,7 +241,7 @@ export async function adminGetStockAlerts(): Promise<StockAlertAdminData> {
     return handleResponse(await authedFetch('/api/inventory/admin/stock-alerts/'));
 }
 
-export async function adminSendStockAlert(): Promise<{ campaign: StockAlertCampaign }> {
+export async function adminSendStockAlert(): Promise<{ sent_count: number; failed_count: number }> {
     return handleResponse(await authedFetch('/api/inventory/admin/stock-alerts/send/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

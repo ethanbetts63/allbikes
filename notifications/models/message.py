@@ -30,12 +30,19 @@ class Message(models.Model):
         ('parts_customer_backorder_update', 'Parts Customer Backorder Update'),
         ('parts_customer_refund_update', 'Parts Customer Refund Update'),
         ('parts_customer_order_arranged', 'Parts Customer Order Arranged'),
-        ('stock_alert_update', 'Scooter Stock Alert'),
+        ('stock_alert_update', 'Stock Alert Update'),
     ]
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey('content_type', 'object_id')
+    stock_alert_subscriber = models.ForeignKey(
+        'inventory.StockAlertSubscriber',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='messages',
+    )
 
     to = models.CharField(max_length=255)
     subject = models.CharField(max_length=500, blank=True)

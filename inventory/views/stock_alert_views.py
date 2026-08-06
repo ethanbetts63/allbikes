@@ -3,8 +3,8 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from inventory.models import Motorcycle, StockAlertCampaign, StockAlertSubscriber
-from inventory.stock_alerts import preview_data, send_next_campaign
+from inventory.models import Motorcycle, StockAlertSubscriber
+from inventory.stock_alerts import preview_data, send_next_stock_alert
 
 
 class SubscriptionSerializer(serializers.Serializer):
@@ -18,32 +18,6 @@ def _subscriber_data(subscriber):
         'status': subscriber.status,
         'subscribed_at': subscriber.subscribed_at,
         'unsubscribed_at': subscriber.unsubscribed_at,
-    }
-
-
-def _campaign_data(campaign):
-    return {
-        'id': campaign.id,
-        'subject': campaign.subject,
-        'status': campaign.status,
-        'recipient_count': campaign.recipient_count,
-        'sent_count': campaign.sent_count,
-        'failed_count': campaign.failed_count,
-        'created_at': campaign.created_at,
-        'sent_at': campaign.sent_at,
-        'message_id': next((recipient.message_id for recipient in campaign.recipients.all() if recipient.message_id), None),
-        'items': [
-            {
-                'id': item.id,
-                'title': item.title,
-                'listing_url': item.listing_url,
-                'deposit_url': item.deposit_url,
-                'image_url': item.image_url,
-                'price_label': item.price_label,
-                'details': item.details,
-            }
-            for item in campaign.items.all()
-        ],
     }
 
 
@@ -102,10 +76,8 @@ class AdminStockAlertView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
-        campaigns = StockAlertCampaign.objects.prefetch_related('items', 'recipients').all()[:50]
         return Response({
             'subscribers': [_subscriber_data(subscriber) for subscriber in StockAlertSubscriber.objects.all()],
-            'campaigns': [_campaign_data(campaign) for campaign in campaigns],
             'preview': preview_data(),
             'included_bikes': [
                 _included_bike_data(bike)
@@ -119,8 +91,7 @@ class AdminStockAlertSendView(APIView):
 
     def post(self, request):
         try:
-            campaign = send_next_campaign()
+            result = send_next_stock_alert()
         except ValueError as exc:
             return Response({'detail': str(exc)}, status=400)
-        campaign = StockAlertCampaign.objects.prefetch_related('items', 'recipients').get(pk=campaign.pk)
-        return Response({'campaign': _campaign_data(campaign)}, status=201)
+        return Response(result, status=201)

@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from inventory.models import StockAlertSubscriber
-from inventory.stock_alerts import eligible_scooters, send_next_campaign
+from inventory.stock_alerts import eligible_bikes, send_next_stock_alert
 from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
 from notifications.models import Message
 from data_management.tests.factories.user_factory import UserFactory
@@ -26,27 +26,26 @@ def test_public_signup_is_idempotent_and_reactivates_an_unsubscribed_email():
 
 
 @pytest.mark.django_db
-def test_campaign_sends_each_active_subscriber_once_and_excludes_sent_listings(monkeypatch):
+def test_stock_alert_send_uses_only_the_listing_flag_and_clears_it(monkeypatch):
     scooter = MotorcycleFactory(condition='used', vehicle_type='scooter', status='for_sale')
-    new_scooter = MotorcycleFactory(condition='new', vehicle_type='scooter', status='for_sale')
-    demo_scooter = MotorcycleFactory(condition='demo', vehicle_type='scooter', status='for_sale')
-    motorcycle = MotorcycleFactory(condition='used', vehicle_type='motorcycle', status='for_sale')
-    excluded_scooter = MotorcycleFactory(
-        condition='used', vehicle_type='scooter', status='for_sale', include_in_stock_alerts=False,
-    )
+    hidden_parts_bike = MotorcycleFactory(condition='parts', vehicle_type='motorcycle', status='hide')
+    excluded_bike = MotorcycleFactory(include_in_stock_alerts=False)
     StockAlertSubscriber.objects.create(email='first@example.com')
     StockAlertSubscriber.objects.create(email='second@example.com')
     monkeypatch.setattr('inventory.stock_alerts._send_mailgun', lambda *args, **kwargs: None)
 
-    campaign = send_next_campaign()
+    result = send_next_stock_alert()
 
-    assert campaign.status == 'sent'
-    assert campaign.sent_count == 2
-    assert set(campaign.items.values_list('motorcycle_id', flat=True)) == {scooter.id, new_scooter.id, demo_scooter.id, motorcycle.id}
-    assert excluded_scooter.id not in campaign.items.values_list('motorcycle_id', flat=True)
-    assert campaign.recipients.count() == 2
+    assert result == {'sent_count': 2, 'failed_count': 0}
     assert Message.objects.filter(message_type='stock_alert_update', status='sent').count() == 2
-    assert list(eligible_scooters()) == []
+    assert set(Message.objects.filter(message_type='stock_alert_update').values_list('stock_alert_subscriber_id', flat=True)) == set(StockAlertSubscriber.objects.values_list('id', flat=True))
+    assert set(eligible_bikes()) == set()
+    scooter.refresh_from_db()
+    hidden_parts_bike.refresh_from_db()
+    excluded_bike.refresh_from_db()
+    assert scooter.include_in_stock_alerts is False
+    assert hidden_parts_bike.include_in_stock_alerts is False
+    assert excluded_bike.include_in_stock_alerts is False
 
 
 @pytest.mark.django_db
