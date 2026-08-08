@@ -45,7 +45,9 @@ def eligible_bikes():
 
 def item_snapshot(bike, position):
     primary = bike.stock_alert_images[0] if bike.stock_alert_images else None
-    image_url = _absolute_media_url(primary.medium.url if primary else '')
+    # `email`, not `medium`: the WebP variants keep an alpha channel that email
+    # clients render as a black background. See MotorcycleImage.email.
+    image_url = _absolute_media_url(primary.email.url if primary else '')
     return {
         'id': bike.id,
         'position': position,

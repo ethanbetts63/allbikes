@@ -27,7 +27,7 @@ export default function OrderConfirmationDetails({ order }: { order: Order }) {
           </p>
           <p className="font-bold text-[var(--text-dark-primary)]">{order.order_kind === 'product' ? order.product_name : ''}</p>
           <p className="text-[var(--text-dark-secondary)] text-sm">
-            ${amountPaid} incl. GST &middot; Free delivery Australia-wide
+            {`$${amountPaid} incl. GST · Free delivery Australia-wide`}
           </p>
         </div>
       )}

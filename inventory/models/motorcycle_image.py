@@ -20,6 +20,17 @@ class MotorcycleImage(models.Model):
                                     format='WEBP',
                                     options={'quality': 80})
 
+    # Stock-alert emails only. Many listing photos are cut-outs whose transparent
+    # surround holds white RGB, but resizing zeroes the RGB under the alpha (pilkit
+    # hands RGBA straight to PIL's resize). An RGBA variant therefore shows up as a
+    # black rectangle with a light fringe in any client or proxy that drops or
+    # mis-composites the channel. JPEG carries no alpha to get wrong, and pilkit
+    # mattes onto white on the way out.
+    email = ImageSpecField(source='image',
+                                   processors=[ResizeToFit(800, 600)],
+                                   format='JPEG',
+                                   options={'quality': 85})
+
     order = models.IntegerField(default=0)
 
     def __str__(self):

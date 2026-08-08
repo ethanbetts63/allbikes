@@ -299,19 +299,21 @@ const BikeDetailPage = ({
                     {bike.popular && <PopularBadge className="shrink-0 md:mt-1 self-start" />}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 md:items-start gap-8">
 
-                    {/* Left Column: Image Gallery */}
-                    <MediaGallery
-                        videoId={videoId}
-                        images={sortedImages}
-                        initialSelectedMedia={getInitialSelectedMedia(bike)}
-                        altText={bikeAltText}
-                        overlay={statusOverlay}
-                    />
+                    {/* Left Column, row 1: Image Gallery */}
+                    <div className="md:col-start-1 md:row-start-1">
+                        <MediaGallery
+                            videoId={videoId}
+                            images={sortedImages}
+                            initialSelectedMedia={getInitialSelectedMedia(bike)}
+                            altText={bikeAltText}
+                            overlay={statusOverlay}
+                        />
+                    </div>
 
-                    {/* Right Column: Specifications & Description */}
-                    <div>
+                    {/* Right Column: purchase options & specifications */}
+                    <div className="md:col-start-2 md:row-start-1 md:row-span-2">
                         <PriceDisplay
                             price={bike.price}
                             discount_price={bike.discount_price}
@@ -365,7 +367,7 @@ const BikeDetailPage = ({
                                     Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
                                 </Link>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
-                                    Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we&apos;ll be in touch to arrange the rest.
+                                    {`Secure your place with a $${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch to arrange the rest.`}
                                 </p>
                             </div>
                         )}
@@ -387,7 +389,7 @@ const BikeDetailPage = ({
                         )}
 
                         {/* Specifications */}
-                        <div className="mb-8">
+                        <div>
                             <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Specifications</h2>
                             <ul className="divide-y divide-stone-100">
                                 {specifications.map((spec) => {
@@ -406,13 +408,14 @@ const BikeDetailPage = ({
                             </ul>
                         </div>
 
-                        {/* Description */}
-                        <div>
-                            <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Description</h2>
-                            <p className="text-[var(--text-dark-secondary)] leading-relaxed text-sm">
-                                {bike.description || 'No description available.'}
-                            </p>
-                        </div>
+                    </div>
+
+                    {/* Left Column, row 2: Description — sits beside the specifications on desktop */}
+                    <div className="md:col-start-1 md:row-start-2">
+                        <h2 className="text-lg font-black text-[var(--text-dark-primary)] uppercase tracking-wide mb-3">Description</h2>
+                        <p className="text-[var(--text-dark-secondary)] leading-relaxed text-sm">
+                            {bike.description || 'No description available.'}
+                        </p>
                     </div>
                 </div>
             </div>

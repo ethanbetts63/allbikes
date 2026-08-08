@@ -78,7 +78,7 @@ export default function NewScooterColourPurchase({
             </Link>
           )}
           <p className="mt-2 text-center text-xs text-[var(--text-dark-secondary)]">
-            Secure your place with a ${parseFloat(depositAmount).toLocaleString()} deposit — we&apos;ll be in touch to arrange the rest.
+            {`Secure your place with a $${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch to arrange the rest.`}
           </p>
         </div>
       )}
