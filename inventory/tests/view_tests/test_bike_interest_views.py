@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from django.core.cache import cache
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -31,12 +32,17 @@ def admin_client():
 
 
 @pytest.fixture(autouse=True)
-def no_throttling(settings):
-    """The public form is rate limited; the limit itself is not under test here."""
-    settings.REST_FRAMEWORK = {
-        **settings.REST_FRAMEWORK,
-        'DEFAULT_THROTTLE_RATES': {**settings.REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'], 'bike_interest': None},
-    }
+def reset_throttle_history():
+    """Give each test a fresh throttle budget.
+
+    DRF binds THROTTLE_RATES as a class attribute at import time, so overriding
+    the rate via settings has no effect. The throttle counts against the anon
+    IP in Django's cache, which persists for the whole test run — without this,
+    tests silently start 429ing once the module has made enough requests.
+    """
+    cache.clear()
+    yield
+    cache.clear()
 
 
 @pytest.mark.django_db
@@ -96,6 +102,106 @@ class TestBikeInterestCreateView:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert not BikeInterestEnquiry.objects.exists()
+
+    def test_notifies_admin_by_email_and_sms(self, api_client, settings):
+        """
+        GIVEN a bike
+        WHEN someone registers interest
+        THEN admin gets both an email and an SMS, so a reply can go out fast.
+        """
+        settings.ADMIN_EMAILS = ['admin@example.com']
+        bike = MotorcycleFactory()
+
+        with patch('notifications.utils.email._send_admin_sms') as sms:
+            api_client.post(
+                reverse('inventory:bike-interest-create'),
+                {'motorcycle': bike.id, 'email': 'buyer@example.com'},
+                format='json',
+            )
+
+        message = Message.objects.get(message_type='bike_interest_admin_new')
+        assert message.to == 'admin@example.com'
+        assert 'buyer@example.com' in message.body_text
+        assert str(bike) in message.subject
+        sms.assert_called_once()
+        assert 'buyer@example.com' in sms.call_args.args[0]
+
+    def test_repeat_submission_does_not_re_notify_admin(self, api_client, settings):
+        """
+        GIVEN an existing enquiry
+        WHEN the same person submits the same bike again
+        THEN admin is not alerted a second time.
+        """
+        settings.ADMIN_EMAILS = ['admin@example.com']
+        bike = MotorcycleFactory()
+        url = reverse('inventory:bike-interest-create')
+        payload = {'motorcycle': bike.id, 'email': 'buyer@example.com'}
+
+        with patch('notifications.utils.email._send_admin_sms') as sms:
+            api_client.post(url, payload, format='json')
+            api_client.post(url, payload, format='json')
+
+        assert Message.objects.filter(message_type='bike_interest_admin_new').count() == 1
+        assert sms.call_count == 1
+
+    def test_enquiry_is_still_saved_when_the_notification_fails(self, api_client, settings):
+        """
+        GIVEN admin notification is broken
+        WHEN someone registers interest
+        THEN the enquiry is still stored and the customer still sees success.
+
+        The enquiry is the thing of value; a failed alert must not lose it.
+        """
+        settings.ADMIN_EMAILS = ['admin@example.com']
+        bike = MotorcycleFactory()
+
+        with patch(
+            'inventory.views.bike_interest_views.send_bike_interest_admin_new',
+            side_effect=Exception('twilio down'),
+        ):
+            response = api_client.post(
+                reverse('inventory:bike-interest-create'),
+                {'motorcycle': bike.id, 'email': 'buyer@example.com'},
+                format='json',
+            )
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert BikeInterestEnquiry.objects.filter(email='buyer@example.com').exists()
+
+    def test_sms_still_sends_when_no_admin_email_is_configured(self, api_client, settings):
+        """A missing ADMIN_EMAILS must not silently drop the SMS as well."""
+        settings.ADMIN_EMAILS = []
+        settings.ADMIN_EMAIL = ''
+        bike = MotorcycleFactory()
+
+        with patch('notifications.utils.email._send_admin_sms') as sms:
+            api_client.post(
+                reverse('inventory:bike-interest-create'),
+                {'motorcycle': bike.id, 'email': 'buyer@example.com'},
+                format='json',
+            )
+
+        assert not Message.objects.filter(message_type='bike_interest_admin_new').exists()
+        sms.assert_called_once()
+
+    def test_is_rate_limited(self, api_client):
+        """
+        GIVEN the public, unauthenticated form
+        WHEN one client submits far more than the hourly allowance
+        THEN it is throttled, so the endpoint cannot be used to bulk-enrol
+             addresses or spam admin with notifications.
+        """
+        bikes = MotorcycleFactory.create_batch(12)
+        url = reverse('inventory:bike-interest-create')
+
+        statuses = [
+            api_client.post(
+                url, {'motorcycle': bike.id, 'email': f'buyer{index}@example.com'}, format='json'
+            ).status_code
+            for index, bike in enumerate(bikes)
+        ]
+
+        assert status.HTTP_429_TOO_MANY_REQUESTS in statuses
 
     def test_rejects_unknown_bike(self, api_client):
         response = api_client.post(

@@ -52,7 +52,7 @@ export default function NewScooterColourPurchase({
             ))}
           </select>
           <p className="mt-1.5 text-xs text-[var(--text-dark-secondary)]">
-            Available finishes are shown in the image gallery.
+            Finishes are shown in the image gallery.
           </p>
         </div>
       )}

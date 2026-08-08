@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
@@ -7,7 +9,9 @@ from rest_framework.views import APIView
 
 from data_management.throttling import BikeInterestThrottle
 from inventory.models import BikeInterestEnquiry, Motorcycle
-from notifications.utils.email import send_bike_interest_reply
+from notifications.utils.email import send_bike_interest_admin_new, send_bike_interest_reply
+
+logger = logging.getLogger(__name__)
 
 REPLY_SUBJECT = 'About the {title}'
 
@@ -18,7 +22,7 @@ INTRO = 'Thanks for enquiring about the {title}.'
 BIKE_LINK = 'Here it is again if you want another look: {url}'
 
 NEW_BIKE_COLOUR_QUESTION = (
-    "Do you know which colour you'd are interested in? The options are {options}."
+    "Do you know which colour you'd be interested in? The options are {options}."
 )
 
 NEW_BIKE_BODY = (
@@ -113,7 +117,15 @@ class BikeInterestCreateView(APIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email'].strip().casefold()
         motorcycle = serializer.validated_data['motorcycle']
-        _, created = BikeInterestEnquiry.objects.get_or_create(motorcycle=motorcycle, email=email)
+        enquiry, created = BikeInterestEnquiry.objects.get_or_create(motorcycle=motorcycle, email=email)
+        if created:
+            # Only on a genuinely new row: a repeat submit of the same bike and
+            # address must not re-alert. Never allowed to fail the submission —
+            # the enquiry is already saved and is what the customer cares about.
+            try:
+                send_bike_interest_admin_new(enquiry)
+            except Exception:
+                logger.exception('Failed to notify admin of bike enquiry %s', enquiry.pk)
         return Response(
             {'detail': 'Thanks for your interest — we will be in touch.'},
             status=201 if created else 200,

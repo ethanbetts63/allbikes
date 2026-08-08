@@ -1,0 +1,9 @@
+{% extends "notifications/emails/base.html" %}
+{% block title %}New bike enquiry — {{ enquiry.motorcycle }}{% endblock %}
+{% block content %}
+<h1>New bike enquiry</h1>
+<p><strong>{{ enquiry.motorcycle }}</strong></p>
+<p>{{ enquiry.email }}</p>
+<p><a href="{{ listing_url }}">View the listing</a></p>
+<p>Reply to this enquiry from the Enquiries page in the dashboard.</p>
+{% endblock %}

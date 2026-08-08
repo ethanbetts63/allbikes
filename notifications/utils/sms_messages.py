@@ -21,6 +21,13 @@ def admin_new_bike_order(order):
     ).strip()
 
 
+def admin_new_bike_interest(enquiry):
+    return (
+        f"New bike enquiry: {enquiry.motorcycle} — {enquiry.email}. "
+        "Reply from the Enquiries page."
+    ).strip()
+
+
 def admin_new_hire(booking):
     return (
         f"New hire booking: {booking.booking_reference} — "

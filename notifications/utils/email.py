@@ -428,6 +428,43 @@ def send_parts_supplier_dispatch(parts_order, *, to, subject, text_body):
         return False
 
 
+def send_bike_interest_admin_new(enquiry):
+    """Tell admin an enquiry has landed, by email and SMS.
+
+    Mirrors the bike deposit notification: the value of this form is a fast,
+    personal reply, so it has to reach someone without them checking the
+    dashboard. Failures are logged and recorded but never raised — a broken
+    notification must not fail the customer's submission.
+    """
+    recipients = _admin_recipients()
+    listing_url = f'{settings.SITE_URL}/inventory/motorcycles/{enquiry.motorcycle.slug}'
+    if not recipients:
+        logger.warning(
+            "ADMIN_EMAIL not configured — skipping admin notification for bike enquiry %s",
+            enquiry.pk,
+        )
+    else:
+        subject = f'New bike enquiry — {enquiry.motorcycle}'
+        text_body = (
+            f'New bike enquiry: {enquiry.motorcycle}\n'
+            f'Email: {enquiry.email}\n\n'
+            f'Listing: {listing_url}\n\n'
+            'Reply to this enquiry from the Enquiries page in the dashboard.'
+        )
+        html_body = render_to_string(
+            'notifications/emails/bike_interest_admin_new.html',
+            {'enquiry': enquiry, 'listing_url': listing_url},
+        )
+        for to in recipients:
+            try:
+                _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+                _record(enquiry, 'bike_interest_admin_new', to, subject, text_body, html_body, 'sent')
+            except Exception as e:
+                logger.error("Failed to send admin bike enquiry notification %s: %s", enquiry.pk, e)
+                _record(enquiry, 'bike_interest_admin_new', to, subject, text_body, html_body, 'failed', str(e))
+    _send_admin_sms(sms_messages.admin_new_bike_interest(enquiry))
+
+
 def send_bike_interest_reply(enquiry, *, subject, text_body):
     """Send the staff-written reply to a bike interest enquiry.
 

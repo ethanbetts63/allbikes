@@ -32,6 +32,7 @@ class Message(models.Model):
         ('parts_customer_order_arranged', 'Parts Customer Order Arranged'),
         ('stock_alert_update', 'Stock Alert Update'),
         ('bike_interest_reply', 'Bike Interest Reply'),
+        ('bike_interest_admin_new', 'Bike Interest Admin New Enquiry'),
     ]
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
