@@ -212,7 +212,7 @@
 
 @layer utilities {
   .animate-interest-glow {
-    animation: interest-glow 30s ease-in-out infinite;
+    animation: interest-glow 20s ease-in-out infinite;
   }
 
   /* The glow is decorative attention-seeking — exactly what this opts out of. */
