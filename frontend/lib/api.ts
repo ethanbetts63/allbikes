@@ -15,6 +15,7 @@ import type { Booking, BookingInput, BlockedDate } from '@/types/Booking';
 import type { ServiceSettings } from '@/types/ServiceSettings';
 import type { HireBooking, HireSettings } from '@/types/HireBooking';
 import type { StockAlertAdminData } from '@/types/StockAlert';
+import type { BikeInterestEnquiry, BikeInterestReplyDraft } from '@/types/BikeInterest';
 
 /**
  * A centralized module for all API interactions.
@@ -245,6 +246,36 @@ export async function adminSendStockAlert(): Promise<{ sent_count: number; faile
     return handleResponse(await authedFetch('/api/inventory/admin/stock-alerts/send/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+    }));
+}
+
+// --- Bike Interest Endpoints ---
+
+export async function registerBikeInterest(motorcycle: number, email: string): Promise<void> {
+    const response = await fetch('/api/inventory/bike-interest/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ motorcycle, email }),
+    });
+    await handleResponse(response);
+}
+
+export async function adminGetBikeInterest(): Promise<{ enquiries: BikeInterestEnquiry[] }> {
+    return handleResponse(await authedFetch('/api/inventory/admin/bike-interest/'));
+}
+
+export async function adminGetBikeInterestReplyDraft(id: number): Promise<BikeInterestReplyDraft> {
+    return handleResponse(await authedFetch(`/api/inventory/admin/bike-interest/${id}/reply/`));
+}
+
+export async function adminSendBikeInterestReply(
+    id: number,
+    payload: { subject: string; body: string },
+): Promise<{ detail: string; enquiry: BikeInterestEnquiry }> {
+    return handleResponse(await authedFetch(`/api/inventory/admin/bike-interest/${id}/reply/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
     }));
 }
 

@@ -98,3 +98,36 @@ class TestPartsOrdersToAction:
             'message_type': 'test_email', 'status': 'failed', 'error_message': 'Mailgun timeout',
             'created_at': data['failed_emails'][0]['created_at'],
         }]
+
+
+class TestInterestEnquiries:
+    """The unanswered-enquiry feed behind the Enquiries nav badge."""
+
+    def test_lists_only_unanswered_enquiries_oldest_first(self, admin_client):
+        """
+        GIVEN two unanswered enquiries and one already replied to
+        WHEN admin notifications are fetched
+        THEN only the unanswered ones appear, oldest first.
+        """
+        from django.utils import timezone
+
+        from inventory.models import BikeInterestEnquiry
+        from inventory.tests.factories.motorcycle_factory import MotorcycleFactory
+
+        bike = MotorcycleFactory()
+        BikeInterestEnquiry.objects.create(motorcycle=bike, email='first@example.com')
+        BikeInterestEnquiry.objects.create(motorcycle=bike, email='second@example.com')
+        answered = BikeInterestEnquiry.objects.create(motorcycle=bike, email='answered@example.com')
+        answered.responded_at = timezone.now()
+        answered.save(update_fields=['responded_at'])
+
+        response = admin_client.get(URL)
+
+        assert response.status_code == 200
+        rows = response.data['interest_enquiries_to_action']
+        assert [row['email'] for row in rows] == ['first@example.com', 'second@example.com']
+        assert rows[0]['motorcycle_name'] == str(bike)
+
+    def test_is_empty_when_everything_is_answered(self, admin_client):
+        response = admin_client.get(URL)
+        assert response.data['interest_enquiries_to_action'] == []

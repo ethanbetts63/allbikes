@@ -6,7 +6,7 @@ import { Bell, ChevronLeft, ChevronRight, ExternalLink, Pencil, Send, Trash2 } f
 
 import { adminGetStockAlerts, adminSendStockAlert, setMotorcycleStockAlertInclusion } from '@/lib/api';
 import type { StockAlertAdminData } from '@/types/StockAlert';
-import StockAlertMessageHistory from './_components/StockAlertMessageHistory';
+import MessageHistorySection from '@/components/messages/MessageHistorySection';
 
 const LISTING_STATUS_STYLE: Record<string, { row: string; swatch: string; label: string }> = {
   for_sale: { row: 'bg-emerald-50 hover:bg-emerald-100', swatch: 'bg-emerald-300', label: 'For sale' },
@@ -164,7 +164,13 @@ export default function StockAlertsAdminPage() {
           </div>
         </section>
 
-        <StockAlertMessageHistory />
+        <MessageHistorySection
+          messageType="stock_alert_update"
+          title="Sent update history"
+          description="Each row is an individual stock-alert email. Select it to view the recorded message."
+          emptyMessage="No stock alert emails have been sent yet."
+          noun="stock alert message"
+        />
       </div>
     </div>
   );

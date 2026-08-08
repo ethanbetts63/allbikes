@@ -13,6 +13,7 @@ import PartsOrdersToAction from './_components/PartsOrdersToAction';
 import ProductStock from './_components/ProductStock';
 import ReservedMotorcycles from './_components/ReservedMotorcycles';
 import FailedEmails from './_components/FailedEmails';
+import InterestEnquiries from './_components/InterestEnquiries';
 
 /** Total outstanding items, which also decides whether to show "All clear". */
 const outstandingCount = (n: AdminNotifications) =>
@@ -22,6 +23,7 @@ const outstandingCount = (n: AdminNotifications) =>
   n.reserved_bikes.length +
   n.active_hire_bookings.length +
   n.attention_products.length +
+  n.interest_enquiries_to_action.length +
   n.failed_emails.length;
 
 export default function AdminNotificationsPage() {
@@ -69,6 +71,8 @@ export default function AdminNotificationsPage() {
             ...notifications.product_orders_to_action.map(order => ({ ...order, order_kind: 'product' as const, item_name: order.product_name })),
             ...notifications.bike_orders_to_action.map(order => ({ ...order, order_kind: 'bike' as const, item_name: order.motorcycle_name })),
           ]} />
+          {/* Above the inventory groups: an unanswered lead goes cold fastest. */}
+          <InterestEnquiries enquiries={notifications.interest_enquiries_to_action} />
           <ReservedMotorcycles bikes={notifications.reserved_bikes} />
           <HireBookings bookings={notifications.active_hire_bookings} />
           <ProductStock products={notifications.attention_products} />

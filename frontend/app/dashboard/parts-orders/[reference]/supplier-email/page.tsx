@@ -11,7 +11,7 @@ import {
   adminGetPartsSupplierEmailDraft, adminSendPartsSupplierEmail,
   type SupplierEmailDraft,
 } from '@/app/dashboard/parts-orders/_lib/partsAdminService';
-import SupplierEmailComposer from '../../_components/SupplierEmailComposer';
+import EmailComposer from '@/components/messages/EmailComposer';
 
 export default function SupplierEmailPage() {
   const { reference } = useParams<{ reference: string }>();
@@ -79,11 +79,13 @@ export default function SupplierEmailPage() {
           </Alert>
         )}
 
-        <SupplierEmailComposer
+        <EmailComposer
           to={to}
           subject={subject}
           body={body}
           sending={sending}
+          toPlaceholder="Enter supplier email address"
+          sendLabel="Send supplier email"
           onToChange={setTo}
           onSubjectChange={setSubject}
           onBodyChange={setBody}

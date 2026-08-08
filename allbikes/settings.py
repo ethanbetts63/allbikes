@@ -241,6 +241,7 @@ REST_FRAMEWORK = {
         'user': '10000/day',
         'login': '5/minute',
         'stock_alert_signup': '5/hour',
+        'bike_interest': '10/hour',
     }
 }
 

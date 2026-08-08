@@ -30,7 +30,7 @@ import { assetUrl } from '@/lib/assetUrl';
 import { getPrimaryVehicleImage, getSortedVehicleImages } from '@/lib/vehicleImages';
 import { buildBreadcrumbSchema } from '@/lib/seo';
 import NewScooterColourPurchase from '@/app/inventory/motorcycles/[slug]/_components/NewScooterColourPurchase';
-import StockAlertSignup from '@/app/inventory/_components/StockAlertSignup';
+import RegisterInterest from '@/app/inventory/_components/RegisterInterest';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { preload } from 'react-dom';
@@ -314,6 +314,12 @@ const BikeDetailPage = ({
 
                     {/* Right Column: purchase options & specifications */}
                     <div className="md:col-start-2 md:row-start-1 md:row-span-2">
+                        {['new', 'demo', 'used'].includes(bike.condition) && (
+                            <div className="mb-6">
+                                <RegisterInterest motorcycleId={bike.id} />
+                            </div>
+                        )}
+
                         <PriceDisplay
                             price={bike.price}
                             discount_price={bike.discount_price}
@@ -364,7 +370,7 @@ const BikeDetailPage = ({
                                     className="w-full py-3 px-6 font-bold text-sm uppercase tracking-wide transition-colors bg-highlight hover:bg-highlight/80 text-[var(--text-dark-primary)] flex items-center justify-center gap-3"
                                 >
                                     <img src={assetUrl(clickIcon)} alt="" className="h-7 w-7 opacity-70" />
-                                    Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
+                                    Reserve Now - Deposit ${parseFloat(depositAmount).toLocaleString()} 
                                 </Link>
                                 <p className="text-xs text-[var(--text-dark-secondary)] mt-2 text-center">
                                     {`Secure your place with a $${parseFloat(depositAmount).toLocaleString()} deposit — we'll be in touch to arrange the rest.`}
@@ -379,12 +385,6 @@ const BikeDetailPage = ({
                                 <Link href="/contact" className="text-sm text-[var(--highlight)] hover:underline mt-1 inline-block">
                                     Contact us about similar {vehicleLabelPlural}
                                 </Link>
-                            </div>
-                        )}
-
-                        {['new', 'demo', 'used'].includes(bike.condition) && (
-                            <div className="mb-6">
-                                <StockAlertSignup />
                             </div>
                         )}
 

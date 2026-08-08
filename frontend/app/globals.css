@@ -190,7 +190,38 @@
   border-radius: 0.25rem;
 }
 
+/* One slow swell near the start of each cycle, then dark for the rest of it.
+   Deliberately a single soft-edged glow rather than a ring or a repeated pulse:
+   a hard edge or a second flash reads as a strobe demanding attention, which is
+   the wrong tone next to the price and deposit button.
+
+   Keyframes are percentages, so the swell scales with animation-duration below.
+   To preview, shorten the duration rather than editing these — the shape stays
+   proportional. */
+@keyframes interest-glow {
+  0%, 4% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  9% {
+    box-shadow: 0 0 26px 6px color-mix(in oklab, var(--highlight) 55%, transparent);
+  }
+  18%, 100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
 @layer utilities {
+  .animate-interest-glow {
+    animation: interest-glow 30s ease-in-out infinite;
+  }
+
+  /* The glow is decorative attention-seeking — exactly what this opts out of. */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-interest-glow {
+      animation: none;
+    }
+  }
+
   .defer-section {
     content-visibility: auto;
     contain-intrinsic-size: auto 640px;

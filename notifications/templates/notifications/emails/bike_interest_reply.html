@@ -1,0 +1,12 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}{{ subject }}{% endblock %}
+
+{% block preheader %}A reply from Allbikes &amp; Scooters about the {{ enquiry.motorcycle }}.{% endblock %}
+
+{% block content %}
+{# Rendered as plain prose rather than the branded panels the order emails use.
+   This is a person replying to an enquiry — anything that reads like a generated
+   receipt undercuts the point of the enquiry form. #}
+<div style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #1c1917; line-height: 26px; white-space: pre-wrap;">{{ body }}</div>
+{% endblock %}

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from hire.models import HireBooking
-from inventory.models import BikeOrder, Motorcycle
+from inventory.models import BikeInterestEnquiry, BikeOrder, Motorcycle
 from notifications.models import Message
 from parts.models import PartsOrder
 from product.models import Product, ProductOrder
@@ -26,6 +26,10 @@ class AdminNotificationsView(APIView):
         active_hires = HireBooking.objects.filter(status__in=['confirmed', 'active']).select_related('motorcycle').order_by('hire_start')
         parts_orders = PartsOrder.objects.filter(status__in=PARTS_ORDER_ACTION_STATUSES).prefetch_related('items').order_by('created_at')
         failed_emails = Message.objects.filter(status__in=['failed', 'bounced']).order_by('-created_at')
+        # Oldest first: an enquiry left waiting longest is the one to answer next.
+        interest_enquiries = BikeInterestEnquiry.objects.filter(
+            responded_at__isnull=True
+        ).select_related('motorcycle').order_by('created_at')
 
         return Response({
             'product_orders_to_action': [
@@ -58,6 +62,11 @@ class AdminNotificationsView(APIView):
                  'status': o.status, 'has_backorder': o.has_backorder, 'item_count': len(o.items.all()),
                  'created_at': o.created_at}
                 for o in parts_orders
+            ],
+            'interest_enquiries_to_action': [
+                {'id': e.id, 'email': e.email, 'motorcycle_name': str(e.motorcycle),
+                 'created_at': e.created_at}
+                for e in interest_enquiries
             ],
             'failed_emails': [
                 {'id': message.id, 'to': message.to, 'subject': message.subject,

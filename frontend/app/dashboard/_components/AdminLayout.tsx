@@ -20,6 +20,7 @@ import {
   Key,
   Wrench,
   BellRing,
+  MessageSquare,
 } from 'lucide-react';
 import { adminGetNotifications } from '@/lib/api';
 import type { AdminNotifications } from '@/types/AdminNotifications';
@@ -86,6 +87,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     (notifications?.reserved_bikes.length ?? 0) +
     (notifications?.active_hire_bookings.length ?? 0) +
     (notifications?.attention_products.length ?? 0) +
+    (notifications?.interest_enquiries_to_action.length ?? 0) +
     (notifications?.failed_emails.length ?? 0);
 
   if (isAuthLoading) {
@@ -126,6 +128,11 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <Link href="/dashboard/stock-alerts" className={navItemClass('/dashboard/stock-alerts')}>
               <BellRing className="h-4 w-4 shrink-0" />
               <span className="flex-1">Stock Alerts</span>
+            </Link>
+            <Link href="/dashboard/bike-interest" className={navItemClass('/dashboard/bike-interest')}>
+              <MessageSquare className="h-4 w-4 shrink-0" />
+              <span className="flex-1">Enquiries</span>
+              <NavBadge count={notifications?.interest_enquiries_to_action.length ?? 0} />
             </Link>
             <Link href="/dashboard/inventory" className={navItemClass('/dashboard/inventory')}>
               <Gauge className="h-4 w-4 shrink-0" />

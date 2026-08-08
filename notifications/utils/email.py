@@ -428,6 +428,28 @@ def send_parts_supplier_dispatch(parts_order, *, to, subject, text_body):
         return False
 
 
+def send_bike_interest_reply(enquiry, *, subject, text_body):
+    """Send the staff-written reply to a bike interest enquiry.
+
+    The body is passed through verbatim: the compose screen is where a person
+    reviews and edits the wording, and the audit record must store exactly the
+    copy that was approved.
+    """
+    to = enquiry.email
+    html_body = render_to_string(
+        'notifications/emails/bike_interest_reply.html',
+        {'subject': subject, 'body': text_body, 'enquiry': enquiry},
+    )
+    try:
+        _send_mailgun(to=to, subject=subject, html_body=html_body, text_body=text_body)
+        _record(enquiry, 'bike_interest_reply', to, subject, text_body, html_body, 'sent')
+        return True
+    except Exception as e:
+        logger.error("Failed to send bike interest reply for enquiry %s to %s: %s", enquiry.pk, to, e)
+        _record(enquiry, 'bike_interest_reply', to, subject, text_body, html_body, 'failed', str(e))
+        return False
+
+
 def send_parts_customer_update(parts_order, update_type, *, backorder_days):
     """Send one of the fixed, audited customer parts-order status updates."""
     labels = {

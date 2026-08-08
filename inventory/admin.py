@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    BikeOrder, Motorcycle, MotorcycleImage, StockAlertSubscriber,
+    BikeInterestEnquiry, BikeOrder, Motorcycle, MotorcycleImage, StockAlertSubscriber,
 )
 
 class MotorcycleImageInline(admin.TabularInline):
@@ -23,6 +23,14 @@ class StockAlertSubscriberAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     search_fields = ('email',)
     readonly_fields = ('unsubscribe_token', 'subscribed_at', 'updated_at')
+
+@admin.register(BikeInterestEnquiry)
+class BikeInterestEnquiryAdmin(admin.ModelAdmin):
+    list_display = ('email', 'motorcycle', 'created_at', 'responded_at')
+    list_filter = ('responded_at',)
+    search_fields = ('email', 'motorcycle__make', 'motorcycle__model')
+    readonly_fields = ('created_at',)
+
 
 @admin.register(BikeOrder)
 class BikeOrderAdmin(admin.ModelAdmin):

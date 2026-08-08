@@ -9,6 +9,11 @@ from .views.bike_order_views import (
     BikeOrderDetailView,
     BikeOrderPaymentIntentView,
 )
+from .views.bike_interest_views import (
+    AdminBikeInterestListView,
+    AdminBikeInterestReplyView,
+    BikeInterestCreateView,
+)
 from .views.stock_alert_views import (
     AdminStockAlertSendView,
     AdminStockAlertView,
@@ -25,6 +30,9 @@ urlpatterns = [
     path('stock-alerts/unsubscribe/<uuid:token>/', StockAlertUnsubscribeView.as_view(), name='stock-alert-unsubscribe'),
     path('admin/stock-alerts/', AdminStockAlertView.as_view(), name='admin-stock-alerts'),
     path('admin/stock-alerts/send/', AdminStockAlertSendView.as_view(), name='admin-stock-alert-send'),
+    path('bike-interest/', BikeInterestCreateView.as_view(), name='bike-interest-create'),
+    path('admin/bike-interest/', AdminBikeInterestListView.as_view(), name='admin-bike-interest-list'),
+    path('admin/bike-interest/<int:pk>/reply/', AdminBikeInterestReplyView.as_view(), name='admin-bike-interest-reply'),
     path('bike-orders/', BikeOrderCreateView.as_view(), name='bike-order-create'),
     path('bike-orders/<str:order_reference>/', BikeOrderDetailView.as_view(), name='bike-order-detail'),
     path('bike-orders/<str:order_reference>/payment-intent/', BikeOrderPaymentIntentView.as_view(), name='bike-order-payment-intent'),

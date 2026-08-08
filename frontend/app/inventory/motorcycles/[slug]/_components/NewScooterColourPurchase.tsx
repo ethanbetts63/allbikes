@@ -66,7 +66,7 @@ export default function NewScooterColourPurchase({
               className="flex w-full cursor-not-allowed items-center justify-center gap-3 bg-highlight px-6 py-3 text-sm font-bold uppercase tracking-wide text-[var(--text-dark-primary)] opacity-50"
             >
               <Image src={clickIcon} alt="" width={28} height={28} className="opacity-70" />
-              Select a Colour to Continue
+              Select a Colour to Reserve
             </button>
           ) : (
             <Link
@@ -74,7 +74,7 @@ export default function NewScooterColourPurchase({
               className="flex w-full items-center justify-center gap-3 bg-highlight px-6 py-3 text-sm font-bold uppercase tracking-wide text-[var(--text-dark-primary)] transition-colors hover:bg-highlight/80"
             >
               <Image src={clickIcon} alt="" width={28} height={28} className="opacity-70" />
-              Buy Now - Deposit ${parseFloat(depositAmount).toLocaleString()}
+              Reserve Now - Deposit ${parseFloat(depositAmount).toLocaleString()}
             </Link>
           )}
           <p className="mt-2 text-center text-xs text-[var(--text-dark-secondary)]">

@@ -60,6 +60,13 @@ export interface NotificationPartsOrder {
   created_at: string;
 }
 
+export interface NotificationInterestEnquiry {
+  id: number;
+  email: string;
+  motorcycle_name: string;
+  created_at: string;
+}
+
 export interface NotificationFailedEmail {
   id: number;
   to: string;
@@ -78,5 +85,7 @@ export interface AdminNotifications {
   active_hire_bookings: NotificationHireBooking[];
   /** Paid parts orders that still need fulfilment or refund action. */
   parts_orders_to_action: NotificationPartsOrder[];
+  /** Bike interest enquiries that no one has replied to yet. */
+  interest_enquiries_to_action: NotificationInterestEnquiry[];
   failed_emails: NotificationFailedEmail[];
 }

@@ -31,6 +31,7 @@ class Message(models.Model):
         ('parts_customer_refund_update', 'Parts Customer Refund Update'),
         ('parts_customer_order_arranged', 'Parts Customer Order Arranged'),
         ('stock_alert_update', 'Stock Alert Update'),
+        ('bike_interest_reply', 'Bike Interest Reply'),
     ]
 
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)

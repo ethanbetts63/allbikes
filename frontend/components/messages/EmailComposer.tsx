@@ -3,18 +3,24 @@ import { Button } from '@/components/ui/button';
 const FIELD = 'mt-1 h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm';
 
 /**
- * The compose fields for the supplier order email.
+ * Shared compose fields for staff-written outbound email.
  *
- * `to` starts blank on purpose — no supplier address is stored or prefilled
- * anywhere, so a staff member has to enter it before anything can be sent.
+ * `toReadOnly` is the meaningful choice here. The parts supplier email starts
+ * blank and editable because no supplier address is stored anywhere and a
+ * person must supply it. A reply to a customer enquiry is the opposite: the
+ * recipient is fixed to the address that wrote in, so it is shown but locked.
  */
-export default function SupplierEmailComposer({
-  to, subject, body, sending, onToChange, onSubjectChange, onBodyChange, onSend,
+export default function EmailComposer({
+  to, subject, body, sending, toPlaceholder, toReadOnly = false, sendLabel = 'Send email',
+  onToChange, onSubjectChange, onBodyChange, onSend,
 }: {
   to: string;
   subject: string;
   body: string;
   sending: boolean;
+  toPlaceholder?: string;
+  toReadOnly?: boolean;
+  sendLabel?: string;
   onToChange: (value: string) => void;
   onSubjectChange: (value: string) => void;
   onBodyChange: (value: string) => void;
@@ -29,8 +35,9 @@ export default function SupplierEmailComposer({
           onChange={(e) => onToChange(e.target.value)}
           type="email"
           autoComplete="off"
-          placeholder="Enter supplier email address"
-          className={FIELD}
+          readOnly={toReadOnly}
+          placeholder={toPlaceholder}
+          className={toReadOnly ? `${FIELD} bg-muted text-[var(--text-dark-secondary)]` : FIELD}
         />
       </label>
       <label className="block text-sm font-medium">
@@ -47,7 +54,7 @@ export default function SupplierEmailComposer({
         />
       </label>
       <Button onClick={onSend} disabled={sending || !to.trim() || !subject.trim() || !body.trim()}>
-        {sending ? 'Sending…' : 'Send supplier email'}
+        {sending ? 'Sending…' : sendLabel}
       </Button>
     </div>
   );
