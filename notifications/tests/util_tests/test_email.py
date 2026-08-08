@@ -202,3 +202,65 @@ class TestSendServiceBookingConfirmation:
         assert 'timeout' in msg.error_message
 
 
+
+
+# Bound at import time, before conftest's autouse fixture swaps the module
+# attribute for a MagicMock. This name keeps pointing at the genuine function,
+# which is the thing these tests need to exercise.
+from notifications.utils.email import _send_admin_sms as real_send_admin_sms
+
+
+@pytest.mark.django_db
+class TestSendAdminSms:
+    """`_send_admin_sms` runs in every environment, DEBUG included."""
+
+    @pytest.fixture
+    def twilio(self, mocker):
+        return mocker.patch('twilio.rest.Client')
+
+    def _send(self, settings, debug):
+        settings.DEBUG = debug
+        settings.ADMIN_NUMBERS = ['+61400000000']
+        settings.TWILIO_ACCOUNT_SID = 'sid'
+        settings.TWILIO_AUTH_TOKEN = 'token'
+        settings.TWILIO_MESSAGING_SERVICE_SID = 'service'
+        real_send_admin_sms('New bike enquiry')
+
+    @pytest.mark.parametrize('debug', [True, False])
+    def test_sends_regardless_of_debug(self, twilio, settings, debug):
+        """
+        GIVEN DEBUG on or off
+        WHEN an admin SMS is sent
+        THEN Twilio is called either way — a notification that silently does
+             nothing locally cannot be verified before it ships.
+        """
+        self._send(settings, debug=debug)
+
+        twilio.return_value.messages.create.assert_called_once()
+        assert twilio.return_value.messages.create.call_args.kwargs['to'] == '+61400000000'
+
+    def test_skips_when_no_numbers_configured(self, twilio, settings):
+        """Emptying ADMIN_NUMBERS is the supported way to turn admin SMS off."""
+        settings.DEBUG = True
+        settings.ADMIN_NUMBERS = []
+        real_send_admin_sms('New bike enquiry')
+
+        twilio.assert_not_called()
+
+    def test_missing_credentials_do_not_raise(self, mocker, settings):
+        """
+        GIVEN Twilio credentials are unset, as they often are locally
+        WHEN an admin SMS is attempted
+        THEN the failure is logged rather than escaping into the caller, which
+             is usually a Stripe webhook handler.
+        """
+        mocker.patch('twilio.rest.Client', side_effect=Exception('bad credentials'))
+        settings.DEBUG = True
+        settings.ADMIN_NUMBERS = ['+61400000000']
+
+        real_send_admin_sms('New bike enquiry')
+
+    def test_delivery_failure_does_not_raise(self, twilio, settings):
+        twilio.return_value.messages.create.side_effect = Exception('twilio down')
+
+        self._send(settings, debug=False)

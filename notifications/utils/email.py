@@ -12,15 +12,26 @@ logger = logging.getLogger(__name__)
 
 
 def _send_admin_sms(body):
-    if settings.DEBUG:
-        logger.info("DEBUG mode: skipping admin SMS")
-        return
+    """Send an admin SMS in every environment, DEBUG included.
+
+    Deliberately not gated on DEBUG: a notification that silently does nothing
+    locally cannot be verified before it ships. Configure ADMIN_NUMBERS to an
+    empty value to turn admin SMS off instead. Tests never reach here — conftest
+    replaces this function for the whole suite.
+    """
     numbers = getattr(settings, 'ADMIN_NUMBERS', [])
     if not numbers:
         logger.warning("ADMIN_NUMBERS not configured — skipping admin SMS")
         return
     from twilio.rest import Client
-    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    try:
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    except Exception as e:
+        # Previously unreachable in dev, where credentials are often unset. The
+        # constructor raises on missing ones, which would otherwise escape into
+        # the caller — a Stripe webhook handler in most cases.
+        logger.error("Could not create Twilio client — skipping admin SMS: %s", e)
+        return
     for number in numbers:
         try:
             client.messages.create(
